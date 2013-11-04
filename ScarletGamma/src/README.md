@@ -10,7 +10,7 @@ Code Conventions
 * namespace conform with the directory structure
 * Use pre-declarations instead of includes whenever possible
 
-1. Documentation
+2. Documentation
 ---
 * Doxygen comments in the Header at public attributes/methods:
 	/// \brief			always write a brief describtion
@@ -22,7 +22,7 @@ Code Conventions
 * Member variables and constants: ///< at end of line if short
 * *.cpp contains standard comments: //
 
-1. Code
+3. Code
 ---
 * Everything in english
 * Functions: CamelCase

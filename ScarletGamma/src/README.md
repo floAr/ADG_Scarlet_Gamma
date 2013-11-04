@@ -1,16 +1,16 @@
 Code Conventions
 ===
 
-(1) Structure
+1. Structure
 ---
-* Header: allsmall.hpp
-* Source: allsmall.cpp
+* Header: CamelCase.hpp
+* Source: CamelCase.cpp
 * Header and Source of the same name always in the same directory
-* directories structure the project textural
+* directories give structure the project
 * namespace conform with the directory structure
 * Use pre-declarations instead of includes whenever possible
 
-(2) Documentation
+1. Documentation
 ---
 * Doxygen comments in the Header at public attributes/methods:
 	/// \brief			always write a brief describtion
@@ -20,17 +20,18 @@ Code Conventions
 	/// \param [inout]	the parameter is accessed with read write access
 	/// \return
 * Member variables and constants: ///< at end of line if short
-* *.cpp contains standard commentars: //
+* *.cpp contains standard comments: //
 
-(3) Code
+1. Code
 ---
 * Everything in english
 * Functions: CamelCase
 * Types: CamelCase
+
 * Variables: smallCamelCase
 	* Scope-prefix:
-	  'm_' Member of a class
+	  'm_' Member of a class (Example: m_myInt)
 	  'g_' Global variable
 	  '_' Function parameter
-	* No Typ-prefixes
+	* No type prefixes
 * Constants: BIG_LETTERS

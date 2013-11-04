@@ -11,3 +11,12 @@
 *.lai
 *.la
 *.a
+
+# directories
+Debug/
+Release/
+SFML-2.1/
+
+# VC
+*.sdf
+*.opensdf

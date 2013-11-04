@@ -1,0 +1,36 @@
+Code Conventions
+===
+
+(1) Structure
+---
+* Header: allsmall.hpp
+* Source: allsmall.cpp
+* Header and Source of the same name always in the same directory
+* directories structure the project textural
+* namespace conform with the directory structure
+* Use pre-declarations instead of includes whenever possible
+
+(2) Documentation
+---
+* Doxygen comments in the Header at public attributes/methods:
+	/// \brief			always write a brief describtion
+	/// \details		if there is more to say
+	/// \param [in]		if parameter is only read inside method
+	/// \param [out]	if parameter is only written inside method
+	/// \param [inout]	the parameter is accessed with read write access
+	/// \return
+* Member variables and constants: ///< at end of line if short
+* *.cpp contains standard commentars: //
+
+(3) Code
+---
+* Everything in english
+* Functions: CamelCase
+* Types: CamelCase
+* Variables: smallCamelCase
+	* Scope-prefix:
+	  'm_' Member of a class
+	  'g_' Global variable
+	  '_' Function parameter
+	* No Typ-prefixes
+* Constants: BIG_LETTERS

@@ -13,12 +13,14 @@ Code Conventions
 2. Documentation
 ---
 * Doxygen comments in the Header at public attributes/methods:
-	`/// \brief			always write a brief describtion
-	/// \details		if there is more to say
-	/// \param [in]		if parameter is only read inside method
-	/// \param [out]	if parameter is only written inside method
-	/// \param [inout]	the parameter is accessed with read write access
-	/// \return`
+
+    /// \brief			always write a brief describtion
+    /// \details		if there is more to say
+    /// \param [in]		if parameter is only read inside method
+    /// \param [out]	if parameter is only written inside method
+    /// \param [inout]	the parameter is accessed with read write access
+    /// \return
+
 * Member variables and constants: `///< short comment at the end of the line`
 * *.cpp contains standard comments: `// some comment`
 
@@ -30,8 +32,10 @@ Code Conventions
 
 * Variables: smallCamelCase
 	* Scope-prefix:
-	`'m_' Member of a class (Example: m_myInt)
-	'g_' Global variable
-	'_' Function parameter`
+
+	'm_' Member of a class (Example: m_myInt)
+    'g_' Global variable
+    '_' Function parameter
+
 	* No type prefixes
 * Constants: BIG_LETTERS

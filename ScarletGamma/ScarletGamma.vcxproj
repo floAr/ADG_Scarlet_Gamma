@@ -72,7 +72,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\core\Map.cpp" />
+    <ClCompile Include="src\core\Object.cpp" />
+    <ClCompile Include="src\core\ObjectList.cpp" />
+    <ClCompile Include="src\core\Property.cpp" />
     <ClCompile Include="src\main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\core\Map.hpp" />
+    <ClInclude Include="src\core\Object.hpp" />
+    <ClInclude Include="src\core\ObjectList.hpp" />
+    <ClInclude Include="src\core\Property.hpp" />
+    <ClInclude Include="src\fundamentals\Exception.hpp" />
+    <ClInclude Include="src\fundamentals\Random.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

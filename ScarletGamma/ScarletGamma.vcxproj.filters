@@ -5,18 +5,52 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Headerdateien">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
-    </Filter>
     <Filter Include="Ressourcendateien">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Quelldateien\core">
+      <UniqueIdentifier>{1c41f4a9-0af4-4507-9a25-3a5b0cce97ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\fundamentals">
+      <UniqueIdentifier>{34845449-8d0c-41f1-b728-066bd3b857c1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="src\core\Object.cpp">
+      <Filter>Quelldateien\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\ObjectList.cpp">
+      <Filter>Quelldateien\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\Property.cpp">
+      <Filter>Quelldateien\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\Map.cpp">
+      <Filter>Quelldateien\core</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\core\Map.hpp">
+      <Filter>Quelldateien\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\Object.hpp">
+      <Filter>Quelldateien\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\ObjectList.hpp">
+      <Filter>Quelldateien\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\Property.hpp">
+      <Filter>Quelldateien\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\fundamentals\Exception.hpp">
+      <Filter>Quelldateien\fundamentals</Filter>
+    </ClInclude>
+    <ClInclude Include="src\fundamentals\Random.hpp">
+      <Filter>Quelldateien\fundamentals</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

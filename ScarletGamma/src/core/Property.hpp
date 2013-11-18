@@ -32,6 +32,8 @@ public:
 	/// \brief Write a new value into this property.
 	/// \details It is even allowed to do so if this is an object list property.
 	void SetValue( const std::string& _new );
+
+	// TODO: Serialze, Deserialize
 private:
 	std::string m_name;
 
@@ -40,6 +42,14 @@ private:
 	// union {... is not allowed in this context because both are complex objects
 	std::string m_value;	///< The value string - might contain: text, number, formular, ...
 	ObjectList m_objects;	///< List of object references. Not always available.
+};
+
+
+/// \brief A dynamic list of properties.
+class PropertyList
+{
+public:
+private:
 };
 
 } // namespace Core

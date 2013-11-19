@@ -46,10 +46,37 @@ private:
 
 
 /// \brief A dynamic list of properties.
+/// \details This is a customcontainer which can contain one key
+///		multiple times. Currently it is a list and all accesses are slow.
 class PropertyList
 {
 public:
+	/// \brief Adds a copy of a property to this list.
+	/// \param [in] _property Some property object from another list or a new one.
+	void Add( const Property& _property );
+
+	/// \brief Remove a property whichs address comes from Get or GetAll.
+	/// \param [in] _property Reference to one property in this list. If
+	///		the given object is not part of this container nothing happens.
+	void Remove( Property& _property );
+
+	/// \brief Removes all properties sharing a name from the list.
+	void Remove( const std::string& _name );
+
+	/// \brief Returns the first occurency of a property with a matching name.
+	/// \param [in] _name A full name of a property to search. The case is ignored.
+	Property& Get( const std::string& _name );
 private:
+	struct ListNode {
+		Property m_property;
+		ListNode* m_next;
+
+		ListNode( const Property& _prop ) : m_property(_prop), m_next(nullptr) {
+		}
+	};
+
+	ListNode* m_first;	///< Single linked list start.
+	ListNode* m_last;	///< Single linked list last node.
 };
 
 } // namespace Core

@@ -85,6 +85,9 @@
     <ClInclude Include="src\core\Property.hpp" />
     <ClInclude Include="src\fundamentals\Exception.hpp" />
     <ClInclude Include="src\fundamentals\Random.hpp" />
+    <ClInclude Include="src\Game.hpp" />
+    <ClInclude Include="src\states\GameState.hpp" />
+    <ClInclude Include="src\states\StateMachine.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

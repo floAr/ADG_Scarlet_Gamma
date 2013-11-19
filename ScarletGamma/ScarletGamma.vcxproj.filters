@@ -15,6 +15,9 @@
     <Filter Include="Quelldateien\fundamentals">
       <UniqueIdentifier>{34845449-8d0c-41f1-b728-066bd3b857c1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Quelldateien\states">
+      <UniqueIdentifier>{6fc8e544-5a84-425f-9a02-17e8961bc73f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -51,6 +54,15 @@
     </ClInclude>
     <ClInclude Include="src\fundamentals\Random.hpp">
       <Filter>Quelldateien\fundamentals</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game.hpp">
+      <Filter>Quelldateien</Filter>
+    </ClInclude>
+    <ClInclude Include="src\states\StateMachine.hpp">
+      <Filter>Quelldateien\states</Filter>
+    </ClInclude>
+    <ClInclude Include="src\states\GameState.hpp">
+      <Filter>Quelldateien\states</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

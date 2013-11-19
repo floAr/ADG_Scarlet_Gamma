@@ -18,6 +18,9 @@
     <Filter Include="Quelldateien\states">
       <UniqueIdentifier>{6fc8e544-5a84-425f-9a02-17e8961bc73f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Quelldateien\graphics">
+      <UniqueIdentifier>{b307e98b-f6be-4e79-83d1-cd35586be726}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -34,6 +37,15 @@
     </ClCompile>
     <ClCompile Include="src\core\Map.cpp">
       <Filter>Quelldateien\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="src\states\StateMachine.cpp">
+      <Filter>Quelldateien\states</Filter>
+    </ClCompile>
+    <ClCompile Include="src\graphics\GraphicsManager.cpp">
+      <Filter>Quelldateien\graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -63,6 +75,18 @@
     </ClInclude>
     <ClInclude Include="src\states\GameState.hpp">
       <Filter>Quelldateien\states</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Prerequisites.hpp">
+      <Filter>Quelldateien</Filter>
+    </ClInclude>
+    <ClInclude Include="src\states\IntroState.hpp">
+      <Filter>Quelldateien\states</Filter>
+    </ClInclude>
+    <ClInclude Include="src\states\MainMenuState.hpp">
+      <Filter>Quelldateien\states</Filter>
+    </ClInclude>
+    <ClInclude Include="src\graphics\GraphicsManager.hpp">
+      <Filter>Quelldateien\graphics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

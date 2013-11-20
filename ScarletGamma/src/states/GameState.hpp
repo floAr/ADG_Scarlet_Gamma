@@ -1,5 +1,7 @@
 #pragma once
 
+#include <SFML/Graphics.hpp>
+
 namespace States
 {
 	/// \brief Abstract base class for all states the game can be in.
@@ -40,7 +42,7 @@ namespace States
 		///		to draw everything.
 		/// \details Use this function to specifiy what needs to be drawn: the
 		///		map, certain menus etc.
-		virtual void Draw() = 0;
+		virtual void Draw(sf::RenderWindow& win) = 0;
 
 		/// \brief Tells the StateMachine wether the GameState is to be pop'd
 		///
@@ -52,7 +54,7 @@ namespace States
 			return m_finished;
 		}
 
-	private:
+	protected:
 		bool m_finished; ///< set to true if the GameState is finished
 	};
 }

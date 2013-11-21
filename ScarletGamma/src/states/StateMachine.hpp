@@ -14,6 +14,9 @@ namespace States
 	class StateMachine
 	{
 	public:
+		/// \brief Creates a new StateMachine. Initializes the current GameState to 0.
+		StateMachine();
+
 		/// \brief Creates the specified GameState and pushes it onto the stack.
 		/// \detail To remove a GameState, the state has to mark itself as
 		///		finished. The game then returns to the previous GameState or
@@ -25,7 +28,7 @@ namespace States
 		/// \return true if at least one state is left, false otherwise
 		inline bool HasStates()
 		{
-			return !m_gameStates.empty();
+			return m_gameState != 0;
 		}
 
 		/// \brief Updates the current GameState. May pop it if it's finished. 
@@ -36,6 +39,6 @@ namespace States
 		void Draw(sf::RenderWindow& win);
 	private:
 		/// \brief Stack of GameStates. Current state is the top element.
-		std::stack<GameState*> m_gameStates;
+		GameState* m_gameState;
 	};
 }

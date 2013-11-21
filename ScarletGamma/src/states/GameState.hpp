@@ -12,7 +12,25 @@ namespace States
 	public:
 		/// \brief Empty base constructor that makes sure that the GameState
 		///		isn't finished instantly.
-		GameState() : m_finished(false) {}
+		GameState() : m_finished(false), m_previousState(0) {}
+
+		/// \brief Sets the previous GameState, i.e. the GameState that the
+		///		StateMachine will return to when this one is finished.
+		/// \detail If this is set to 0, the StateMachine will assume that
+		///		no states are left and the game will quit. You shouldn't have
+		///		to use this function, the StateMachine will set the previous
+		///		state automatically when you push a new one.
+		inline void SetPreviousState(GameState* state)
+		{
+			m_previousState = state;
+		}
+
+		/// \brief Returns a pointer to the previous GameState, i.e. the state
+		///		that was on the top of the stack before this one was pushed.
+		inline GameState* GetPreviousState()
+		{
+			return m_previousState;
+		}
 
 		/// \brief Pure virtual function that is called when the GameState is
 		///		first entered and pushed.
@@ -56,5 +74,6 @@ namespace States
 
 	protected:
 		bool m_finished; ///< set to true if the GameState is finished
+		GameState* m_previousState;
 	};
 }

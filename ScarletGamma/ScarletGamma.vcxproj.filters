@@ -44,8 +44,11 @@
     <ClCompile Include="src\states\StateMachine.cpp">
       <Filter>Quelldateien\states</Filter>
     </ClCompile>
-    <ClCompile Include="src\graphics\GraphicsManager.cpp">
-      <Filter>Quelldateien\graphics</Filter>
+    <ClCompile Include="src\states\IntroState.cpp">
+      <Filter>Quelldateien\states</Filter>
+    </ClCompile>
+    <ClCompile Include="src\states\MainMenuState.cpp">
+      <Filter>Quelldateien\states</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -84,9 +87,6 @@
     </ClInclude>
     <ClInclude Include="src\states\MainMenuState.hpp">
       <Filter>Quelldateien\states</Filter>
-    </ClInclude>
-    <ClInclude Include="src\graphics\GraphicsManager.hpp">
-      <Filter>Quelldateien\graphics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

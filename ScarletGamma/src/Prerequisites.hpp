@@ -45,5 +45,4 @@ namespace States
 // GRAPHICS
 namespace Graphics
 {
-	class GraphicsManager;
 }

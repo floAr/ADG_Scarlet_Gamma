@@ -2,6 +2,9 @@
 
 #include "Prerequisites.hpp"
 
+#include <SFML/Graphics.hpp>
+#include <SFML/System.hpp>
+
 /// \brief Master class containing the game loop and pointers to subsystems.
 ///
 /// The main() creates and deletes a global Game into the g_Game variable.
@@ -20,7 +23,7 @@ public:
 
 private:
 	States::StateMachine*		m_stateMachine;
-	Graphics::GraphicsManager*	m_graphicsManager;
+	sf::RenderWindow			m_window;
 };
 
 /// \brief Global pointer because everyone needs to know the game anyway...

@@ -77,8 +77,9 @@
     <ClCompile Include="src\core\ObjectList.cpp" />
     <ClCompile Include="src\core\Property.cpp" />
     <ClCompile Include="src\Game.cpp" />
-    <ClCompile Include="src\graphics\GraphicsManager.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\states\IntroState.cpp" />
+    <ClCompile Include="src\states\MainMenuState.cpp" />
     <ClCompile Include="src\states\StateMachine.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -89,7 +90,6 @@
     <ClInclude Include="src\fundamentals\Exception.hpp" />
     <ClInclude Include="src\fundamentals\Random.hpp" />
     <ClInclude Include="src\Game.hpp" />
-    <ClInclude Include="src\graphics\GraphicsManager.hpp" />
     <ClInclude Include="src\Prerequisites.hpp" />
     <ClInclude Include="src\states\GameState.hpp" />
     <ClInclude Include="src\states\IntroState.hpp" />

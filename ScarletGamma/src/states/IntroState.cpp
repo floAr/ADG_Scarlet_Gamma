@@ -3,6 +3,10 @@
 States::IntroState::IntroState(std::string& filename, float duration) :
 	GameState(), m_maxTime(duration), m_totalTime(0)
 {
+#ifdef _DEBUG
+	m_finished = true;
+#endif
+
 	if (m_logoTexture.loadFromFile(filename))
 	{
 		// Scale texture

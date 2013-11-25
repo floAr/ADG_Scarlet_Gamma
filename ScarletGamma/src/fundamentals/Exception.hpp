@@ -9,4 +9,7 @@ namespace Exception {
 	/// \brief Thrown if something is expeced to contain a (nonempty) object list.
 	class NoObjectList {};
 
+	/// \brief Thrown if the existence of a property was expected but is not there.
+	class NoSuchProperty {};
+
 } // namespace Exception

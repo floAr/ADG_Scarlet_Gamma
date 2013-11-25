@@ -50,6 +50,9 @@
     <ClCompile Include="src\states\MainMenuState.cpp">
       <Filter>Quelldateien\states</Filter>
     </ClCompile>
+    <ClCompile Include="src\fundamentals\StringUtil.cpp">
+      <Filter>Quelldateien\fundamentals</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\core\Map.hpp">
@@ -87,6 +90,9 @@
     </ClInclude>
     <ClInclude Include="src\states\MainMenuState.hpp">
       <Filter>Quelldateien\states</Filter>
+    </ClInclude>
+    <ClInclude Include="src\fundamentals\StringUtil.hpp">
+      <Filter>Quelldateien\fundamentals</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

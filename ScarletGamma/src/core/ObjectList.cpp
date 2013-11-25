@@ -29,7 +29,7 @@ namespace Core {
 
 	ObjectID ObjectList::operator[](int _index) const
 	{
-		assert(0<=_index && _index<m_objects.size());
+		assert(0<=_index && _index<(int)m_objects.size());
 		return m_objects[_index];
 	}
 

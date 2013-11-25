@@ -17,6 +17,7 @@ namespace Fundamentals
 namespace Exception {
 	class NotEvaluateable;
 	class NoObjectList;
+	class NoSuchProperty;
 }
 
 //------------------------------------------------------------------------------

@@ -43,7 +43,8 @@ namespace Core {
 
 	PropertyList::PropertyList() :
 		m_first(nullptr),
-		m_last(nullptr)
+		m_last(nullptr),
+		m_num(0)
 	{
 	}
 
@@ -69,6 +70,8 @@ namespace Core {
 			Add( otherCurrent->m_property );
 			otherCurrent = otherCurrent->m_next;
 		}
+
+		return *this;
 	}
 
 
@@ -80,6 +83,7 @@ namespace Core {
 			m_last = m_last->m_next;
 		} else
 			m_first = m_last = new ListNode( _property );
+		++m_num;
 	}
 
 	void PropertyList::Remove( Property* _property )
@@ -97,6 +101,7 @@ namespace Core {
 				if( !m_first ) m_last = nullptr;	// Case: the current element was the only one
 
 				delete current;
+				--m_num;
 				return;
 			}
 			current = current->m_next;
@@ -115,6 +120,13 @@ namespace Core {
 	}
 
 	Property* PropertyList::Get( const std::string& _name )
+	{
+		// A trick to avoid redundant implementation. The const_cast is valid
+		// in this context because we know the current list isn't const.
+		return const_cast<Property*>(const_cast<const PropertyList*>(this)->Get(_name));
+	}
+
+	const Property* PropertyList::Get( const std::string& _name ) const
 	{
 		ListNode* current = m_first;
 		while(current)
@@ -143,5 +155,6 @@ namespace Core {
 			m_last = nullptr;
 			// Both m_first and m_last are now nullptr
 		}
+		m_num = 0;
 	}
 } // namespace Core

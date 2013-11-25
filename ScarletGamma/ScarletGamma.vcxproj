@@ -76,6 +76,7 @@
     <ClCompile Include="src\core\Object.cpp" />
     <ClCompile Include="src\core\ObjectList.cpp" />
     <ClCompile Include="src\core\Property.cpp" />
+    <ClCompile Include="src\fundamentals\StringUtil.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\states\IntroState.cpp" />
@@ -89,6 +90,7 @@
     <ClInclude Include="src\core\Property.hpp" />
     <ClInclude Include="src\fundamentals\Exception.hpp" />
     <ClInclude Include="src\fundamentals\Random.hpp" />
+    <ClInclude Include="src\fundamentals\StringUtil.hpp" />
     <ClInclude Include="src\Game.hpp" />
     <ClInclude Include="src\Prerequisites.hpp" />
     <ClInclude Include="src\states\GameState.hpp" />

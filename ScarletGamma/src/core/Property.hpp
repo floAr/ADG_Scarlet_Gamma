@@ -79,6 +79,9 @@ public:
 	/// \return The property or a nullptr if the element does not exists.
 	Property* Get( const std::string& _name );
 
+	/// \brief Read only method of Get().
+	const Property* Get( const std::string& _name ) const;
+
 	/// \brief Remove all properties from the list.
 	void Clear();
 private:
@@ -93,6 +96,7 @@ private:
 
 	ListNode* m_first;	///< Single linked list start.
 	ListNode* m_last;	///< Single linked list last node.
+	int m_num;			///< Number of properties in this list.
 };
 
 } // namespace Core

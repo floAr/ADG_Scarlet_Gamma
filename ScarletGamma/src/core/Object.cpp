@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Object.hpp"
-#include "fundamentals/Exception.hpp"
+#include "utils/Exception.hpp"
 
 namespace Core {
 

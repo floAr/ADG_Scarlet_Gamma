@@ -1,6 +1,6 @@
 #include "Property.hpp"
-#include "../fundamentals/Exception.hpp"
-#include "../fundamentals/StringUtil.hpp"
+#include "../utils/Exception.hpp"
+#include "../utils/StringUtil.hpp"
 
 namespace Core {
 	Property::Property( const std::string& _name, const std::string& _value ) :

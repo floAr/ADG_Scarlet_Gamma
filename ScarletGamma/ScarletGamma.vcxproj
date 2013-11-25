@@ -76,27 +76,27 @@
     <ClCompile Include="src\core\Object.cpp" />
     <ClCompile Include="src\core\ObjectList.cpp" />
     <ClCompile Include="src\core\Property.cpp" />
-    <ClCompile Include="src\fundamentals\StringUtil.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\states\IntroState.cpp" />
     <ClCompile Include="src\states\MainMenuState.cpp" />
     <ClCompile Include="src\states\StateMachine.cpp" />
+    <ClCompile Include="src\utils\StringUtil.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\core\Map.hpp" />
     <ClInclude Include="src\core\Object.hpp" />
     <ClInclude Include="src\core\ObjectList.hpp" />
     <ClInclude Include="src\core\Property.hpp" />
-    <ClInclude Include="src\fundamentals\Exception.hpp" />
-    <ClInclude Include="src\fundamentals\Random.hpp" />
-    <ClInclude Include="src\fundamentals\StringUtil.hpp" />
     <ClInclude Include="src\Game.hpp" />
     <ClInclude Include="src\Prerequisites.hpp" />
     <ClInclude Include="src\states\GameState.hpp" />
     <ClInclude Include="src\states\IntroState.hpp" />
     <ClInclude Include="src\states\MainMenuState.hpp" />
     <ClInclude Include="src\states\StateMachine.hpp" />
+    <ClInclude Include="src\utils\Exception.hpp" />
+    <ClInclude Include="src\utils\Random.hpp" />
+    <ClInclude Include="src\utils\StringUtil.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

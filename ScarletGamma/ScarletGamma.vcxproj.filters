@@ -50,7 +50,7 @@
     <ClCompile Include="src\states\MainMenuState.cpp">
       <Filter>Quelldateien\states</Filter>
     </ClCompile>
-    <ClCompile Include="src\fundamentals\StringUtil.cpp">
+    <ClCompile Include="src\utils\StringUtil.cpp">
       <Filter>Quelldateien\utils</Filter>
     </ClCompile>
   </ItemGroup>
@@ -66,12 +66,6 @@
     </ClInclude>
     <ClInclude Include="src\core\Property.hpp">
       <Filter>Quelldateien\core</Filter>
-    </ClInclude>
-    <ClInclude Include="src\fundamentals\Exception.hpp">
-      <Filter>Quelldateien\utils</Filter>
-    </ClInclude>
-    <ClInclude Include="src\fundamentals\Random.hpp">
-      <Filter>Quelldateien\utils</Filter>
     </ClInclude>
     <ClInclude Include="src\Game.hpp">
       <Filter>Quelldateien</Filter>
@@ -91,7 +85,13 @@
     <ClInclude Include="src\states\MainMenuState.hpp">
       <Filter>Quelldateien\states</Filter>
     </ClInclude>
-    <ClInclude Include="src\fundamentals\StringUtil.hpp">
+    <ClInclude Include="src\utils\Exception.hpp">
+      <Filter>Quelldateien\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utils\Random.hpp">
+      <Filter>Quelldateien\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utils\StringUtil.hpp">
       <Filter>Quelldateien\utils</Filter>
     </ClInclude>
   </ItemGroup>

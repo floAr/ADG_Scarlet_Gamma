@@ -41,81 +41,34 @@ namespace Core {
 
 
 
-	PropertyList::PropertyList() :
-		m_first(nullptr),
-		m_last(nullptr),
-		m_num(0)
-	{
-	}
-
-	PropertyList::~PropertyList()
-	{
-		Clear();
-	}
-
-	PropertyList::PropertyList( const PropertyList& _list )
-	{
-		ListNode* otherCurrent = _list.m_first;
-		while(otherCurrent) {
-			Add( otherCurrent->m_property );
-			otherCurrent = otherCurrent->m_next;
-		}
-	}
-
-	PropertyList& PropertyList::operator=(const PropertyList& _list)
-	{
-		Clear();
-		ListNode* otherCurrent = _list.m_first;
-		while(otherCurrent) {
-			Add( otherCurrent->m_property );
-			otherCurrent = otherCurrent->m_next;
-		}
-
-		return *this;
-	}
 
 
 	void PropertyList::Add( const Property& _property )
 	{
 		// Append at the end
-		if( m_last ) {
-			m_last->m_next = new ListNode( _property );
-			m_last = m_last->m_next;
-		} else
-			m_first = m_last = new ListNode( _property );
-		++m_num;
+		m_list.push_back(_property);
 	}
 
 	void PropertyList::Remove( Property* _property )
 	{
-		ListNode* current = m_first;
-		ListNode* last = nullptr;
-		while(current)
-		{
-			if( &current->m_property == _property )
-			{
-				// Found
-				// Remove from list
-				if( last ) last->m_next = current->m_next;
-				else m_first = current->m_next;
-				if( !m_first ) m_last = nullptr;	// Case: the current element was the only one
-
-				delete current;
-				--m_num;
+		for(auto current = m_list.begin(); current != m_list.end(); ++current )
+			if( &(*current) == _property ) {
+				m_list.erase( current );
 				return;
 			}
-			current = current->m_next;
-		}
 		// Not in list
 	}
 
 	void PropertyList::Remove( const std::string& _name )
 	{
-		// OPTIMIZE: Go only once through the list insted of repeated search
-		Property* found = Get(_name);
-		while(found) {
-			Remove(found);
-			found = Get(_name);
+		for(auto current = m_list.begin(); current != m_list.end(); )
+		{
+			// erase from list returns an iterator to the first element after
+			// the deleted sequence. In this case the iterator should not be
+			// increase -> not in for loop.
+			if( Utils::IStringEqual( (*current).Name(), _name ) )
+				current = m_list.erase(current);
+			else ++current;
 		}
 	}
 
@@ -128,12 +81,10 @@ namespace Core {
 
 	const Property* PropertyList::Get( const std::string& _name ) const
 	{
-		ListNode* current = m_first;
-		while(current)
+		for(auto current = m_list.begin(); current != m_list.end(); ++current )
 		{
-			if( Utils::IStringEqual( current->m_property.Name(), _name ) )
-				return &current->m_property;
-			current = current->m_next;
+			if( Utils::IStringEqual( (*current).Name(), _name ) )
+				return &(*current);
 		}
 
 		// not in list
@@ -142,19 +93,6 @@ namespace Core {
 
 	void PropertyList::Clear()
 	{
-		if( m_first )
-		{
-			// Delete iteratively (no recursive destructor!)
-			ListNode* next = m_first->m_next;
-			while( m_first )
-			{
-				delete m_first;
-				m_first = next;
-				next = next->m_next;
-			}
-			m_last = nullptr;
-			// Both m_first and m_last are now nullptr
-		}
-		m_num = 0;
+		m_list.clear();
 	}
 } // namespace Core

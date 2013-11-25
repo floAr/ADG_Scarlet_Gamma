@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <list>
 #include "ObjectList.hpp"
 
 namespace Core {
@@ -53,8 +54,6 @@ private:
 class PropertyList
 {
 public:
-	PropertyList();
-	~PropertyList();
 
 	/// \brief Deep copy construction
 	PropertyList( const PropertyList& _list );
@@ -84,9 +83,18 @@ public:
 
 	/// \brief Remove all properties from the list.
 	void Clear();
+
+	/// \brief Returns the counter for the size of this list.
+	int GetNumElements() const		{ return (int)m_list.size(); }
+
+	/// \brief Use of this 
+	//class Iterator: std::iterator<std::forward_iterator_tag,Property>
+	//{
+	//};
 private:
+	std::list<Property> m_list;
 	/// \brief Single linked list node.
-	struct ListNode {
+/*	struct ListNode {
 		Property m_property;	///< Contains one property
 		ListNode* m_next;		///< List-link
 
@@ -96,7 +104,7 @@ private:
 
 	ListNode* m_first;	///< Single linked list start.
 	ListNode* m_last;	///< Single linked list last node.
-	int m_num;			///< Number of properties in this list.
+	int m_num;			///< Number of properties in this list.*/
 };
 
 } // namespace Core

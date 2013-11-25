@@ -12,14 +12,14 @@
     <Filter Include="Quelldateien\core">
       <UniqueIdentifier>{1c41f4a9-0af4-4507-9a25-3a5b0cce97ac}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Quelldateien\fundamentals">
-      <UniqueIdentifier>{34845449-8d0c-41f1-b728-066bd3b857c1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Quelldateien\states">
       <UniqueIdentifier>{6fc8e544-5a84-425f-9a02-17e8961bc73f}</UniqueIdentifier>
     </Filter>
     <Filter Include="Quelldateien\graphics">
       <UniqueIdentifier>{b307e98b-f6be-4e79-83d1-cd35586be726}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\utils">
+      <UniqueIdentifier>{34845449-8d0c-41f1-b728-066bd3b857c1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -51,7 +51,7 @@
       <Filter>Quelldateien\states</Filter>
     </ClCompile>
     <ClCompile Include="src\fundamentals\StringUtil.cpp">
-      <Filter>Quelldateien\fundamentals</Filter>
+      <Filter>Quelldateien\utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -68,10 +68,10 @@
       <Filter>Quelldateien\core</Filter>
     </ClInclude>
     <ClInclude Include="src\fundamentals\Exception.hpp">
-      <Filter>Quelldateien\fundamentals</Filter>
+      <Filter>Quelldateien\utils</Filter>
     </ClInclude>
     <ClInclude Include="src\fundamentals\Random.hpp">
-      <Filter>Quelldateien\fundamentals</Filter>
+      <Filter>Quelldateien\utils</Filter>
     </ClInclude>
     <ClInclude Include="src\Game.hpp">
       <Filter>Quelldateien</Filter>
@@ -92,7 +92,7 @@
       <Filter>Quelldateien\states</Filter>
     </ClInclude>
     <ClInclude Include="src\fundamentals\StringUtil.hpp">
-      <Filter>Quelldateien\fundamentals</Filter>
+      <Filter>Quelldateien\utils</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

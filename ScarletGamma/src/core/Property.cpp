@@ -95,4 +95,32 @@ namespace Core {
 	{
 		m_list.clear();
 	}
+
+
+	std::vector<const Property*> PropertyList::FilterByName( const std::string& _text ) const
+	{
+		std::vector<const Property*> _results;
+		for(auto current = m_list.begin(); current != m_list.end(); ++current )
+		{
+			// Test if the name contains the correct part
+			if( Utils::IStringContains(current->Name(), _text) )
+				// Add reference to output
+				_results.push_back( &(*current) );
+		}
+		return _results;
+	}
+
+	std::vector<const Property*> PropertyList::FilterByValue( const std::string& _text ) const
+	{
+		std::vector<const Property*> _results;
+		for(auto current = m_list.begin(); current != m_list.end(); ++current )
+		{
+			// Test if the name contains the correct part
+			if( Utils::IStringContains(current->Value(), _text) )
+				// Add reference to output
+				_results.push_back( &(*current) );
+		}
+		return _results;
+	}
+
 } // namespace Core

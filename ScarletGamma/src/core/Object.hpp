@@ -23,13 +23,13 @@ public:
 
 	/// \brief Search all properties which have a certain text sequence in
 	///		there name.
-	/// \details This method is not case sensitive.
+	/// \details This method is case insensitive.
 	/// \return An array with read access to all found properties.
 	std::vector<const Property*> FilterByName( const std::string& _text ) const;
 
 	/// \brief Search all properties which have a certain text sequence in
 	///		there value.
-	/// \details This method is not case sensitive.
+	/// \details This method is case insensitive.
 	/// \return An array with read access to all found properties.
 	std::vector<const Property*> FilterByValue( const std::string& _text ) const;
 private:

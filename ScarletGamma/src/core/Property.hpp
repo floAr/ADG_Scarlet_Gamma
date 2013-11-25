@@ -87,24 +87,19 @@ public:
 	/// \brief Returns the counter for the size of this list.
 	int GetNumElements() const		{ return (int)m_list.size(); }
 
-	/// \brief Use of this 
-	//class Iterator: std::iterator<std::forward_iterator_tag,Property>
-	//{
-	//};
+	/// \brief Search all properties which have a certain text sequence in
+	///		there name.
+	/// \details This method is case insensitive.
+	/// \return An array with read access to all found properties.
+	std::vector<const Property*> FilterByName( const std::string& _text ) const;
+
+	/// \brief Search all properties which have a certain text sequence in
+	///		there value.
+	/// \details This method is case insensitive.
+	/// \return An array with read access to all found properties.
+	std::vector<const Property*> FilterByValue( const std::string& _text ) const;
 private:
 	std::list<Property> m_list;
-	/// \brief Single linked list node.
-/*	struct ListNode {
-		Property m_property;	///< Contains one property
-		ListNode* m_next;		///< List-link
-
-		ListNode( const Property& _prop ) : m_property(_prop), m_next(nullptr) {
-		}
-	};
-
-	ListNode* m_first;	///< Single linked list start.
-	ListNode* m_last;	///< Single linked list last node.
-	int m_num;			///< Number of properties in this list.*/
 };
 
 } // namespace Core

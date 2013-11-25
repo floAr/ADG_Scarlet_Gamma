@@ -1,5 +1,7 @@
 #include "StringUtil.hpp"
 
+#include <algorithm>
+
 namespace Utils {
 
 	bool IStringEqual(const std::string& _str1, const std::string& _str2)
@@ -13,6 +15,15 @@ namespace Utils {
 			}
 		}
 		return true;
+	}
+
+	bool IStringContains(const std::string& _string, const std::string& _subString)
+	{
+		std::string pattern(_subString);
+		std::transform(pattern.begin(), pattern.end(), pattern.begin(), ::tolower);
+		std::string string(_string);
+		std::transform(string.begin(), string.end(), string.begin(), ::tolower);
+		return string.find(pattern) != std::string::npos;
 	}
 
 } // namespace Utils

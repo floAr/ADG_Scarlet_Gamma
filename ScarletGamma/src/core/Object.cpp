@@ -31,13 +31,13 @@ namespace Core {
 
 	std::vector<const Property*> Object::FilterByName( const std::string& _text ) const
 	{
-		return std::vector<const Property*>();
+		return std::move(m_properties.FilterByName(_text));
 	}
 
 
 	std::vector<const Property*> Object::FilterByValue( const std::string& _text ) const
 	{
-		return std::vector<const Property*>();
+		return std::move(m_properties.FilterByValue(_text));
 	}
 
 } // namespace Core

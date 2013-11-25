@@ -33,6 +33,8 @@ public:
 	/// \details It is even allowed to do so if this is an object list property.
 	void SetValue( const std::string& _new );
 
+	const std::string& Name() const	{ return m_name; }
+
 	// TODO: Serialze, Deserialize
 private:
 	std::string m_name;
@@ -51,21 +53,28 @@ private:
 class PropertyList
 {
 public:
-	/// \brief Adds a copy of a property to this list.
+	PropertyList();
+	~PropertyList();
+
+	/// \brief Adds a copy of a property to the end of this list.
 	/// \param [in] _property Some property object from another list or a new one.
 	void Add( const Property& _property );
 
 	/// \brief Remove a property whichs address comes from Get or GetAll.
 	/// \param [in] _property Reference to one property in this list. If
 	///		the given object is not part of this container nothing happens.
-	void Remove( Property& _property );
+	void Remove( Property* _property );
 
-	/// \brief Removes all properties sharing a name from the list.
+	/// \brief Removes all properties with given name from the list.
 	void Remove( const std::string& _name );
 
 	/// \brief Returns the first occurency of a property with a matching name.
 	/// \param [in] _name A full name of a property to search. The case is ignored.
-	Property& Get( const std::string& _name );
+	/// \return The property or a nullptr if the element does not exists.
+	Property* Get( const std::string& _name );
+
+	/// \brief Remove all properties from the list.
+	void Clear();
 private:
 	/// \brief Single linked list node.
 	struct ListNode {

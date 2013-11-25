@@ -14,6 +14,11 @@ namespace Fundamentals
 	// todo...
 }
 
+namespace Exception {
+	class NotEvaluateable;
+	class NoObjectList;
+}
+
 //------------------------------------------------------------------------------
 // CORE
 namespace Core

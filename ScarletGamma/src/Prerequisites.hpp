@@ -18,7 +18,14 @@ namespace Fundamentals
 // CORE
 namespace Core
 {
-	// todo...
+	class ObjectList;
+	class Property;
+	class PropertyList;
+
+	/// \brief General definition of an object handle.
+	/// \details This typedef allows to introduce 64Bit or even complexer types
+	///		if necessary.
+	typedef unsigned int ObjectID;
 }
 
 //------------------------------------------------------------------------------

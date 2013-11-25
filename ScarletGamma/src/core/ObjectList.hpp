@@ -1,13 +1,9 @@
 #pragma once
 
 #include <vector>
+#include "../Prerequisites.hpp"
 
 namespace Core {
-
-/// \brief General definition of an object handle.
-/// \details This typedef allows to introduce 64Bit or even complexer types
-///		if necessary.
-typedef unsigned int ObjectID;
 
 /// \brief A dynamic list of object-references.
 class ObjectList
@@ -25,7 +21,7 @@ public:
 	void Remove( ObjectID _id );
 
 	/// \brief Number of elements in the list
-	int Size() const;
+	int Size() const { return (int)m_objects.size(); }
 
 	/// \brief Index access to all elements in the list.
 	/// \details Index out of bounds is checked by an assertion in debug mode.

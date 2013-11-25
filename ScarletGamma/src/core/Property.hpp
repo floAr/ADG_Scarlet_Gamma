@@ -67,9 +67,10 @@ public:
 	/// \param [in] _name A full name of a property to search. The case is ignored.
 	Property& Get( const std::string& _name );
 private:
+	/// \brief Single linked list node.
 	struct ListNode {
-		Property m_property;
-		ListNode* m_next;
+		Property m_property;	///< Contains one property
+		ListNode* m_next;		///< List-link
 
 		ListNode( const Property& _prop ) : m_property(_prop), m_next(nullptr) {
 		}

@@ -56,6 +56,12 @@ public:
 	PropertyList();
 	~PropertyList();
 
+	/// \brief Deep copy construction
+	PropertyList( const PropertyList& _list );
+
+	/// \brief Deep copy assignment
+	PropertyList& operator=(const PropertyList& _list);
+
 	/// \brief Adds a copy of a property to the end of this list.
 	/// \param [in] _property Some property object from another list or a new one.
 	void Add( const Property& _property );

@@ -52,6 +52,26 @@ namespace Core {
 		Clear();
 	}
 
+	PropertyList::PropertyList( const PropertyList& _list )
+	{
+		ListNode* otherCurrent = _list.m_first;
+		while(otherCurrent) {
+			Add( otherCurrent->m_property );
+			otherCurrent = otherCurrent->m_next;
+		}
+	}
+
+	PropertyList& PropertyList::operator=(const PropertyList& _list)
+	{
+		Clear();
+		ListNode* otherCurrent = _list.m_first;
+		while(otherCurrent) {
+			Add( otherCurrent->m_property );
+			otherCurrent = otherCurrent->m_next;
+		}
+	}
+
+
 	void PropertyList::Add( const Property& _property )
 	{
 		// Append at the end

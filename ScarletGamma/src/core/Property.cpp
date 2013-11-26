@@ -2,6 +2,8 @@
 #include "../utils/Exception.hpp"
 #include "../utils/StringUtil.hpp"
 
+using namespace std;
+
 namespace Core {
 	Property::Property( const std::string& _name, const std::string& _value ) :
 		m_name(_name),
@@ -16,6 +18,17 @@ namespace Core {
 		m_value(""),
 		m_objects(_list)
 	{
+	}
+
+	Property::Property( const Jo::Files::MetaFileWrapper::Node& _parent )
+	{
+		m_name = _parent[string("name")];
+		m_value = _parent[string("value")];
+		const Jo::Files::MetaFileWrapper::Node* objects;
+		if( _parent.HasChild( string("objects"), &objects ) )
+		{
+			m_objects = ObjectList(*objects);
+		}
 	}
 
 	ObjectList& Property::Objects()
@@ -39,9 +52,27 @@ namespace Core {
 		m_value = _new;
 	}
 
+	void Property::Serialize( Jo::Files::MetaFileWrapper::Node& _parent )
+	{
+		_parent[std::string("name")] = m_name;
+		_parent[std::string("value")] = m_value;
+		if( m_isObjectList ) {
+			m_objects.Serialize(_parent[std::string("objects")]);
+		}
+	}
 
 
 
+
+
+
+	PropertyList::PropertyList( const Jo::Files::MetaFileWrapper::Node& _parent )
+	{
+		for( uint64_t i=0; i<_parent.Size(); ++i )
+		{
+			Add( Property( _parent[i] ) );
+		}
+	}
 
 	void PropertyList::Add( const Property& _property )
 	{
@@ -121,6 +152,17 @@ namespace Core {
 				_results.push_back( &(*current) );
 		}
 		return _results;
+	}
+
+	void PropertyList::Serialize( Jo::Files::MetaFileWrapper::Node& _parent )
+	{
+		// Would also run without preallocation but so its faster.
+		_parent.Resize(m_list.size(), Jo::Files::MetaFileWrapper::ElementType::NODE);
+		int i=0;
+		for(auto current = m_list.begin(); current != m_list.end(); ++current ) {
+			current->Serialize( _parent[i] );
+			++i;
+		}
 	}
 
 } // namespace Core

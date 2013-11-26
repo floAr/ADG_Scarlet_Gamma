@@ -3,6 +3,7 @@
 #include <string>
 #include <list>
 #include "ObjectList.hpp"
+#include <jofilelib.hpp>
 
 namespace Core {
 
@@ -18,11 +19,15 @@ public:
 	///		to the object list with SetValue.
 	Property( const std::string& _name, const ObjectList& _list );
 
+	/// \brief Deserialize an object.
+	/// \param [in] _parent A serialized object node.
+	Property( const Jo::Files::MetaFileWrapper::Node& _parent );
+
 	/// \brief Access the internal object list.
 	/// \throws Exception::NoObjectList.
 	ObjectList& Objects();
 
-	/// \brief Interpretes the value as formular/number and returns the result
+	/// \brief Interprets the value as formular/number and returns the result
 	///		after evaluation.
 	/// \throws Exception::NotEvaluateable
 	float Evaluate() const;
@@ -36,36 +41,39 @@ public:
 
 	const std::string& Name() const	{ return m_name; }
 
-	// TODO: Serialze, Deserialize
+	/// \brief Write the content of this object to a meta-file.
+	/// \param [inout] _parent A node with ElementType::UNKNOWN which can
+	///		be changed and expanded by serialize.
+	void Serialize( Jo::Files::MetaFileWrapper::Node& _parent );
 private:
 	std::string m_name;
 
 	bool m_isObjectList;	///< True if the object list is defined
 
 	// union {... is not allowed in this context because both are complex objects
-	std::string m_value;	///< The value string - might contain: text, number, formular, ...
+	std::string m_value;	///< The value string - might contain: text, number, formula, ...
 	ObjectList m_objects;	///< List of object references. Not always available.
 };
 
 
 /// \brief A dynamic list of properties.
-/// \details This is a customcontainer which can contain one key
+/// \details This is a custom container which can contain one key
 ///		multiple times. Currently it is a list and all accesses are slow.
 class PropertyList
 {
 public:
+	/// \brief Normal standard constructor.
+	PropertyList()	{}
 
-	/// \brief Deep copy construction
-	PropertyList( const PropertyList& _list );
-
-	/// \brief Deep copy assignment
-	PropertyList& operator=(const PropertyList& _list);
+	/// \brief Deserialize an object.
+	/// \param [in] _parent A serialized object node.
+	PropertyList( const Jo::Files::MetaFileWrapper::Node& _parent );
 
 	/// \brief Adds a copy of a property to the end of this list.
 	/// \param [in] _property Some property object from another list or a new one.
 	void Add( const Property& _property );
 
-	/// \brief Remove a property whichs address comes from Get or GetAll.
+	/// \brief Remove a property whose address comes from Get or GetAll.
 	/// \param [in] _property Reference to one property in this list. If
 	///		the given object is not part of this container nothing happens.
 	void Remove( Property* _property );
@@ -73,7 +81,7 @@ public:
 	/// \brief Removes all properties with given name from the list.
 	void Remove( const std::string& _name );
 
-	/// \brief Returns the first occurency of a property with a matching name.
+	/// \brief Returns the first occurrence of a property with a matching name.
 	/// \param [in] _name A full name of a property to search. The case is ignored.
 	/// \return The property or a nullptr if the element does not exists.
 	Property* Get( const std::string& _name );
@@ -98,6 +106,11 @@ public:
 	/// \details This method is case insensitive.
 	/// \return An array with read access to all found properties.
 	std::vector<const Property*> FilterByValue( const std::string& _text ) const;
+
+	/// \brief Write the content of this object to a meta-file.
+	/// \param [inout] _parent A node with ElementType::UNKNOWN which can
+	///		be changed and expanded by serialize.
+	void Serialize( Jo::Files::MetaFileWrapper::Node& _parent );
 private:
 	std::list<Property> m_list;
 };

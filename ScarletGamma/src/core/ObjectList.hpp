@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <jofilelib.hpp>
 #include "../Prerequisites.hpp"
 
 namespace Core {
@@ -9,6 +10,13 @@ namespace Core {
 class ObjectList
 {
 public:
+	/// \brief Standard constructor to create an empty list.
+	ObjectList()	{}
+
+	/// \brief Deserialize an object.
+	/// \param [in] _parent A serialized object node.
+	ObjectList(const Jo::Files::MetaFileWrapper::Node& _parent);
+
 	/// \brief Add a new object to the list.
 	/// \details This method does a linear search in debug mode and tests if
 	///		the object is already in the list. If so it causes an assertion to fail.
@@ -27,6 +35,10 @@ public:
 	/// \details Index out of bounds is checked by an assertion in debug mode.
 	ObjectID operator[](int _index) const;
 
+	/// \brief Write the content of this object to a meta-file.
+	/// \param [inout] _parent A node with ElementType::UNKNOWN which can
+	///		be changed and expanded by serialize.
+	void Serialize( Jo::Files::MetaFileWrapper::Node& _parent );
 private:
 	std::vector<ObjectID> m_objects;
 };

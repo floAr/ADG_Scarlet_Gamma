@@ -3,10 +3,18 @@
 
 namespace Core {
 
+	ObjectList::ObjectList( const Jo::Files::MetaFileWrapper::Node& _parent )
+	{
+		m_objects.resize( _parent.Size() );
+		for( size_t i=0; i<m_objects.size(); ++i )
+			m_objects[i] = _parent[i];
+	}
+
+
 	void ObjectList::Add( ObjectID _id )
 	{
-		// If the program stops here somthing with object loading or 
-		// synchronisation failed (Every object id should excists only once).
+		// If the program stops here something with object loading or 
+		// synchronization failed (Every object id should exists only once).
 		for( size_t i=0; i<m_objects.size(); ++i )
 			assert(m_objects[i] != _id);
 
@@ -32,5 +40,14 @@ namespace Core {
 		assert(0<=_index && _index<(int)m_objects.size());
 		return m_objects[_index];
 	}
+
+	void ObjectList::Serialize( Jo::Files::MetaFileWrapper::Node& _parent )
+	{
+		// Would also run without preallocation but so its faster.
+		_parent.Resize(m_objects.size(), Jo::Files::MetaFileWrapper::ElementType::UINT32);
+		for( size_t i=0; i<m_objects.size(); ++i )
+			_parent[i] = m_objects[i];
+	}
+
 
 } // namespace Core

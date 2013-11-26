@@ -81,6 +81,8 @@
     <ClCompile Include="src\states\IntroState.cpp" />
     <ClCompile Include="src\states\MainMenuState.cpp" />
     <ClCompile Include="src\states\StateMachine.cpp" />
+    <ClCompile Include="src\unittest\UTObject.cpp" />
+    <ClCompile Include="src\unittest\UnitTest.cpp" />
     <ClCompile Include="src\utils\StringUtil.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -94,6 +96,7 @@
     <ClInclude Include="src\states\IntroState.hpp" />
     <ClInclude Include="src\states\MainMenuState.hpp" />
     <ClInclude Include="src\states\StateMachine.hpp" />
+    <ClInclude Include="src\unittest\UnitTests.hpp" />
     <ClInclude Include="src\utils\Exception.hpp" />
     <ClInclude Include="src\utils\Random.hpp" />
     <ClInclude Include="src\utils\StringUtil.hpp" />

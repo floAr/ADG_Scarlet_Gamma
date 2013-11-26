@@ -21,6 +21,9 @@
     <Filter Include="Quelldateien\utils">
       <UniqueIdentifier>{34845449-8d0c-41f1-b728-066bd3b857c1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Quelldateien\unittest">
+      <UniqueIdentifier>{48260fbc-5a2c-4280-bc21-85aa852a93aa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -52,6 +55,12 @@
     </ClCompile>
     <ClCompile Include="src\utils\StringUtil.cpp">
       <Filter>Quelldateien\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\unittest\UnitTest.cpp">
+      <Filter>Quelldateien\unittest</Filter>
+    </ClCompile>
+    <ClCompile Include="src\unittest\UTObject.cpp">
+      <Filter>Quelldateien\unittest</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -93,6 +102,9 @@
     </ClInclude>
     <ClInclude Include="src\utils\StringUtil.hpp">
       <Filter>Quelldateien\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\unittest\UnitTests.hpp">
+      <Filter>Quelldateien\unittest</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

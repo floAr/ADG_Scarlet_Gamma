@@ -14,8 +14,8 @@ public:
 	ObjectList()	{}
 
 	/// \brief Deserialize an object.
-	/// \param [in] _parent A serialized object node.
-	ObjectList(const Jo::Files::MetaFileWrapper::Node& _parent);
+	/// \param [in] _node A serialized object node.
+	ObjectList(const Jo::Files::MetaFileWrapper::Node& _node);
 
 	/// \brief Add a new object to the list.
 	/// \details This method does a linear search in debug mode and tests if
@@ -36,9 +36,9 @@ public:
 	ObjectID operator[](int _index) const;
 
 	/// \brief Write the content of this object to a meta-file.
-	/// \param [inout] _parent A node with ElementType::UNKNOWN which can
+	/// \param [inout] _node A node with ElementType::UNKNOWN which can
 	///		be changed and expanded by serialize.
-	void Serialize( Jo::Files::MetaFileWrapper::Node& _parent );
+	void Serialize( Jo::Files::MetaFileWrapper::Node& _node );
 private:
 	std::vector<ObjectID> m_objects;
 };

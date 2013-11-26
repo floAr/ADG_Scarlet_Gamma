@@ -5,21 +5,23 @@ using namespace std;
 
 namespace Core {
 
-	Object::Object( float _x, float _y, const string& _sprite )
+	Object::Object( ObjectID _id, float _x, float _y, const string& _sprite ) :
+		m_id(_id)
 	{
-		m_properties.Add( Property(string("X"), to_string(_x)) );
-		m_properties.Add( Property(string("Y"), to_string(_y)) );
-		m_properties.Add( Property(string("Sprite"), _sprite) );
+		Add( Property(string("X"), to_string(_x)) );
+		Add( Property(string("Y"), to_string(_y)) );
+		Add( Property(string("Sprite"), _sprite) );
 	}
 
-	Object::Object( const Jo::Files::MetaFileWrapper::Node& _parent ) :
-		m_properties( _parent )
+	Object::Object( const Jo::Files::MetaFileWrapper::Node& _node ) :
+		PropertyList( _node[string("Properties")] )
 	{
+		m_id = _node[string("ID")];
 	}
 
 	Property& Object::GetProperty( const string& _name )
 	{
-		Property* prop = m_properties.Get(_name);
+		Property* prop = Get(_name);
 		if( !prop ) throw Exception::NoSuchProperty();
 
 		return *prop;
@@ -28,7 +30,7 @@ namespace Core {
 
 	const Property& Object::GetProperty( const string& _name ) const
 	{
-		const Property* prop = m_properties.Get(_name);
+		const Property* prop = Get(_name);
 		if( !prop ) throw Exception::NoSuchProperty();
 
 		return *prop;
@@ -37,25 +39,13 @@ namespace Core {
 
 	bool Object::HasProperty( const string& _name ) const
 	{
-		return m_properties.Get(_name) != nullptr;
+		return Get(_name) != nullptr;
 	}
 
-
-	std::vector<const Property*> Object::FilterByName( const string& _text ) const
+	void Object::Serialize( Jo::Files::MetaFileWrapper::Node& _node )
 	{
-		return std::move(m_properties.FilterByName(_text));
-	}
-
-
-	std::vector<const Property*> Object::FilterByValue( const string& _text ) const
-	{
-		return std::move(m_properties.FilterByValue(_text));
-	}
-
-	void Object::Serialize( Jo::Files::MetaFileWrapper::Node& _parent )
-	{
-		// Currently the object does not add any extra information.
-		m_properties.Serialize(_parent);
+		_node[string("ID")] = m_id;
+		PropertyList::Serialize(_node[string("Properties")]);
 	}
 
 } // namespace Core

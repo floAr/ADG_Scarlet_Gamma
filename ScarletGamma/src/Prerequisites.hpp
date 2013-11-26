@@ -27,6 +27,9 @@ namespace Core
 	class ObjectList;
 	class Property;
 	class PropertyList;
+	class Object;
+	class Map;
+	class World;
 
 	/// \brief General definition of an object handle.
 	/// \details This typedef allows to introduce 64Bit or even complexer types

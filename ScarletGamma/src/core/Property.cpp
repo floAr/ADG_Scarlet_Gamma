@@ -20,12 +20,12 @@ namespace Core {
 	{
 	}
 
-	Property::Property( const Jo::Files::MetaFileWrapper::Node& _parent )
+	Property::Property( const Jo::Files::MetaFileWrapper::Node& _node )
 	{
-		m_name = _parent[string("name")];
-		m_value = _parent[string("value")];
+		m_name = _node[string("name")];
+		m_value = _node[string("value")];
 		const Jo::Files::MetaFileWrapper::Node* objects;
-		if( _parent.HasChild( string("objects"), &objects ) )
+		if( _node.HasChild( string("objects"), &objects ) )
 		{
 			m_objects = ObjectList(*objects);
 		}
@@ -39,7 +39,7 @@ namespace Core {
 
 	float Property::Evaluate() const
 	{
-		return 0.0f;	// TODO: Implement
+		return 1.0f;	// TODO: Implement
 	}
 
 	const std::string& Property::Value() const
@@ -52,12 +52,12 @@ namespace Core {
 		m_value = _new;
 	}
 
-	void Property::Serialize( Jo::Files::MetaFileWrapper::Node& _parent )
+	void Property::Serialize( Jo::Files::MetaFileWrapper::Node& _node )
 	{
-		_parent[std::string("name")] = m_name;
-		_parent[std::string("value")] = m_value;
+		_node[std::string("name")] = m_name;
+		_node[std::string("value")] = m_value;
 		if( m_isObjectList ) {
-			m_objects.Serialize(_parent[std::string("objects")]);
+			m_objects.Serialize(_node[std::string("objects")]);
 		}
 	}
 
@@ -154,13 +154,13 @@ namespace Core {
 		return _results;
 	}
 
-	void PropertyList::Serialize( Jo::Files::MetaFileWrapper::Node& _parent )
+	void PropertyList::Serialize( Jo::Files::MetaFileWrapper::Node& _node )
 	{
 		// Would also run without preallocation but so its faster.
-		_parent.Resize(m_list.size(), Jo::Files::MetaFileWrapper::ElementType::NODE);
+		_node.Resize(m_list.size(), Jo::Files::MetaFileWrapper::ElementType::NODE);
 		int i=0;
 		for(auto current = m_list.begin(); current != m_list.end(); ++current ) {
-			current->Serialize( _parent[i] );
+			current->Serialize( _node[i] );
 			++i;
 		}
 	}

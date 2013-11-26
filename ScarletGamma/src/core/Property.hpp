@@ -20,12 +20,14 @@ public:
 	Property( const std::string& _name, const ObjectList& _list );
 
 	/// \brief Deserialize an object.
-	/// \param [in] _parent A serialized object node.
-	Property( const Jo::Files::MetaFileWrapper::Node& _parent );
+	/// \param [in] _node A serialized object node.
+	Property( const Jo::Files::MetaFileWrapper::Node& _node );
 
 	/// \brief Access the internal object list.
 	/// \throws Exception::NoObjectList.
 	ObjectList& Objects();
+
+	bool IsObjectList() const	{ return m_isObjectList; }
 
 	/// \brief Interprets the value as formular/number and returns the result
 	///		after evaluation.
@@ -42,9 +44,9 @@ public:
 	const std::string& Name() const	{ return m_name; }
 
 	/// \brief Write the content of this object to a meta-file.
-	/// \param [inout] _parent A node with ElementType::UNKNOWN which can
+	/// \param [inout] _node A node with ElementType::UNKNOWN which can
 	///		be changed and expanded by serialize.
-	void Serialize( Jo::Files::MetaFileWrapper::Node& _parent );
+	void Serialize( Jo::Files::MetaFileWrapper::Node& _node );
 private:
 	std::string m_name;
 
@@ -66,14 +68,14 @@ public:
 	PropertyList()	{}
 
 	/// \brief Deserialize an object.
-	/// \param [in] _parent A serialized object node.
-	PropertyList( const Jo::Files::MetaFileWrapper::Node& _parent );
+	/// \param [in] _node A serialized object node.
+	PropertyList( const Jo::Files::MetaFileWrapper::Node& _node );
 
 	/// \brief Adds a copy of a property to the end of this list.
 	/// \param [in] _property Some property object from another list or a new one.
 	void Add( const Property& _property );
 
-	/// \brief Remove a property whose address comes from Get or GetAll.
+	/// \brief Remove a property whose address comes from Get or Filter.
 	/// \param [in] _property Reference to one property in this list. If
 	///		the given object is not part of this container nothing happens.
 	void Remove( Property* _property );
@@ -108,9 +110,9 @@ public:
 	std::vector<const Property*> FilterByValue( const std::string& _text ) const;
 
 	/// \brief Write the content of this object to a meta-file.
-	/// \param [inout] _parent A node with ElementType::UNKNOWN which can
+	/// \param [inout] _node A node with ElementType::UNKNOWN which can
 	///		be changed and expanded by serialize.
-	void Serialize( Jo::Files::MetaFileWrapper::Node& _parent );
+	virtual void Serialize( Jo::Files::MetaFileWrapper::Node& _node );
 private:
 	std::list<Property> m_list;
 };

@@ -65,6 +65,9 @@
     <ClCompile Include="src\core\World.cpp">
       <Filter>Quelldateien\core</Filter>
     </ClCompile>
+    <ClCompile Include="src\graphics\TileRenderer.cpp">
+      <Filter>Quelldateien\graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\core\Map.hpp">
@@ -111,6 +114,9 @@
     </ClInclude>
     <ClInclude Include="src\core\World.hpp">
       <Filter>Quelldateien\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\graphics\TileRenderer.h">
+      <Filter>Quelldateien\graphics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

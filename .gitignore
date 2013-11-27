@@ -16,7 +16,10 @@
 Debug/
 Release/
 SFML-2.1/
+JoFile/
 
 # VC
 *.sdf
 *.opensdf
+*.suo
+*.vcxproj.user

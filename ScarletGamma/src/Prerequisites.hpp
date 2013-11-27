@@ -52,4 +52,5 @@ namespace States
 // GRAPHICS
 namespace Graphics
 {
+	class TileRenderer;
 }

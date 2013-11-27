@@ -23,6 +23,7 @@ public:
 
 private:
 	States::StateMachine*		m_stateMachine;
+	Graphics::TileRenderer*		m_tileRenderer;
 	sf::RenderWindow			m_window;
 };
 

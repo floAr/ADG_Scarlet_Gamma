@@ -76,6 +76,7 @@
     <ClCompile Include="src\core\Object.cpp" />
     <ClCompile Include="src\core\ObjectList.cpp" />
     <ClCompile Include="src\core\Property.cpp" />
+    <ClCompile Include="src\core\World.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\states\IntroState.cpp" />
@@ -90,6 +91,7 @@
     <ClInclude Include="src\core\Object.hpp" />
     <ClInclude Include="src\core\ObjectList.hpp" />
     <ClInclude Include="src\core\Property.hpp" />
+    <ClInclude Include="src\core\World.hpp" />
     <ClInclude Include="src\Game.hpp" />
     <ClInclude Include="src\Prerequisites.hpp" />
     <ClInclude Include="src\states\GameState.hpp" />

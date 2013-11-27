@@ -35,6 +35,9 @@ namespace Core
 	/// \details This typedef allows to introduce 64Bit or even complexer types
 	///		if necessary.
 	typedef unsigned int ObjectID;
+
+	/// \brief A map handle inside the world.
+	typedef unsigned int MapID;
 }
 
 //------------------------------------------------------------------------------

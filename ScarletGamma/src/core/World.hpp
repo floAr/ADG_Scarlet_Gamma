@@ -17,6 +17,6 @@ namespace Core {
 		Object* GetObject(ObjectID _id);
 	private:
 		/// \brief All real existing objects.
-		std::unordered_map<ObjectID, Object> m_objects;
+		std::unordered_map<ObjectID, Object*> m_objects;
 	};
 } // namespace Core

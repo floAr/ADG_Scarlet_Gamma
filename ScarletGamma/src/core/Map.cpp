@@ -64,7 +64,7 @@ namespace Core {
 		return true;
 	}
 
-	void Map::Add(ObjectID _object, int _x, int _y, int _layer = -1)
+	void Map::Add(ObjectID _object, int _x, int _y, int _layer)
 	{
 		auto list = GetObjectsAt(_x, _y);
 		// TODO: layering

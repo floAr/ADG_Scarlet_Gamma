@@ -1,23 +1,36 @@
 #include "states/MainMenuState.hpp"
+#include "graphics/TileRenderer.hpp"
+#include "StateMachine.hpp"
+#include "core/Map.hpp"
+#include "Game.hpp"
+#include "SFML/Window.hpp"
 #include <iostream>
 
 States::MainMenuState::MainMenuState() :
 	GameState()
 {
-	// \todo I don't want my own resource management
-	// \todo I want some way to report errors
+	// TODO:: I don't want my own resource management
+	// TODO:: I want some way to report errors
 	m_menuFont.loadFromFile("media/arial.ttf");
 }
 
 void States::MainMenuState::Update(float dt)
 {
-	// TODO get input
+	// Quit with escape
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+		m_finished = true;
+
+	// New game with enter
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return))
+		g_Game->GetStateMachine()->PushGameState(GST_PLAYER);
+
+	// TODO: Replace with events
 }
 
 void States::MainMenuState::Draw(sf::RenderWindow& win)
 {
 	win.clear(sf::Color::Black);
-	sf::Text t("This is some text!", m_menuFont, 24);
+	sf::Text t("Press enter to see TileRenderer in action\nor escape to quit.", m_menuFont, 24);
 	t.setPosition(30, 30);
 	win.draw(t);
 }

@@ -80,8 +80,10 @@
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\graphics\TileRenderer.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\sfutils\View.cpp" />
     <ClCompile Include="src\states\IntroState.cpp" />
     <ClCompile Include="src\states\MainMenuState.cpp" />
+    <ClCompile Include="src\states\PlayerState.cpp" />
     <ClCompile Include="src\states\StateMachine.cpp" />
     <ClCompile Include="src\unittest\UTObject.cpp" />
     <ClCompile Include="src\unittest\UnitTest.cpp" />
@@ -94,11 +96,13 @@
     <ClInclude Include="src\core\Property.hpp" />
     <ClInclude Include="src\core\World.hpp" />
     <ClInclude Include="src\Game.hpp" />
-    <ClInclude Include="src\graphics\TileRenderer.h" />
+    <ClInclude Include="src\graphics\TileRenderer.hpp" />
     <ClInclude Include="src\Prerequisites.hpp" />
+    <ClInclude Include="src\sfutils\View.h" />
     <ClInclude Include="src\states\GameState.hpp" />
     <ClInclude Include="src\states\IntroState.hpp" />
     <ClInclude Include="src\states\MainMenuState.hpp" />
+    <ClInclude Include="src\states\PlayerState.hpp" />
     <ClInclude Include="src\states\StateMachine.hpp" />
     <ClInclude Include="src\unittest\UnitTests.hpp" />
     <ClInclude Include="src\utils\Exception.hpp" />

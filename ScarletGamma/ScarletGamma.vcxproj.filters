@@ -24,6 +24,9 @@
     <Filter Include="Quelldateien\unittest">
       <UniqueIdentifier>{48260fbc-5a2c-4280-bc21-85aa852a93aa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Quelldateien\sfutils">
+      <UniqueIdentifier>{449d6ac8-b979-4836-8e7c-45d6c1a2755c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -67,6 +70,12 @@
     </ClCompile>
     <ClCompile Include="src\graphics\TileRenderer.cpp">
       <Filter>Quelldateien\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sfutils\View.cpp">
+      <Filter>Quelldateien\sfutils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\states\PlayerState.cpp">
+      <Filter>Quelldateien\states</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -115,8 +124,14 @@
     <ClInclude Include="src\core\World.hpp">
       <Filter>Quelldateien\core</Filter>
     </ClInclude>
-    <ClInclude Include="src\graphics\TileRenderer.h">
+    <ClInclude Include="src\sfutils\View.h">
+      <Filter>Quelldateien\sfutils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\graphics\TileRenderer.hpp">
       <Filter>Quelldateien\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\states\PlayerState.hpp">
+      <Filter>Quelldateien\states</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

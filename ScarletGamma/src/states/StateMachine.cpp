@@ -1,5 +1,6 @@
 #include "StateMachine.hpp"
 #include "IntroState.hpp"
+#include "PlayerState.hpp"
 #include "MainMenuState.hpp"
 
 States::StateMachine::StateMachine() :
@@ -20,6 +21,9 @@ void States::StateMachine::PushGameState(States::GameStateType state)
 		break;
 	case GST_MAIN_MENU:
 		newState = new States::MainMenuState();
+		break;
+	case GST_PLAYER:
+		newState = new States::PlayerState();
 		break;
 	}
 
@@ -50,10 +54,5 @@ void States::StateMachine::Draw(sf::RenderWindow& win)
 {
 	// Draw GameState to window, if both exists
 	if (win.isOpen() && m_gameState)
-	{
 		m_gameState->Draw(win);
-
-		// Swap buffers
-		win.display();
-	}
 }

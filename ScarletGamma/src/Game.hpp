@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Prerequisites.hpp"
-
+#include <assert.h>
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 
@@ -11,19 +11,39 @@
 class Game
 {
 public:
-	/// \todo Document
+
+	/// \brief Default constructor that tames wild pointers
+	Game() : m_stateMachine(0), m_world(0) {}
+
+	/// TODO:: Document
 	void Init();
 
 	/// \brief Starts the GameLoop.
 	/// \details Runs until the StateMachine tells it to stop.
 	void Run();
 
-	/// \todo Document
+	/// TODO:: Document
 	void CleanUp();
+
+	/// \brief Get the game's state machine.
+	/// \return Pointer to StateMachine object
+	States::StateMachine* GetStateMachine()
+	{
+		assert(m_stateMachine);
+		return m_stateMachine;
+	}
+
+	/// \brief Get the game's world.
+	/// \return Pointer to World object
+	Core::World* GetWorld()
+	{
+		assert(m_world);
+		return m_world;
+	}
 
 private:
 	States::StateMachine*		m_stateMachine;
-	Graphics::TileRenderer*		m_tileRenderer;
+	Core::World*				m_world;
 	sf::RenderWindow			m_window;
 };
 

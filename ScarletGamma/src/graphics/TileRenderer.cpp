@@ -35,7 +35,8 @@ void Graphics::TileRenderer::Render(sf::RenderWindow& window, Core::Map& map)
 				//Core::ObjectID objID = objList[layer];
 				
 				// Lets just assume I had an object ;)
-				/* TODO: remove > */ Core::Object* obj = new Core::Object(20*x+y,(float)x,(float)y,"media/test.png");
+				/* TODO: remove > */ Core::Object* obj = new Core::Object(20*x+y,"media/test.png");
+				obj->SetPosition((float)x,(float)y);
 				
 				//Core::Object* obj = g_Game->GetWorld()->GetObject(objID);
 				assert(obj);

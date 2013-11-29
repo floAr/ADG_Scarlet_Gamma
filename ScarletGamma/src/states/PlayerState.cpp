@@ -14,7 +14,7 @@ void States::PlayerState::Draw(sf::RenderWindow& win)
 	win.clear(c);
 
 	// Draw tile map
-	static Core::Map map(64, 64, g_Game->GetWorld());
+	static Core::Map map(0, "RenderTest", 64, 64, g_Game->GetWorld());
 	map.Add(0, 1, 2, 0);
 	Graphics::TileRenderer::Render(win, map);
 }

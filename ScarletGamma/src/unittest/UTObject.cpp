@@ -8,7 +8,7 @@ namespace UnitTest {
 	void TestObjects()
 	{
 		// Create an object and add some stuff
-		Core::Object obj(1, 0.0f, 1.0f, "floor.png");
+		Core::Object obj(1, "floor.png");
 		obj.Add( Core::Property(string("Invisible"), string("true")) );
 		obj.Add( Core::Property( string("Inventory"), Core::ObjectList() ) );
 		auto& inventory = obj.GetProperty(string("Inventory"));

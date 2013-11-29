@@ -5,12 +5,12 @@ using namespace std;
 
 namespace Core {
 
-	Object::Object( ObjectID _id, float _x, float _y, const string& _sprite ) :
+	Object::Object( ObjectID _id, const string& _sprite ) :
 		m_id(_id)
 	{
-		Add( Property(string("X"), to_string(_x)) );
-		Add( Property(string("Y"), to_string(_y)) );
-		Add( Property(string("Sprite"), _sprite) );
+		Add( Property("X", "0.0") );
+		Add( Property("Y", "0.0") );
+		Add( Property("Sprite", _sprite) );
 	}
 
 	Object::Object( const Jo::Files::MetaFileWrapper::Node& _node ) :
@@ -41,6 +41,14 @@ namespace Core {
 	{
 		return Get(_name) != nullptr;
 	}
+
+
+	void Object::SetPosition( float _x, float _y )
+	{
+		Get("X")->SetValue( to_string(_x) );
+		Get("Y")->SetValue( to_string(_y) );
+	}
+
 
 	void Object::Serialize( Jo::Files::MetaFileWrapper::Node& _node )
 	{

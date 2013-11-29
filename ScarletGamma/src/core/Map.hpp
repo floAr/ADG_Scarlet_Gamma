@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Prerequisites.hpp"
+#include <jofilelib.hpp>
 
 namespace Core {
 
@@ -16,15 +17,26 @@ namespace Core {
 	{
 	public:
 		/// \brief Create a map with an initial size (can be changed later).
+		/// \param [in] _name A name which is players choice.
 		/// \param [in] _sizeX Initial map size. The tile coordinates go
 		///		from 0 to _size-1.
 		/// \param [in] _sizeY Initial map size. The tile coordinates go
 		///		from 0 to _size-1.
 		///	\param [in] _world The world stores the real objects. The map
 		///		requires a world reference to check their properties.
-		Map(unsigned _sizeX, unsigned _sizeY, World* _world);
+		Map(MapID _id, const std::string& _name, unsigned _sizeX, unsigned _sizeY, World* _world);
+
+		/// \brief C++11 Move construction.
+		Map( Map&& _map );
+
+		/// \brief Deserialize an map.
+		/// \param [in] _node A serialized map node.
+		Map(const Jo::Files::MetaFileWrapper::Node& _node);
 
 		~Map();
+
+		/// \brief Get the unique id of this map.
+		MapID ID() const { return m_id; }
 
 		/// \brief Extend the 2D map on one or more sides.
 		/// \details The old object coordinates remain valid. So after expansion
@@ -55,6 +67,8 @@ namespace Core {
 		bool IsFree(int _x, int _y) const;
 
 		/// \brief Add a new object between or on top of the existing objects.
+		/// \details If the map position is not inside the current map the map
+		///		will be extended.
 		/// \param [in] _layer Where to insert the object in the list? The
 		///		default -1 adds the element on top of the stack (at the end).
 		void Add(ObjectID _object, int _x, int _y, int _layer = -1);
@@ -71,12 +85,22 @@ namespace Core {
 		int Top() const		{ return m_minY; }
 		/// \brief Largest coordinate in y-direction
 		int Bottom() const	{ return m_maxY; }
+
+		/// \brief Write the content of this map to a meta-file.
+		/// \details Serialization contains the map ids.
+		/// \param [inout] _node A node with ElementType::UNKNOWN which can
+		///		be changed and expanded by serialize.
+		void Serialize( Jo::Files::MetaFileWrapper::Node& _node );
 	private:
+		std::string m_name;
+
 		ObjectList* m_mapArray;	///< 2D cell array.
 		int m_minX, m_maxX;		///< Size (max-min+1) and position in x direction
 		int m_minY, m_maxY;		///< Size (max-min+1) and position in y direction
 
 		World* m_parentWorld;	///< World reference to have direct object access.
+
+		MapID m_id;				///< Unique identification of this map
 
 		// No copy construction and assignments of maps allowed
 		Map( const Map& _map );

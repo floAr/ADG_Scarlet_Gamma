@@ -41,12 +41,12 @@ namespace Core {
 		return m_objects[_index];
 	}
 
-	void ObjectList::Serialize( Jo::Files::MetaFileWrapper::Node& _parent )
+	void ObjectList::Serialize( Jo::Files::MetaFileWrapper::Node& _node )
 	{
 		// Would also run without preallocation but so its faster.
-		_parent.Resize(m_objects.size(), Jo::Files::MetaFileWrapper::ElementType::UINT32);
+		_node.Resize(m_objects.size(), Jo::Files::MetaFileWrapper::ElementType::UINT32);
 		for( size_t i=0; i<m_objects.size(); ++i )
-			_parent[i] = m_objects[i];
+			_node[i] = m_objects[i];
 	}
 
 

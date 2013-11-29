@@ -11,13 +11,12 @@ public:
 	/// \brief Create an object with the required standard properties
 	/// \param [in] _id Unique id. Once the id is given it should never be
 	///		changed or reused.
-	/// \param [in] _x X coordinate of the object position. The integral part
-	///		defines the location within the tile-grid.
-	/// \param [in] _y Y coordinate of the object position. The integral part
-	///		defines the location within the tile-grid.
 	///	\param [in] _sprite Name of a texture file which is used for the
 	///		rendering.
-	Object(ObjectID _id, float _x, float _y, const std::string& _sprite);
+	Object(ObjectID _id, const std::string& _sprite);
+
+	/// \brief C++11 move construction (auto generated)
+	//Object(Object&& _object);
 
 	/// \brief Deserialize an object.
 	/// \param [in] _node A serialized object node.
@@ -35,6 +34,13 @@ public:
 
 	/// \brief Checks if at least one property with that name exists.
 	bool HasProperty( const std::string& _name ) const;
+
+	/// \brief Updates the two position properties
+	/// \param [in] _x X coordinate of the object position. The integral part
+	///		defines the location within the tile-grid.
+	/// \param [in] _y Y coordinate of the object position. The integral part
+	///		defines the location within the tile-grid.
+	void SetPosition( float _x, float _y );
 
 	/// \brief Write the content of this object to a meta-file.
 	/// \details Serialization contains the object ids.

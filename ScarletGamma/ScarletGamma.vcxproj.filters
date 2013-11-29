@@ -68,6 +68,9 @@
     <ClCompile Include="src\graphics\TileRenderer.cpp">
       <Filter>Quelldateien\graphics</Filter>
     </ClCompile>
+    <ClCompile Include="src\unittest\UTMap.cpp">
+      <Filter>Quelldateien\unittest</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\core\Map.hpp">

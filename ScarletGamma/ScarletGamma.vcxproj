@@ -83,6 +83,7 @@
     <ClCompile Include="src\states\IntroState.cpp" />
     <ClCompile Include="src\states\MainMenuState.cpp" />
     <ClCompile Include="src\states\StateMachine.cpp" />
+    <ClCompile Include="src\unittest\UTMap.cpp" />
     <ClCompile Include="src\unittest\UTObject.cpp" />
     <ClCompile Include="src\unittest\UnitTest.cpp" />
     <ClCompile Include="src\utils\StringUtil.cpp" />

@@ -26,19 +26,12 @@ void Graphics::TileRenderer::Render(sf::RenderWindow& window, Core::Map& map)
 		{
 			Core::ObjectList& objList = map.GetObjectsAt(x, y);
 			
-			// TODO: this is all test code!
-
 			// Draw objects bottom to top
-			/* TODO:: remove > */ for (int layer = 0; layer < (int)(x >= y); layer++)
-			//for (int layer = 0; layer < objList.Size(); layer++)
+			for (int layer = 0; layer < objList.Size(); layer++)
 			{
-				//Core::ObjectID objID = objList[layer];
+				Core::ObjectID objID = objList[layer];
 				
-				// Lets just assume I had an object ;)
-				/* TODO: remove > */ Core::Object* obj = new Core::Object(20*x+y,"media/test.png");
-				obj->SetPosition((float)x,(float)y);
-				
-				//Core::Object* obj = g_Game->GetWorld()->GetObject(objID);
+				Core::Object* obj = g_Game->GetWorld()->GetObject(objID);
 				assert(obj);
 			
 				// Render visible objects
@@ -54,8 +47,6 @@ void Graphics::TileRenderer::Render(sf::RenderWindow& window, Core::Map& map)
 					drawSprite.setPosition((float)(x * tileSize), (float)(y * tileSize));
 					window.draw(drawSprite);
 				}
-
-				/* TODO: remove > */ delete obj;
 			}
 		}
 	}

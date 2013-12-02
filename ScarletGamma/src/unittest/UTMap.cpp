@@ -16,7 +16,7 @@ namespace UnitTest {
 
 		// Create objects and put them to the map
 		for( int i=1; i<9; ++i ) {
-			Core::ObjectID objID = world->NewObject("floor.png");
+			Core::ObjectID objID = world->NewObject("media/test.png");
 			map->Add(objID, i, i );
 		}
 

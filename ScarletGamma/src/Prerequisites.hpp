@@ -58,3 +58,9 @@ namespace Graphics
 //------------------------------------------------------------------------------
 // MATHEMATICS
 #include "SFML/System/Vector2.hpp"
+
+//------------------------------------------------------------------------------
+// TEST
+namespace UnitTest	{
+	void TestObjects();
+}

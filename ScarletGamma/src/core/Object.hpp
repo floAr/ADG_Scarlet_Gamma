@@ -9,19 +9,8 @@ namespace Core {
 class Object: public PropertyList
 {
 public:
-	/// \brief Create an object with the required standard properties
-	/// \param [in] _id Unique id. Once the id is given it should never be
-	///		changed or reused.
-	///	\param [in] _sprite Name of a texture file which is used for the
-	///		rendering.
-	Object(ObjectID _id, const std::string& _sprite);
-
 	/// \brief C++11 move construction (auto generated)
 	//Object(Object&& _object);
-
-	/// \brief Deserialize an object.
-	/// \param [in] _node A serialized object node.
-	Object(const Jo::Files::MetaFileWrapper::Node& _node);
 
 	/// \brief Returns the first occurrence of a property with a matching name.
 	/// \details This method allows read and write access.
@@ -64,6 +53,22 @@ private:
 	PropertyList::GetNumElements;
 
 	ObjectID m_id;	///< Unique identification number for this object.
+
+
+	/// Use private constructors such that only the world can create objects.
+	friend class Core::World;
+	friend void UnitTest::TestObjects();
+
+	/// \brief Create an object with the required standard properties
+	/// \param [in] _id Unique id. Once the id is given it should never be
+	///		changed or reused.
+	///	\param [in] _sprite Name of a texture file which is used for the
+	///		rendering.
+	Object(ObjectID _id, const std::string& _sprite);
+
+	/// \brief Deserialize an object.
+	/// \param [in] _node A serialized object node.
+	Object(const Jo::Files::MetaFileWrapper::Node& _node);
 };
 
 

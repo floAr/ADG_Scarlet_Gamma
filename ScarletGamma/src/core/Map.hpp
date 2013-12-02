@@ -16,22 +16,8 @@ namespace Core {
 	class Map
 	{
 	public:
-		/// \brief Create a map with an initial size (can be changed later).
-		/// \param [in] _name A name which is players choice.
-		/// \param [in] _sizeX Initial map size. The tile coordinates go
-		///		from 0 to _size-1.
-		/// \param [in] _sizeY Initial map size. The tile coordinates go
-		///		from 0 to _size-1.
-		///	\param [in] _world The world stores the real objects. The map
-		///		requires a world reference to check their properties.
-		Map(MapID _id, const std::string& _name, unsigned _sizeX, unsigned _sizeY, World* _world);
-
 		/// \brief C++11 Move construction.
 		Map( Map&& _map );
-
-		/// \brief Deserialize an map.
-		/// \param [in] _node A serialized map node.
-		Map(const Jo::Files::MetaFileWrapper::Node& _node);
 
 		~Map();
 
@@ -105,6 +91,25 @@ namespace Core {
 		// No copy construction and assignments of maps allowed
 		Map( const Map& _map );
 		Map& operator=(const Map& _map);
+
+
+		/// Use private constructors such that only the world can create maps.
+		friend class Core::World;
+
+		/// \brief Create a map with an initial size (can be changed later).
+		/// \param [in] _name A name which is players choice.
+		/// \param [in] _sizeX Initial map size. The tile coordinates go
+		///		from 0 to _size-1.
+		/// \param [in] _sizeY Initial map size. The tile coordinates go
+		///		from 0 to _size-1.
+		///	\param [in] _world The world stores the real objects. The map
+		///		requires a world reference to check their properties.
+		Map(MapID _id, const std::string& _name, unsigned _sizeX, unsigned _sizeY, World* _world);
+
+		/// \brief Deserialize an map.
+		/// \param [in] _node A serialized map node.
+		Map(const Jo::Files::MetaFileWrapper::Node& _node);
+
 	};
 
 } // namespace Core

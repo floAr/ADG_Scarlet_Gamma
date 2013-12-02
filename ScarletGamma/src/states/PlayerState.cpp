@@ -14,17 +14,7 @@ void States::PlayerState::Draw(sf::RenderWindow& win)
 	static sf::Color c(20, 26, 36);
 	win.clear(c);
 
-	// Draw tile map
-	static Core::Map map(0, "RenderTest", 64, 64, g_Game->GetWorld());
-
-	// Create some random objects
-	Core::ObjectID id;
-	for (int i=0; i<10; ++i)
-	{
-		id = g_Game->GetWorld()->NewObject("media/test.png");
-		map.Add(id, i, i, 0);
-	}
-
 	// Render
-	Graphics::TileRenderer::Render(win, map);
+	// Uses the test map 0 for testing purposes.
+	Graphics::TileRenderer::Render(win, *g_Game->GetWorld()->GetMap(0));
 }

@@ -5,7 +5,7 @@ namespace Core {
 
 	ObjectList::ObjectList( const Jo::Files::MetaFileWrapper::Node& _node )
 	{
-		m_objects.resize( _node.Size() );
+		m_objects.resize( size_t(_node.Size()) );
 		for( size_t i=0; i<m_objects.size(); ++i )
 			m_objects[i] = _node[i];
 	}

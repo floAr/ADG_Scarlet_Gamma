@@ -1,8 +1,10 @@
 #include "Map.hpp"
 #include "Object.hpp"
 #include "World.hpp"
+#include "utils/OrFibHeap.h"
 
 #include <algorithm>
+#include <unordered_map>
 
 using namespace std;
 
@@ -119,7 +121,7 @@ namespace Core {
 
 		// Set correct position for the object itself
 		Object* object = m_parentWorld->GetObject(_object);
-		object->SetPosition(_x, _y);
+		object->SetPosition(float(_x), float(_y));
 	}
 
 	void Map::Serialize( Jo::Files::MetaFileWrapper::Node& _node )
@@ -137,6 +139,88 @@ namespace Core {
 				int index = x+y*Width();
 				m_mapArray[index].Serialize(cells[index]);
 			}
+	}
+
+
+
+	struct SearchNode {
+		SearchNode* predecessor;
+		sf::Vector2i cell;
+		float costs;
+		OrE::ADT::FibHeapNode<SearchNode*>* entry;	///< nullptr if on closed list otherwise a reference to the entry on the open list
+
+		SearchNode(SearchNode* _predecessor, float _costs, const sf::Vector2i& _cell) :
+			predecessor(_predecessor),
+			costs(_costs),
+			cell(_cell),
+			entry(nullptr)
+		{}
+	};
+
+	std::vector<sf::Vector2i> Map::FindPath( sf::Vector2i _start, sf::Vector2i _goal )
+	{
+		// Persistent memory of all visited nodes.
+		std::list<SearchNode> visited;
+		// A* requires a heap with a decrease-key operation. The STL variants
+		// do not support this operation.
+		OrE::ADT::HeapT<SearchNode*> openList;
+		visited.push_back( SearchNode(nullptr, 0.0f, _start) );
+		visited.front().entry = openList.Insert( &visited.front(), 0.0f );
+		// References into the visited list to search for a position
+		std::unordered_map<int64_t, SearchNode*> visitedAccess;
+		visitedAccess.insert(make_pair(_start.x | (int64_t(_start.y) << 32), &visited.front()));
+
+		while(openList.GetNumElements()>0)
+		{
+			// The object is in the list so it can be deleted from stack immediately
+			auto minEntry = openList.Min();
+			SearchNode* node = minEntry->Object;
+			openList.Delete(minEntry);
+			// Stop if node is the goal
+			if( node->cell == _goal )
+			{
+				// Build a path vector (stack)
+				std::vector<sf::Vector2i> path;
+				while(node) {
+					path.push_back(node->cell);
+					node = node->predecessor;
+				}
+				return path;
+			}
+			// Otherwise search in 8 neighborhood for new nodes.
+			node->entry = nullptr;
+			for(int y=-1; y<=1; ++y) {
+				for(int x=-1; x<=1; ++x) {
+					sf::Vector2i successorPos = node->cell+sf::Vector2i(x,y);
+					int64_t hash = successorPos.x | (int64_t(successorPos.y) << 32);
+					auto next = visitedAccess.find(hash);
+					if( next != visitedAccess.end() )
+					{
+						// Already on index -> Update or not?
+						if( next->second->entry &&
+							next->second->costs > node->costs+sfUtils::Length(_goal-successorPos) )
+						{
+							next->second->costs = node->costs+sfUtils::Length(_goal-successorPos);
+							openList.ChangeKey(next->second->entry, next->second->costs);
+						}
+					} else {
+						// Insert
+						visited.push_back( SearchNode(node, node->costs+sfUtils::Length(_goal-successorPos), successorPos) );
+						visited.back().entry = openList.Insert(&visited.back(), visited.back().costs);
+						visitedAccess.insert(make_pair(hash, &visited.back()));
+					}
+				}
+			}
+		}
+
+		// Nothing found:
+		return std::vector<sf::Vector2i>();
+	}
+
+	sf::Vector2i Map::FindNextOnPath( sf::Vector2i _start, sf::Vector2i _goal )
+	{
+		// This function can be optimized by avoiding the build of the whole path.
+		return FindPath(_start, _goal).back();
 	}
 
 } // namespace Core

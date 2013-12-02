@@ -136,5 +136,11 @@
     <ClInclude Include="src\states\PlayerState.hpp">
       <Filter>Quelldateien\states</Filter>
     </ClInclude>
+    <ClInclude Include="src\utils\OrFibHeap.h">
+      <Filter>Quelldateien\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sfutils\Vectors.hpp">
+      <Filter>Quelldateien\sfutils</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

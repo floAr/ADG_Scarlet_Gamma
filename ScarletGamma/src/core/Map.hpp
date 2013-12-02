@@ -77,6 +77,19 @@ namespace Core {
 		/// \param [inout] _node A node with ElementType::UNKNOWN which can
 		///		be changed and expanded by serialize.
 		void Serialize( Jo::Files::MetaFileWrapper::Node& _node );
+
+		/// \brief A* path search from one tile to another.
+		/// \return A stack of points which must be reached one after one
+		///		where each next point can be reached by linear interpolation.
+		///		The next point to reach is always on top of the stack (back
+		///		of vector).
+		///		
+		///		The vector is empty if no way exists.
+		std::vector<sf::Vector2i> FindPath( sf::Vector2i _start, sf::Vector2i _goal );
+
+		/// \brief Returns one of the 8 neighbors which is the first to be
+		///		visited to go to the goal.
+		sf::Vector2i FindNextOnPath( sf::Vector2i _start, sf::Vector2i _goal );
 	private:
 		std::string m_name;
 

@@ -99,6 +99,7 @@
     <ClInclude Include="src\Game.hpp" />
     <ClInclude Include="src\graphics\TileRenderer.hpp" />
     <ClInclude Include="src\Prerequisites.hpp" />
+    <ClInclude Include="src\sfutils\Vectors.hpp" />
     <ClInclude Include="src\sfutils\View.h" />
     <ClInclude Include="src\states\GameState.hpp" />
     <ClInclude Include="src\states\IntroState.hpp" />
@@ -107,6 +108,7 @@
     <ClInclude Include="src\states\StateMachine.hpp" />
     <ClInclude Include="src\unittest\UnitTests.hpp" />
     <ClInclude Include="src\utils\Exception.hpp" />
+    <ClInclude Include="src\utils\OrFibHeap.h" />
     <ClInclude Include="src\utils\Random.hpp" />
     <ClInclude Include="src\utils\StringUtil.hpp" />
   </ItemGroup>

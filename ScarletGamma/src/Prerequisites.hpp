@@ -41,6 +41,14 @@ namespace Core
 }
 
 //------------------------------------------------------------------------------
+// EVENTS
+namespace Events
+{
+	class EventHandler;
+	class InputHandler;
+}
+
+//------------------------------------------------------------------------------
 // STATES
 namespace States
 {

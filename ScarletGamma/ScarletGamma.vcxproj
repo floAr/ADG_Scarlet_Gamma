@@ -77,6 +77,8 @@
     <ClCompile Include="src\core\ObjectList.cpp" />
     <ClCompile Include="src\core\Property.cpp" />
     <ClCompile Include="src\core\World.cpp" />
+    <ClCompile Include="src\events\EventHandler.cpp" />
+    <ClCompile Include="src\events\InputHandler.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\graphics\TileRenderer.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -96,11 +98,13 @@
     <ClInclude Include="src\core\ObjectList.hpp" />
     <ClInclude Include="src\core\Property.hpp" />
     <ClInclude Include="src\core\World.hpp" />
+    <ClInclude Include="src\events\EventHandler.hpp" />
+    <ClInclude Include="src\events\InputHandler.hpp" />
     <ClInclude Include="src\Game.hpp" />
     <ClInclude Include="src\graphics\TileRenderer.hpp" />
     <ClInclude Include="src\Prerequisites.hpp" />
+    <ClInclude Include="src\sfutils\View.hpp" />
     <ClInclude Include="src\sfutils\Vectors.hpp" />
-    <ClInclude Include="src\sfutils\View.h" />
     <ClInclude Include="src\states\GameState.hpp" />
     <ClInclude Include="src\states\IntroState.hpp" />
     <ClInclude Include="src\states\MainMenuState.hpp" />

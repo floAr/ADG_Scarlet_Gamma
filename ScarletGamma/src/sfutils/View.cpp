@@ -1,4 +1,4 @@
-#include "sfutils/View.h"
+#include "sfutils/View.hpp"
 
 sf::FloatRect sfUtils::View::GetViewRect(const sf::View& view)
 {

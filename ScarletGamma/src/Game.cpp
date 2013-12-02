@@ -1,4 +1,5 @@
 #include "Game.hpp"
+#include "events/EventHandler.hpp"
 #include "states/StateMachine.hpp"
 #include "states/GameState.hpp"
 #include "graphics/TileRenderer.hpp"
@@ -7,11 +8,15 @@
 
 void Game::Init()
 {
+	// Create a state machine
 	m_stateMachine = new States::StateMachine();
 
 	// Set up SFML window
 	m_window.create(sf::VideoMode(800, 600), "Scarlet Gamma");
 	m_window.setVerticalSyncEnabled(true);
+
+	// Create an event handler using the window
+	m_eventHandler = new Events::EventHandler(m_window);
 
 	// Create an empty game world
 	m_world = new Core::World();
@@ -31,18 +36,8 @@ void Game::Run()
 		// Get elapsed time
 		sf::Time elapsed = clock.restart();
 
-		// Forward windows events
-		// This could also be handled by the GameState if required
-		// If you need this, move it :)
-		sf::Event event;
-        while (m_window.pollEvent(event))
-        {
-            // close on [x]
-            if (event.type == sf::Event::Closed)
-			{
-                m_window.close();
-			}
-        }
+		// Let the EventHandler handle all window events
+		m_eventHandler->Update();
 
 		// Update and draw the GameState
 		m_stateMachine->Update(elapsed.asSeconds());
@@ -57,5 +52,6 @@ void Game::CleanUp()
 {
 	// Delete in reverse order of construction
 	delete m_world;
+	delete m_eventHandler;
 	delete m_stateMachine;
 }

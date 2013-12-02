@@ -3,7 +3,7 @@
 #include "core/Map.hpp"
 #include "core/ObjectList.hpp"
 #include "core/Object.hpp"
-#include "sfutils/View.h"
+#include "sfutils/View.hpp"
 #include "Game.hpp"
 #include <cmath>
 #include <iostream>
@@ -29,11 +29,13 @@ void Graphics::TileRenderer::Render(sf::RenderWindow& window, Core::Map& map)
 			// Draw objects bottom to top
 			for (int layer = 0; layer < objList.Size(); layer++)
 			{
+				// Get the object ID
 				Core::ObjectID objID = objList[layer];
 				
+				// try to get the object instance from the world
 				Core::Object* obj = g_Game->GetWorld()->GetObject(objID);
 				assert(obj);
-			
+
 				// Render visible objects
 				if (obj->HasProperty("Sprite"))
 				{

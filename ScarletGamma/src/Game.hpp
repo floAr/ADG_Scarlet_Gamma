@@ -22,7 +22,7 @@ public:
 	/// \details Runs until the StateMachine tells it to stop.
 	void Run();
 
-	/// TODO:: Document
+	/// TODO: Document
 	void CleanUp();
 
 	/// \brief Get the game's state machine.
@@ -42,6 +42,7 @@ public:
 	}
 
 private:
+	Events::EventHandler*		m_eventHandler;
 	States::StateMachine*		m_stateMachine;
 	Core::World*				m_world;
 	sf::RenderWindow			m_window;

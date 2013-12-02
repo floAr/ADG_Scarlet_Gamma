@@ -27,6 +27,9 @@
     <Filter Include="Quelldateien\sfutils">
       <UniqueIdentifier>{449d6ac8-b979-4836-8e7c-45d6c1a2755c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Quelldateien\events">
+      <UniqueIdentifier>{4153138c-0b74-4b6c-8d06-2028e991351f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -80,6 +83,12 @@
     <ClCompile Include="src\states\PlayerState.cpp">
       <Filter>Quelldateien\states</Filter>
     </ClCompile>
+    <ClCompile Include="src\events\EventHandler.cpp">
+      <Filter>Quelldateien\events</Filter>
+    </ClCompile>
+    <ClCompile Include="src\events\InputHandler.cpp">
+      <Filter>Quelldateien\events</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\core\Map.hpp">
@@ -127,14 +136,20 @@
     <ClInclude Include="src\core\World.hpp">
       <Filter>Quelldateien\core</Filter>
     </ClInclude>
-    <ClInclude Include="src\sfutils\View.h">
-      <Filter>Quelldateien\sfutils</Filter>
-    </ClInclude>
     <ClInclude Include="src\graphics\TileRenderer.hpp">
       <Filter>Quelldateien\graphics</Filter>
     </ClInclude>
     <ClInclude Include="src\states\PlayerState.hpp">
       <Filter>Quelldateien\states</Filter>
+    </ClInclude>
+    <ClInclude Include="src\events\EventHandler.hpp">
+      <Filter>Quelldateien\events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\events\InputHandler.hpp">
+      <Filter>Quelldateien\events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sfutils\View.hpp">
+      <Filter>Quelldateien\sfutils</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

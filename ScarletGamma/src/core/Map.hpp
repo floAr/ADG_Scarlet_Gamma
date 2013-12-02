@@ -48,9 +48,8 @@ namespace Core {
 
 		/// \brief Tests if there are no objects with collision in the
 		///		grid cell.
-		///	\param [in] _x 2D position x component.
-		///	\param [in] _y 2D position y component.
-		bool IsFree(int _x, int _y) const;
+		///	\param [in] _position 2D tile-position.
+		bool IsFree(const sf::Vector2i& _position) const;
 
 		/// \brief Add a new object between or on top of the existing objects.
 		/// \details If the map position is not inside the current map the map

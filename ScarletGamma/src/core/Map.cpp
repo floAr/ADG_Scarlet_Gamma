@@ -101,10 +101,10 @@ namespace Core {
 		return const_cast<ObjectList&>( const_cast<const Map*>(this)->GetObjectsAt(_x, _y) );
 	}
 
-	bool Map::IsFree( int _x, int _y ) const
+	bool Map::IsFree( const sf::Vector2i& _position ) const
 	{
 		// Test each object in this cell if it has obstacle property
-		auto list = GetObjectsAt(_x, _y);
+		auto list = GetObjectsAt(_position.x, _position.y);
 		for( int i=0; i<list.Size(); ++i )
 			if(m_parentWorld->GetObject(list[i])->HasProperty(string("Obstacle")))
 				return false;
@@ -204,6 +204,8 @@ namespace Core {
 							openList.ChangeKey(next->second->entry, next->second->costs);
 						}
 					} else {
+						// Is this neighbor a possible field?
+						if(IsFree(successorPos)) continue;
 						// Insert
 						visited.push_back( SearchNode(node, node->costs+sfUtils::Length(_goal-successorPos), successorPos) );
 						visited.back().entry = openList.Insert(&visited.back(), visited.back().costs);

@@ -50,6 +50,15 @@ namespace Core {
 	}
 
 
+	sf::Vector2f Object::GetPosition() const
+	{
+		sf::Vector2f pos;
+		pos.x = (float)atof(Get("X")->Value().c_str());
+		pos.y = (float)atof(Get("X")->Value().c_str());
+		return pos;
+	}
+
+
 	void Object::Serialize( Jo::Files::MetaFileWrapper::Node& _node )
 	{
 		_node[string("ID")] = m_id;

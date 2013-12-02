@@ -54,3 +54,7 @@ namespace Graphics
 {
 	class TileRenderer;
 }
+
+//------------------------------------------------------------------------------
+// MATHEMATICS
+#include "SFML/System/Vector2.hpp"

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Prerequisites.hpp"
 #include "Property.hpp"
 
 namespace Core {
@@ -41,6 +42,13 @@ public:
 	/// \param [in] _y Y coordinate of the object position. The integral part
 	///		defines the location within the tile-grid.
 	void SetPosition( float _x, float _y );
+
+	/// \brief Returns the floating position within the tile grid.
+	/// \details The position property is mandatory for objects.
+	/// 
+	///		This method is relatively slow because it contains a string->float
+	///		cast. So buffer the position if used more than once.
+	sf::Vector2f GetPosition() const;
 
 	/// \brief Write the content of this object to a meta-file.
 	/// \details Serialization contains the object ids.

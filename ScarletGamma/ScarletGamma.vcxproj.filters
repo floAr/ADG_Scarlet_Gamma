@@ -89,6 +89,9 @@
     <ClCompile Include="src\events\InputHandler.cpp">
       <Filter>Quelldateien\events</Filter>
     </ClCompile>
+    <ClCompile Include="src\utils\Random.cpp">
+      <Filter>Quelldateien\utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\core\Map.hpp">
@@ -156,6 +159,9 @@
     </ClInclude>
     <ClInclude Include="src\sfutils\View.hpp">
       <Filter>Quelldateien\sfutils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utils\MathUtil.hpp">
+      <Filter>Quelldateien\utils</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

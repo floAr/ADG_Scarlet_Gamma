@@ -8,10 +8,10 @@
 class Game;
 
 //------------------------------------------------------------------------------
-// FUNDAMENTALS
-namespace Fundamentals
+// UTILS
+namespace Utils
 {
-	// todo...
+	class Random;
 }
 
 namespace Exception {

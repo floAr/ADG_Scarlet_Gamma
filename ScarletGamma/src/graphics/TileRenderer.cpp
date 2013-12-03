@@ -47,6 +47,7 @@ void Graphics::TileRenderer::Render(sf::RenderWindow& window, Core::Map& map)
 					// Draw the tile
 					sf::Sprite drawSprite(tex);
 					drawSprite.setPosition(obj->GetPosition() * float(tileSize));
+					drawSprite.setScale(float(tileSize)/tex.getSize().x, float(tileSize)/tex.getSize().y);
 					window.draw(drawSprite);
 				}
 			}

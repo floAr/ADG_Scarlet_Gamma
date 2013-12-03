@@ -1,5 +1,6 @@
 #include "core/Map.hpp"
 #include "core/World.hpp"
+#include "utils/Random.hpp"
 #include "unittest/UnitTests.hpp"
 #include <iostream>
 
@@ -15,9 +16,17 @@ namespace UnitTest {
 		Core::Map* map = world->GetMap( mapID );
 
 		// Create objects and put them to the map
-		for( int i=1; i<9; ++i ) {
-			Core::ObjectID objID = world->NewObject("media/test.png");
-			map->Add(objID, i, i );
+		Utils::Random rnd(236);
+		for( int y=0; y<10; ++y ) for( int x=0; x<10; ++x ){
+			Core::ObjectID objID = world->NewObject("media/noise_2.png");
+			map->Add(objID, x, y );
+		}
+		const char* walls[3] = {"media/bar_hor.png", "media/bar_vert.png", "media/cross_big.png"};
+		for( int i=0; i<16; ++i ) {
+			Core::ObjectID objID = world->NewObject(walls[rnd.Uniform(0,2)]);
+			Core::Object* obj = world->GetObject(objID);
+			obj->Add(Core::Property("Obstacle",""));
+			map->Add(objID, rnd.Uniform(0,9), rnd.Uniform(0,9));
 		}
 
 		// Save

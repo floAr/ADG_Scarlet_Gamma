@@ -54,7 +54,7 @@ namespace Core {
 	{
 		sf::Vector2f pos;
 		pos.x = (float)atof(Get("X")->Value().c_str());
-		pos.y = (float)atof(Get("X")->Value().c_str());
+		pos.y = (float)atof(Get("Y")->Value().c_str());
 		return pos;
 	}
 

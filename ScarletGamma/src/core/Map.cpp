@@ -193,21 +193,23 @@ namespace Core {
 				for(int x=-1; x<=1; ++x) {
 					sf::Vector2i successorPos = node->cell+sf::Vector2i(x,y);
 					int64_t hash = successorPos.x | (int64_t(successorPos.y) << 32);
+					// Costs to this node + to next node + heuristic
+					float costs = node->costs+sfUtils::Length(_goal-successorPos)+sfUtils::Length(sf::Vector2i(x,y));
 					auto next = visitedAccess.find(hash);
 					if( next != visitedAccess.end() )
 					{
 						// Already on index -> Update or not?
 						if( next->second->entry &&
-							next->second->costs > node->costs+sfUtils::Length(_goal-successorPos) )
+							next->second->costs > costs )
 						{
-							next->second->costs = node->costs+sfUtils::Length(_goal-successorPos);
+							next->second->costs = costs;
 							openList.ChangeKey(next->second->entry, next->second->costs);
 						}
 					} else {
 						// Is this neighbor a possible field?
 						if(IsFree(successorPos)) continue;
 						// Insert
-						visited.push_back( SearchNode(node, node->costs+sfUtils::Length(_goal-successorPos), successorPos) );
+						visited.push_back( SearchNode(node, costs, successorPos) );
 						visited.back().entry = openList.Insert(&visited.back(), visited.back().costs);
 						visitedAccess.insert(make_pair(hash, &visited.back()));
 					}

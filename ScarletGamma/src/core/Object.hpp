@@ -2,6 +2,7 @@
 
 #include "Prerequisites.hpp"
 #include "Property.hpp"
+#include "SFML\Graphics\Color.hpp"
 
 namespace Core {
 
@@ -38,6 +39,14 @@ public:
 	///		This method is relatively slow because it contains a string->float
 	///		cast. So buffer the position if used more than once.
 	sf::Vector2f GetPosition() const;
+
+	/// \brief Returns a color if the according property exists and white
+	///		otherwise.
+	sf::Color GetColor() const;
+
+	/// \brief Creates the color property if not existing and sets a color
+	///		which is multiplied during rendering.
+	void SetColor( const sf::Color& _color );
 
 	/// \brief Write the content of this object to a meta-file.
 	/// \details Serialization contains the object ids.

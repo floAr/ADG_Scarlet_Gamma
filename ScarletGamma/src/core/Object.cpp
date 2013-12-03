@@ -1,5 +1,7 @@
 #include "Object.hpp"
 #include "utils/Exception.hpp"
+#include <iomanip>
+#include <sstream>
 
 using namespace std;
 
@@ -56,6 +58,30 @@ namespace Core {
 		pos.x = (float)atof(Get("X")->Value().c_str());
 		pos.y = (float)atof(Get("Y")->Value().c_str());
 		return pos;
+	}
+
+
+	sf::Color Object::GetColor() const
+	{
+		// The property does not always exists
+		auto colorProp = Get("Color");
+		if( colorProp ) {
+			// Evaluate the hexadecimal number
+			uint32_t color = strtoul(colorProp->Value().c_str(), nullptr, 16);
+			return sf::Color(color>>24, (color>>16) & 0xff, (color>>8) & 0xff, color & 0xff);
+		}
+		return sf::Color::White;
+	}
+
+
+	void Object::SetColor( const sf::Color& _color )
+	{
+		std::stringstream value;
+		value << std::hex << (int)_color.r << (int)_color.g << (int)_color.b << (int)_color.a;
+		// Create or set property?
+		auto colorProp = Get("Color");
+		if( !colorProp ) Add(Property(string("Color"), value.str()));
+		else colorProp->SetValue( value.str() );
 	}
 
 

@@ -26,6 +26,7 @@ namespace UnitTest {
 			Core::ObjectID objID = world->NewObject(walls[rnd.Uniform(0,2)]);
 			Core::Object* obj = world->GetObject(objID);
 			obj->Add(Core::Property("Obstacle",""));
+			obj->SetColor(sf::Color(rnd.Uniform(0,255), rnd.Uniform(0,255), rnd.Uniform(0,255), 255));
 			map->Add(objID, rnd.Uniform(0,9), rnd.Uniform(0,9));
 		}
 

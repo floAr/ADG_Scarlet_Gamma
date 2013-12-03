@@ -22,8 +22,8 @@ namespace Core {
 
 	Property::Property( const Jo::Files::MetaFileWrapper::Node& _node )
 	{
-		m_name = _node[string("name")];
-		m_value = _node[string("value")];
+		m_name = _node[0].GetName();
+		m_value = _node[0];
 		const Jo::Files::MetaFileWrapper::Node* objects;
 		if( _node.HasChild( string("objects"), &objects ) )
 		{
@@ -54,8 +54,7 @@ namespace Core {
 
 	void Property::Serialize( Jo::Files::MetaFileWrapper::Node& _node )
 	{
-		_node[std::string("name")] = m_name;
-		_node[std::string("value")] = m_value;
+		_node[m_name] = m_value;
 		if( m_isObjectList ) {
 			m_objects.Serialize(_node[std::string("objects")]);
 		}

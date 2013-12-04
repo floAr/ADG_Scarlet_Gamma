@@ -9,6 +9,9 @@
 States::MainMenuState::MainMenuState() :
 	GameState()
 {
+	for (int i = 0; i < sizeof(m_mousePos) / sizeof(m_mousePos[0]); i++)
+		m_mousePos[i] = 0;
+
 	// TODO:: I don't want my own resource management
 	// TODO:: I want some way to report errors
 	m_menuFont.loadFromFile("media/arial.ttf");
@@ -20,13 +23,19 @@ void States::MainMenuState::Update(float dt)
 
 void States::MainMenuState::Draw(sf::RenderWindow& win)
 {
-	win.clear(sf::Color::Black);
-	sf::Text t("Press enter to see TileRenderer in action\nor escape to quit.", m_menuFont, 24);
+	// Set window color according to mouse position...
+	win.clear(sf::Color((unsigned char)(255 * (float)m_mousePos[0] / (float)win.getSize().x),
+		(unsigned char)(255 * (float)m_mousePos[1] / (float)win.getSize().y),
+		(unsigned char)(m_mousePos[2])));
+	
+	sf::Text t("Press enter to see TileRenderer in action\n"
+		       "or escape to quit.\n\n"
+		       "Move mouse or scroll to change background color.", m_menuFont, 24);
 	t.setPosition(30, 30);
 	win.draw(t);
 }
 
-void States::MainMenuState::KeyPressed(sf::Event::KeyEvent key)
+void States::MainMenuState::KeyPressed(sf::Event::KeyEvent& key)
 {
 	switch (key.code)
 	{
@@ -39,4 +48,15 @@ void States::MainMenuState::KeyPressed(sf::Event::KeyEvent key)
 		m_finished = true;
 		break;
 	}
+}
+
+void States::MainMenuState::MouseMoved(sf::Event::MouseMoveEvent& move)
+{
+	m_mousePos[0] = move.x;
+	m_mousePos[1] = move.y;
+}
+
+void States::MainMenuState::MouseWheelMoved(sf::Event::MouseWheelEvent& wheel)
+{
+	m_mousePos[2] += wheel.delta * 10;
 }

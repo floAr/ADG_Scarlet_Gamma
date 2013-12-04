@@ -62,15 +62,19 @@ void Events::EventHandler::Update(float dt)
 		// MOUSE EVENTS
 
 		case sf::Event::MouseWheelMoved:
+			m_inputHandler->MouseWheelMoved(event.mouseWheel);
 			break;
 
 		case sf::Event::MouseButtonPressed:
+			m_inputHandler->MouseButtonPressed(event.mouseButton);
 			break;
 
 		case sf::Event::MouseButtonReleased:
+			m_inputHandler->MouseButtonReleased(event.mouseButton);
 			break;
 
 		case sf::Event::MouseMoved:
+			m_inputHandler->MouseMoved(event.mouseMove);
 			break;
 
 		case sf::Event::MouseEntered:

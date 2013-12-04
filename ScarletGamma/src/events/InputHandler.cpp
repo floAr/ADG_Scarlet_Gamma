@@ -15,20 +15,22 @@ void Events::InputHandler::Update(float dt)
 	m_totalTime += dt;
 }
 
+//------------------------------------------------------------------------------
+#pragma region KeyboardEvents
+
 void Events::InputHandler::TextEntered(char character)
 {
 	m_stateMachine.TextEntered(character);
 }
 
-void Events::InputHandler::KeyPressed(sf::Event::KeyEvent key)
+void Events::InputHandler::KeyPressed(sf::Event::KeyEvent& key)
 {
 	m_stateMachine.KeyPressed(key);
 	m_keyLastPressed.erase(key.code);
 	m_keyLastPressed.emplace(key.code, m_totalTime);
-
 }
 
-void Events::InputHandler::KeyReleased(sf::Event::KeyEvent key)
+void Events::InputHandler::KeyReleased(sf::Event::KeyEvent& key)
 {
 	if (m_keyLastPressed.find(key.code) != m_keyLastPressed.end())
 	{
@@ -37,3 +39,37 @@ void Events::InputHandler::KeyReleased(sf::Event::KeyEvent key)
 		m_stateMachine.KeyReleased(key, time);
 	}
 }
+
+#pragma endregion
+
+//------------------------------------------------------------------------------
+#pragma region MouseEvents
+
+void Events::InputHandler::MouseWheelMoved(sf::Event::MouseWheelEvent& wheel)
+{
+	m_stateMachine.MouseWheelMoved(wheel);
+}
+
+void Events::InputHandler::MouseButtonPressed(sf::Event::MouseButtonEvent& button)
+{
+	m_stateMachine.MouseButtonPressed(button);
+	m_mouseBtnLastPressed.erase(button.button);
+	m_mouseBtnLastPressed.emplace(button.button, m_totalTime);
+}
+
+void Events::InputHandler::MouseButtonReleased(sf::Event::MouseButtonEvent& button)
+{
+	if (m_mouseBtnLastPressed.find(button.button) != m_mouseBtnLastPressed.end())
+	{
+		float time = m_totalTime - m_mouseBtnLastPressed[button.button];
+		m_mouseBtnLastPressed.erase(button.button);
+		m_stateMachine.MouseButtonReleased(button, time);
+	}
+}
+
+void Events::InputHandler::MouseMoved(sf::Event::MouseMoveEvent& move)
+{
+	m_stateMachine.MouseMoved(move);
+}
+
+#pragma endregion

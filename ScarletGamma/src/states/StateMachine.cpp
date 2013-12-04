@@ -59,14 +59,38 @@ void States::StateMachine::TextEntered(char character)
 		m_gameState->TextEntered(character);
 }
 
-void States::StateMachine::KeyPressed(sf::Event::KeyEvent key)
+void States::StateMachine::KeyPressed(sf::Event::KeyEvent& key)
 {
 	if (m_gameState)
 		m_gameState->KeyPressed(key);
 }
 
-void States::StateMachine::KeyReleased(sf::Event::KeyEvent key, float time)
+void States::StateMachine::KeyReleased(sf::Event::KeyEvent& key, float time)
 {
 	if (m_gameState)
 		m_gameState->KeyReleased(key, time);
+}
+
+void States::StateMachine::MouseWheelMoved(sf::Event::MouseWheelEvent& wheel)
+{
+	if (m_gameState)
+		m_gameState->MouseWheelMoved(wheel);
+}
+
+void States::StateMachine::MouseButtonPressed(sf::Event::MouseButtonEvent& button)
+{
+	if (m_gameState)
+		m_gameState->MouseButtonPressed(button);
+}
+
+void States::StateMachine::MouseButtonReleased(sf::Event::MouseButtonEvent& button, float time)
+{
+	if (m_gameState)
+		m_gameState->MouseButtonReleased(button, time);
+}
+
+void States::StateMachine::MouseMoved(sf::Event::MouseMoveEvent& move)
+{
+	if (m_gameState)
+		m_gameState->MouseMoved(move);
 }

@@ -38,6 +38,10 @@ namespace States
 		/// \brief Draws the current GameState.
 		void Draw(sf::RenderWindow& win);
 
+
+		//----------------------------------------------------------------------
+		// KEYBOARD EVENTS
+
 		/// \brief Gets called by the InputHandler when any ASCII character was
 		///		entered.
 		/// \details You shouldn't call this function manually, except for
@@ -48,12 +52,35 @@ namespace States
 
 		/// \brief Gets called by the InputHandler when any key is pressed.
 		/// \param [in] key	SFML key event that contains all required information.
-		void KeyPressed(sf::Event::KeyEvent key);
+		void KeyPressed(sf::Event::KeyEvent& key);
 
 		/// \brief Gets called by the InputHandler when any key is released.
 		/// \param [in] key   SFML key event that contains all required information.
 		/// \param [in] time  How long the key was pressed, in seconds.
-		void KeyReleased(sf::Event::KeyEvent key, float time);
+		void KeyReleased(sf::Event::KeyEvent& key, float time);
+
+
+		//----------------------------------------------------------------------
+		// MOUSE EVENTS
+
+		/// \brief Gets called when the mouse wheel is moved.
+		/// param [in] wheel  SFML wheel event that contains all required information.
+		void MouseWheelMoved(sf::Event::MouseWheelEvent& wheel);
+
+		/// \brief Gets called when a mouse button is pressed.
+		/// \details Has the same internal logic as KeyPressed.
+		/// param [in] wheel  SFML button event that contains all required information.
+		void MouseButtonPressed(sf::Event::MouseButtonEvent& button);
+
+		/// \brief Gets called when a mouse button is released.
+		/// param [in] wheel  SFML button event that contains all required information.
+		/// \param [in] time  How long the button was pressed, in seconds.
+		void MouseButtonReleased(sf::Event::MouseButtonEvent& button, float time);
+
+		/// \brief Gets called when the mouse is moved.
+		/// param [in] wheel  SFML move event that contains all required information.
+		void MouseMoved(sf::Event::MouseMoveEvent& move);
+
 	private:
 		/// \brief Pointer to the current GameState. The previous state is known
 		///		by the current GameState.

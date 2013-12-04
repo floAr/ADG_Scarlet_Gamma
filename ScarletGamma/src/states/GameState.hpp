@@ -72,17 +72,50 @@ namespace States
 			return m_finished;
 		}
 
-		/// \brief Gets called when a valid ASCII character is typed.
-		/// \param [in] character    The typed character. May be something cool like à.
-		virtual void TextEntered(char character) {}
 
-		/// \brief Gets called when a key is pressed.
-		/// \param [in] key    SFML key event that contains all required information.
-		virtual void KeyPressed(sf::Event::KeyEvent key) {}
+		//----------------------------------------------------------------------
+		// KEYBOARD EVENTS
 
-		/// \brief Gets called when a key is released.
-		/// \param [in] key    SFML key event that contains all required information.
-		virtual void KeyReleased(sf::Event::KeyEvent key, float time) {}
+		/// \brief Gets called by the InputHandler when any ASCII character was
+		///		entered.
+		/// \details You shouldn't call this function manually, except for
+		///		cases where you really want to fake user input (e.g. buttons
+		///		that insert special characters or something).
+		/// \param [in] character  ASCII character that was entered.
+		virtual void TextEntered(char character) { }
+
+		/// \brief Gets called by the InputHandler when any key is pressed.
+		/// \param [in] key	SFML key event that contains all required information.
+		virtual void KeyPressed(sf::Event::KeyEvent& key) { }
+
+		/// \brief Gets called by the InputHandler when any key is released.
+		/// \param [in] key   SFML key event that contains all required information.
+		/// \param [in] time  How long the key was pressed, in seconds.
+		virtual void KeyReleased(sf::Event::KeyEvent& key, float time) { }
+
+
+		//----------------------------------------------------------------------
+		// MOUSE EVENTS
+
+		/// \brief Gets called when the mouse wheel is moved.
+		/// param [in] wheel  SFML wheel event that contains all required information.
+		virtual void MouseWheelMoved(sf::Event::MouseWheelEvent& wheel) { }
+
+		/// \brief Gets called when a mouse button is pressed.
+		/// \details Has the same internal logic as KeyPressed.
+		/// param [in] wheel  SFML button event that contains all required information.
+		virtual void MouseButtonPressed(sf::Event::MouseButtonEvent& button) { }
+
+		/// \brief Gets called when a mouse button is released.
+		/// param [in] wheel  SFML button event that contains all required information.
+		/// \param [in] time  How long the button was pressed, in seconds.
+		virtual void MouseButtonReleased(sf::Event::MouseButtonEvent& button, float time) { }
+
+		/// \brief Gets called when the mouse is moved.
+		/// param [in] wheel  SFML move event that contains all required information.
+		virtual void MouseMoved(sf::Event::MouseMoveEvent& move) { }
+
+#pragma endregion
 
 	protected:
 		bool m_finished; ///< set to true if the GameState is finished

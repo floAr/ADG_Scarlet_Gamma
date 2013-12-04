@@ -41,11 +41,23 @@ public:
 		return m_world;
 	}
 
+	sf::RenderWindow& GetWindow()
+	{
+		return m_window;
+	}
+
 private:  
 	Events::EventHandler* m_eventHandler;
 	States::StateMachine* m_stateMachine;
 	Core::World* m_world;
 	sf::RenderWindow m_window;
+
+#ifdef _DEBUG
+	float    m_dFpsTime;
+	int      m_dFpsCounter;
+	int      m_dFps;
+	sf::Font m_dFpsFont;
+#endif
 };
 
 /// \brief Global pointer because everyone needs to know the game anyway...

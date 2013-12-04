@@ -18,3 +18,24 @@ void States::PlayerState::Draw(sf::RenderWindow& win)
 	// Uses the test map 0 for testing purposes.
 	Graphics::TileRenderer::Render(win, *g_Game->GetWorld()->GetMap(0));
 }
+
+void States::PlayerState::MouseMoved(sf::Event::MouseMoveEvent& move)
+{
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+	{
+		// Get the render window
+		sf::RenderWindow& win = g_Game->GetWindow();
+
+		// Create a new view with its center shifted by the mouse position
+		sf::Vector2f center = win.getView().getCenter();
+		sf::View newView = win.getView();
+		newView.setCenter(center.x - (move.x - m_mousePos[0]),
+						  center.y - (move.y - m_mousePos[1]));
+
+		// Apply view to the window
+		win.setView(newView);
+	}
+
+	m_mousePos[0] = move.x;
+	m_mousePos[1] = move.y;
+}

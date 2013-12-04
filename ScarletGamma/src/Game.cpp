@@ -5,6 +5,7 @@
 #include "graphics/TileRenderer.hpp"
 #include "core/World.hpp"
 #include "core/Map.hpp"
+#include <math.h>
 
 void Game::Init()
 {
@@ -27,6 +28,13 @@ void Game::Init()
 	// Push states. Note that the last state is current!
 	m_stateMachine->PushGameState(States::GST_MAIN_MENU);
 	m_stateMachine->PushGameState(States::GST_INTRO);
+
+#ifdef _DEBUG
+	m_dFps = 60;
+	m_dFpsTime = 0;
+	m_dFpsCounter = 0;
+	m_dFpsFont.loadFromFile("media/arial.ttf");
+#endif
 }
 
 void Game::Run()
@@ -43,6 +51,25 @@ void Game::Run()
 		// Update and draw the GameState
 		m_stateMachine->Update(time);
 		m_stateMachine->Draw(m_window);
+
+#ifdef _DEBUG
+		m_dFpsTime += time;
+		m_dFpsCounter++;
+		if (m_dFpsTime >= 1.f)
+		{
+			m_dFps = m_dFpsCounter;
+			m_dFpsTime = 0;
+			m_dFpsCounter = 0;
+		}
+		sf::View backup = m_window.getView();
+		m_window.setView(m_window.getDefaultView());
+		sf::Text t(std::to_string(m_dFps), m_dFpsFont, 12);
+		if (m_dFps < 30)
+			t.setColor(sf::Color::Red);
+		t.setPosition(5, 5);
+		m_window.draw(t);
+		m_window.setView(backup);
+#endif
 
 		// Swap buffers
 		m_window.display();

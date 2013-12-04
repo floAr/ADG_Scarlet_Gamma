@@ -7,6 +7,7 @@
 #include "Game.hpp"
 #include <cmath>
 #include <iostream>
+#include <unordered_map>
 
 void Graphics::TileRenderer::Render(sf::RenderWindow& window, Core::Map& map)
 {
@@ -41,8 +42,16 @@ void Graphics::TileRenderer::Render(sf::RenderWindow& window, Core::Map& map)
 				{
 					// Load texture
 					// TODO: content manager! we don't wanna load this in every - fucking - frame!
-					sf::Texture tex;
-					tex.loadFromFile(obj->GetProperty("Sprite").Value());
+
+					// Very quick and dirty custom resource manager
+					static std::unordered_map<std::string, sf::Texture> textures;
+					if (textures.find(obj->GetProperty("Sprite").Value()) == textures.end())
+					{
+						sf::Texture tex;
+						tex.loadFromFile(obj->GetProperty("Sprite").Value());
+						textures.emplace(obj->GetProperty("Sprite").Value(), tex);
+					}
+					sf::Texture& tex = textures[obj->GetProperty("Sprite").Value()];
 
 					// Draw the tile
 					sf::Sprite drawSprite(tex);

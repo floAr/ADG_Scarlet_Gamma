@@ -7,9 +7,9 @@ namespace Events
 	class EventHandler
 	{
 	public:
-		EventHandler(sf::Window& window);
+		EventHandler(sf::Window& window, States::StateMachine& stateMachine);
 		~EventHandler();
-		void Update();
+		void Update(float dt);
 	private:
 		sf::Window& m_window;
 		InputHandler* m_inputHandler;

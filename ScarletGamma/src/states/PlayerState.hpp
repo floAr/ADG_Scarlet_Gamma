@@ -6,7 +6,7 @@ namespace States
 {
 	class PlayerState : public GameState
 	{
-	public:	
+	public:
 		virtual void OnBegin() {}
 		virtual void OnEnd() {}
 		virtual void OnPause() {}

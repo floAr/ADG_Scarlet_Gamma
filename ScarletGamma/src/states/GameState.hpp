@@ -16,7 +16,7 @@ namespace States
 
 		/// \brief Sets the previous GameState, i.e. the GameState that the
 		///		StateMachine will return to when this one is finished.
-		/// \detail If this is set to 0, the StateMachine will assume that
+		/// \details If this is set to 0, the StateMachine will assume that
 		///		no states are left and the game will quit. You shouldn't have
 		///		to use this function, the StateMachine will set the previous
 		///		state automatically when you push a new one.
@@ -72,8 +72,20 @@ namespace States
 			return m_finished;
 		}
 
+		/// \brief Gets called when a valid ASCII character is typed.
+		/// \param [in] character    The typed character. May be something cool like à.
+		virtual void TextEntered(char character) {}
+
+		/// \brief Gets called when a key is pressed.
+		/// \param [in] key    SFML key event that contains all required information.
+		virtual void KeyPressed(sf::Event::KeyEvent key) {}
+
+		/// \brief Gets called when a key is released.
+		/// \param [in] key    SFML key event that contains all required information.
+		virtual void KeyReleased(sf::Event::KeyEvent key, float time) {}
+
 	protected:
 		bool m_finished; ///< set to true if the GameState is finished
-		GameState* m_previousState;
+		GameState* m_previousState; ///< Pointer to previous state or null
 	};
 }

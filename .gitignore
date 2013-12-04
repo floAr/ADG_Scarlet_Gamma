@@ -15,8 +15,7 @@
 # directories
 Debug/
 Release/
-SFML-2.1/
-JoFile/
+lib/
 
 # VC
 *.sdf

@@ -14,6 +14,7 @@ namespace States
 		virtual void OnResume() {}
 		virtual void Update(float dt);
 		virtual void Draw(sf::RenderWindow& win);
+		virtual void KeyPressed(sf::Event::KeyEvent key);
 	private:
 		sf::Font	m_menuFont;
 	};

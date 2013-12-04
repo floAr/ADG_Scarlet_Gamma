@@ -13,7 +13,7 @@ class Game
 public:
 
 	/// \brief Default constructor that tames wild pointers
-	Game() : m_stateMachine(0), m_world(0) {}
+	Game() : m_stateMachine(0), m_world(0), m_eventHandler(0) {}
 
 	/// TODO:: Document
 	void Init();
@@ -41,11 +41,11 @@ public:
 		return m_world;
 	}
 
-private:
-	Events::EventHandler*		m_eventHandler;
-	States::StateMachine*		m_stateMachine;
-	Core::World*				m_world;
-	sf::RenderWindow			m_window;
+private:  
+	Events::EventHandler* m_eventHandler;
+	States::StateMachine* m_stateMachine;
+	Core::World* m_world;
+	sf::RenderWindow m_window;
 };
 
 /// \brief Global pointer because everyone needs to know the game anyway...

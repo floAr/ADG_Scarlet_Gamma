@@ -21,7 +21,7 @@ namespace States
 		/// \detail To remove a GameState, the state has to mark itself as
 		///		finished. The game then returns to the previous GameState or
 		///		quits if it was the last one.
-		/// \param [in] state	Identifies the state to be pushed
+		/// \param [in] state  Identifies the state to be pushed
 		void PushGameState(GameStateType state);
 
 		/// \brief Used for quitting the game when the last GameState has ended.
@@ -32,13 +32,31 @@ namespace States
 		}
 
 		/// \brief Updates the current GameState. May pop it if it's finished. 
-		/// \param [in] dt	Delta time since last frame in seconds.
+		/// \param [in] dt  Delta time since last frame in seconds.
 		void Update(float dt);
 
 		/// \brief Draws the current GameState.
 		void Draw(sf::RenderWindow& win);
+
+		/// \brief Gets called by the InputHandler when any ASCII character was
+		///		entered.
+		/// \details You shouldn't call this function manually, except for
+		///		cases where you really want to fake user input (e.g. buttons
+		///		that insert special characters or something).
+		/// \param [in] character  ASCII character that was entered.
+		void TextEntered(char character);
+
+		/// \brief Gets called by the InputHandler when any key is pressed.
+		/// \param [in] key	SFML key event that contains all required information.
+		void KeyPressed(sf::Event::KeyEvent key);
+
+		/// \brief Gets called by the InputHandler when any key is released.
+		/// \param [in] key   SFML key event that contains all required information.
+		/// \param [in] time  How long the key was pressed, in seconds.
+		void KeyReleased(sf::Event::KeyEvent key, float time);
 	private:
-		/// \brief Stack of GameStates. Current state is the top element.
+		/// \brief Pointer to the current GameState. The previous state is known
+		///		by the current GameState.
 		GameState* m_gameState;
 	};
 }

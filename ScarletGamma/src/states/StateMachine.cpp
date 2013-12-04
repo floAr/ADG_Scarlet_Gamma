@@ -39,15 +39,11 @@ void States::StateMachine::Update(float dt)
 {
 	// Replace game state with predecessor - may be 0
 	if (m_gameState && m_gameState->IsFinished())
-	{
 		m_gameState = m_gameState->GetPreviousState();
-	}
 
 	// Update, if there is a GameState left
 	if (m_gameState)
-	{
 		m_gameState->Update(dt);
-	}
 }
 
 void States::StateMachine::Draw(sf::RenderWindow& win)
@@ -55,4 +51,22 @@ void States::StateMachine::Draw(sf::RenderWindow& win)
 	// Draw GameState to window, if both exists
 	if (win.isOpen() && m_gameState)
 		m_gameState->Draw(win);
+}
+
+void States::StateMachine::TextEntered(char character)
+{
+	if (m_gameState)
+		m_gameState->TextEntered(character);
+}
+
+void States::StateMachine::KeyPressed(sf::Event::KeyEvent key)
+{
+	if (m_gameState)
+		m_gameState->KeyPressed(key);
+}
+
+void States::StateMachine::KeyReleased(sf::Event::KeyEvent key, float time)
+{
+	if (m_gameState)
+		m_gameState->KeyReleased(key, time);
 }

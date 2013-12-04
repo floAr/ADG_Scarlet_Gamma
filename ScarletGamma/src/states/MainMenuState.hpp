@@ -15,7 +15,7 @@ namespace States
 		virtual void Update(float dt);
 		virtual void Draw(sf::RenderWindow& win);
 		virtual void KeyPressed(sf::Event::KeyEvent& key);
-		virtual void MouseMoved(sf::Event::MouseMoveEvent& move);
+		virtual void MouseMoved(int deltaX, int deltaY);
 		virtual void MouseWheelMoved(sf::Event::MouseWheelEvent& wheel);
 	private:
 		sf::Font	m_menuFont;

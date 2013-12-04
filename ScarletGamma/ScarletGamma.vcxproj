@@ -94,6 +94,7 @@
     <ClCompile Include="src\utils\StringUtil.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Constants.h" />
     <ClInclude Include="src\core\Map.hpp" />
     <ClInclude Include="src\core\Object.hpp" />
     <ClInclude Include="src\core\ObjectList.hpp" />

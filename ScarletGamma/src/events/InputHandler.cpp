@@ -15,8 +15,9 @@ void Events::InputHandler::Update(float dt)
 	m_totalTime += dt;
 }
 
+
 //------------------------------------------------------------------------------
-#pragma region KeyboardEvents
+// KEYBOARD EVENTS
 
 void Events::InputHandler::TextEntered(char character)
 {
@@ -40,10 +41,9 @@ void Events::InputHandler::KeyReleased(sf::Event::KeyEvent& key)
 	}
 }
 
-#pragma endregion
 
 //------------------------------------------------------------------------------
-#pragma region MouseEvents
+// MOUSE EVENTS
 
 void Events::InputHandler::MouseWheelMoved(sf::Event::MouseWheelEvent& wheel)
 {
@@ -69,7 +69,9 @@ void Events::InputHandler::MouseButtonReleased(sf::Event::MouseButtonEvent& butt
 
 void Events::InputHandler::MouseMoved(sf::Event::MouseMoveEvent& move)
 {
-	m_stateMachine.MouseMoved(move);
-}
+	m_stateMachine.MouseMoved(move.x - m_mousePos[0], move.y - m_mousePos[1]);
 
-#pragma endregion
+	// Update mouse position
+	m_mousePos[0] = move.x;
+	m_mousePos[1] = move.y;
+}

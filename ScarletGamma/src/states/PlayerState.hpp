@@ -13,8 +13,8 @@ namespace States
 		virtual void OnResume() {}
 		virtual void Update(float dt);
 		virtual void Draw(sf::RenderWindow& win);
-		virtual void MouseMoved(sf::Event::MouseMoveEvent& move);
-	private:
-		int m_mousePos[2];
+		virtual void MouseMoved(int deltaX, int deltaY);
+		virtual void MouseButtonPressed(sf::Event::MouseButtonEvent& button);
+		virtual void MouseWheelMoved(sf::Event::MouseWheelEvent& wheel);
 	};
 }

@@ -50,10 +50,10 @@ void States::MainMenuState::KeyPressed(sf::Event::KeyEvent& key)
 	}
 }
 
-void States::MainMenuState::MouseMoved(sf::Event::MouseMoveEvent& move)
+void States::MainMenuState::MouseMoved(int deltaX, int deltaY)
 {
-	m_mousePos[0] = move.x;
-	m_mousePos[1] = move.y;
+	m_mousePos[0] = sf::Mouse::getPosition().x;
+	m_mousePos[1] = sf::Mouse::getPosition().y;
 }
 
 void States::MainMenuState::MouseWheelMoved(sf::Event::MouseWheelEvent& wheel)

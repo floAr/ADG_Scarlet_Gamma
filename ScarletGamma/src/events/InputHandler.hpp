@@ -61,7 +61,6 @@ namespace Events
 		/// param [in] wheel  SFML move event that contains all required information.
 		void MouseMoved(sf::Event::MouseMoveEvent& move);
 
-
 	private:
 		/// \brief Counts the total time the InputManager was updated with. Used for
 		///		determining how long a key / button was pressed.
@@ -76,5 +75,7 @@ namespace Events
 		/// \brief Reference to the StateMachine managed by the Game, used for
 		///		getting the current GameState to inform it about input.
 		States::StateMachine& m_stateMachine;
+
+		unsigned int m_mousePos[2];
 	};
 }

@@ -112,8 +112,9 @@ namespace States
 		virtual void MouseButtonReleased(sf::Event::MouseButtonEvent& button, float time) { }
 
 		/// \brief Gets called when the mouse is moved.
-		/// param [in] wheel  SFML move event that contains all required information.
-		virtual void MouseMoved(sf::Event::MouseMoveEvent& move) { }
+		/// param [in] deltaX  Relative horizontal mouse movement since last frame.
+		/// param [in] deltaY  Relative vertical mouse movement since last frame.
+		virtual void MouseMoved(int deltaX, int deltaY) { }
 
 #pragma endregion
 

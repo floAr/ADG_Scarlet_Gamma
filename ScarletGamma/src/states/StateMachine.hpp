@@ -79,7 +79,7 @@ namespace States
 
 		/// \brief Gets called when the mouse is moved.
 		/// param [in] wheel  SFML move event that contains all required information.
-		void MouseMoved(sf::Event::MouseMoveEvent& move);
+		void MouseMoved(int deltaX, int deltaY);
 
 	private:
 		/// \brief Pointer to the current GameState. The previous state is known

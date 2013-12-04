@@ -89,8 +89,8 @@ void States::StateMachine::MouseButtonReleased(sf::Event::MouseButtonEvent& butt
 		m_gameState->MouseButtonReleased(button, time);
 }
 
-void States::StateMachine::MouseMoved(sf::Event::MouseMoveEvent& move)
+void States::StateMachine::MouseMoved(int deltaX, int deltaY)
 {
 	if (m_gameState)
-		m_gameState->MouseMoved(move);
+		m_gameState->MouseMoved(deltaX, deltaY);
 }

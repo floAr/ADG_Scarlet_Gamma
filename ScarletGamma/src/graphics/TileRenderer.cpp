@@ -5,6 +5,7 @@
 #include "core/Object.hpp"
 #include "sfutils/View.hpp"
 #include "Game.hpp"
+#include "Constants.h"
 #include <cmath>
 #include <iostream>
 #include <unordered_map>
@@ -15,11 +16,10 @@ void Graphics::TileRenderer::Render(sf::RenderWindow& window, Core::Map& map)
 	sf::FloatRect viewRect = sfUtils::View::GetViewRect(window.getView());
 	
 	// Ceil / floor to find the top-left and bottom-right tile that is currently visible
-	int tileSize = 64;
-	int left = (int)floor(viewRect.left / tileSize);
-	int top = (int)floor(viewRect.top / tileSize);
-	int right = (int)ceil((viewRect.left + viewRect.width) / tileSize);
-	int bottom = (int)ceil((viewRect.top + viewRect.height) / tileSize);
+	int left = (int)floor(viewRect.left / TILESIZE);
+	int top = (int)floor(viewRect.top / TILESIZE);
+	int right = (int)ceil((viewRect.left + viewRect.width) / TILESIZE);
+	int bottom = (int)ceil((viewRect.top + viewRect.height) / TILESIZE);
 
 	for (int y = top; y <= bottom; y++)
 	{
@@ -55,8 +55,8 @@ void Graphics::TileRenderer::Render(sf::RenderWindow& window, Core::Map& map)
 
 					// Draw the tile
 					sf::Sprite drawSprite(tex);
-					drawSprite.setPosition(obj->GetPosition() * float(tileSize));
-					drawSprite.setScale(float(tileSize)/tex.getSize().x, float(tileSize)/tex.getSize().y);
+					drawSprite.setPosition(obj->GetPosition() * float(TILESIZE));
+					drawSprite.setScale(float(TILESIZE)/tex.getSize().x, float(TILESIZE)/tex.getSize().y);
 					drawSprite.setColor(obj->GetColor());
 					window.draw(drawSprite);
 				}

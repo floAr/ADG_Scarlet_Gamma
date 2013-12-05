@@ -5,7 +5,7 @@
 #include "core/Object.hpp"
 #include "sfutils/View.hpp"
 #include "Game.hpp"
-#include "Constants.h"
+#include "Constants.hpp"
 #include <cmath>
 #include <iostream>
 #include <unordered_map>

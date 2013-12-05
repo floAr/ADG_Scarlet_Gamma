@@ -90,11 +90,12 @@
     <ClCompile Include="src\unittest\UTMap.cpp" />
     <ClCompile Include="src\unittest\UTObject.cpp" />
     <ClCompile Include="src\unittest\UnitTest.cpp" />
+    <ClCompile Include="src\utils\Falloff.cpp" />
     <ClCompile Include="src\utils\Random.cpp" />
     <ClCompile Include="src\utils\StringUtil.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Constants.h" />
+    <ClInclude Include="src\Constants.hpp" />
     <ClInclude Include="src\core\Map.hpp" />
     <ClInclude Include="src\core\Object.hpp" />
     <ClInclude Include="src\core\ObjectList.hpp" />
@@ -114,6 +115,7 @@
     <ClInclude Include="src\states\StateMachine.hpp" />
     <ClInclude Include="src\unittest\UnitTests.hpp" />
     <ClInclude Include="src\utils\Exception.hpp" />
+    <ClInclude Include="src\utils\Falloff.hpp" />
     <ClInclude Include="src\utils\MathUtil.hpp" />
     <ClInclude Include="src\utils\OrFibHeap.h" />
     <ClInclude Include="src\utils\Random.hpp" />

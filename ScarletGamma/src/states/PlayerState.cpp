@@ -3,11 +3,15 @@
 #include "graphics/TileRenderer.hpp"
 #include "core/Map.hpp"
 #include "core/World.hpp"
-#include "Constants.h"
+#include "Constants.hpp"
+#include "utils/Falloff.hpp"
 #include <iostream>
 
 void States::PlayerState::Update(float dt)
 {
+	m_zoom.Update(dt);
+	if (m_zoom != 0)
+		ZoomView(m_zoom);
 }
 
 void States::PlayerState::Draw(sf::RenderWindow& win)
@@ -46,15 +50,21 @@ void States::PlayerState::MouseButtonPressed(sf::Event::MouseButtonEvent& button
 	switch (button.button)
 	{
 	case sf::Mouse::Middle:
+		m_zoom = 0;
 		sf::RenderWindow& win = g_Game->GetWindow();
 		sf::View newView = win.getView();
-		newView.setSize(win.getSize().x, win.getSize().y);
+		newView.setSize((float)win.getSize().x, (float)win.getSize().y);
 		win.setView(newView);
 		break;
 	}
 }
 
 void States::PlayerState::MouseWheelMoved(sf::Event::MouseWheelEvent& wheel)
+{
+	m_zoom = (float)wheel.delta;
+}
+
+void States::PlayerState::ZoomView(float delta)
 {
 	// Get the render window
 	sf::RenderWindow& win = g_Game->GetWindow();
@@ -63,9 +73,7 @@ void States::PlayerState::MouseWheelMoved(sf::Event::MouseWheelEvent& wheel)
 	sf::Vector2f center = win.getView().getCenter();
 	sf::View newView = win.getView();
 
-	newView.zoom(exp(wheel.delta * 0.25f));
-
-	std::cout << wheel.delta << " " << newView.getSize().x;
+	newView.zoom(exp(delta * 0.1f));
 
 	// Clamp scale so that one tile doesn't get smaller than 1 pixel
 	// This is required to avoid overdraw, which blocks GPU threads and
@@ -83,9 +91,6 @@ void States::PlayerState::MouseWheelMoved(sf::Event::MouseWheelEvent& wheel)
 	{
 		newView.setSize(win.getSize().x * clampFactor, win.getSize().y * clampFactor);
 	}
-
-	std::cout << " " << newView.getSize().x / win.getSize().y << std::endl;
-
 
 	// Apply view to the window
 	win.setView(newView);

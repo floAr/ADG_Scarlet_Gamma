@@ -1,12 +1,14 @@
 #pragma once
 
 #include "states/GameState.hpp"
+#include "utils/Falloff.hpp"
 
 namespace States
 {
 	class PlayerState : public GameState
 	{
 	public:
+		PlayerState() : m_zoom(Utils::Falloff::FT_QUADRATIC, 0.75f, 0.05f) {}
 		virtual void OnBegin() {}
 		virtual void OnEnd() {}
 		virtual void OnPause() {}
@@ -16,5 +18,8 @@ namespace States
 		virtual void MouseMoved(int deltaX, int deltaY);
 		virtual void MouseButtonPressed(sf::Event::MouseButtonEvent& button);
 		virtual void MouseWheelMoved(sf::Event::MouseWheelEvent& wheel);
+	private:
+		void ZoomView(float delta);
+		Utils::Falloff m_zoom;
 	};
 }

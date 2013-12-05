@@ -12,6 +12,7 @@ class Game;
 namespace Utils
 {
 	class Random;
+	class Falloff;
 }
 
 namespace Exception {

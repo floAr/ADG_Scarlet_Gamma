@@ -92,6 +92,9 @@
     <ClCompile Include="src\utils\Random.cpp">
       <Filter>Quelldateien\utils</Filter>
     </ClCompile>
+    <ClCompile Include="src\utils\Falloff.cpp">
+      <Filter>Quelldateien\utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\core\Map.hpp">
@@ -163,6 +166,11 @@
     <ClInclude Include="src\utils\MathUtil.hpp">
       <Filter>Quelldateien\utils</Filter>
     </ClInclude>
-    <ClInclude Include="src\Constants.h" />
+    <ClInclude Include="src\utils\Falloff.hpp">
+      <Filter>Quelldateien\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Constants.hpp">
+      <Filter>Quelldateien</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -77,16 +77,16 @@ void States::StateMachine::MouseWheelMoved(sf::Event::MouseWheelEvent& wheel)
 		m_gameState->MouseWheelMoved(wheel);
 }
 
-void States::StateMachine::MouseButtonPressed(sf::Event::MouseButtonEvent& button)
+void States::StateMachine::MouseButtonPressed(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos)
 {
 	if (m_gameState)
-		m_gameState->MouseButtonPressed(button);
+		m_gameState->MouseButtonPressed(button, tilePos);
 }
 
-void States::StateMachine::MouseButtonReleased(sf::Event::MouseButtonEvent& button, float time)
+void States::StateMachine::MouseButtonReleased(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos, float time)
 {
 	if (m_gameState)
-		m_gameState->MouseButtonReleased(button, time);
+		m_gameState->MouseButtonReleased(button, tilePos, time);
 }
 
 void States::StateMachine::MouseMoved(int deltaX, int deltaY)

@@ -1,4 +1,7 @@
 #pragma once
+#ifdef _DEBUG
+	#define _FPS
+#endif
 
 #include "Prerequisites.hpp"
 #include <assert.h>
@@ -52,7 +55,7 @@ private:
 	Core::World* m_world;
 	sf::RenderWindow m_window;
 
-#ifdef _DEBUG
+#ifdef _FPS
 	float    m_dFpsTime;
 	int      m_dFpsCounter;
 	int      m_dFps;

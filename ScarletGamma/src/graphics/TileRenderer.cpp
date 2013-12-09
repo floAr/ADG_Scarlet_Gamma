@@ -21,6 +21,7 @@ void Graphics::TileRenderer::Render(sf::RenderWindow& window, Core::Map& map)
 	int right = (int)ceil((viewRect.left + viewRect.width) / TILESIZE);
 	int bottom = (int)ceil((viewRect.top + viewRect.height) / TILESIZE);
 
+
 	for (int y = top; y <= bottom; y++)
 	{
 		for (int x = left; x <= right; x++)

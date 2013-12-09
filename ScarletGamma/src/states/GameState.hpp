@@ -103,13 +103,15 @@ namespace States
 
 		/// \brief Gets called when a mouse button is pressed.
 		/// \details Has the same internal logic as KeyPressed.
-		/// param [in] wheel  SFML button event that contains all required information.
-		virtual void MouseButtonPressed(sf::Event::MouseButtonEvent& button) { }
+		/// \param [in] button   SFML button event that contains all required information.
+		/// \param [in] tilePos  In-game tile that the user clicked on. Cast to float if required.
+		virtual void MouseButtonPressed(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos) { }
 
 		/// \brief Gets called when a mouse button is released.
-		/// param [in] wheel  SFML button event that contains all required information.
-		/// \param [in] time  How long the button was pressed, in seconds.
-		virtual void MouseButtonReleased(sf::Event::MouseButtonEvent& button, float time) { }
+		/// \param [in] button  SFML button event that contains all required information.
+		/// \param [in] tilePos  In-game tile that the user clicked on. Cast to float if required.
+		/// \param [in] time    How long the button was pressed, in seconds.
+		virtual void MouseButtonReleased(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos, float time) { }
 
 		/// \brief Gets called when the mouse is moved.
 		/// param [in] deltaX  Relative horizontal mouse movement since last frame.

@@ -1,6 +1,7 @@
 #include "events/InputHandler.hpp"
 #include "Game.hpp"
 #include "states/StateMachine.hpp"
+#include "Constants.hpp"
 #include <iostream>
 
 using namespace std;
@@ -52,7 +53,12 @@ void Events::InputHandler::MouseWheelMoved(sf::Event::MouseWheelEvent& wheel)
 
 void Events::InputHandler::MouseButtonPressed(sf::Event::MouseButtonEvent& button)
 {
-	m_stateMachine.MouseButtonPressed(button);
+	// calculate tile position
+	sf::Vector2f tilePos = g_Game->GetWindow().mapPixelToCoords(sf::Vector2i(button.x, button.y));
+	tilePos.x /= TILESIZE;
+	tilePos.y /= TILESIZE;
+
+	m_stateMachine.MouseButtonPressed(button, tilePos);
 	m_mouseBtnLastPressed.erase(button.button);
 	m_mouseBtnLastPressed.emplace(button.button, m_totalTime);
 }
@@ -61,9 +67,14 @@ void Events::InputHandler::MouseButtonReleased(sf::Event::MouseButtonEvent& butt
 {
 	if (m_mouseBtnLastPressed.find(button.button) != m_mouseBtnLastPressed.end())
 	{
+		// calculate tile position
+		sf::Vector2f tilePos = g_Game->GetWindow().mapPixelToCoords(sf::Vector2i(button.x, button.y));
+		tilePos.x /= TILESIZE;
+		tilePos.y /= TILESIZE;
+
 		float time = m_totalTime - m_mouseBtnLastPressed[button.button];
 		m_mouseBtnLastPressed.erase(button.button);
-		m_stateMachine.MouseButtonReleased(button, time);
+		m_stateMachine.MouseButtonReleased(button, tilePos, time);
 	}
 }
 

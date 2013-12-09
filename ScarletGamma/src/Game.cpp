@@ -29,7 +29,7 @@ void Game::Init()
 	m_stateMachine->PushGameState(States::GST_MAIN_MENU);
 	m_stateMachine->PushGameState(States::GST_INTRO);
 
-#ifdef _DEBUG
+#ifdef _FPS
 	m_dFps = 60;
 	m_dFpsTime = 0;
 	m_dFpsCounter = 0;
@@ -52,7 +52,7 @@ void Game::Run()
 		m_stateMachine->Update(time);
 		m_stateMachine->Draw(m_window);
 
-#ifdef _DEBUG
+#ifdef _FPS
 		m_dFpsTime += time;
 		m_dFpsCounter++;
 		if (m_dFpsTime >= 1.f)

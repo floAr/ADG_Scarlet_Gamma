@@ -48,10 +48,15 @@ void States::PlayerState::MouseMoved(int deltaX, int deltaY)
 	}
 }
 
-void States::PlayerState::MouseButtonPressed(sf::Event::MouseButtonEvent& button)
+void States::PlayerState::MouseButtonPressed(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos)
 {
 	switch (button.button)
 	{
+	case sf::Mouse::Left:
+		//------------------------------------//
+		// TODO: move player to tile position //
+		//------------------------------------//
+		break;
 	case sf::Mouse::Middle:
 		m_zoom = 0;
 		sf::RenderWindow& win = g_Game->GetWindow();

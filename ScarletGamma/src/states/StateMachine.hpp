@@ -64,21 +64,23 @@ namespace States
 		// MOUSE EVENTS
 
 		/// \brief Gets called when the mouse wheel is moved.
-		/// param [in] wheel  SFML wheel event that contains all required information.
+		/// \param [in] wheel  SFML wheel event that contains all required information.
 		void MouseWheelMoved(sf::Event::MouseWheelEvent& wheel);
 
 		/// \brief Gets called when a mouse button is pressed.
 		/// \details Has the same internal logic as KeyPressed.
-		/// param [in] wheel  SFML button event that contains all required information.
-		void MouseButtonPressed(sf::Event::MouseButtonEvent& button);
+		/// \param [in] button   SFML button event that contains all required information.
+		/// \param [in] tilePos  In-game tile that the user clicked on. Cast to float if required.
+		void MouseButtonPressed(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos);
 
 		/// \brief Gets called when a mouse button is released.
-		/// param [in] wheel  SFML button event that contains all required information.
-		/// \param [in] time  How long the button was pressed, in seconds.
-		void MouseButtonReleased(sf::Event::MouseButtonEvent& button, float time);
+		/// \param [in] button   SFML button event that contains all required- information.
+		/// \param [in] tilePos  In-game tile that the user clicked on. Cast to float if required.
+		/// \param [in] time     How long the button was pressed, in seconds.
+		void MouseButtonReleased(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos, float time);
 
 		/// \brief Gets called when the mouse is moved.
-		/// param [in] wheel  SFML move event that contains all required information.
+		/// \param [in] wheel  SFML move event that contains all required information.
 		void MouseMoved(int deltaX, int deltaY);
 
 	private:

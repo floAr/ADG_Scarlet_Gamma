@@ -16,7 +16,7 @@ namespace States
 		virtual void Update(float dt);
 		virtual void Draw(sf::RenderWindow& win);
 		virtual void MouseMoved(int deltaX, int deltaY);
-		virtual void MouseButtonPressed(sf::Event::MouseButtonEvent& button);
+		virtual void MouseButtonPressed(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos);
 		virtual void MouseWheelMoved(sf::Event::MouseWheelEvent& wheel);
 	private:
 		void ZoomView(float delta);

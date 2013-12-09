@@ -75,7 +75,7 @@ namespace Core {
 			for( unsigned i=0; i<child->Size(); ++i )
 			{
 				// Deserialize -> update maximum used ObjectID
-				Map newMap((*child)[i]);
+				Map newMap((*child)[i], this);
 				m_nextFreeMapID = max(m_nextFreeMapID, newMap.ID());
 				m_maps.insert(std::make_pair<MapID,Map>( newMap.ID(), std::move(newMap) ) );
 			}

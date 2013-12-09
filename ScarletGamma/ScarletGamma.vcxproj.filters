@@ -95,6 +95,9 @@
     <ClCompile Include="src\utils\Falloff.cpp">
       <Filter>Quelldateien\utils</Filter>
     </ClCompile>
+    <ClCompile Include="src\sfutils\Vectors.cpp">
+      <Filter>Quelldateien\sfutils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\core\Map.hpp">

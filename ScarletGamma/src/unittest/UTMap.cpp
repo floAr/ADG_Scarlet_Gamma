@@ -30,6 +30,14 @@ namespace UnitTest {
 			map->Add(objID, rnd.Uniform(0,9), rnd.Uniform(0,9));
 		}
 
+		// Add one active object
+		Core::ObjectID objID = world->NewObject("media/smile_2.png");
+		Core::Object* obj = world->GetObject(objID);
+		obj->Add(Core::Property("Target","0:3"));
+		obj->Add(Core::Property("Path","0:0;9:9"));
+		obj->SetColor(sf::Color::Green);
+		map->Add(objID, rnd.Uniform(0,9), rnd.Uniform(0,9));
+
 		// Save
 		try {
 			world->Save( "saves/unittest.json" );

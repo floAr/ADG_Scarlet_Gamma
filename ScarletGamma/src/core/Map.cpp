@@ -20,6 +20,7 @@ namespace Core {
 		m_id(_id)
 	{
 		m_mapArray = new ObjectList[_sizeX * _sizeY];
+		m_activeObjects = new ObjectList;
 	}
 
 	Map::Map( Map&& _map ) :
@@ -34,9 +35,12 @@ namespace Core {
 		// Move the only real resource
 		m_mapArray = _map.m_mapArray;
 		_map.m_mapArray = nullptr;
+		m_activeObjects = _map.m_activeObjects;
+		_map.m_activeObjects = nullptr;
 	}
 
-	Map::Map(const Jo::Files::MetaFileWrapper::Node& _node)
+	Map::Map(const Jo::Files::MetaFileWrapper::Node& _node, World* _world) :
+		m_parentWorld(_world)
 	{
 		m_name = _node.GetName();
 		m_id = _node[string("ID")];
@@ -52,11 +56,13 @@ namespace Core {
 				int index = x+y*Width();
 				m_mapArray[index] = ObjectList(cells[index]);
 			}
+		m_activeObjects = new ObjectList(_node[string("Active")]);
 	}
 
 	Map::~Map()
 	{
 		delete[] m_mapArray;
+		delete m_activeObjects;
 	}
 
 	void Map::Extend( unsigned _nx, unsigned _px, unsigned _ny, unsigned _py )
@@ -103,6 +109,10 @@ namespace Core {
 
 	bool Map::IsFree( const sf::Vector2i& _position ) const
 	{
+		// Out of bounds -> obstacle (end of world)
+		if( _position.x < m_minX || _position.x > m_maxX ) return false;
+		if( _position.y < m_minY || _position.y > m_maxY ) return false;
+
 		// Test each object in this cell if it has obstacle property
 		auto list = GetObjectsAt(_position.x, _position.y);
 		for( int i=0; i<list.Size(); ++i )
@@ -122,7 +132,62 @@ namespace Core {
 		// Set correct position for the object itself
 		Object* object = m_parentWorld->GetObject(_object);
 		object->SetPosition(float(_x), float(_y));
+
+		// Does the object requires updates?
+		if( object->HasProperty("Target") )
+		{
+			m_activeObjects->Add(_object);
+		}
 	}
+
+
+	void Map::Update(float _dt)
+	{
+		for( int i=0; i<m_activeObjects->Size(); ++i )
+		{
+			// Move objects in the direction of their target.
+			// Assert: Each object in the active list has a target
+			Object* object = m_parentWorld->GetObject( (*m_activeObjects)[i] );
+			auto target = sfUtils::to_vector(object->GetProperty("Target").Value());
+			auto position = object->GetPosition();
+			target -= position;	// Scaled direction
+			float len = sfUtils::Length(target);
+			if( len > 0.01 ) {
+				sf::Vector2i oldCell(sfUtils::Round(position));
+				// Move with constant speed and don't overshoot the target
+				position += target * std::min(_dt / len, 1.0f);
+				object->SetPosition(position.x, position.y);
+				// TODO: update cells
+				sf::Vector2i newCell(sfUtils::Round(position));
+				if( oldCell != newCell ) {
+					GetObjectsAt(oldCell.x, oldCell.y).Remove(object->ID());
+					GetObjectsAt(newCell.x, newCell.y).Add(object->ID());
+				}
+			} else {
+				// If it reached the target choose a new one.
+				if(object->HasProperty("Path"))
+				{
+					const string& path = object->GetProperty("Path").Value();
+					size_t delim = path.find_first_of(';');
+					string tmpStr = path.substr(0, delim);
+					target = sfUtils::to_vector( tmpStr );
+					// Remove the point from the path if reached
+					if( target == position ) {
+						tmpStr = path.substr(delim+1,0xffffffff);
+						object->GetProperty("Path").SetValue( tmpStr );
+						tmpStr = tmpStr.substr(0, delim);
+						target = sfUtils::to_vector( tmpStr );
+						// TODO: loop through path
+					}
+					sf::Vector2i start(sfUtils::Round(position));
+					sf::Vector2i goal(sfUtils::Round(target));
+					target = sf::Vector2f(FindNextOnPath( start, goal ));
+					object->GetProperty("Target").SetValue( sfUtils::to_string(target) );
+				}
+			}
+		}
+	}
+
 
 	void Map::Serialize( Jo::Files::MetaFileWrapper::Node& _node )
 	{
@@ -139,6 +204,7 @@ namespace Core {
 				int index = x+y*Width();
 				m_mapArray[index].Serialize(cells[index]);
 			}
+		m_activeObjects->Serialize(_node[string("Active")]);
 	}
 
 
@@ -164,11 +230,11 @@ namespace Core {
 		// A* requires a heap with a decrease-key operation. The STL variants
 		// do not support this operation.
 		OrE::ADT::HeapT<SearchNode*> openList;
-		visited.push_back( SearchNode(nullptr, 0.0f, _start) );
-		visited.front().entry = openList.Insert( &visited.front(), 0.0f );
+		visited.push_back( SearchNode(nullptr, sfUtils::Length(_goal-_start), _start) );
+		visited.back().entry = openList.Insert( &visited.back(), visited.back().costs );
 		// References into the visited list to search for a position
 		std::unordered_map<int64_t, SearchNode*> visitedAccess;
-		visitedAccess.insert(make_pair(_start.x | (int64_t(_start.y) << 32), &visited.front()));
+		visitedAccess.insert(make_pair((int64_t(_start.x) & 0xffffffff) | (int64_t(_start.y) << 32), &visited.front()));
 
 		while(openList.GetNumElements()>0)
 		{
@@ -182,7 +248,8 @@ namespace Core {
 				// Build a path vector (stack)
 				std::vector<sf::Vector2i> path;
 				while(node) {
-					path.push_back(node->cell);
+					if(node->predecessor) // Exclude the start itself
+						path.push_back(node->cell);
 					node = node->predecessor;
 				}
 				return path;
@@ -192,9 +259,9 @@ namespace Core {
 			for(int y=-1; y<=1; ++y) {
 				for(int x=-1; x<=1; ++x) {
 					sf::Vector2i successorPos = node->cell+sf::Vector2i(x,y);
-					int64_t hash = successorPos.x | (int64_t(successorPos.y) << 32);
-					// Costs to this node + to next node + heuristic
-					float costs = node->costs+sfUtils::Length(_goal-successorPos)+sfUtils::Length(sf::Vector2i(x,y));
+					int64_t hash = (int64_t(successorPos.x) & 0xffffffff) | (int64_t(successorPos.y) << 32);
+					// Costs to this node + heuristic + to next node
+					float costs = (node->costs-sfUtils::Length(_goal-node->cell)) + sfUtils::Length(_goal-successorPos) + sfUtils::Length(sf::Vector2i(x,y));
 					auto next = visitedAccess.find(hash);
 					if( next != visitedAccess.end() )
 					{
@@ -207,7 +274,7 @@ namespace Core {
 						}
 					} else {
 						// Is this neighbor a possible field?
-						if(IsFree(successorPos)) continue;
+						if(!IsFree(successorPos)) continue;
 						// Insert
 						visited.push_back( SearchNode(node, costs, successorPos) );
 						visited.back().entry = openList.Insert(&visited.back(), visited.back().costs);
@@ -224,7 +291,9 @@ namespace Core {
 	sf::Vector2i Map::FindNextOnPath( sf::Vector2i _start, sf::Vector2i _goal )
 	{
 		// This function can be optimized by avoiding the build of the whole path.
-		return FindPath(_start, _goal).back();
+		auto& path = FindPath(_start, _goal);
+		if( path.empty() ) return _start;
+		return path.back();
 	}
 
 } // namespace Core

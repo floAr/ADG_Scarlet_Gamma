@@ -71,6 +71,11 @@ namespace Core {
 		/// \brief Largest coordinate in y-direction
 		int Bottom() const	{ return m_maxY; }
 
+		/// \brief Update all active objects on the map (mostly path finding
+		///		and movements of players and NPCs.
+		///	\param [in] _dt	Delta time since last frame in seconds.
+		void Update(float _dt);
+
 		/// \brief Write the content of this map to a meta-file.
 		/// \details Serialization contains the map ids.
 		/// \param [inout] _node A node with ElementType::UNKNOWN which can
@@ -95,6 +100,7 @@ namespace Core {
 		ObjectList* m_mapArray;	///< 2D cell array.
 		int m_minX, m_maxX;		///< Size (max-min+1) and position in x direction
 		int m_minY, m_maxY;		///< Size (max-min+1) and position in y direction
+		ObjectList* m_activeObjects;	///< All objects in the mapArray which needs to be updated.
 
 		World* m_parentWorld;	///< World reference to have direct object access.
 
@@ -120,7 +126,9 @@ namespace Core {
 
 		/// \brief Deserialize an map.
 		/// \param [in] _node A serialized map node.
-		Map(const Jo::Files::MetaFileWrapper::Node& _node);
+		///	\param [in] _world The world stores the real objects. The map
+		///		requires a world reference to check their properties.
+		Map(const Jo::Files::MetaFileWrapper::Node& _node, World* _world);
 
 	};
 

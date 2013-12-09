@@ -12,6 +12,9 @@ void States::PlayerState::Update(float dt)
 	m_zoom.Update(dt);
 	if (m_zoom != 0)
 		ZoomView(m_zoom);
+
+	// Uses the test map 0 for testing purposes.
+	g_Game->GetWorld()->GetMap(0)->Update(dt);
 }
 
 void States::PlayerState::Draw(sf::RenderWindow& win)

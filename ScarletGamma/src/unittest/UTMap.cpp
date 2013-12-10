@@ -38,7 +38,7 @@ namespace UnitTest {
 		path.Add(map->GetObjectsAt(0,0)[0]);
 		path.Add(map->GetObjectsAt(9,9)[0]);
 		obj->Add(Core::Property("Path", path));
-		obj->SetColor(sf::Color::Green);
+		obj->SetColor(sf::Color(0, 155, 0, 155));
 		map->Add(objID, rnd.Uniform(0,9), rnd.Uniform(0,9), 4);
 
 		// Save

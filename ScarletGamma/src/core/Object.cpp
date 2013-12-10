@@ -80,12 +80,14 @@ namespace Core {
 
 	void Object::SetColor( const sf::Color& _color )
 	{
-		std::stringstream value;
-		value << std::hex << (int)_color.r << (int)_color.g << (int)_color.b << (int)_color.a;
+		char value[9];
+		sprintf(value, "%02x%02x%02x%02x", (int)_color.r, (int)_color.g, (int)_color.b, (int)_color.a);
+//		std::stringstream value;
+		//value << std::hex << (int)_color.r << (int)_color.g << (int)_color.b << (int)_color.a;
 		// Create or set property?
 		auto colorProp = Get("Color");
-		if( !colorProp ) Add(Property(string("Color"), value.str()));
-		else colorProp->SetValue( value.str() );
+		if( !colorProp ) Add(Property(string("Color"), string(value)));
+		else colorProp->SetValue( value );
 	}
 
 

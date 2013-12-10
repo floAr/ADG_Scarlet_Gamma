@@ -149,7 +149,17 @@ namespace Core {
 
 	void Map::Remove(ObjectID _object)
 	{
-		// TODO
+		// Find the object
+		Object* obj = m_parentWorld->GetObject(_object);
+		sf::Vector2i gridPos = sfUtils::Round(obj->GetPosition());
+		auto& list = GetObjectsAt(gridPos.x, gridPos.y);
+		list.Remove(_object);
+		m_activeObjects->Remove(_object);
+
+		// Remove map-related properties from the object
+		obj->Remove("X");
+		obj->Remove("Y");
+		obj->Remove("Layer");
 	}
 
 

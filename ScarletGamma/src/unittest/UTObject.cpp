@@ -10,7 +10,8 @@ namespace UnitTest {
 		// Create an object and add some stuff
 		Core::Object obj(1, "floor.png");
 		obj.Add( Core::Property(string("Invisible"), string("true")) );
-		obj.Add( Core::Property( string("Inventory"), Core::ObjectList() ) );
+		obj.Add( Core::Property(string("Inventory"), Core::ObjectList()) );
+		obj.Add( Core::Property(string("Dmg"), string("1W8+10")) );
 		auto& inventory = obj.GetProperty(string("Inventory"));
 		inventory.Objects().Add( 2 );	// Add a probably wrong id
 
@@ -20,7 +21,7 @@ namespace UnitTest {
 
 		// Take samples to test the restored object
 		Core::Object deserialized( Wrapper.RootNode );
-		if( deserialized.GetProperty(string("Y")).Evaluate() != 1.0 )
+		if( deserialized.GetProperty(string("Dmg")).Evaluate() != 1.0 )
 			TEST_FAILED("Property not restored properly.");
 		if( !deserialized.GetProperty(string("Inventory")).IsObjectList() )
 			TEST_FAILED("Object list not restored.");

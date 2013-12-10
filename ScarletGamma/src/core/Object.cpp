@@ -10,8 +10,6 @@ namespace Core {
 	Object::Object( ObjectID _id, const string& _sprite ) :
 		m_id(_id)
 	{
-		Add( Property("X", "0.0") );
-		Add( Property("Y", "0.0") );
 		Add( Property("Sprite", _sprite) );
 	}
 
@@ -47,16 +45,22 @@ namespace Core {
 
 	void Object::SetPosition( float _x, float _y )
 	{
-		Get("X")->SetValue( to_string(_x) );
-		Get("Y")->SetValue( to_string(_y) );
+		Property* X = Get("X");
+		Property* Y = Get("Y");
+		if( !X || !Y ) throw Exception::NoSuchProperty();
+		X->SetValue( to_string(_x) );
+		Y->SetValue( to_string(_y) );
 	}
 
 
 	sf::Vector2f Object::GetPosition() const
 	{
+		const Property* X = Get("X");
+		const Property* Y = Get("Y");
+		if( !X || !Y ) throw Exception::NoSuchProperty();
 		sf::Vector2f pos;
-		pos.x = (float)atof(Get("X")->Value().c_str());
-		pos.y = (float)atof(Get("Y")->Value().c_str());
+		pos.x = (float)atof(X->Value().c_str());
+		pos.y = (float)atof(Y->Value().c_str());
 		return pos;
 	}
 

@@ -19,7 +19,7 @@ namespace UnitTest {
 		Utils::Random rnd(236);
 		for( int y=0; y<10; ++y ) for( int x=0; x<10; ++x ){
 			Core::ObjectID objID = world->NewObject("media/noise_2.png");
-			map->Add(objID, x, y );
+			map->Add(objID, x, y, 0 );
 		}
 		const char* walls[3] = {"media/bar_hor.png", "media/bar_vert.png", "media/cross_big.png"};
 		for( int i=0; i<16; ++i ) {
@@ -27,7 +27,7 @@ namespace UnitTest {
 			Core::Object* obj = world->GetObject(objID);
 			obj->Add(Core::Property("Obstacle",""));
 			obj->SetColor(sf::Color(rnd.Uniform(0,255), rnd.Uniform(0,255), rnd.Uniform(0,255), 255));
-			map->Add(objID, rnd.Uniform(0,9), rnd.Uniform(0,9));
+			map->Add(objID, rnd.Uniform(0,9), rnd.Uniform(0,9), 1);
 		}
 
 		// Add one active object
@@ -36,7 +36,7 @@ namespace UnitTest {
 		obj->Add(Core::Property("Target","0:3"));
 		obj->Add(Core::Property("Path","0:0;9:9"));
 		obj->SetColor(sf::Color::Green);
-		map->Add(objID, rnd.Uniform(0,9), rnd.Uniform(0,9));
+		map->Add(objID, rnd.Uniform(0,9), rnd.Uniform(0,9), 4);
 
 		// Save
 		try {

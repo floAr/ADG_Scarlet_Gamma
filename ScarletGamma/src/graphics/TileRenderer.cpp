@@ -21,45 +21,52 @@ void Graphics::TileRenderer::Render(sf::RenderWindow& window, Core::Map& map)
 	int right = (int)ceil((viewRect.left + viewRect.width) / TILESIZE);
 	int bottom = (int)ceil((viewRect.top + viewRect.height) / TILESIZE);
 
-
-	for (int y = top; y <= bottom; y++)
+	// Search layer-wise
+	for (int layer = 0; layer <= map.GetMaxLayer(); layer++ )
 	{
-		for (int x = left; x <= right; x++)
+		for (int y = top; y <= bottom; y++)
 		{
-			Core::ObjectList& objList = map.GetObjectsAt(x, y);
-			
-			// Draw objects bottom to top
-			for (int layer = 0; layer < objList.Size(); layer++)
+			for (int x = left; x <= right; x++)
 			{
-				// Get the object ID
-				Core::ObjectID objID = objList[layer];
-				
-				// try to get the object instance from the world
-				Core::Object* obj = g_Game->GetWorld()->GetObject(objID);
-				assert(obj);
-
-				// Render visible objects
-				if (obj->HasProperty("Sprite"))
+				Core::ObjectList& objList = map.GetObjectsAt(x, y);
+			
+				// Draw objects bottom to top
+				for (int i = 0; i < objList.Size(); i++)
 				{
-					// Load texture
-					// TODO: content manager! we don't wanna load this in every - fucking - frame!
+					// Get the object ID
+					Core::ObjectID objID = objList[i];
+				
+					// try to get the object instance from the world
+					Core::Object* obj = g_Game->GetWorld()->GetObject(objID);
+					assert(obj);
 
-					// Very quick and dirty custom resource manager
-					static std::unordered_map<std::string, sf::Texture> textures;
-					if (textures.find(obj->GetProperty("Sprite").Value()) == textures.end())
+					// Skip objects from the wrong layer
+					if( atoi(obj->GetProperty("Layer").Value().c_str()) != layer )
+						continue;
+
+					// Render visible objects TODO visib-prop
+					if (obj->HasProperty("Sprite"))
 					{
-						sf::Texture tex;
-						tex.loadFromFile(obj->GetProperty("Sprite").Value());
-						textures.emplace(obj->GetProperty("Sprite").Value(), tex);
-					}
-					sf::Texture& tex = textures[obj->GetProperty("Sprite").Value()];
+						// Load texture
+						// TODO: content manager! we don't wanna load this in every - fucking - frame!
 
-					// Draw the tile
-					sf::Sprite drawSprite(tex);
-					drawSprite.setPosition(obj->GetPosition() * float(TILESIZE));
-					drawSprite.setScale(float(TILESIZE)/tex.getSize().x, float(TILESIZE)/tex.getSize().y);
-					drawSprite.setColor(obj->GetColor());
-					window.draw(drawSprite);
+						// Very quick and dirty custom resource manager
+						static std::unordered_map<std::string, sf::Texture> textures;
+						if (textures.find(obj->GetProperty("Sprite").Value()) == textures.end())
+						{
+							sf::Texture tex;
+							tex.loadFromFile(obj->GetProperty("Sprite").Value());
+							textures.emplace(obj->GetProperty("Sprite").Value(), tex);
+						}
+						sf::Texture& tex = textures[obj->GetProperty("Sprite").Value()];
+
+						// Draw the tile
+						sf::Sprite drawSprite(tex);
+						drawSprite.setPosition(obj->GetPosition() * float(TILESIZE));
+						drawSprite.setScale(float(TILESIZE)/tex.getSize().x, float(TILESIZE)/tex.getSize().y);
+						drawSprite.setColor(obj->GetColor());
+						window.draw(drawSprite);
+					}
 				}
 			}
 		}

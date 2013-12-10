@@ -17,7 +17,8 @@ namespace Core {
 		m_minY(0),
 		m_maxY(_sizeY-1),
 		m_parentWorld(_world),
-		m_id(_id)
+		m_id(_id),
+		m_maxLayer(-1)
 	{
 		m_mapArray = new ObjectList[_sizeX * _sizeY];
 		m_activeObjects = new ObjectList;
@@ -30,7 +31,8 @@ namespace Core {
 		m_minY(_map.m_minY),
 		m_maxY(_map.m_maxY),
 		m_parentWorld(_map.m_parentWorld),
-		m_id(_map.m_id)
+		m_id(_map.m_id),
+		m_maxLayer(_map.m_maxLayer)
 	{
 		// Move the only real resource
 		m_mapArray = _map.m_mapArray;
@@ -48,6 +50,7 @@ namespace Core {
 		m_minY = _node[string("MinY")];
 		m_maxX = _node[string("MaxX")];
 		m_maxY = _node[string("MaxY")];
+		m_maxLayer = _node[string("MaxLayer")];
 		m_mapArray = new ObjectList[Width() * Height()];
 		auto& cells = _node[string("Cells")];
 		for(int y=0; y<Height(); ++y)
@@ -126,18 +129,27 @@ namespace Core {
 		Extend(std::max(m_minX-_x,0), std::max(_x-m_maxX,0), std::max(m_minY-_y,0), std::max(_y-m_maxY,0));
 
 		auto& list = GetObjectsAt(_x, _y);
-		// TODO: layering
 		list.Add(_object);
+		// Update layer index
+		m_maxLayer = max(_layer, m_maxLayer);
 
 		// Set correct position for the object itself
 		Object* object = m_parentWorld->GetObject(_object);
-		object->SetPosition(float(_x), float(_y));
+		object->Add( Property("X", to_string((float)_x)) );
+		object->Add( Property("Y", to_string((float)_y)) );
+		object->Add( Property("Layer", to_string(_layer)) );
 
 		// Does the object requires updates?
 		if( object->HasProperty("Target") )
 		{
 			m_activeObjects->Add(_object);
 		}
+	}
+
+
+	void Map::Remove(ObjectID _object)
+	{
+		// TODO
 	}
 
 
@@ -197,6 +209,7 @@ namespace Core {
 		_node[string("MinY")] = m_minY;
 		_node[string("MaxX")] = m_maxX;
 		_node[string("MaxY")] = m_maxY;
+		_node[string("MaxLayer")] = m_maxLayer;
 		auto& cells = _node.Add(string("Cells"), Jo::Files::MetaFileWrapper::ElementType::NODE, Width()*Height() );
 		for(int y=0; y<Height(); ++y)
 			for(int x=0; x<Width(); ++x)

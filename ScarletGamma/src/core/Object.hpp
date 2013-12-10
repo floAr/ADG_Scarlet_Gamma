@@ -27,17 +27,22 @@ public:
 	bool HasProperty( const std::string& _name ) const;
 
 	/// \brief Updates the two position properties
+	/// \details The position exists only if the object is located on a map.
+	///		Otherwise this method will return a NoSuchProperty exception.
 	/// \param [in] _x X coordinate of the object position. The integral part
 	///		defines the location within the tile-grid.
 	/// \param [in] _y Y coordinate of the object position. The integral part
 	///		defines the location within the tile-grid.
+	/// \throws Exception::NoSuchProperty
 	void SetPosition( float _x, float _y );
 
 	/// \brief Returns the floating position within the tile grid.
-	/// \details The position property is mandatory for objects.
+	/// \details The position exists only if the object is located on a map.
+	///		Otherwise this method will return a NoSuchProperty exception.
 	/// 
 	///		This method is relatively slow because it contains a string->float
 	///		cast. So buffer the position if used more than once.
+	/// \throws Exception::NoSuchProperty
 	sf::Vector2f GetPosition() const;
 
 	/// \brief Returns a color if the according property exists and white

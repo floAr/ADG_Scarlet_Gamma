@@ -54,9 +54,17 @@ namespace Core {
 		/// \brief Add a new object between or on top of the existing objects.
 		/// \details If the map position is not inside the current map the map
 		///		will be extended.
-		/// \param [in] _layer Where to insert the object in the list? The
-		///		default -1 adds the element on top of the stack (at the end).
-		void Add(ObjectID _object, int _x, int _y, int _layer = -1);
+		/// \param [in] _layer Where to insert the object in the render order?
+		///		0 is the ground and objects with negative values are not drawn.
+		void Add(ObjectID _object, int _x, int _y, int _layer);
+
+		/// \brief Remove an object from the map. The object itself is not deleted!
+		/// \details The attributes for position and layer are removed from
+		///		the object.
+		///	\param [in] _object ID of the object which should be deleted. If the
+		///		object is not on the map or has an invalid position state an
+		///		assertion will fail.
+		void Remove(ObjectID _object);
 
 		/// \brief Number for cells in x-direction
 		int Width() const	{ return m_maxX-m_minX+1; }
@@ -94,12 +102,16 @@ namespace Core {
 		/// \brief Returns one of the 8 neighbors which is the first to be
 		///		visited to go to the goal.
 		sf::Vector2i FindNextOnPath( sf::Vector2i _start, sf::Vector2i _goal );
+
+		/// \brief return the highest layer of all contained objects.
+		int GetMaxLayer() const { return m_maxLayer; }
 	private:
 		std::string m_name;
 
 		ObjectList* m_mapArray;	///< 2D cell array.
 		int m_minX, m_maxX;		///< Size (max-min+1) and position in x direction
 		int m_minY, m_maxY;		///< Size (max-min+1) and position in y direction
+		int m_maxLayer;			///< Highest used number in the layering required for render order
 		ObjectList* m_activeObjects;	///< All objects in the mapArray which needs to be updated.
 
 		World* m_parentWorld;	///< World reference to have direct object access.

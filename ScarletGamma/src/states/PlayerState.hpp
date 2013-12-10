@@ -9,7 +9,7 @@ namespace States
 	class PlayerState : public GameState
 	{
 	public:
-		PlayerState() : m_zoom(Utils::Falloff::FT_QUADRATIC, 0.75f, 0.05f), m_selected(nullptr) {}
+		PlayerState() : m_zoom(Utils::Falloff::FT_QUADRATIC, 0.75f, 0.05f), m_selected(nullptr), m_player(nullptr) {}
 		virtual void OnBegin() {}
 		virtual void OnEnd() {}
 		virtual void OnPause() {}
@@ -24,6 +24,7 @@ namespace States
 		Utils::Falloff m_zoom;
 
 		Core::Object* m_selected;	///< A reference to the selected object or nullptr
+		Core::Object* m_player;		///< The one and only player object
 		void DrawPathOverlay(sf::RenderWindow& win);
 	};
 }

@@ -75,7 +75,7 @@ void Graphics::TileRenderer::Render(sf::RenderWindow& window, Core::Map& map)
 
 void Graphics::TileRenderer::RenderPath( sf::RenderWindow& window, const std::vector<sf::Vector2i>& _path )
 {
-	for( int i=0; i<_path.size(); ++i )
+	for( size_t i=0; i<_path.size(); ++i )
 	{
 		// Wtf? I wanna access the textures! TODO: usage of real manager
 		sf::Texture tex; tex.loadFromFile("media/way_point.png");

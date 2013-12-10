@@ -20,8 +20,10 @@ void States::PlayerState::Update(float dt)
 void States::PlayerState::Draw(sf::RenderWindow& win)
 {
 	// Hard coded test selection:
-	if( !m_selected )
+	if( !m_selected ) {
 		m_selected = g_Game->GetWorld()->GetObject(g_Game->GetWorld()->GetMap(0)->GetObjectsAt(0,2)[1]);
+		m_player = m_selected;
+	}
 
 	// Draw some color to the background
 	static sf::Color c(20, 26, 36);
@@ -32,8 +34,7 @@ void States::PlayerState::Draw(sf::RenderWindow& win)
 	Graphics::TileRenderer::Render(win, *g_Game->GetWorld()->GetMap(0));
 
 	// If the selected object has a path draw it
-	if( m_selected )
-		DrawPathOverlay(win);
+	DrawPathOverlay(win);
 }
 
 void States::PlayerState::MouseMoved(int deltaX, int deltaY)
@@ -60,11 +61,25 @@ void States::PlayerState::MouseButtonPressed(sf::Event::MouseButtonEvent& button
 {
 	switch (button.button)
 	{
-	case sf::Mouse::Left:
+	case sf::Mouse::Left: {
 		//------------------------------------//
-		// TODO: move player to tile position //
+		// move player to tile position		  //
 		//------------------------------------//
-		break;
+		auto& tiles = g_Game->GetWorld()->GetMap(0)->GetObjectsAt((int)tilePos.x,(int)tilePos.y);
+		if( tiles.Size() > 0 )
+		{
+			// TODO: intelligent selcet?
+			m_selected = g_Game->GetWorld()->GetObject(tiles[tiles.Size()-1]);
+			// Delete current target(s) if not appending
+			if( !sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) )
+			{
+				m_player->GetProperty("Target").SetValue("");
+				m_player->GetProperty("Path").Objects().Clear();
+			}
+			// Append to target list
+			m_player->GetProperty("Path").Objects().Add(m_selected->ID());
+		}
+		} break;
 	case sf::Mouse::Middle:
 		m_zoom = 0;
 		sf::RenderWindow& win = g_Game->GetWindow();
@@ -114,13 +129,14 @@ void States::PlayerState::ZoomView(float delta)
 
 void States::PlayerState::DrawPathOverlay(sf::RenderWindow& win)
 {
+	assert( m_player );
 	try {
 		std::vector<sf::Vector2i> path;
-		sf::Vector2i start(sfUtils::Round(m_selected->GetPosition()));
-		if( m_selected->HasProperty("Path") )
+		sf::Vector2i start(sfUtils::Round(m_player->GetPosition()));
+		if( m_player->HasProperty("Path") )
 		{
 			// For each way point compute the shortest path
-			auto& wayPoints = m_selected->GetProperty("Path").Objects();
+			auto& wayPoints = m_player->GetProperty("Path").Objects();
 			for( int i=0; i<wayPoints.Size(); ++i )
 			{
 				sf::Vector2i goal = sfUtils::Round(g_Game->GetWorld()->GetObject(wayPoints[i])->GetPosition());
@@ -128,9 +144,9 @@ void States::PlayerState::DrawPathOverlay(sf::RenderWindow& win)
 				start = goal;
 				path.insert( path.end(), part.begin(), part.end() );
 			}
-		} else if( m_selected->HasProperty("Target") ) {
+		} else if( m_player->HasProperty("Target") ) {
 			// There are no paths but a short time target.
-			sf::Vector2i goal = sfUtils::Round(sfUtils::to_vector(m_selected->GetProperty("Target").Value()));
+			sf::Vector2i goal = sfUtils::Round(sfUtils::to_vector(m_player->GetProperty("Target").Value()));
 			path = g_Game->GetWorld()->GetMap(0)->FindPath(start, goal);
 		}
 

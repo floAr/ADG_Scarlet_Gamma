@@ -394,7 +394,7 @@ namespace ADT {
 		}
 
 		// Check for new minimum
-		if( _iNewPriority <= m_pRoot->iPriority )
+		if( _iNewPriority < m_pRoot->iPriority )
 		{
 			assert(!_pElement->pParent);
 			m_pRoot = _pElement;

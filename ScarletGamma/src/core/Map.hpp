@@ -150,6 +150,13 @@ namespace Core {
 		///		The list is updated if the current position is equal to the
 		///		first point in the path list.
 		sf::Vector2f FindNextTarget(Object* _object) const;
+
+		/// \brief AI helper method to test if an objects position is equal
+		///		to the target position.
+		///	\param [in] _object The object to test.
+		///	\param [in] _position The current objects position (to avoid
+		///		computational overhead).
+		bool HasReachedTarget(Object* _object, const sf::Vector2f& _position) const;
 	};
 
 } // namespace Core

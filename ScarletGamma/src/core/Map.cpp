@@ -170,25 +170,28 @@ namespace Core {
 			// Move objects in the direction of their target.
 			// Assert: Each object in the active list has a target
 			Object* object = m_parentWorld->GetObject( (*m_activeObjects)[i] );
-			auto target = sfUtils::to_vector(object->GetProperty("Target").Value());
 			auto position = object->GetPosition();
+			if( HasReachedTarget(object, position) )
+			{
+				// If it reached the target choose a new one.
+				object->GetProperty("Target").SetValue( sfUtils::to_string(FindNextTarget(object)) );
+			}
+			auto target = sfUtils::to_vector(object->GetProperty("Target").Value());
 			target -= position;	// Scaled direction
 			float len = sfUtils::Length(target);
-			// Reached target?
-			if( len > 0.00001 ) { // No
+			if( len > 0.00001 )
+			{
 				sf::Vector2i oldCell(sfUtils::Round(position));
 				// Move with constant speed and don't overshoot the target
 				position += target * std::min(_dt / len, 1.0f);
 				object->SetPosition(position.x, position.y);
 				// Update cells
 				sf::Vector2i newCell(sfUtils::Round(position));
-				if( oldCell != newCell ) {
+				if( oldCell != newCell )
+				{
 					GetObjectsAt(oldCell.x, oldCell.y).Remove(object->ID());
 					GetObjectsAt(newCell.x, newCell.y).Add(object->ID());
 				}
-			} else {
-				// If it reached the target choose a new one.
-				object->GetProperty("Target").SetValue( sfUtils::to_string(FindNextTarget(object)) );
 			}
 		}
 	}
@@ -334,6 +337,14 @@ namespace Core {
 		}
 		// No new target
 		return position;
+	}
+
+	bool Map::HasReachedTarget( Object* _object, const sf::Vector2f& _position ) const
+	{
+		auto& targetProp = _object->GetProperty("Target");
+		if( targetProp.Value() == "" ) return true;
+		auto target = sfUtils::to_vector(targetProp.Value());
+		return sfUtils::LengthSq(target-_position) < 0.00000001;
 	}
 
 } // namespace Core

@@ -28,6 +28,9 @@ public:
 	///		This method does not change the original object.
 	void Remove( ObjectID _id );
 
+	/// \brief Remove all objects
+	void Clear()	{ m_objects.clear(); }
+
 	/// \brief Remove the first element (inefficient queue).
 	void PopFront();
 

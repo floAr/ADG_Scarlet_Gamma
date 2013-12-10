@@ -2,6 +2,7 @@
 
 #include "Prerequisites.hpp"
 #include <SFML/Graphics.hpp>
+#include <vector>
 
 namespace Graphics
 {
@@ -13,5 +14,9 @@ namespace Graphics
 		/// \param [in] window	SFML Window to be rendered to
 		/// \param [in] map		Map to be rendered
 		static void Render(sf::RenderWindow& window, Core::Map& map);
+
+		/// \brief Draw a path overlay for the current objects path.
+		///	\param [in] An array of tile-positions where the overlay should appear.
+		static void RenderPath(sf::RenderWindow& window, const std::vector<sf::Vector2i>& _path);
 	};
 }

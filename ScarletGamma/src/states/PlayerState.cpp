@@ -19,6 +19,10 @@ void States::PlayerState::Update(float dt)
 
 void States::PlayerState::Draw(sf::RenderWindow& win)
 {
+	// Hard coded test selection:
+	if( !m_selected )
+		m_selected = g_Game->GetWorld()->GetObject(g_Game->GetWorld()->GetMap(0)->GetObjectsAt(0,2)[1]);
+
 	// Draw some color to the background
 	static sf::Color c(20, 26, 36);
 	win.clear(c);
@@ -26,6 +30,10 @@ void States::PlayerState::Draw(sf::RenderWindow& win)
 	// Render
 	// Uses the test map 0 for testing purposes.
 	Graphics::TileRenderer::Render(win, *g_Game->GetWorld()->GetMap(0));
+
+	// If the selected object has a path draw it
+	if( m_selected )
+		DrawPathOverlay(win);
 }
 
 void States::PlayerState::MouseMoved(int deltaX, int deltaY)
@@ -102,4 +110,33 @@ void States::PlayerState::ZoomView(float delta)
 
 	// Apply view to the window
 	win.setView(newView);
+}
+
+void States::PlayerState::DrawPathOverlay(sf::RenderWindow& win)
+{
+	try {
+		std::vector<sf::Vector2i> path;
+		sf::Vector2i start(sfUtils::Round(m_selected->GetPosition()));
+		if( m_selected->HasProperty("Path") )
+		{
+			// For each way point compute the shortest path
+			auto& wayPoints = m_selected->GetProperty("Path").Objects();
+			for( int i=0; i<wayPoints.Size(); ++i )
+			{
+				sf::Vector2i goal = sfUtils::Round(g_Game->GetWorld()->GetObject(wayPoints[i])->GetPosition());
+				auto part = g_Game->GetWorld()->GetMap(0)->FindPath(start, goal);
+				start = goal;
+				path.insert( path.end(), part.begin(), part.end() );
+			}
+		} else if( m_selected->HasProperty("Target") ) {
+			// There are no paths but a short time target.
+			sf::Vector2i goal = sfUtils::Round(sfUtils::to_vector(m_selected->GetProperty("Target").Value()));
+			path = g_Game->GetWorld()->GetMap(0)->FindPath(start, goal);
+		}
+
+		if( path.size() > 0 )
+			Graphics::TileRenderer::RenderPath(win, path);
+	} catch(...) {
+		// In case of an invalid selection just draw no path
+	}
 }

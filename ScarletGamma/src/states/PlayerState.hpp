@@ -2,13 +2,14 @@
 
 #include "states/GameState.hpp"
 #include "utils/Falloff.hpp"
+#include "Prerequisites.hpp"
 
 namespace States
 {
 	class PlayerState : public GameState
 	{
 	public:
-		PlayerState() : m_zoom(Utils::Falloff::FT_QUADRATIC, 0.75f, 0.05f) {}
+		PlayerState() : m_zoom(Utils::Falloff::FT_QUADRATIC, 0.75f, 0.05f), m_selected(nullptr) {}
 		virtual void OnBegin() {}
 		virtual void OnEnd() {}
 		virtual void OnPause() {}
@@ -21,5 +22,8 @@ namespace States
 	private:
 		void ZoomView(float delta);
 		Utils::Falloff m_zoom;
+
+		Core::Object* m_selected;	///< A reference to the selected object or nullptr
+		void DrawPathOverlay(sf::RenderWindow& win);
 	};
 }

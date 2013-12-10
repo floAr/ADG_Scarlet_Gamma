@@ -72,3 +72,17 @@ void Graphics::TileRenderer::Render(sf::RenderWindow& window, Core::Map& map)
 		}
 	}
 }
+
+void Graphics::TileRenderer::RenderPath( sf::RenderWindow& window, const std::vector<sf::Vector2i>& _path )
+{
+	for( int i=0; i<_path.size(); ++i )
+	{
+		// Wtf? I wanna access the textures! TODO: usage of real manager
+		sf::Texture tex; tex.loadFromFile("media/way_point.png");
+		sf::Sprite drawSprite(tex);
+		drawSprite.setPosition(sf::Vector2f(_path[i]) * float(TILESIZE));
+		drawSprite.setScale(float(TILESIZE)/tex.getSize().x, float(TILESIZE)/tex.getSize().y);
+		drawSprite.setColor(sf::Color(255, 144, 1, 130));
+		window.draw(drawSprite);
+	}
+}

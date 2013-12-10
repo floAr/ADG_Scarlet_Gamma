@@ -35,6 +35,13 @@ namespace Core {
 	}
 
 
+	void ObjectList::PopFront()
+	{
+		m_objects.erase(m_objects.begin());
+	}
+
+
+
 	ObjectID ObjectList::operator[](int _index) const
 	{
 		assert(0<=_index && _index<(int)m_objects.size());

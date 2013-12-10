@@ -28,6 +28,9 @@ public:
 	///		This method does not change the original object.
 	void Remove( ObjectID _id );
 
+	/// \brief Remove the first element (inefficient queue).
+	void PopFront();
+
 	/// \brief Number of elements in the list
 	int Size() const { return (int)m_objects.size(); }
 

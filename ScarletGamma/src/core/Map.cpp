@@ -174,12 +174,13 @@ namespace Core {
 			auto position = object->GetPosition();
 			target -= position;	// Scaled direction
 			float len = sfUtils::Length(target);
-			if( len > 0.01 ) {
+			// Reached target?
+			if( len > 0.00001 ) { // No
 				sf::Vector2i oldCell(sfUtils::Round(position));
 				// Move with constant speed and don't overshoot the target
 				position += target * std::min(_dt / len, 1.0f);
 				object->SetPosition(position.x, position.y);
-				// TODO: update cells
+				// Update cells
 				sf::Vector2i newCell(sfUtils::Round(position));
 				if( oldCell != newCell ) {
 					GetObjectsAt(oldCell.x, oldCell.y).Remove(object->ID());
@@ -187,25 +188,7 @@ namespace Core {
 				}
 			} else {
 				// If it reached the target choose a new one.
-				if(object->HasProperty("Path"))
-				{
-					const string& path = object->GetProperty("Path").Value();
-					size_t delim = path.find_first_of(';');
-					string tmpStr = path.substr(0, delim);
-					target = sfUtils::to_vector( tmpStr );
-					// Remove the point from the path if reached
-					if( target == position ) {
-						tmpStr = path.substr(delim+1,0xffffffff);
-						object->GetProperty("Path").SetValue( tmpStr );
-						tmpStr = tmpStr.substr(0, delim);
-						target = sfUtils::to_vector( tmpStr );
-						// TODO: loop through path
-					}
-					sf::Vector2i start(sfUtils::Round(position));
-					sf::Vector2i goal(sfUtils::Round(target));
-					target = sf::Vector2f(FindNextOnPath( start, goal ));
-					object->GetProperty("Target").SetValue( sfUtils::to_string(target) );
-				}
+				object->GetProperty("Target").SetValue( sfUtils::to_string(FindNextTarget(object)) );
 			}
 		}
 	}
@@ -246,7 +229,7 @@ namespace Core {
 		{}
 	};
 
-	std::vector<sf::Vector2i> Map::FindPath( sf::Vector2i _start, sf::Vector2i _goal )
+	std::vector<sf::Vector2i> Map::FindPath( sf::Vector2i _start, sf::Vector2i _goal ) const
 	{
 		// Persistent memory of all visited nodes.
 		std::list<SearchNode> visited;
@@ -311,12 +294,46 @@ namespace Core {
 		return std::vector<sf::Vector2i>();
 	}
 
-	sf::Vector2i Map::FindNextOnPath( sf::Vector2i _start, sf::Vector2i _goal )
+	sf::Vector2i Map::FindNextOnPath( sf::Vector2i _start, sf::Vector2i _goal ) const
 	{
 		// This function can be optimized by avoiding the build of the whole path.
 		auto& path = FindPath(_start, _goal);
 		if( path.empty() ) return _start;
 		return path.back();
+	}
+
+
+	sf::Vector2f Map::FindNextTarget(Object* _object) const
+	{
+		sf::Vector2f position = _object->GetPosition();
+		if(_object->HasProperty("Path"))
+		{
+			auto& path = _object->GetProperty("Path").Objects();
+			sf::Vector2i start, goal;
+			do {
+				if( path.Size() > 0 )
+				{
+					Object* pathPoint = m_parentWorld->GetObject(path[0]);
+					sf::Vector2f point = position;
+					try { // Maybe the target point was removed from the map?
+						point = pathPoint->GetPosition();
+					} catch(...) {path.PopFront();}
+
+					start = sfUtils::Round(position);
+					goal = sfUtils::Round(point);
+
+					// If we are already at the first path-point remove it.
+					// TODO: loop path
+					if( start == goal )
+						path.PopFront();
+				} else return position;
+			} while( start == goal );
+
+			// Search a way
+			return sf::Vector2f(FindNextOnPath( start, goal ));
+		}
+		// No new target
+		return position;
 	}
 
 } // namespace Core

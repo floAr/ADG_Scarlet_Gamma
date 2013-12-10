@@ -97,11 +97,11 @@ namespace Core {
 		///		of vector).
 		///		
 		///		The vector is empty if no way exists.
-		std::vector<sf::Vector2i> FindPath( sf::Vector2i _start, sf::Vector2i _goal );
+		std::vector<sf::Vector2i> FindPath( sf::Vector2i _start, sf::Vector2i _goal ) const;
 
 		/// \brief Returns one of the 8 neighbors which is the first to be
 		///		visited to go to the goal.
-		sf::Vector2i FindNextOnPath( sf::Vector2i _start, sf::Vector2i _goal );
+		sf::Vector2i FindNextOnPath( sf::Vector2i _start, sf::Vector2i _goal ) const;
 
 		/// \brief return the highest layer of all contained objects.
 		int GetMaxLayer() const { return m_maxLayer; }
@@ -142,6 +142,14 @@ namespace Core {
 		///		requires a world reference to check their properties.
 		Map(const Jo::Files::MetaFileWrapper::Node& _node, World* _world);
 
+		/// \brief AI helper method to find the next target for an object.
+		/// \details A target is a grid cell which can be reached by a linear
+		///		walk.
+		///		
+		///		The target is drawn from the "Path" property (first element).
+		///		The list is updated if the current position is equal to the
+		///		first point in the path list.
+		sf::Vector2f FindNextTarget(Object* _object) const;
 	};
 
 } // namespace Core

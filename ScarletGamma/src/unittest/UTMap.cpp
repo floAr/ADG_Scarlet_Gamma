@@ -43,14 +43,16 @@ namespace UnitTest {
 
 		// Save
 		try {
-			world->Save( "saves/unittest.json" );
+			Jo::Files::HDDFile file("saves/unittest.json", false);
+			world->Save( file );
 		} catch(std::string _e) {TEST_FAILED(_e);}
 		catch(...) {TEST_FAILED("Saving a world.");}
 		delete world;
 
 		// Load
 		world = new Core::World();
-		world->Load( "saves/unittest.json" );
+		Jo::Files::HDDFile file("saves/unittest.json", true);
+		world->Load( file );
 		// Test sample
 		if( world->GetObject( world->GetMap(mapID)->GetObjectsAt(2,2)[0] )->GetProperty("X").Value() != "2.000000" )
 			TEST_FAILED("Could not load the world correct.");

@@ -30,6 +30,9 @@
     <Filter Include="Quelldateien\events">
       <UniqueIdentifier>{4153138c-0b74-4b6c-8d06-2028e991351f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Quelldateien\network">
+      <UniqueIdentifier>{649d2e1f-529f-477b-89a8-73181b415c41}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -97,6 +100,12 @@
     </ClCompile>
     <ClCompile Include="src\sfutils\Vectors.cpp">
       <Filter>Quelldateien\sfutils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\network\Messenger.cpp">
+      <Filter>Quelldateien\network</Filter>
+    </ClCompile>
+    <ClCompile Include="src\network\WorldMessages.cpp">
+      <Filter>Quelldateien\network</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -174,6 +183,15 @@
     </ClInclude>
     <ClInclude Include="src\Constants.hpp">
       <Filter>Quelldateien</Filter>
+    </ClInclude>
+    <ClInclude Include="src\network\Messenger.hpp">
+      <Filter>Quelldateien\network</Filter>
+    </ClInclude>
+    <ClInclude Include="src\network\Message.hpp">
+      <Filter>Quelldateien\network</Filter>
+    </ClInclude>
+    <ClInclude Include="src\network\WorldMessages.hpp">
+      <Filter>Quelldateien\network</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

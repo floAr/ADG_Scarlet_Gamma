@@ -1,6 +1,7 @@
 #pragma once
 
 #include <unordered_map>
+#include <jofilelib.hpp>
 #include "Prerequisites.hpp"
 #include "Map.hpp"
 #include "Object.hpp"
@@ -35,11 +36,11 @@ namespace Core {
 		ObjectID NewObject( const std::string& _sprite );
 
 		/// \brief Loads all maps and objects of a world from a save-game.
-		void Load( std::string _fileName );
+		void Load( Jo::Files::IFile& _file );
 
 		/// \brief Stores all maps and objects to a save game.
 		/// TODO: how are players handled?
-		void Save( std::string _fileName );
+		void Save( Jo::Files::IFile& _file );
 	private:
 		/// \brief All real existing objects.
 		std::unordered_map<ObjectID, Object> m_objects;

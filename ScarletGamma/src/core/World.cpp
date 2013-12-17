@@ -39,7 +39,7 @@ namespace Core {
 	}
 
 
-	void World::Load( std::string _fileName )
+	void World::Load( Jo::Files::IFile& _file )
 	{
 		// Clear old stuff
 		m_maps.clear();
@@ -49,8 +49,7 @@ namespace Core {
 
 		// The save game is a top level file which contains maps and objects
 		// serialized.
-		Jo::Files::HDDFile file(_fileName, true);
-		const Jo::Files::MetaFileWrapper saveGame(file);
+		const Jo::Files::MetaFileWrapper saveGame(_file);
 
 		// There should be an array of objects
 		const Jo::Files::MetaFileWrapper::Node* child;
@@ -89,7 +88,7 @@ namespace Core {
 		++m_nextFreeMapID;
 	}
 
-	void World::Save( std::string _fileName )
+	void World::Save( Jo::Files::IFile& _file )
 	{
 		Jo::Files::MetaFileWrapper saveGame;
 		// Serialize objects
@@ -105,8 +104,7 @@ namespace Core {
 			it->second.Serialize(maps[i]);
 
 		// Write a new file
-		Jo::Files::HDDFile file(_fileName, false);
-		saveGame.Write(file, Jo::Files::Format::JSON);
+		saveGame.Write(_file, Jo::Files::Format::JSON);
 	}
 
 } // namespace Core

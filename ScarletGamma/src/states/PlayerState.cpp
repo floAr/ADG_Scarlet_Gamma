@@ -56,25 +56,6 @@ void States::PlayerState::MouseButtonPressed(sf::Event::MouseButtonEvent& button
 {
 	switch (button.button)
 	{
-	case sf::Mouse::Left: {
-		//------------------------------------//
-		// move player to tile position		  //
-		//------------------------------------//
-		auto& tiles = g_Game->GetWorld()->GetMap(0)->GetObjectsAt((int)tilePos.x,(int)tilePos.y);
-		if( tiles.Size() > 0 )
-		{
-			// TODO: intelligent selcet?
-			m_selected = g_Game->GetWorld()->GetObject(tiles[tiles.Size()-1]);
-			// Delete current target(s) if not appending
-			if( !sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) )
-			{
-				m_player->GetProperty("Target").SetValue("");
-				m_player->GetProperty("Path").Objects().Clear();
-			}
-			// Append to target list
-			m_player->GetProperty("Path").Objects().Add(m_selected->ID());
-		}
-		} break;
 	case sf::Mouse::Middle:
 		m_zoom = 0;
 		sf::RenderWindow& win = g_Game->GetWindow();

@@ -3,6 +3,7 @@
 #include <iostream>
 #include "Message.hpp"
 #include "WorldMessages.hpp"
+#include "Game.hpp"
 
 namespace Network {
 
@@ -32,7 +33,8 @@ namespace Network {
 		if( serverConnection->connect( _server, 42961 ) != sf::Socket::Done )
 		{
 			std::cout << "[Messenger] Connection to " << _server << ':' << 42961 << " not possible";
-		}
+		} else
+			m_sockets.push_back(serverConnection);
 	}
 
 	Messenger::~Messenger()
@@ -58,7 +60,7 @@ namespace Network {
 		delete g_msgInstance;
 	}
 
-	void Messenger::Poll()
+	void Messenger::Poll( bool _blocking )
 	{
 		if( g_msgInstance->m_listener ) // This is the server
 		{
@@ -74,21 +76,21 @@ namespace Network {
 		// Both server and client can receive any message
 		for( size_t i=0; i<g_msgInstance->m_sockets.size(); ++i )
 		{
+			g_msgInstance->m_sockets[i]->setBlocking( _blocking );
 			size_t receivedBytes;
-			if( g_msgInstance->m_sockets[i]->receive(g_msgInstance->m_buffer, BUFFER_SIZE, receivedBytes) )
+			if( g_msgInstance->m_sockets[i]->receive(g_msgInstance->m_buffer, BUFFER_SIZE, receivedBytes) == sf::Socket::Done )
 				g_msgInstance->HandleMessage(receivedBytes);
 		}
 	}
 
 	void Messenger::AddClient( sf::TcpSocket* _newClient )
 	{
-		_newClient->setBlocking( false );
 		m_sockets.push_back( _newClient );
 		// Sent whole world (in its latest state)
 		Jo::Files::MemFile data;
 		data.Write( &MessageHeader( Target::WORLD, 0 ), sizeof(MessageHeader) );
 		data.Write( &MsgWorldHeader( MsgWorld::LOAD ), sizeof(MsgWorldHeader) );
-		m_world->Save( data );
+		g_Game->GetWorld()->Save( data );
 		_newClient->send( data.GetBuffer(), (size_t)data.GetSize() );
 	}
 
@@ -99,7 +101,7 @@ namespace Network {
 		switch(((MessageHeader*)m_buffer)->target)
 		{
 		case Target::WORLD:
-			HandleWorldMessage(m_world, (uint8_t*)m_buffer + sizeof(MessageHeader), _size - sizeof(MessageHeader));
+			HandleWorldMessage(g_Game->GetWorld(), (uint8_t*)m_buffer + sizeof(MessageHeader), _size - sizeof(MessageHeader));
 			break;
 		}
 	}

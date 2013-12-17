@@ -27,11 +27,12 @@ namespace Network {
 		static void RegisterTarget(/**/);
 
 		/// \brief Look for new packets or clients and handle them.
-		static void Poll();
+		/// \param [in] _blocking Block current thread until a message is
+		///		received.
+		static void Poll( bool _blocking );
 	private:
 		sf::TcpListener* m_listener;			///< Server side listener to find new clients.
 		std::vector<sf::TcpSocket*> m_sockets;	///< An array of connected servers/clients.
-		Core::World* m_world;					///< The world which is played and synchronized.
 		void* m_buffer;							///< A large buffer to receive any message.
 
 		/// \brief Server constructor

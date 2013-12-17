@@ -28,7 +28,8 @@ void States::MainMenuState::Draw(sf::RenderWindow& win)
 		(unsigned char)(255 * (float)m_mousePos[1] / (float)win.getSize().y),
 		(unsigned char)(m_mousePos[2])));
 	
-	sf::Text t("Press enter to see TileRenderer in action\n"
+	sf::Text t("Press enter to open PlayerState\n"
+			   "or 'm' to open MasterState\n"
 		       "or escape to quit.\n\n"
 		       "Move mouse or scroll to change background color.", m_menuFont, 24);
 	t.setPosition(30, 30);
@@ -42,6 +43,10 @@ void States::MainMenuState::KeyPressed(sf::Event::KeyEvent& key)
 	// Playing state with enter
 	case sf::Keyboard::Return:
 		g_Game->GetStateMachine()->PushGameState(GST_PLAYER);
+		break;
+	// Master state with m
+	case sf::Keyboard::M:
+		g_Game->GetStateMachine()->PushGameState(GST_MASTER);
 		break;
 	// Quit with escape
 	case sf::Keyboard::Escape:

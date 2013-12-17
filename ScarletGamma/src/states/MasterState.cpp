@@ -1,4 +1,4 @@
-#include "states/PlayerState.hpp"
+#include "states/MasterState.hpp"
 #include "Game.hpp"
 #include "graphics/TileRenderer.hpp"
 #include "core/Map.hpp"
@@ -8,18 +8,27 @@
 #include "network/Messenger.hpp"
 #include <iostream>
 
-void States::PlayerState::Update(float dt)
+void States::MasterState::Update(float dt)
 {
-	// Handle network events
-	Network::Messenger::Poll( false );
-
 	m_zoom.Update(dt);
 	if (m_zoom != 0)
 		ZoomView(m_zoom);
+
+	// Uses the test map 0 for testing purposes.
+	g_Game->GetWorld()->GetMap(0)->Update(dt);
+
+	// Handle network events
+	Network::Messenger::Poll( false );
 }
 
-void States::PlayerState::Draw(sf::RenderWindow& win)
+void States::MasterState::Draw(sf::RenderWindow& win)
 {
+	// Hard coded test selection:
+	if( !m_selected ) {
+		m_selected = g_Game->GetWorld()->GetObject(g_Game->GetWorld()->GetMap(0)->GetObjectsAt(0,2)[1]);
+		m_player = m_selected;
+	}
+
 	// Draw some color to the background
 	static sf::Color c(20, 26, 36);
 	win.clear(c);
@@ -29,10 +38,10 @@ void States::PlayerState::Draw(sf::RenderWindow& win)
 	Graphics::TileRenderer::Render(win, *g_Game->GetWorld()->GetMap(0));
 
 	// If the selected object has a path draw it
-	//DrawPathOverlay(win);
+	DrawPathOverlay(win);
 }
 
-void States::PlayerState::MouseMoved(int deltaX, int deltaY)
+void States::MasterState::MouseMoved(int deltaX, int deltaY)
 {
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 	{
@@ -52,7 +61,7 @@ void States::PlayerState::MouseMoved(int deltaX, int deltaY)
 	}
 }
 
-void States::PlayerState::MouseButtonPressed(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos)
+void States::MasterState::MouseButtonPressed(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos)
 {
 	switch (button.button)
 	{
@@ -74,7 +83,7 @@ void States::PlayerState::MouseButtonPressed(sf::Event::MouseButtonEvent& button
 			// Append to target list
 			m_player->GetProperty("Path").Objects().Add(m_selected->ID());
 		}
-		} break;
+						  } break;
 	case sf::Mouse::Middle:
 		m_zoom = 0;
 		sf::RenderWindow& win = g_Game->GetWindow();
@@ -85,12 +94,12 @@ void States::PlayerState::MouseButtonPressed(sf::Event::MouseButtonEvent& button
 	}
 }
 
-void States::PlayerState::MouseWheelMoved(sf::Event::MouseWheelEvent& wheel)
+void States::MasterState::MouseWheelMoved(sf::Event::MouseWheelEvent& wheel)
 {
 	m_zoom = (float)wheel.delta;
 }
 
-void States::PlayerState::ZoomView(float delta)
+void States::MasterState::ZoomView(float delta)
 {
 	// Get the render window
 	sf::RenderWindow& win = g_Game->GetWindow();
@@ -109,7 +118,7 @@ void States::PlayerState::ZoomView(float delta)
 		newView.getSize().y / win.getSize().y > clampFactor * TILESIZE)
 	{
 		newView.setSize(win.getSize().x * TILESIZE * clampFactor,
-			            win.getSize().y * TILESIZE * clampFactor);
+			win.getSize().y * TILESIZE * clampFactor);
 	}
 
 	if (newView.getSize().x / win.getSize().x < clampFactor || 
@@ -122,7 +131,7 @@ void States::PlayerState::ZoomView(float delta)
 	win.setView(newView);
 }
 
-void States::PlayerState::DrawPathOverlay(sf::RenderWindow& win)
+void States::MasterState::DrawPathOverlay(sf::RenderWindow& win)
 {
 	assert( m_player );
 	try {
@@ -152,16 +161,18 @@ void States::PlayerState::DrawPathOverlay(sf::RenderWindow& win)
 	}
 }
 
-void States::PlayerState::OnBegin()
-{
-	// Connect to server: local host for tests
-	Network::Messenger::Initialize(sf::IpAddress("127.0.0.1"));
 
-	// After connecting the client is receiving the world
-	Network::Messenger::Poll( true );
+void States::MasterState::OnBegin()
+{
+	// Init server
+	Network::Messenger::Initialize(sf::IpAddress());
+
+	// Load the test map
+	Jo::Files::HDDFile file("saves/unittest.json");
+	g_Game->GetWorld()->Load( file );
 }
 
-void States::PlayerState::OnEnd()
+void States::MasterState::OnEnd()
 {
 	Network::Messenger::Close();
 }

@@ -2,6 +2,7 @@
 #include "IntroState.hpp"
 #include "PlayerState.hpp"
 #include "MainMenuState.hpp"
+#include "MasterState.hpp"
 
 States::StateMachine::StateMachine() :
 	m_gameState(0)
@@ -25,12 +26,17 @@ void States::StateMachine::PushGameState(States::GameStateType state)
 	case GST_PLAYER:
 		newState = new States::PlayerState();
 		break;
+	case GST_MASTER:
+		newState = new States::MasterState();
 	}
 
 	// If we have a new state, "push" it
 	if (newState != 0)
 	{
+		if( m_gameState )
+			m_gameState->OnPause();
 		newState->SetPreviousState(m_gameState);
+		newState->OnBegin();
 		m_gameState = newState;
 	}
 }
@@ -39,7 +45,12 @@ void States::StateMachine::Update(float dt)
 {
 	// Replace game state with predecessor - may be 0
 	if (m_gameState && m_gameState->IsFinished())
+	{
+		m_gameState->OnEnd();
 		m_gameState = m_gameState->GetPreviousState();
+		if (m_gameState)
+			m_gameState->OnResume();
+	}
 
 	// Update, if there is a GameState left
 	if (m_gameState)

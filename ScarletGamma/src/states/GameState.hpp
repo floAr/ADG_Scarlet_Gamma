@@ -14,6 +14,8 @@ namespace States
 		///		isn't finished instantly.
 		GameState() : m_finished(false), m_previousState(0) {}
 
+		virtual ~GameState() {}
+
 		/// \brief Sets the previous GameState, i.e. the GameState that the
 		///		StateMachine will return to when this one is finished.
 		/// \details If this is set to 0, the StateMachine will assume that
@@ -58,11 +60,11 @@ namespace States
 
 		/// \brief Pure virtual functions that is called when the GameLoop wants
 		///		to draw everything.
-		/// \details Use this function to specifiy what needs to be drawn: the
+		/// \details Use this function to specify what needs to be drawn: the
 		///		map, certain menus etc.
 		virtual void Draw(sf::RenderWindow& win) = 0;
 
-		/// \brief Tells the StateMachine wether the GameState is to be pop'd
+		/// \brief Tells the StateMachine whether the GameState is to be pop'd
 		///
 		/// The standard implementation returns m_finished, which can be set to
 		/// true by the specific GameState implementation. Don't forget to set

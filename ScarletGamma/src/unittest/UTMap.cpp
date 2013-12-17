@@ -43,7 +43,7 @@ namespace UnitTest {
 
 		// Save
 		try {
-			Jo::Files::HDDFile file("saves/unittest.json", false);
+			Jo::Files::HDDFile file("saves/unittest.json", Jo::Files::HDDFile::CREATE_FILE);
 			world->Save( file );
 		} catch(std::string _e) {TEST_FAILED(_e);}
 		catch(...) {TEST_FAILED("Saving a world.");}
@@ -51,7 +51,7 @@ namespace UnitTest {
 
 		// Load
 		world = new Core::World();
-		Jo::Files::HDDFile file("saves/unittest.json", true);
+		Jo::Files::HDDFile file("saves/unittest.json");
 		world->Load( file );
 		// Test sample
 		if( world->GetObject( world->GetMap(mapID)->GetObjectsAt(2,2)[0] )->GetProperty("X").Value() != "2.000000" )

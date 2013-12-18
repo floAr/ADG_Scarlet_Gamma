@@ -1,12 +1,16 @@
 #include "core/Object.hpp"
 #include "unittest/UnitTests.hpp"
+#include "network/WorldMessages.hpp"
 #include <iostream>
 
 using namespace std;
 
 namespace UnitTest {
+
 	void TestObjects()
 	{
+		Network::MaskWorldMessage messageLock;
+
 		// Create an object and add some stuff
 		Core::Object obj(1, "floor.png");
 		obj.Add( Core::Property(obj.ID(), string("Invisible"), string("true")) );

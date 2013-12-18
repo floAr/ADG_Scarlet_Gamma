@@ -47,7 +47,7 @@ public:
 	/// \details Serialization contains the object ids.
 	/// \param [inout] _node A node with ElementType::UNKNOWN which can
 	///		be changed and expanded by serialize.
-	virtual void Serialize( Jo::Files::MetaFileWrapper::Node& _node ) override;
+	virtual void Serialize( Jo::Files::MetaFileWrapper::Node& _node ) const override;
 
 	ObjectID ID() const { return m_id; }
 private:

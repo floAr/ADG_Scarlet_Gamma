@@ -82,7 +82,7 @@ namespace Core {
 	}
 
 
-	void Object::Serialize( Jo::Files::MetaFileWrapper::Node& _node )
+	void Object::Serialize( Jo::Files::MetaFileWrapper::Node& _node ) const
 	{
 		_node[string("ID")] = m_id;
 		PropertyList::Serialize(_node[string("Properties")]);

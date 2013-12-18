@@ -108,14 +108,18 @@ namespace Core {
 
 	void PropertyList::Add( const Property& _property )
 	{
+		// No duplicates!
+		Remove( _property.Name() );
 		// Append at the end
 		m_list.push_back(_property);
+		Network::SendPropertyChanged( _property.ParentObject(), &_property );
 	}
 
 	void PropertyList::Remove( Property* _property )
 	{
 		for(auto current = m_list.begin(); current != m_list.end(); ++current )
 			if( &(*current) == _property ) {
+				Network::SendRemoveProperty( _property->ParentObject(), _property );
 				m_list.erase( current );
 				return;
 			}
@@ -124,14 +128,14 @@ namespace Core {
 
 	void PropertyList::Remove( const std::string& _name )
 	{
-		for(auto current = m_list.begin(); current != m_list.end(); )
+		for(auto current = m_list.begin(); current != m_list.end(); ++current )
 		{
-			// erase from list returns an iterator to the first element after
-			// the deleted sequence. In this case the iterator should not be
-			// increase -> not in for loop.
-			if( Utils::IStringEqual( (*current).Name(), _name ) )
-				current = m_list.erase(current);
-			else ++current;
+			if( Utils::IStringEqual( current->Name(), _name ) )
+			{
+				Network::SendRemoveProperty( current->ParentObject(), &(*current) );
+				m_list.erase(current);
+				return;
+			}
 		}
 	}
 
@@ -186,7 +190,7 @@ namespace Core {
 		return _results;
 	}
 
-	void PropertyList::Serialize( Jo::Files::MetaFileWrapper::Node& _node )
+	void PropertyList::Serialize( Jo::Files::MetaFileWrapper::Node& _node ) const
 	{
 		// Would also run without preallocation but so its faster.
 		_node.Resize(m_list.size(), Jo::Files::MetaFileWrapper::ElementType::NODE);

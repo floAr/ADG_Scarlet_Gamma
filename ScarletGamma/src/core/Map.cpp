@@ -127,6 +127,9 @@ namespace Core {
 
 	void Map::Add(ObjectID _object, int _x, int _y, int _layer)
 	{
+		Network::MaskObjectMessage objMessageLock;
+		Network::MsgInsertObjectToMap( m_id, _object, _x, _y, _layer ).Send();
+
 		Extend(std::max(m_minX-_x,0), std::max(_x-m_maxX,0), std::max(m_minY-_y,0), std::max(_y-m_maxY,0));
 
 		auto& list = GetObjectsAt(_x, _y);
@@ -150,6 +153,9 @@ namespace Core {
 
 	void Map::Remove(ObjectID _object)
 	{
+		Network::MaskObjectMessage objMessageLock;
+		Network::MsgRemoveObjectFromMap( m_id, _object ).Send();
+
 		// Find the object
 		Object* obj = m_parentWorld->GetObject(_object);
 		sf::Vector2i gridPos = sfUtils::Round(obj->GetPosition());
@@ -188,7 +194,7 @@ namespace Core {
 	}
 
 
-	void Map::Serialize( Jo::Files::MetaFileWrapper::Node& _node )
+	void Map::Serialize( Jo::Files::MetaFileWrapper::Node& _node ) const
 	{
 		_node.SetName(m_name);
 		_node[string("ID")] = m_id;
@@ -340,7 +346,11 @@ namespace Core {
 
 	void Map::SetObjectPosition( Object* _object, const sf::Vector2f& _position )
 	{
-		sf::Vector2f position = _object->GetPosition();
+		sf::Vector2f position;
+		try {
+			position = _object->GetPosition();
+		} catch(...) {}
+
 		sf::Vector2i oldCell(sfUtils::Round(position));
 		// Avoid recursive - redundant messages
 		Network::MaskObjectMessage objMessageLock;
@@ -362,7 +372,7 @@ namespace Core {
 			GetObjectsAt(newCell.x, newCell.y).Add(_object->ID());
 		}
 		// Send a map-message
-		Network::SendObjectPositionChanged(m_id, _object->ID(), _position);
+		Network::MsgObjectPositionChanged(m_id, _object->ID(), _position).Send();
 	}
 
 } // namespace Core

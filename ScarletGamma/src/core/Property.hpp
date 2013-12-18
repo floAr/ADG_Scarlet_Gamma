@@ -64,6 +64,8 @@ public:
 	/// \param [inout] _node A node with ElementType::UNKNOWN which can
 	///		be changed and expanded by serialize.
 	void Serialize( Jo::Files::MetaFileWrapper::Node& _node ) const;
+
+	ObjectID ParentObject() const		{ return m_parent; }
 private:
 	std::string m_name;
 	ObjectID m_parent;		///< The object to which this property belongs
@@ -77,8 +79,8 @@ private:
 
 
 /// \brief A dynamic list of properties.
-/// \details This is a custom container which can contain one key
-///		multiple times. Currently it is a list and all accesses are slow.
+/// \details This is a custom container which contains Properties. Each
+///		key (name) can only be used once.
 class PropertyList
 {
 public:
@@ -131,7 +133,7 @@ public:
 	/// \brief Write the content of this object to a meta-file.
 	/// \param [inout] _node A node with ElementType::UNKNOWN which can
 	///		be changed and expanded by serialize.
-	virtual void Serialize( Jo::Files::MetaFileWrapper::Node& _node );
+	virtual void Serialize( Jo::Files::MetaFileWrapper::Node& _node ) const;
 private:
 	std::list<Property> m_list;
 };

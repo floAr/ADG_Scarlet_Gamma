@@ -2,6 +2,7 @@
 #include "core/World.hpp"
 #include "utils/Random.hpp"
 #include "unittest/UnitTests.hpp"
+#include "network/WorldMessages.hpp"
 #include <iostream>
 
 using namespace std;
@@ -10,6 +11,8 @@ namespace UnitTest {
 
 	void TestMap()
 	{
+		Network::MaskWorldMessage messageLock;
+
 		// Create a map
 		Core::World* world = new Core::World();
 		Core::MapID mapID = world->NewMap("Scarlet Square",10,10);

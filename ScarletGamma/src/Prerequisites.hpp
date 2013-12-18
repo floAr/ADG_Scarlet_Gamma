@@ -80,3 +80,11 @@ namespace Graphics
 namespace UnitTest	{
 	void TestObjects();
 }
+
+
+
+//------------------------------------------------------------------------------
+// sf
+namespace sf {
+	class TcpSocket;
+} // namespace sf

@@ -1,6 +1,7 @@
 #include "World.hpp"
 #include "Object.hpp"
 #include "Map.hpp"
+#include "network/WorldMessages.hpp"
 
 using namespace std;
 
@@ -26,16 +27,37 @@ namespace Core {
 	MapID World::NewMap( const std::string& _name, unsigned _sizeX, unsigned _sizeY )
 	{
 		m_maps.insert(std::make_pair<MapID,Map>(MapID(m_nextFreeMapID+0), Map(m_nextFreeMapID, _name, _sizeX, _sizeY, this)));
+		Network::SendAddMap( m_nextFreeMapID );
 		++m_nextFreeMapID;
 		return m_nextFreeMapID-1;
 	}
 
 
-	Core::ObjectID World::NewObject( const std::string& _sprite )
+	ObjectID World::NewObject( const std::string& _sprite )
 	{
 		m_objects.insert(std::make_pair<ObjectID,Object>(ObjectID(m_nextFreeObjectID+0), Object(m_nextFreeObjectID, _sprite)));
+		Network::SendAddObject( m_nextFreeObjectID );
 		++m_nextFreeObjectID;
 		return m_nextFreeObjectID-1;
+	}
+
+	MapID World::NewMap( const Jo::Files::MetaFileWrapper::Node& _node )
+	{
+		// Deserialize -> update maximum used MapID
+		Map newMap(_node, this);
+		m_nextFreeMapID = max(m_nextFreeMapID, newMap.ID());
+		m_maps.insert(std::make_pair<MapID,Map>( newMap.ID(), std::move(newMap) ) );
+		return newMap.ID();
+	}
+
+
+	ObjectID World::NewObject( const Jo::Files::MetaFileWrapper::Node& _node )
+	{
+		// Deserialize -> update maximum used ObjectID
+		Object newObj(_node);
+		m_nextFreeObjectID = max(m_nextFreeObjectID, newObj.ID());
+		m_objects.insert(std::make_pair<ObjectID,Object>( newObj.ID(), std::move(newObj) ) );
+		return newObj.ID();
 	}
 
 
@@ -58,10 +80,7 @@ namespace Core {
 			// OK child should be an array of objects.
 			for( unsigned i=0; i<child->Size(); ++i )
 			{
-				// Deserialize -> update maximum used ObjectID
-				Object newObj((*child)[i]);
-				m_nextFreeObjectID = max(m_nextFreeObjectID, newObj.ID());
-				m_objects.insert(std::make_pair<ObjectID,Object>( newObj.ID(), std::move(newObj) ) );
+				NewObject( (*child)[i] );
 			}
 		} else {
 			throw std::exception("Map file corrupted: cannot find the objects");
@@ -73,10 +92,7 @@ namespace Core {
 			// OK child should be an array of objects.
 			for( unsigned i=0; i<child->Size(); ++i )
 			{
-				// Deserialize -> update maximum used ObjectID
-				Map newMap((*child)[i], this);
-				m_nextFreeMapID = max(m_nextFreeMapID, newMap.ID());
-				m_maps.insert(std::make_pair<MapID,Map>( newMap.ID(), std::move(newMap) ) );
+				NewMap( (*child)[i] );
 			}
 		} else {
 			throw std::exception("Map file corrupted: cannot find the maps");
@@ -88,7 +104,7 @@ namespace Core {
 		++m_nextFreeMapID;
 	}
 
-	void World::Save( Jo::Files::IFile& _file )
+	void World::Save( Jo::Files::IFile& _file ) const
 	{
 		Jo::Files::MetaFileWrapper saveGame;
 		// Serialize objects
@@ -107,53 +123,30 @@ namespace Core {
 		saveGame.Write(_file, Jo::Files::Format::JSON);
 	}
 
+	void World::RemoveMap( MapID _map )
+	{
+		// Remove all objects referenced by the map
+		{
+			Network::MaskWorldMessage messageLock;
+			Map* map = GetMap(_map);
+			for( int y=map->Top(); y<=map->Bottom(); ++y )
+				for( int x=map->Left(); x<=map->Right(); ++x )
+				{
+					ObjectList& list = map->GetObjectsAt(x,y);
+					for( int i=0; i<list.Size(); ++i )
+						RemoveObject( list[i] );
+				}
+		}
+		Network::SendRemoveMap( _map );
+		// TODO: Test if destructor is called proper
+		m_maps.erase( _map );
+	}
+
+	void World::RemoveObject( ObjectID _object )
+	{
+		Network::SendRemoveObject( _object );
+		// TODO: Test if destructor is called proper
+		m_objects.erase( _object );
+	}
+
 } // namespace Core
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

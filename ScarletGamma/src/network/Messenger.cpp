@@ -98,11 +98,7 @@ namespace Network {
 	{
 		m_sockets.push_back( _newClient );
 		// Sent whole world (in its latest state)
-		Jo::Files::MemFile data;
-		data.Write( &MessageHeader( Target::WORLD, 0 ), sizeof(MessageHeader) );
-		data.Write( &MsgWorldHeader( MsgWorld::LOAD ), sizeof(MsgWorldHeader) );
-		g_Game->GetWorld()->Save( data );
-		_newClient->send( data.GetBuffer(), (size_t)data.GetSize() );
+		SendLoadWorld( g_Game->GetWorld(), _newClient );
 	}
 
 
@@ -119,11 +115,11 @@ namespace Network {
 				read += HandleWorldMessage(g_Game->GetWorld(), buffer + sizeof(MessageHeader), _size);
 				break;
 			case Target::MAP:
-				read += HandleMapMessage(g_Game->GetWorld()->GetMap(header->targetID),
+				read += HandleMapMessage(g_Game->GetWorld()->GetMap(static_cast<Core::MapID>(header->targetID)),
 					buffer + sizeof(MessageHeader), _size);
 				break;
 			case Target::OBJECT:
-				read += HandleObjectMessage(g_Game->GetWorld()->GetObject(header->targetID),
+				read += HandleObjectMessage(g_Game->GetWorld()->GetObject(static_cast<Core::ObjectID>(header->targetID)),
 					buffer + sizeof(MessageHeader), _size);
 				break;
 			}

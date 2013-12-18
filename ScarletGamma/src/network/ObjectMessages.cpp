@@ -26,7 +26,6 @@ namespace Network {
 		case MsgObject::SET_PROPERTY: {
 			// Deserialize and than remove the old and add the deserialized one.
 			Core::Property prop(_object->ID(), Jo::Files::MetaFileWrapper(file).RootNode );
-			_object->Remove( prop.Name() );
 			_object->Add( prop );
 			} break;
 		case MsgObject::REMOVE_PROPERTY: {

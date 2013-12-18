@@ -32,8 +32,10 @@ namespace Network {
 		static void Poll( bool _blocking );
 
 		/// \brief Send to server or broadcast an information.
-		/// \details If this Messenger is the server the message is always
-		///		broadcasted.
+		/// \details If this Messenger is the server the message is
+		///		broadcasted per default.
+		///	\param [in] _data Raw data to be send. Must begin with MessageHeader
+		///	\param [in] _size Size of the data in bytes.
 		static void Send( void* _data, size_t _size );
 	private:
 		sf::TcpListener* m_listener;			///< Server side listener to find new clients.

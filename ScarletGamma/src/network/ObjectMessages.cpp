@@ -13,64 +13,95 @@ namespace Network {
 	MaskObjectMessage::MaskObjectMessage() { ++g_MaskNewObjectMessages; }
 	MaskObjectMessage::~MaskObjectMessage() { --g_MaskNewObjectMessages; }
 
-	size_t HandleObjectMessage( Core::Object* _object, void* _data, size_t _size )
+	size_t HandleObjectMessage( Core::Object* _object, uint8_t* _data, size_t _size )
 	{
-		assert(_size > sizeof(MsgObjectHeader));
+		assert(_size > sizeof(ObjectMsgType));
 		MaskObjectMessage messageLock;
 
-		// Map memory for deserialization
-		Jo::Files::MemFile file((uint8_t*)_data + sizeof(MsgObjectHeader), _size - sizeof(MsgObjectHeader));
+		ObjectMsgType* header = reinterpret_cast<ObjectMsgType*>(_data);
+		size_t readSize = sizeof(ObjectMsgType);
 
-		switch(((MsgObjectHeader*)_data)->purpose)
+		switch(*header)
 		{
-		case MsgObject::SET_PROPERTY: {
-			// Deserialize and than remove the old and add the deserialized one.
-			Core::Property prop(_object->ID(), Jo::Files::MetaFileWrapper(file).RootNode );
-			_object->Add( prop );
-			} break;
-		case MsgObject::REMOVE_PROPERTY: {
-			// Deserialize to get the name
-			Core::Property prop(_object->ID(), Jo::Files::MetaFileWrapper(file).RootNode );
-			_object->Remove( prop.Name() );
-			} break;
+		case ObjectMsgType::SET_PROPERTY:
+			readSize += MsgPropertyChanged::Receive(_object, _data + readSize, _size - readSize);
+			break;
+		case ObjectMsgType::REMOVE_PROPERTY:
+			readSize += MsgRemoveProperty::Receive(_object, _data + readSize, _size - readSize);
+			break;
 		}
 
-		return size_t(file.GetCursor() + sizeof(MsgObjectHeader));
+		return readSize;
 	}
 
-	void SendPropertyChanged( const Core::ObjectID _object, const Core::Property* _property )
+	void ObjectMsg::Send()
 	{
 		if( g_MaskNewObjectMessages == 0 )
 		{
 			// Write headers
 			Jo::Files::MemFile data;
-			data.Write( &MessageHeader( Target::OBJECT, _object ), sizeof(MessageHeader) );
-			data.Write( &MsgObjectHeader( MsgObject::SET_PROPERTY ), sizeof(MsgObjectHeader) );
-			// Serialize the property
-			Jo::Files::MetaFileWrapper propertyData;
-			_property->Serialize( propertyData.RootNode );
-			propertyData.Write( data, Jo::Files::Format::SRAW );
+			data.Write( &MessageHeader( Target::OBJECT, m_object ), sizeof(MessageHeader) );
+			data.Write( &m_purpose, sizeof(ObjectMsgType) );
+			// Write data
+			WriteData( data );
 
 			Messenger::Send( data.GetBuffer(), (size_t)data.GetSize() );
 		}
 	}
 
 
-	void SendRemoveProperty( const Core::ObjectID _object, const Core::Property* _property )
+	// ********************************************************************* //
+	MsgPropertyChanged::MsgPropertyChanged( const Core::ObjectID _object, const Core::Property* _property ) :
+		ObjectMsg( ObjectMsgType::SET_PROPERTY, _object ),
+		m_property( _property )
 	{
-		if( g_MaskNewObjectMessages == 0 )
-		{
-			// Do mostly the same as in SendPropertyChanged() (eaysier).
-			// Only the purpose of the message differs
-			Jo::Files::MemFile data;
-			data.Write( &MessageHeader( Target::OBJECT, _object ), sizeof(MessageHeader) );
-			data.Write( &MsgObjectHeader( MsgObject::REMOVE_PROPERTY ), sizeof(MsgObjectHeader) );
-			Jo::Files::MetaFileWrapper propertyData;
-			_property->Serialize( propertyData.RootNode );
-			propertyData.Write( data, Jo::Files::Format::SRAW );
-			Messenger::Send( data.GetBuffer(), (size_t)data.GetSize() );
-		}
 	}
 
+	void MsgPropertyChanged::WriteData( Jo::Files::MemFile& _output ) const
+	{
+		// Serialize the property
+		Jo::Files::MetaFileWrapper propertyData;
+		m_property->Serialize( propertyData.RootNode );
+		propertyData.Write( _output, Jo::Files::Format::SRAW );
+	}
+
+	size_t MsgPropertyChanged::Receive( Core::Object* _object, uint8_t* _data, size_t _size )
+	{
+		// Deserialize and than remove the old and add the deserialized one.
+		Jo::Files::MemFile file(_data, _size);
+		Core::Property prop(_object->ID(), Jo::Files::MetaFileWrapper(file).RootNode );
+		_object->Add( prop );
+		return (size_t)file.GetCursor();
+	}
+
+	
+
+
+	// ********************************************************************* //
+	MsgRemoveProperty::MsgRemoveProperty( const Core::ObjectID _object, const Core::Property* _property ) :
+		ObjectMsg( ObjectMsgType::REMOVE_PROPERTY, _object ),
+		m_property( _property )
+	{
+	}
+
+	void MsgRemoveProperty::WriteData( Jo::Files::MemFile& _output ) const
+	{
+		// Serialize the property
+		Jo::Files::MetaFileWrapper propertyData;
+		m_property->Serialize( propertyData.RootNode );
+		propertyData.Write( _output, Jo::Files::Format::SRAW );
+	}
+
+	size_t MsgRemoveProperty::Receive( Core::Object* _object, uint8_t* _data, size_t _size )
+	{
+		// Deserialize to get the name
+		Jo::Files::MemFile file(_data, _size);
+		Core::Property prop(_object->ID(), Jo::Files::MetaFileWrapper(file).RootNode );
+		_object->Remove( prop.Name() );
+
+		return (size_t)file.GetCursor();
+	}
+
+	
 
 } // namespace Network

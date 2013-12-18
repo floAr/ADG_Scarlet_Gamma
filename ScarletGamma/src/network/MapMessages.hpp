@@ -14,7 +14,7 @@ namespace Network {
 		REMOVE_OBJECT				///< Remove object reference from map
 	};
 
-	/// \brief A header for world-targeted messages.
+	/// \brief A base class for all map related messages.
 	class MapMsg
 	{
 	public:
@@ -53,7 +53,7 @@ namespace Network {
 	///	\return Number of bytes which were read: could be smaller than _size.
 	size_t HandleMapMessage( Core::Map* _map, uint8_t* _data, size_t _size );
 
-	/// \brief Send this message if a property is added or changed.
+	/// \brief Send this message if the position of an object changed.
 	class MsgObjectPositionChanged: public MapMsg
 	{
 	public:

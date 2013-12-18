@@ -46,7 +46,7 @@ namespace Core {
 		if( !m_isObjectList ) throw Exception::NoObjectList();
 
 		m_objects.Add(_id);
-		Network::SendPropertyChanged( m_parent, this );
+		Network::MsgPropertyChanged( m_parent, this ).Send();
 	}
 
 	void Property::RemoveObject( ObjectID _id )
@@ -54,7 +54,7 @@ namespace Core {
 		if( !m_isObjectList ) throw Exception::NoObjectList();
 
 		m_objects.Remove(_id);
-		Network::SendPropertyChanged( m_parent, this );
+		Network::MsgPropertyChanged( m_parent, this ).Send();
 	}
 
 	void Property::ClearObjects()
@@ -62,7 +62,7 @@ namespace Core {
 		if( m_objects.Size() > 0 )
 		{
 			m_objects.Clear();
-			Network::SendPropertyChanged( m_parent, this );
+			Network::MsgPropertyChanged( m_parent, this ).Send();
 		}
 	}
 
@@ -81,7 +81,7 @@ namespace Core {
 		if( m_value != _new )
 		{
 			m_value = _new;
-			Network::SendPropertyChanged( m_parent, this );
+			Network::MsgPropertyChanged( m_parent, this ).Send();
 		}
 	}
 
@@ -112,14 +112,14 @@ namespace Core {
 		Remove( _property.Name() );
 		// Append at the end
 		m_list.push_back(_property);
-		Network::SendPropertyChanged( _property.ParentObject(), &_property );
+		Network::MsgPropertyChanged( _property.ParentObject(), &_property ).Send();
 	}
 
 	void PropertyList::Remove( Property* _property )
 	{
 		for(auto current = m_list.begin(); current != m_list.end(); ++current )
 			if( &(*current) == _property ) {
-				Network::SendRemoveProperty( _property->ParentObject(), _property );
+				Network::MsgRemoveProperty( _property->ParentObject(), _property ).Send();
 				m_list.erase( current );
 				return;
 			}
@@ -132,7 +132,7 @@ namespace Core {
 		{
 			if( Utils::IStringEqual( current->Name(), _name ) )
 			{
-				Network::SendRemoveProperty( current->ParentObject(), &(*current) );
+				Network::MsgRemoveProperty( current->ParentObject(), &(*current) ).Send();
 				m_list.erase(current);
 				return;
 			}

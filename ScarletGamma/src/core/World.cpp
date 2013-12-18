@@ -27,7 +27,7 @@ namespace Core {
 	MapID World::NewMap( const std::string& _name, unsigned _sizeX, unsigned _sizeY )
 	{
 		m_maps.insert(std::make_pair<MapID,Map>(MapID(m_nextFreeMapID+0), Map(m_nextFreeMapID, _name, _sizeX, _sizeY, this)));
-		Network::SendAddMap( m_nextFreeMapID );
+		Network::MsgAddMap( m_nextFreeMapID ).Send();
 		++m_nextFreeMapID;
 		return m_nextFreeMapID-1;
 	}
@@ -36,7 +36,7 @@ namespace Core {
 	ObjectID World::NewObject( const std::string& _sprite )
 	{
 		m_objects.insert(std::make_pair<ObjectID,Object>(ObjectID(m_nextFreeObjectID+0), Object(m_nextFreeObjectID, _sprite)));
-		Network::SendAddObject( m_nextFreeObjectID );
+		Network::MsgAddObject( m_nextFreeObjectID ).Send();
 		++m_nextFreeObjectID;
 		return m_nextFreeObjectID-1;
 	}
@@ -137,14 +137,14 @@ namespace Core {
 						RemoveObject( list[i] );
 				}
 		}
-		Network::SendRemoveMap( _map );
+		Network::MsgRemoveMap( _map ).Send();
 		// TODO: Test if destructor is called proper
 		m_maps.erase( _map );
 	}
 
 	void World::RemoveObject( ObjectID _object )
 	{
-		Network::SendRemoveObject( _object );
+		Network::MsgRemoveObject( _object ).Send();
 		// TODO: Test if destructor is called proper
 		m_objects.erase( _object );
 	}

@@ -88,9 +88,11 @@ namespace Network {
 	void Messenger::Send( void* _data, size_t _size )
 	{
 		if( g_msgInstance )
-		for( size_t i=0; i<g_msgInstance->m_sockets.size(); ++i )
 		{
-			g_msgInstance->m_sockets[i]->send( _data, _size );
+			for( size_t i=0; i<g_msgInstance->m_sockets.size(); ++i )
+			{
+				g_msgInstance->m_sockets[i]->send( _data, _size );
+			}
 		}
 	}
 
@@ -98,7 +100,7 @@ namespace Network {
 	{
 		m_sockets.push_back( _newClient );
 		// Sent whole world (in its latest state)
-		SendLoadWorld( g_Game->GetWorld(), _newClient );
+		MsgLoadWorld( g_Game->GetWorld(), _newClient ).Send();
 	}
 
 

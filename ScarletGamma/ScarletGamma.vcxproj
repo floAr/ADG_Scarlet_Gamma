@@ -82,7 +82,9 @@
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\graphics\TileRenderer.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\network\MapMessages.cpp" />
     <ClCompile Include="src\network\Messenger.cpp" />
+    <ClCompile Include="src\network\ObjectMessages.cpp" />
     <ClCompile Include="src\network\WorldMessages.cpp" />
     <ClCompile Include="src\sfutils\Vectors.cpp" />
     <ClCompile Include="src\sfutils\View.cpp" />
@@ -109,8 +111,10 @@
     <ClInclude Include="src\events\InputHandler.hpp" />
     <ClInclude Include="src\Game.hpp" />
     <ClInclude Include="src\graphics\TileRenderer.hpp" />
+    <ClInclude Include="src\network\MapMessages.hpp" />
     <ClInclude Include="src\network\Message.hpp" />
     <ClInclude Include="src\network\Messenger.hpp" />
+    <ClInclude Include="src\network\ObjectMessages.hpp" />
     <ClInclude Include="src\network\WorldMessages.hpp" />
     <ClInclude Include="src\Prerequisites.hpp" />
     <ClInclude Include="src\sfutils\View.hpp" />

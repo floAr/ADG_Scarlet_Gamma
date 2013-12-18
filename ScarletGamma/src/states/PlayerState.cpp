@@ -112,7 +112,7 @@ void States::PlayerState::DrawPathOverlay(sf::RenderWindow& win)
 		if( m_player->HasProperty("Path") )
 		{
 			// For each way point compute the shortest path
-			auto& wayPoints = m_player->GetProperty("Path").Objects();
+			auto& wayPoints = m_player->GetProperty("Path").GetObjects();
 			for( int i=0; i<wayPoints.Size(); ++i )
 			{
 				sf::Vector2i goal = sfUtils::Round(g_Game->GetWorld()->GetObject(wayPoints[i])->GetPosition());

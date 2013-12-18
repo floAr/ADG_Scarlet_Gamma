@@ -3,6 +3,8 @@
 #include <iostream>
 #include "Message.hpp"
 #include "WorldMessages.hpp"
+#include "MapMessages.hpp"
+#include "ObjectMessages.hpp"
 #include "Game.hpp"
 
 namespace Network {
@@ -83,6 +85,15 @@ namespace Network {
 		}
 	}
 
+	void Messenger::Send( void* _data, size_t _size )
+	{
+		if( g_msgInstance )
+		for( size_t i=0; i<g_msgInstance->m_sockets.size(); ++i )
+		{
+			g_msgInstance->m_sockets[i]->send( _data, _size );
+		}
+	}
+
 	void Messenger::AddClient( sf::TcpSocket* _newClient )
 	{
 		m_sockets.push_back( _newClient );
@@ -97,12 +108,28 @@ namespace Network {
 
 	void Messenger::HandleMessage( size_t _size )
 	{
-		assert( _size > sizeof(MessageHeader) );
-		switch(((MessageHeader*)m_buffer)->target)
+		uint8_t* buffer = (uint8_t*)m_buffer;
+		while( _size > sizeof(MessageHeader) )
 		{
-		case Target::WORLD:
-			HandleWorldMessage(g_Game->GetWorld(), (uint8_t*)m_buffer + sizeof(MessageHeader), _size - sizeof(MessageHeader));
-			break;
+			MessageHeader* header = reinterpret_cast<MessageHeader*>(buffer);
+			size_t read = sizeof(MessageHeader);
+			switch(header->target)
+			{
+			case Target::WORLD:
+				read += HandleWorldMessage(g_Game->GetWorld(), buffer + sizeof(MessageHeader), _size);
+				break;
+			case Target::MAP:
+				read += HandleMapMessage(g_Game->GetWorld()->GetMap(header->targetID),
+					buffer + sizeof(MessageHeader), _size);
+				break;
+			case Target::OBJECT:
+				read += HandleObjectMessage(g_Game->GetWorld()->GetObject(header->targetID),
+					buffer + sizeof(MessageHeader), _size);
+				break;
+			}
+
+			buffer += read;
+			_size -= read;
 		}
 	}
 

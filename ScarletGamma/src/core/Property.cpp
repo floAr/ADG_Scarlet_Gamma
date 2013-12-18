@@ -1,26 +1,30 @@
 #include "Property.hpp"
-#include "../utils/Exception.hpp"
-#include "../utils/StringUtil.hpp"
+#include "utils/Exception.hpp"
+#include "utils/StringUtil.hpp"
+#include "network/ObjectMessages.hpp"
 
 using namespace std;
 
 namespace Core {
-	Property::Property( const std::string& _name, const std::string& _value ) :
+	Property::Property( ObjectID _parent, const std::string& _name, const std::string& _value ) :
 		m_name(_name),
 		m_isObjectList(false),
-		m_value(_value)
+		m_value(_value),
+		m_parent(_parent)
 	{
 	}
 
-	Property::Property( const std::string& _name, const ObjectList& _list ) :
+	Property::Property( ObjectID _parent, const std::string& _name, const ObjectList& _list ) :
 		m_name(_name),
 		m_isObjectList(true),
 		m_value(""),
-		m_objects(_list)
+		m_objects(_list),
+		m_parent(_parent)
 	{
 	}
 
-	Property::Property( const Jo::Files::MetaFileWrapper::Node& _node )
+	Property::Property( ObjectID _parent, const Jo::Files::MetaFileWrapper::Node& _node ) :
+		m_parent(_parent)
 	{
 		m_name = _node[0].GetName();
 		m_value = _node[0];
@@ -31,10 +35,35 @@ namespace Core {
 		}
 	}
 
-	ObjectList& Property::Objects()
+	const ObjectList& Property::GetObjects()
 	{
 		if( !m_isObjectList ) throw Exception::NoObjectList();
 		return m_objects;
+	}
+
+	void Property::AddObject( ObjectID _id )
+	{
+		if( !m_isObjectList ) throw Exception::NoObjectList();
+
+		m_objects.Add(_id);
+		Network::SendPropertyChanged( m_parent, this );
+	}
+
+	void Property::RemoveObject( ObjectID _id )
+	{
+		if( !m_isObjectList ) throw Exception::NoObjectList();
+
+		m_objects.Remove(_id);
+		Network::SendPropertyChanged( m_parent, this );
+	}
+
+	void Property::ClearObjects()
+	{
+		if( m_objects.Size() > 0 )
+		{
+			m_objects.Clear();
+			Network::SendPropertyChanged( m_parent, this );
+		}
 	}
 
 	float Property::Evaluate() const
@@ -49,10 +78,14 @@ namespace Core {
 
 	void Property::SetValue( const std::string& _new )
 	{
-		m_value = _new;
+		if( m_value != _new )
+		{
+			m_value = _new;
+			Network::SendPropertyChanged( m_parent, this );
+		}
 	}
 
-	void Property::Serialize( Jo::Files::MetaFileWrapper::Node& _node )
+	void Property::Serialize( Jo::Files::MetaFileWrapper::Node& _node ) const
 	{
 		_node[m_name] = m_value;
 		if( m_isObjectList ) {
@@ -65,11 +98,11 @@ namespace Core {
 
 
 
-	PropertyList::PropertyList( const Jo::Files::MetaFileWrapper::Node& _parent )
+	PropertyList::PropertyList( ObjectID _parent, const Jo::Files::MetaFileWrapper::Node& _node )
 	{
-		for( uint64_t i=0; i<_parent.Size(); ++i )
+		for( uint64_t i=0; i<_node.Size(); ++i )
 		{
-			Add( Property( _parent[i] ) );
+			Add( Property( _parent, _node[i] ) );
 		}
 	}
 

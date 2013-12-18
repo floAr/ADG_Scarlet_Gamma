@@ -25,7 +25,7 @@ namespace UnitTest {
 		for( int i=0; i<16; ++i ) {
 			Core::ObjectID objID = world->NewObject(walls[rnd.Uniform(0,2)]);
 			Core::Object* obj = world->GetObject(objID);
-			obj->Add(Core::Property("Obstacle",""));
+			obj->Add(Core::Property(objID, "Obstacle",""));
 			obj->SetColor(sf::Color(rnd.Uniform(0,255), rnd.Uniform(0,255), rnd.Uniform(0,255), 255));
 			map->Add(objID, rnd.Uniform(0,9), rnd.Uniform(0,9), 1);
 		}
@@ -33,11 +33,11 @@ namespace UnitTest {
 		// Add one active object
 		Core::ObjectID objID = world->NewObject("media/smile_2.png");
 		Core::Object* obj = world->GetObject(objID);
-		obj->Add(Core::Property("Target","0:3"));
+		obj->Add(Core::Property(objID, "Target","0:3"));
 		Core::ObjectList path;
 		path.Add(map->GetObjectsAt(0,0)[0]);
 		path.Add(map->GetObjectsAt(9,9)[0]);
-		obj->Add(Core::Property("Path", path));
+		obj->Add(Core::Property(objID, "Path", path));
 		obj->SetColor(sf::Color(0, 155, 0, 155));
 		map->Add(objID, 0, 2, 4);
 

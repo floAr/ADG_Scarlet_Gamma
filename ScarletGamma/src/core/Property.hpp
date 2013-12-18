@@ -12,24 +12,40 @@ class Property
 {
 public:
 	/// \brief Create a name value pair property. This cannot be changed later.
-	Property( const std::string& _name, const std::string& _value );
+	Property( ObjectID _parent, const std::string& _name, const std::string& _value );
 
 	/// \brief Create a named object list property.
 	/// \details It is possible to add a standard string property additional
 	///		to the object list with SetValue.
-	Property( const std::string& _name, const ObjectList& _list );
+	Property( ObjectID _parent, const std::string& _name, const ObjectList& _list );
 
 	/// \brief Deserialize an object.
 	/// \param [in] _node A serialized object node.
-	Property( const Jo::Files::MetaFileWrapper::Node& _node );
+	Property( ObjectID _parent, const Jo::Files::MetaFileWrapper::Node& _node );
 
 	/// \brief Access the internal object list.
 	/// \throws Exception::NoObjectList.
-	ObjectList& Objects();
+	const ObjectList& GetObjects();
 
 	bool IsObjectList() const	{ return m_isObjectList; }
 
-	/// \brief Interprets the value as formular/number and returns the result
+	/// \brief Add a new object to the object list.
+	/// \details \see ObjectList::Add
+	///		Sends a message through the network.
+	/// \throws Exception::NoObjectList.
+	void AddObject( ObjectID _id );
+
+	/// \brief Remove an object from the object list.
+	/// \details \see ObjectList::Remove
+	///		Sends a message through the network.
+	/// \throws Exception::NoObjectList.
+	void RemoveObject( ObjectID _id );
+
+	/// \brief Remove all objects from the list.
+	/// \throws Exception::NoObjectList.
+	void ClearObjects();
+
+	/// \brief Interprets the value as formula/number and returns the result
 	///		after evaluation.
 	/// \throws Exception::NotEvaluateable
 	float Evaluate() const;
@@ -39,6 +55,7 @@ public:
 
 	/// \brief Write a new value into this property.
 	/// \details It is even allowed to do so if this is an object list property.
+	///		Sends a message through the network.
 	void SetValue( const std::string& _new );
 
 	const std::string& Name() const	{ return m_name; }
@@ -46,9 +63,10 @@ public:
 	/// \brief Write the content of this object to a meta-file.
 	/// \param [inout] _node A node with ElementType::UNKNOWN which can
 	///		be changed and expanded by serialize.
-	void Serialize( Jo::Files::MetaFileWrapper::Node& _node );
+	void Serialize( Jo::Files::MetaFileWrapper::Node& _node ) const;
 private:
 	std::string m_name;
+	ObjectID m_parent;		///< The object to which this property belongs
 
 	bool m_isObjectList;	///< True if the object list is defined
 
@@ -68,8 +86,9 @@ public:
 	PropertyList()	{}
 
 	/// \brief Deserialize an object.
+	/// \param [in] _parent Required to access object fast from property.
 	/// \param [in] _node A serialized object node.
-	PropertyList( const Jo::Files::MetaFileWrapper::Node& _node );
+	PropertyList( ObjectID _parent, const Jo::Files::MetaFileWrapper::Node& _node );
 
 	/// \brief Adds a copy of a property to the end of this list.
 	/// \param [in] _property Some property object from another list or a new one.

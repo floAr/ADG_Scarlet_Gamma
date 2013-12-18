@@ -44,7 +44,7 @@ public:
 	/// \brief Write the content of this object to a meta-file.
 	/// \param [inout] _node A node with ElementType::UNKNOWN which can
 	///		be changed and expanded by serialize.
-	void Serialize( Jo::Files::MetaFileWrapper::Node& _node );
+	void Serialize( Jo::Files::MetaFileWrapper::Node& _node ) const;
 private:
 	std::vector<ObjectID> m_objects;
 };

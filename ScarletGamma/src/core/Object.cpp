@@ -10,11 +10,11 @@ namespace Core {
 	Object::Object( ObjectID _id, const string& _sprite ) :
 		m_id(_id)
 	{
-		Add( Property("Sprite", _sprite) );
+		Add( Property(_id, "Sprite", _sprite) );
 	}
 
 	Object::Object( const Jo::Files::MetaFileWrapper::Node& _node ) :
-		PropertyList( _node[string("Properties")] )
+		PropertyList( _node[string("ID")], _node[string("Properties")] )
 	{
 		m_id = _node[string("ID")];
 	}
@@ -42,15 +42,6 @@ namespace Core {
 		return Get(_name) != nullptr;
 	}
 
-
-	void Object::SetPosition( float _x, float _y )
-	{
-		Property* X = Get("X");
-		Property* Y = Get("Y");
-		if( !X || !Y ) throw Exception::NoSuchProperty();
-		X->SetValue( to_string(_x) );
-		Y->SetValue( to_string(_y) );
-	}
 
 
 	sf::Vector2f Object::GetPosition() const
@@ -86,7 +77,7 @@ namespace Core {
 		//value << std::hex << (int)_color.r << (int)_color.g << (int)_color.b << (int)_color.a;
 		// Create or set property?
 		auto colorProp = Get("Color");
-		if( !colorProp ) Add(Property(string("Color"), string(value)));
+		if( !colorProp ) Add(Property(m_id, string("Color"), string(value)));
 		else colorProp->SetValue( value );
 	}
 

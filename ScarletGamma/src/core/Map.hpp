@@ -105,6 +105,15 @@ namespace Core {
 
 		/// \brief return the highest layer of all contained objects.
 		int GetMaxLayer() const { return m_maxLayer; }
+
+		/// \brief Set the object attributes and reinsert object in tile grid
+		///		if necessary.
+		///	\details This also send a message to the network to autosync the
+		///		games.
+		///	\param [inout] _object The object whose position is to be set.
+		///	\param [in] _position Floating position where the integer part
+		///		gives the tile position. The position must be within the grid.
+		void SetObjectPosition( Object* _object, const sf::Vector2f& _position );
 	private:
 		std::string m_name;
 

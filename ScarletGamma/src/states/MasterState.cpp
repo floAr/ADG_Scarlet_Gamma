@@ -78,10 +78,10 @@ void States::MasterState::MouseButtonPressed(sf::Event::MouseButtonEvent& button
 			if( !sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) )
 			{
 				m_player->GetProperty("Target").SetValue("");
-				m_player->GetProperty("Path").Objects().Clear();
+				m_player->GetProperty("Path").ClearObjects();
 			}
 			// Append to target list
-			m_player->GetProperty("Path").Objects().Add(m_selected->ID());
+			m_player->GetProperty("Path").AddObject(m_selected->ID());
 		}
 						  } break;
 	case sf::Mouse::Middle:
@@ -140,7 +140,7 @@ void States::MasterState::DrawPathOverlay(sf::RenderWindow& win)
 		if( m_player->HasProperty("Path") )
 		{
 			// For each way point compute the shortest path
-			auto& wayPoints = m_player->GetProperty("Path").Objects();
+			auto& wayPoints = m_player->GetProperty("Path").GetObjects();
 			for( int i=0; i<wayPoints.Size(); ++i )
 			{
 				sf::Vector2i goal = sfUtils::Round(g_Game->GetWorld()->GetObject(wayPoints[i])->GetPosition());

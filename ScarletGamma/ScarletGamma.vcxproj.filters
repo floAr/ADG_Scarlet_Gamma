@@ -110,6 +110,12 @@
     <ClCompile Include="src\states\MasterState.cpp">
       <Filter>Quelldateien\states</Filter>
     </ClCompile>
+    <ClCompile Include="src\network\ObjectMessages.cpp">
+      <Filter>Quelldateien\network</Filter>
+    </ClCompile>
+    <ClCompile Include="src\network\MapMessages.cpp">
+      <Filter>Quelldateien\network</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\core\Map.hpp">
@@ -198,6 +204,12 @@
     </ClInclude>
     <ClInclude Include="src\states\MasterState.hpp">
       <Filter>Quelldateien\states</Filter>
+    </ClInclude>
+    <ClInclude Include="src\network\ObjectMessages.hpp">
+      <Filter>Quelldateien\network</Filter>
+    </ClInclude>
+    <ClInclude Include="src\network\MapMessages.hpp">
+      <Filter>Quelldateien\network</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

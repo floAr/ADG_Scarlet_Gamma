@@ -26,16 +26,6 @@ public:
 	/// \brief Checks if at least one property with that name exists.
 	bool HasProperty( const std::string& _name ) const;
 
-	/// \brief Updates the two position properties
-	/// \details The position exists only if the object is located on a map.
-	///		Otherwise this method will return a NoSuchProperty exception.
-	/// \param [in] _x X coordinate of the object position. The integral part
-	///		defines the location within the tile-grid.
-	/// \param [in] _y Y coordinate of the object position. The integral part
-	///		defines the location within the tile-grid.
-	/// \throws Exception::NoSuchProperty
-	void SetPosition( float _x, float _y );
-
 	/// \brief Returns the floating position within the tile grid.
 	/// \details The position exists only if the object is located on a map.
 	///		Otherwise this method will return a NoSuchProperty exception.

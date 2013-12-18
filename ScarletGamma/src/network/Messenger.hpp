@@ -30,6 +30,11 @@ namespace Network {
 		/// \param [in] _blocking Block current thread until a message is
 		///		received.
 		static void Poll( bool _blocking );
+
+		/// \brief Send to server or broadcast an information.
+		/// \details If this Messenger is the server the message is always
+		///		broadcasted.
+		static void Send( void* _data, size_t _size );
 	private:
 		sf::TcpListener* m_listener;			///< Server side listener to find new clients.
 		std::vector<sf::TcpSocket*> m_sockets;	///< An array of connected servers/clients.

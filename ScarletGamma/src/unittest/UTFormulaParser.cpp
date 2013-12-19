@@ -35,6 +35,10 @@ namespace UnitTest {
 				TEST_FAILED("Evaluation of formula: 'W6*w6' failed");
 			if( Utils::EvaluateFormula( "-W8", &dicer ) > -1 || Utils::EvaluateFormula( "-W8", &dicer ) < -8 )
 				TEST_FAILED("Evaluation of formula: '-W8' failed");
+
+			// The ultimating formula
+			int x = Utils::EvaluateFormula( "(-W8/2+6W6-2)*5", &dicer );
+			if( x < 0 || x > 170 ) TEST_FAILED("Evaluation of formula: '(-W8/2+6W6-2)*5' failed");
 		}
 
 		// Test false formulas

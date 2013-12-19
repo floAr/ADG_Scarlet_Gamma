@@ -93,12 +93,14 @@
     <ClCompile Include="src\states\MasterState.cpp" />
     <ClCompile Include="src\states\PlayerState.cpp" />
     <ClCompile Include="src\states\StateMachine.cpp" />
+    <ClCompile Include="src\unittest\UTFormulaParser.cpp" />
     <ClCompile Include="src\unittest\UTMap.cpp" />
     <ClCompile Include="src\unittest\UTObject.cpp" />
     <ClCompile Include="src\unittest\UnitTest.cpp" />
     <ClCompile Include="src\utils\Falloff.cpp" />
     <ClCompile Include="src\utils\Random.cpp" />
     <ClCompile Include="src\utils\StringUtil.cpp" />
+    <ClCompile Include="src\utils\ValueInterpreter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Constants.hpp" />
@@ -132,6 +134,7 @@
     <ClInclude Include="src\utils\OrFibHeap.h" />
     <ClInclude Include="src\utils\Random.hpp" />
     <ClInclude Include="src\utils\StringUtil.hpp" />
+    <ClInclude Include="src\utils\ValueInterpreter.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

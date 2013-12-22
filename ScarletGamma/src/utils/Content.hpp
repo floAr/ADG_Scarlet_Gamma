@@ -24,8 +24,12 @@ private:
 	~Content(void);
 
 	thor::MultiResourceCache m_res_cache;
-
+	
+	std::unordered_map<std::string,std::shared_ptr<sf::Image>> m_img_cache;
 	std::unordered_map<std::string,std::shared_ptr<sf::Texture>> m_tex_cache;
+	std::unordered_map<std::string,std::shared_ptr<sf::Font>> m_fon_cache;
+	std::unordered_map<std::string,std::shared_ptr<sf::Shader>> m_sha_cache;
+	std::unordered_map<std::string,std::shared_ptr<sf::SoundBuffer>> m_sou_cache;
 
 
 public:

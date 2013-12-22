@@ -5,8 +5,10 @@ Game* g_Game;
 
 int main(int argc, const char* argv[])
 {
+#ifdef _DEBUG
 	// As long as in development...
 	UnitTest::Run();
+#endif
 
 	// Create game object
 	g_Game = new Game();
@@ -18,5 +20,6 @@ int main(int argc, const char* argv[])
 
 	// Delete game objects and return
 	delete g_Game;
+
 	return 0;
 }

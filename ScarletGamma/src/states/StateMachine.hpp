@@ -83,6 +83,20 @@ namespace States
 		/// \param [in] wheel  SFML move event that contains all required information.
 		void MouseMoved(int deltaX, int deltaY);
 
+
+		//----------------------------------------------------------------------
+		// GUI STUFF
+
+		/// \brief Forwards an event to the GUI to be handled.
+		/// \param [in] event  Event information from SFML.
+		void GuiHandleEvent(sf::Event& event);
+
+		/// \brief Handles all GUI callbacks that have occured since the last frame-
+		void GuiHandleCallbacks();
+
+		/// \brief Draws the current GUI.
+		void GuiDraw();
+
 	private:
 		/// \brief Pointer to the current GameState. The previous state is known
 		///		by the current GameState.

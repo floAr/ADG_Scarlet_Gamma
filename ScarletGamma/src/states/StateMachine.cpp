@@ -55,13 +55,19 @@ void States::StateMachine::Update(float dt)
 	// Update, if there is a GameState left
 	if (m_gameState)
 		m_gameState->Update(dt);
+
+	// Handle GUI callbacks
+	GuiHandleCallbacks();
 }
 
 void States::StateMachine::Draw(sf::RenderWindow& win)
 {
 	// Draw GameState to window, if both exists
 	if (win.isOpen() && m_gameState)
+	{
 		m_gameState->Draw(win);
+		m_gameState->GuiDraw();
+	}
 }
 
 void States::StateMachine::TextEntered(char character)
@@ -104,4 +110,22 @@ void States::StateMachine::MouseMoved(int deltaX, int deltaY)
 {
 	if (m_gameState)
 		m_gameState->MouseMoved(deltaX, deltaY);
+}
+
+void States::StateMachine::GuiHandleEvent(sf::Event& event)
+{
+	if (m_gameState)
+		m_gameState->GuiHandleEvent(event);
+}
+
+void States::StateMachine::GuiHandleCallbacks()
+{
+	if (m_gameState)
+		m_gameState->GuiHandleCallbacks();
+}
+
+void States::StateMachine::GuiDraw()
+{
+	if (m_gameState)
+		m_gameState->GuiDraw();
 }

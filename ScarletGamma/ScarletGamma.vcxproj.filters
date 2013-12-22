@@ -122,6 +122,9 @@
     <ClCompile Include="src\unittest\UTFormulaParser.cpp">
       <Filter>Quelldateien\unittest</Filter>
     </ClCompile>
+    <ClCompile Include="src\utils\Content.cpp">
+      <Filter>Quelldateien\utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\core\Map.hpp">
@@ -218,6 +221,9 @@
       <Filter>Quelldateien\network</Filter>
     </ClInclude>
     <ClInclude Include="src\utils\ValueInterpreter.hpp">
+      <Filter>Quelldateien\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utils\Content.hpp">
       <Filter>Quelldateien\utils</Filter>
     </ClInclude>
   </ItemGroup>

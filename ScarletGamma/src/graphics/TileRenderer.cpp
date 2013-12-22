@@ -51,16 +51,18 @@ void Graphics::TileRenderer::Render(sf::RenderWindow& window, Core::Map& map)
 						// TODO: content manager! we don't wanna load this in every - fucking - frame!
 
 						// Very quick and dirty custom resource manager
-						static std::unordered_map<std::string, sf::Texture> textures;
+					/*	static std::unordered_map<std::string, sf::Texture> textures;
 						if (textures.find(obj->GetProperty("Sprite").Value()) == textures.end())
 						{
 							sf::Texture tex;
 							tex.loadFromFile(obj->GetProperty("Sprite").Value());
 							textures.emplace(obj->GetProperty("Sprite").Value(), tex);
 						}
-						sf::Texture& tex = textures[obj->GetProperty("Sprite").Value()];
+						sf::Texture& tex = textures[obj->GetProperty("Sprite").Value()];*/
 
 						// Draw the tile
+						sf::Texture tex;
+						tex=Content::Instance()->LoadTexture(obj->GetProperty("Sprite").Value());
 						sf::Sprite drawSprite(tex);
 						drawSprite.setPosition(obj->GetPosition() * float(TILESIZE));
 						drawSprite.setScale(float(TILESIZE)/tex.getSize().x, float(TILESIZE)/tex.getSize().y);
@@ -78,7 +80,9 @@ void Graphics::TileRenderer::RenderPath( sf::RenderWindow& window, const std::ve
 	for( size_t i=0; i<_path.size(); ++i )
 	{
 		// Wtf? I wanna access the textures! TODO: usage of real manager
-		sf::Texture tex; tex.loadFromFile("media/way_point.png");
+		sf::Texture tex; 
+	//	tex.loadFromFile("media/way_point.png");
+		tex=Content::Instance()->LoadTexture("media/way_point.png");
 		sf::Sprite drawSprite(tex);
 		drawSprite.setPosition(sf::Vector2f(_path[i]) * float(TILESIZE));
 		drawSprite.setScale(float(TILESIZE)/tex.getSize().x, float(TILESIZE)/tex.getSize().y);

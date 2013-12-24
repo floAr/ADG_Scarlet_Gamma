@@ -34,11 +34,11 @@ private:
 
 public:
 	
-    sf::Image LoadImage(std::string filename);
-	sf::Texture LoadTexture(std::string filename);
-    sf::Font  LoadFont(std::string filename);
-    sf::Shader LoadShader(std::string filename);
-    sf::SoundBuffer LoadSoundBuffer(std::string filename);
+    const sf::Image& LoadImage(const std::string& filename);
+	const sf::Texture& LoadTexture(const std::string& filename);
+    const sf::Font&  LoadFont(const std::string& filename);
+    const sf::Shader& LoadShader(const std::string& filename);
+    const sf::SoundBuffer& LoadSoundBuffer(const std::string& filename);
 
 };
 

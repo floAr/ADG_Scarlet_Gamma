@@ -20,10 +20,11 @@ Content* Content::Instance(){
 	return m_instance;
 }
 
-sf::Image Content::LoadImage(std::string filename){
-	if(m_img_cache.find(filename)!=m_img_cache.end())
+const sf::Image& Content::LoadImage(const std::string& filename){
+	auto it = m_img_cache.find(filename);
+	if(it != m_img_cache.end())
 	{
-		return *m_img_cache[filename];		
+		return *it->second;
 	}
 	else
 	{
@@ -33,10 +34,11 @@ sf::Image Content::LoadImage(std::string filename){
 	}	
 }
 
-sf::Texture Content::LoadTexture(std::string filename){
-	if(m_tex_cache.find(filename)!=m_tex_cache.end())
+const sf::Texture& Content::LoadTexture(const std::string& filename){
+	auto it = m_tex_cache.find(filename);
+	if(it != m_tex_cache.end())
 	{
-		return *m_tex_cache[filename];		
+		return *it->second;
 	}
 	else
 	{
@@ -46,10 +48,11 @@ sf::Texture Content::LoadTexture(std::string filename){
 	}	
 }
 
-sf::Font Content::LoadFont(std::string filename){
-	if(m_fon_cache.find(filename)!=m_fon_cache.end())
+const sf::Font& Content::LoadFont(const std::string& filename){
+	auto it = m_fon_cache.find(filename);
+	if(it != m_fon_cache.end())
 	{
-		return *m_fon_cache[filename];		
+		return *it->second;
 	}
 	else
 	{
@@ -72,10 +75,11 @@ sf::Font Content::LoadFont(std::string filename){
 //	}	
 //}
 
-sf::SoundBuffer Content::LoadSoundBuffer(std::string filename){
-	if(m_sou_cache.find(filename)!=m_sou_cache.end())
+const sf::SoundBuffer& Content::LoadSoundBuffer(const std::string& filename){
+	auto it = m_sou_cache.find(filename);
+	if(it != m_sou_cache.end())
 	{
-		return *m_sou_cache[filename];		
+		return *it->second;
 	}
 	else
 	{

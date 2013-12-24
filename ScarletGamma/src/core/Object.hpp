@@ -50,6 +50,15 @@ public:
 	virtual void Serialize( Jo::Files::MetaFileWrapper::Node& _node ) const override;
 
 	ObjectID ID() const { return m_id; }
+
+	static const std::string PROP_LAYER;
+	static const std::string PROP_X;
+	static const std::string PROP_Y;
+	static const std::string PROP_SPRITE;
+	static const std::string PROP_COLOR;
+	static const std::string PROP_PATH;
+	static const std::string PROP_TARGET;
+	static const std::string PROP_OBSTACLE;
 private:
 	// Hide some of the methods
 	PropertyList::Clear;

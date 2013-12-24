@@ -47,7 +47,9 @@ void States::StateMachine::Update(float dt)
 	if (m_gameState && m_gameState->IsFinished())
 	{
 		m_gameState->OnEnd();
+		GameState* oldState = m_gameState;
 		m_gameState = m_gameState->GetPreviousState();
+		delete oldState;
 		if (m_gameState)
 			m_gameState->OnResume();
 	}

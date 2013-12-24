@@ -57,7 +57,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>lib/SFML-2.1/lib;lib/JoFile/lib/Debug;lib/TGUI-0.6-RC/lib;lib\Thor-VS11x32\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>tgui-s-d.lib;jofile.lib;thor-s-d.lib;sfml-audio-s-d.lib;sfml-graphics-s-d.lib;sfml-network-s-d.lib;sfml-window-s-d.lib;sfml-system-s-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OptimizeReferences>true</OptimizeReferences>
+      <OptimizeReferences>false</OptimizeReferences>
       <DelayLoadDLLs>libsndfile-1.dll</DelayLoadDLLs>
     </Link>
   </ItemDefinitionGroup>

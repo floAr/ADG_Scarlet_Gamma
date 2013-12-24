@@ -2,6 +2,7 @@
 #include "utils/Exception.hpp"
 #include "utils/StringUtil.hpp"
 #include "network/ObjectMessages.hpp"
+#include <algorithm>
 
 using namespace std;
 
@@ -108,35 +109,21 @@ namespace Core {
 
 	void PropertyList::Add( const Property& _property )
 	{
-		// No duplicates!
-		Remove( _property.Name() );
-		// Append at the end
-		m_list.push_back(_property);
+		// Create a case insensitive key
+		std::string key( _property.Name() );
+		std::transform(key.begin(), key.end(), key.begin(), ::tolower);
+		// No duplicates! Automatically overwrite if exists.
+		m_map.insert( std::make_pair(key, _property) );
 		Network::MsgPropertyChanged( _property.ParentObject(), &_property ).Send();
 	}
 
-	void PropertyList::Remove( Property* _property )
-	{
-		for(auto current = m_list.begin(); current != m_list.end(); ++current )
-			if( &(*current) == _property ) {
-				Network::MsgRemoveProperty( _property->ParentObject(), _property ).Send();
-				m_list.erase( current );
-				return;
-			}
-		// Not in list
-	}
 
 	void PropertyList::Remove( const std::string& _name )
 	{
-		for(auto current = m_list.begin(); current != m_list.end(); ++current )
-		{
-			if( Utils::IStringEqual( current->Name(), _name ) )
-			{
-				Network::MsgRemoveProperty( current->ParentObject(), &(*current) ).Send();
-				m_list.erase(current);
-				return;
-			}
-		}
+		// Create a case insensitive key
+		std::string key( _name );
+		std::transform(key.begin(), key.end(), key.begin(), ::tolower);
+		m_map.erase( key );
 	}
 
 	Property* PropertyList::Get( const std::string& _name )
@@ -148,11 +135,12 @@ namespace Core {
 
 	const Property* PropertyList::Get( const std::string& _name ) const
 	{
-		for(auto current = m_list.begin(); current != m_list.end(); ++current )
-		{
-			if( Utils::IStringEqual( (*current).Name(), _name ) )
-				return &(*current);
-		}
+		// Create a case insensitive key
+		std::string key( _name );
+		std::transform(key.begin(), key.end(), key.begin(), ::tolower);
+
+		auto it = m_map.find( key );
+		if( it != m_map.end() ) return &it->second;
 
 		// not in list
 		return nullptr;
@@ -160,19 +148,19 @@ namespace Core {
 
 	void PropertyList::Clear()
 	{
-		m_list.clear();
+		m_map.clear();
 	}
 
 
 	std::vector<const Property*> PropertyList::FilterByName( const std::string& _text ) const
 	{
 		std::vector<const Property*> _results;
-		for(auto current = m_list.begin(); current != m_list.end(); ++current )
+		for(auto current = m_map.begin(); current != m_map.end(); ++current )
 		{
 			// Test if the name contains the correct part
-			if( Utils::IStringContains(current->Name(), _text) )
+			if( Utils::IStringContains(current->second.Name(), _text) )
 				// Add reference to output
-				_results.push_back( &(*current) );
+				_results.push_back( &current->second );
 		}
 		return _results;
 	}
@@ -180,12 +168,12 @@ namespace Core {
 	std::vector<const Property*> PropertyList::FilterByValue( const std::string& _text ) const
 	{
 		std::vector<const Property*> _results;
-		for(auto current = m_list.begin(); current != m_list.end(); ++current )
+		for(auto current = m_map.begin(); current != m_map.end(); ++current )
 		{
 			// Test if the name contains the correct part
-			if( Utils::IStringContains(current->Value(), _text) )
+			if( Utils::IStringContains(current->second.Value(), _text) )
 				// Add reference to output
-				_results.push_back( &(*current) );
+				_results.push_back( &current->second );
 		}
 		return _results;
 	}
@@ -193,10 +181,10 @@ namespace Core {
 	void PropertyList::Serialize( Jo::Files::MetaFileWrapper::Node& _node ) const
 	{
 		// Would also run without preallocation but so its faster.
-		_node.Resize(m_list.size(), Jo::Files::MetaFileWrapper::ElementType::NODE);
+		_node.Resize(m_map.size(), Jo::Files::MetaFileWrapper::ElementType::NODE);
 		int i=0;
-		for(auto current = m_list.begin(); current != m_list.end(); ++current ) {
-			current->Serialize( _node[i] );
+		for(auto current = m_map.begin(); current != m_map.end(); ++current ) {
+			current->second.Serialize( _node[i] );
 			++i;
 		}
 	}

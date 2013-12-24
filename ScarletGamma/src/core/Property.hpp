@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include <list>
+#include <unordered_map>
 #include "ObjectList.hpp"
 #include <jofilelib.hpp>
 
@@ -80,7 +80,7 @@ private:
 
 /// \brief A dynamic list of properties.
 /// \details This is a custom container which contains Properties. Each
-///		key (name) can only be used once.
+///		key (name) can only be used once. Names are used case insensitive.
 class PropertyList
 {
 public:
@@ -96,12 +96,9 @@ public:
 	/// \param [in] _property Some property object from another list or a new one.
 	void Add( const Property& _property );
 
-	/// \brief Remove a property whose address comes from Get or Filter.
-	/// \param [in] _property Reference to one property in this list. If
-	///		the given object is not part of this container nothing happens.
-	void Remove( Property* _property );
-
-	/// \brief Removes all properties with given name from the list.
+	/// \brief Removes the property with given name from the list.
+	/// \param [in] _name Name of one property in this list (case insensitive).
+	///		If the given object is not part of this container nothing happens.
 	void Remove( const std::string& _name );
 
 	/// \brief Returns the first occurrence of a property with a matching name.
@@ -116,7 +113,7 @@ public:
 	void Clear();
 
 	/// \brief Returns the counter for the size of this list.
-	int GetNumElements() const		{ return (int)m_list.size(); }
+	int GetNumElements() const		{ return (int)m_map.size(); }
 
 	/// \brief Search all properties which have a certain text sequence in
 	///		there name.
@@ -135,7 +132,7 @@ public:
 	///		be changed and expanded by serialize.
 	virtual void Serialize( Jo::Files::MetaFileWrapper::Node& _node ) const;
 private:
-	std::list<Property> m_list;
+	std::unordered_map<std::string, Property> m_map;
 };
 
 } // namespace Core

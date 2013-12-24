@@ -9,6 +9,18 @@ States::StateMachine::StateMachine() :
 {
 }
 
+States::StateMachine::~StateMachine()
+{
+	// Remove all states from stack
+	while (m_gameState)
+	{
+		m_gameState->OnEnd();
+		GameState* oldState = m_gameState;
+		m_gameState = m_gameState->GetPreviousState();
+		delete oldState;
+	}
+}
+
 void States::StateMachine::PushGameState(States::GameStateType state)
 {
 	// Create initialized pointer

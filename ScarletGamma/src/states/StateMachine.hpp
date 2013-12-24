@@ -17,6 +17,9 @@ namespace States
 		/// \brief Creates a new StateMachine. Initializes the current GameState to 0.
 		StateMachine();
 
+		/// \brief Remove all remaining states
+		~StateMachine();
+
 		/// \brief Creates the specified GameState and pushes it onto the stack.
 		/// \detail To remove a GameState, the state has to mark itself as
 		///		finished. The game then returns to the previous GameState or

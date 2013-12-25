@@ -24,7 +24,7 @@ private:
 	~Content(void);
 
 	thor::MultiResourceCache m_res_cache;
-	
+
 	std::unordered_map<std::string,std::shared_ptr<sf::Image>> m_img_cache;
 	std::unordered_map<std::string,std::shared_ptr<sf::Texture>> m_tex_cache;
 	std::unordered_map<std::string,std::shared_ptr<sf::Font>> m_fon_cache;
@@ -33,12 +33,21 @@ private:
 
 
 public:
-	
+	/// \brief Loads a new image from file
+	/// \param [in] filename	The filename of the object relative to root folder
     sf::Image LoadImage(std::string filename);
+	/// \brief Loads a new texture from file
+	/// \param [in] filename	The filename of the object relative to root folder
 	sf::Texture LoadTexture(std::string filename);
-    sf::Font  LoadFont(std::string filename);
-    sf::Shader LoadShader(std::string filename);
-    sf::SoundBuffer LoadSoundBuffer(std::string filename);
+    /// \brief Loads a new font from file
+	/// \param [in] filename	The filename of the object relative to root folder
+	sf::Font  LoadFont(std::string filename);
+    /// \brief Loads a new shader from file [currently not working due restrictions on shader]
+	/// \param [in] filename	The filename of the object relative to root folder
+	sf::Shader LoadShader(std::string filename);
+    /// \brief Loads a new sound buffer from file
+	/// \param [in] filename	The filename of the object relative to root folder
+	sf::SoundBuffer LoadSoundBuffer(std::string filename);
 
 };
 

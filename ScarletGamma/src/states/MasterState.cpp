@@ -80,8 +80,10 @@ void States::MasterState::MouseButtonPressed(sf::Event::MouseButtonEvent& button
 				m_player->GetProperty("Target").SetValue("");
 				m_player->GetProperty("Path").ClearObjects();
 			}
+			if(m_selected->GetProperty("Layer").Value()=="0"){
 			// Append to target list
 			m_player->GetProperty("Path").AddObject(m_selected->ID());
+			}
 		}
 						  } break;
 	case sf::Mouse::Middle:
@@ -170,6 +172,7 @@ void States::MasterState::OnBegin()
 	// Load the test map
 	Jo::Files::HDDFile file("saves/unittest.json");
 	g_Game->GetWorld()->Load( file );
+
 }
 
 void States::MasterState::OnEnd()

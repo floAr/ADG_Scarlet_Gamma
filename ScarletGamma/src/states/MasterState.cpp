@@ -8,10 +8,24 @@
 #include "utils/Falloff.hpp"
 #include "network/Messenger.hpp"
 #include <iostream>
-#include "states/SelectionState.hpp"
+
 
 void States::MasterState::Update(float dt)
 {
+
+	//Selection stuff
+	
+	if(m_selection){//user started a selection process
+		if(m_selection->IsFinished()){//item was selected
+			Core::ObjectID sel=m_selection->SelectedObject();
+			delete(m_selection);
+			m_selection=NULL;
+			std::cout<<"user selected: "<<sel<<std::endl;
+		}
+	}
+
+
+
 	m_zoom.Update(dt);
 	if (m_zoom != 0)
 		ZoomView(m_zoom);
@@ -54,9 +68,9 @@ void States::MasterState::MouseMoved(int deltaX, int deltaY)
 		sf::Vector2f center = win.getView().getCenter();
 		sf::View newView = win.getView();
 		sf::Vector2f scale(newView.getSize().x / win.getSize().x,
-			               newView.getSize().y / win.getSize().y);
+			newView.getSize().y / win.getSize().y);
 		newView.setCenter(center.x - (deltaX * scale.x),
-			              center.y - (deltaY * scale.y));
+			center.y - (deltaY * scale.y));
 
 		// Apply view to the window
 		win.setView(newView);
@@ -83,8 +97,8 @@ void States::MasterState::MouseButtonPressed(sf::Event::MouseButtonEvent& button
 				m_player->GetProperty("Path").ClearObjects();
 			}
 			if(m_selected->GetProperty("Layer").Value()=="0"){
-			// Append to target list
-			m_player->GetProperty("Path").AddObject(m_selected->ID());
+				// Append to target list
+				m_player->GetProperty("Path").AddObject(m_selected->ID());
 			}
 		}
 						  } break;
@@ -95,14 +109,16 @@ void States::MasterState::MouseButtonPressed(sf::Event::MouseButtonEvent& button
 		newView.setSize((float)win.getSize().x, (float)win.getSize().y);
 		win.setView(newView);
 						   }
-		break;
-	/*case sf::Mouse::Right:{
-		States::SelectionState* selection=new States::SelectionState();
-		selection->AddTilePosition((int)tilePos.x,(int)tilePos.y);
-		g_Game->GetStateMachine()->PushGameState(selection);
+						   break;
+	case sf::Mouse::Right:{
+		if(m_selection)
+			delete(m_selection);
+		m_selection=new States::SelectionState();
+		m_selection->AddTilePosition((int)tilePos.x,(int)tilePos.y);
+		g_Game->GetStateMachine()->PushGameState(m_selection);
 						  }
 
-		break;*/
+						  break;
 	}
 }
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "states/GameState.hpp"
+#include "states/SelectionState.hpp"
 #include "utils/Falloff.hpp"
 #include "Prerequisites.hpp"
 
@@ -26,5 +27,7 @@ namespace States
 		Core::Object* m_selected;	///< A reference to the selected object or nullptr
 		Core::Object* m_player;		///< The one and only player object
 		void DrawPathOverlay(sf::RenderWindow& win);
+
+		States::SelectionState* m_selection;
 	};
 }

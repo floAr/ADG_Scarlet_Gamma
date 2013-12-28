@@ -14,7 +14,6 @@ Content* Content::m_instance=0;
 Content* Content::Instance(){
 	if(m_instance==0)
 	{
-		std::cout<<"newcontent";
 		m_instance=new Content();
 
 	}

@@ -5,6 +5,7 @@
 #include "Game.hpp"
 #include "SFML/Window.hpp"
 #include <iostream>
+#include "utils/Content.hpp"
 
 States::MainMenuState::MainMenuState() :
     GameState()
@@ -14,7 +15,8 @@ States::MainMenuState::MainMenuState() :
 
     // TODO:: I don't want my own resource management
     // TODO:: I want some way to report errors
-    m_menuFont.loadFromFile("media/arial.ttf");
+   // m_menuFont.loadFromFile("media/arial.ttf");
+	m_menuFont=Content::Instance()->LoadFont("media/arial.ttf");
 
     //--------------------------------------
     // EXAMPLE GUI USAGE

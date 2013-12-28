@@ -45,6 +45,9 @@ public:
 	/// \param [inout] _node A node with ElementType::UNKNOWN which can
 	///		be changed and expanded by serialize.
 	void Serialize( Jo::Files::MetaFileWrapper::Node& _node ) const;
+
+	/// \brief Gets the current elements in this list
+	std::vector<ObjectID>& Objects();
 private:
 	std::vector<ObjectID> m_objects;
 };

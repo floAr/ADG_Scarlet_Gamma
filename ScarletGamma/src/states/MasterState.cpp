@@ -3,10 +3,12 @@
 #include "graphics/TileRenderer.hpp"
 #include "core/Map.hpp"
 #include "core/World.hpp"
+#include "states/StateMachine.hpp"
 #include "Constants.hpp"
 #include "utils/Falloff.hpp"
 #include "network/Messenger.hpp"
 #include <iostream>
+#include "states/SelectionState.hpp"
 
 void States::MasterState::Update(float dt)
 {
@@ -86,13 +88,21 @@ void States::MasterState::MouseButtonPressed(sf::Event::MouseButtonEvent& button
 			}
 		}
 						  } break;
-	case sf::Mouse::Middle:
+	case sf::Mouse::Middle:{
 		m_zoom = 0;
 		sf::RenderWindow& win = g_Game->GetWindow();
 		sf::View newView = win.getView();
 		newView.setSize((float)win.getSize().x, (float)win.getSize().y);
 		win.setView(newView);
+						   }
 		break;
+	/*case sf::Mouse::Right:{
+		States::SelectionState* selection=new States::SelectionState();
+		selection->AddTilePosition((int)tilePos.x,(int)tilePos.y);
+		g_Game->GetStateMachine()->PushGameState(selection);
+						  }
+
+		break;*/
 	}
 }
 

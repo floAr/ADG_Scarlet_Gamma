@@ -59,4 +59,8 @@ namespace Core {
 	}
 
 
+	std::vector<ObjectID>& ObjectList::Objects(){
+		return m_objects;
+	}
+
 } // namespace Core

@@ -9,6 +9,18 @@ States::StateMachine::StateMachine() :
 {
 }
 
+void States::StateMachine::PushGameState(States::GameState* newState){
+	// If we have a new state, "push" it
+	if (newState != 0)
+	{
+		if( m_gameState )
+			m_gameState->OnPause();
+		newState->SetPreviousState(m_gameState);
+		newState->OnBegin();
+		m_gameState = newState;
+	}
+}
+
 void States::StateMachine::PushGameState(States::GameStateType state)
 {
 	// Create initialized pointer

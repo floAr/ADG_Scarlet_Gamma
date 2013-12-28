@@ -125,6 +125,9 @@
     <ClCompile Include="src\utils\Content.cpp">
       <Filter>Quelldateien\utils</Filter>
     </ClCompile>
+    <ClCompile Include="src\states\SelectionState.cpp">
+      <Filter>Quelldateien\states</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\core\Map.hpp">
@@ -225,6 +228,9 @@
     </ClInclude>
     <ClInclude Include="src\utils\Content.hpp">
       <Filter>Quelldateien\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\states\SelectionState.hpp">
+      <Filter>Quelldateien\states</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -204,4 +204,6 @@ void States::MasterState::OnBegin()
 void States::MasterState::OnEnd()
 {
 	Network::Messenger::Close();
+	delete(m_selection);
+
 }

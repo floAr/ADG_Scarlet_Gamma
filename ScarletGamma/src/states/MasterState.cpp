@@ -173,10 +173,11 @@ void MasterState::DrawPathOverlay(sf::RenderWindow& win)
 	try {
 		std::vector<sf::Vector2i> path;
 		sf::Vector2i start(sfUtils::Round(m_player->GetPosition()));
-		if( m_player->HasProperty("Path") )
+		if( m_player->HasProperty(Core::Object::PROP_PATH) )
 		{
 			// For each way point compute the shortest path
-			auto& wayPoints = m_player->GetProperty("Path").GetObjects();
+			Core::Property& pathProperty = m_player->GetProperty(Core::Object::PROP_PATH);
+			auto& wayPoints = pathProperty.GetObjects();
 			for( int i=0; i<wayPoints.Size(); ++i )
 			{
 				sf::Vector2i goal = sfUtils::Round(g_Game->GetWorld()->GetObject(wayPoints[i])->GetPosition());
@@ -184,9 +185,16 @@ void MasterState::DrawPathOverlay(sf::RenderWindow& win)
 				start = goal;
 				path.insert( path.end(), part.begin(), part.end() );
 			}
-		} else if( m_player->HasProperty("Target") ) {
+			// Loop?
+			if( pathProperty.Value() == "true" )
+			{
+				sf::Vector2i goal = sfUtils::Round(g_Game->GetWorld()->GetObject(wayPoints[0])->GetPosition());
+				auto part = g_Game->GetWorld()->GetMap(0)->FindPath(start, goal);
+				path.insert( path.end(), part.begin(), part.end() );
+			}
+		} else if( m_player->HasProperty(Core::Object::PROP_TARGET) ) {
 			// There are no paths but a short time target.
-			sf::Vector2i goal = sfUtils::Round(sfUtils::to_vector(m_player->GetProperty("Target").Value()));
+			sf::Vector2i goal = sfUtils::Round(sfUtils::to_vector(m_player->GetProperty(Core::Object::PROP_TARGET).Value()));
 			path = g_Game->GetWorld()->GetMap(0)->FindPath(start, goal);
 		}
 

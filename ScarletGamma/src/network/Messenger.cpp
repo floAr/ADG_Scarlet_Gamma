@@ -28,15 +28,18 @@ namespace Network {
 	Messenger::Messenger( const sf::IpAddress& _server ) :
 		m_listener(nullptr)
 	{
-		m_buffer = malloc( BUFFER_SIZE );
-
 		// Establish the connection
 		sf::TcpSocket* serverConnection = new sf::TcpSocket();
 		if( serverConnection->connect( _server, 42961 ) != sf::Socket::Done )
 		{
 			std::cout << "[Messenger] Connection to " << _server << ':' << 42961 << " not possible";
-		} else
+			delete serverConnection;
+			throw std::string("Cannot connect to server.");
+		} else {
+			m_buffer = malloc( BUFFER_SIZE );
+
 			m_sockets.push_back(serverConnection);
+		}
 	}
 
 	Messenger::~Messenger()
@@ -49,12 +52,14 @@ namespace Network {
 		free( m_buffer );
 	}
 
-	void Messenger::Initialize( const sf::IpAddress& _server )
+	void Messenger::Initialize( const sf::IpAddress* _server )
 	{
-		if( _server == sf::IpAddress() )
+		if( _server == nullptr )
 			g_msgInstance = new Messenger();
+		else if( *_server == sf::IpAddress() )
+			throw std::string("Invalid IP address.");
 		else
-			g_msgInstance = new Messenger( _server );
+			g_msgInstance = new Messenger( *_server );
 	}
 
 	void Messenger::Close()

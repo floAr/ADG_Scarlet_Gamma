@@ -135,9 +135,6 @@ void States::PlayerState::DrawPathOverlay(sf::RenderWindow& win)
 
 void States::PlayerState::OnBegin()
 {
-	// Connect to server: local host for tests
-	Network::Messenger::Initialize(sf::IpAddress("127.0.0.1"));
-
 	// After connecting the client is receiving the world
 	Network::Messenger::Poll( true );
 }

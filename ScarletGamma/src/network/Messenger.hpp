@@ -16,9 +16,10 @@ namespace Network {
 	{
 	public:
 		/// \brief Connect to a game master-server or create the server.
-		/// \param [in] _server An address of the server or the empty (invalid)
+		/// \param [in] _server An address of the server or nullptr
 		///		address to initialize the server.
-		static void Initialize( const sf::IpAddress& _server );
+		///	\throws std::string
+		static void Initialize( const sf::IpAddress* _server );
 
 		/// \brief Release all resources and connections.
 		static void Close();

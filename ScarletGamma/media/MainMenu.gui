@@ -29,7 +29,7 @@ Window:
 		Transparency = 255
 		Callback = LeftMouseClicked
 		CallbackId = 3
-		Text = "Enter Game"
+		Text = "Join Game"
 		TextColor = (200,200,200,255)
 		TextSize = 26
 	}

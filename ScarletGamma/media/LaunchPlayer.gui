@@ -1,0 +1,96 @@
+Window:
+{
+	Label: "IPLabel"
+	{
+		ConfigFile = "lib/TGUI-0.6-RC/widgets/Black.conf"
+		Left = 30
+		Top = 110
+		Width = 300
+		Height = 40
+		Visible = true
+		Enabled = true
+		Transparency = 255
+		CallbackId = 0
+		Text = "Enter the server IP:"
+		TextColor = (255,255,255,255)
+		TextSize = 26
+		BackgroundColor = (0,0,0,0)
+		AutoSize = false
+	}
+	
+	EditBox: "ServerIP"
+	{
+		ConfigFile = "lib/TGUI-0.6-RC/widgets/Black.conf"
+		Left = 350
+		Top = 100
+		Width = 400
+		Height = 40
+		Visible = true
+		Enabled = true
+		Transparency = 255
+		CallbackId = 0
+		Text = "127.0.0.1"
+		TextSize = 26
+		MaximumCharacters = 0
+		Borders = (6,4,6,4)
+		TextColor = (200,200,200,255)
+		SelectedTextColor = (255,255,255,255)
+		SelectedTextBackgroundColor = (10,110,255,255)
+		SelectionPointColor = (110,110,255,255)
+		LimitTextWidth = false
+		SelectionPointWidth = 2
+		NumbersOnly = false
+	}
+
+	Button: "Start"
+	{
+		ConfigFile = "lib/TGUI-0.6-RC/widgets/Black.conf"
+		Left = 30
+		Top = 250
+		Width = 300
+		Height = 40
+		Visible = true
+		Enabled = true
+		Transparency = 255
+		Callback = LeftMouseClicked
+		CallbackId = 2
+		Text = "Start"
+		TextColor = (200,200,200,255)
+		TextSize = 26
+	}
+	
+	Label: "Status"
+	{
+		ConfigFile = "lib/TGUI-0.6-RC/widgets/Black.conf"
+		Left = 350
+		Top = 260
+		Width = 300
+		Height = 40
+		Visible = true
+		Enabled = true
+		Transparency = 255
+		CallbackId = 0
+		Text = ""
+		TextColor = (200,200,200,255)
+		TextSize = 26
+		BackgroundColor = (0,0,0,0)
+		AutoSize = false
+	}
+	
+	Button: "Back"
+	{
+		ConfigFile = "lib/TGUI-0.6-RC/widgets/Black.conf"
+		Left = 30
+		Top = 300
+		Width = 300
+		Height = 40
+		Visible = true
+		Enabled = true
+		Transparency = 255
+		Callback = LeftMouseClicked
+		CallbackId = 1
+		Text = "Back"
+		TextColor = (200,200,200,255)
+		TextSize = 26
+	}
+}

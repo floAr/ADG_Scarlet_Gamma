@@ -91,6 +91,10 @@ void States::MainMenuState::GuiCallback(tgui::Callback& callback)
 		// Master state initialization
 		g_Game->GetStateMachine()->PushGameState(GST_LAUNCH_MASTER);
 		break;
+	case 3:
+		// Player state initialization
+		g_Game->GetStateMachine()->PushGameState(GST_LAUNCH_PLAYER);
+		break;
 	default:
 		// No such GUI element!
 		assert(false);

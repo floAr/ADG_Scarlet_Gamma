@@ -201,7 +201,7 @@ void MasterState::DrawPathOverlay(sf::RenderWindow& win)
 void MasterState::OnBegin()
 {
 	// Init server
-	Network::Messenger::Initialize(sf::IpAddress());
+	Network::Messenger::Initialize(nullptr);
 }
 
 void MasterState::OnEnd()

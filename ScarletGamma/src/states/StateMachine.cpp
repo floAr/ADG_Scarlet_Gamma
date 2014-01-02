@@ -4,6 +4,7 @@
 #include "MainMenuState.hpp"
 #include "MasterState.hpp"
 #include "LaunchMasterState.hpp"
+#include "LaunchPlayerState.hpp"
 
 States::StateMachine::StateMachine() :
 	m_gameState(0)
@@ -50,6 +51,9 @@ void States::StateMachine::PushGameState(States::GameStateType state)
 		break;
 	case GST_LAUNCH_MASTER:
 		newState = new States::LaunchMasterState();
+		break;
+	case GST_LAUNCH_PLAYER:
+		newState = new States::LaunchPlayerState();
 		break;
 	case GST_PLAYER:
 		newState = new States::PlayerState();

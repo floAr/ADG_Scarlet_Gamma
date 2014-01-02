@@ -120,7 +120,7 @@ namespace Core {
 		// Test each object in this cell if it has obstacle property
 		auto list = GetObjectsAt(_position.x, _position.y);
 		for( int i=0; i<list.Size(); ++i )
-			if(m_parentWorld->GetObject(list[i])->HasProperty(string("Obstacle")))
+			if(m_parentWorld->GetObject(list[i])->HasProperty(Object::PROP_OBSTACLE))
 				return false;
 		return true;
 	}
@@ -139,12 +139,12 @@ namespace Core {
 
 		// Set correct position for the object itself
 		Object* object = m_parentWorld->GetObject(_object);
-		object->Add( Property(_object, "X", to_string((float)_x)) );
-		object->Add( Property(_object, "Y", to_string((float)_y)) );
-		object->Add( Property(_object, "Layer", to_string(_layer)) );
+		object->Add( Property(_object, Object::PROP_X, to_string((float)_x)) );
+		object->Add( Property(_object, Object::PROP_Y, to_string((float)_y)) );
+		object->Add( Property(_object, Object::PROP_LAYER, to_string(_layer)) );
 
 		// Does the object requires updates?
-		if( object->HasProperty("Target") )
+		if( object->HasProperty(Object::PROP_TARGET) )
 		{
 			m_activeObjects->Add(_object);
 		}
@@ -164,9 +164,9 @@ namespace Core {
 		m_activeObjects->Remove(_object);
 
 		// Remove map-related properties from the object
-		obj->Remove("X");
-		obj->Remove("Y");
-		obj->Remove("Layer");
+		obj->Remove(Object::PROP_X);
+		obj->Remove(Object::PROP_Y);
+		obj->Remove(Object::PROP_LAYER);
 	}
 
 
@@ -181,9 +181,9 @@ namespace Core {
 			if( HasReachedTarget(object, position) )
 			{
 				// If it reached the target choose a new one.
-				object->GetProperty("Target").SetValue( sfUtils::to_string(FindNextTarget(object)) );
+				object->GetProperty(Object::PROP_TARGET).SetValue( sfUtils::to_string(FindNextTarget(object)) );
 			}
-			auto target = sfUtils::to_vector(object->GetProperty("Target").Value());
+			auto target = sfUtils::to_vector(object->GetProperty(Object::PROP_TARGET).Value());
 			target -= position;	// Scaled direction
 			float len = sfUtils::Length(target);
 			if( len > 0.00001 )
@@ -306,9 +306,9 @@ namespace Core {
 	sf::Vector2f Map::FindNextTarget(Object* _object) const
 	{
 		sf::Vector2f position = _object->GetPosition();
-		if(_object->HasProperty("Path"))
+		if(_object->HasProperty(Object::PROP_PATH))
 		{
-			auto& path = _object->GetProperty("Path").GetObjects();
+			auto& path = _object->GetProperty(Object::PROP_PATH).GetObjects();
 			sf::Vector2i start, goal;
 			do {
 				if( path.Size() > 0 )
@@ -317,7 +317,7 @@ namespace Core {
 					sf::Vector2f point = position;
 					try { // Maybe the target point was removed from the map?
 						point = pathPoint->GetPosition();
-					} catch(...) {_object->GetProperty("Path").RemoveObject( path[0] );}
+					} catch(...) {_object->GetProperty(Object::PROP_PATH).RemoveObject( path[0] );}
 
 					start = sfUtils::Round(position);
 					goal = sfUtils::Round(point);
@@ -325,7 +325,7 @@ namespace Core {
 					// If we are already at the first path-point remove it.
 					// TODO: loop path
 					if( start == goal )
-						_object->GetProperty("Path").RemoveObject( path[0] );
+						_object->GetProperty(Object::PROP_PATH).RemoveObject( path[0] );
 				} else return position;
 			} while( start == goal );
 
@@ -338,7 +338,7 @@ namespace Core {
 
 	bool Map::HasReachedTarget( Object* _object, const sf::Vector2f& _position ) const
 	{
-		auto& targetProp = _object->GetProperty("Target");
+		auto& targetProp = _object->GetProperty(Object::PROP_TARGET);
 		if( targetProp.Value() == "" ) return true;
 		auto target = sfUtils::to_vector(targetProp.Value());
 		return sfUtils::LengthSq(target-_position) < 0.00000001;
@@ -355,14 +355,14 @@ namespace Core {
 		// Avoid recursive - redundant messages
 		Network::MaskObjectMessage objMessageLock;
 		try {
-			Property* X = &_object->GetProperty("X");
-			Property* Y = &_object->GetProperty("Y");
+			Property* X = &_object->GetProperty(Object::PROP_X);
+			Property* Y = &_object->GetProperty(Object::PROP_Y);
 			X->SetValue( to_string(_position.x) );
 			Y->SetValue( to_string(_position.y) );
 		} catch(...) {
 			// Should never happen - but stable is stable
-			_object->Add( Property( _object->ID(), "X", to_string(_position.x) ) );
-			_object->Add( Property( _object->ID(), "Y", to_string(_position.y) ) );
+			_object->Add( Property( _object->ID(), Object::PROP_X, to_string(_position.x) ) );
+			_object->Add( Property( _object->ID(), Object::PROP_Y, to_string(_position.y) ) );
 		}
 		// Update cells
 		sf::Vector2i newCell(sfUtils::Round(_position));

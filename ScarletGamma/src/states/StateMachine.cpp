@@ -9,6 +9,18 @@ States::StateMachine::StateMachine() :
 {
 }
 
+States::StateMachine::~StateMachine()
+{
+	// Remove all states from stack
+	while (m_gameState)
+	{
+		m_gameState->OnEnd();
+		GameState* oldState = m_gameState;
+		m_gameState = m_gameState->GetPreviousState();
+		delete oldState;
+	}
+}
+
 void States::StateMachine::PushGameState(States::GameState* newState){
 	// If we have a new state, "push" it
 	if (newState != 0)
@@ -59,7 +71,9 @@ void States::StateMachine::Update(float dt)
 	if (m_gameState && m_gameState->IsFinished())
 	{
 		m_gameState->OnEnd();
+		GameState* oldState = m_gameState;
 		m_gameState = m_gameState->GetPreviousState();
+		delete oldState;
 		if (m_gameState)
 			m_gameState->OnResume();
 	}

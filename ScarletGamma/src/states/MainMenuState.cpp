@@ -25,7 +25,7 @@ States::MainMenuState::MainMenuState() :
     m_gui.setGlobalFont(m_menuFont);
     // Now create stuff or load using loadWidgetsFromFile()
     tgui::Button::Ptr button(m_gui);
-    button->load("lib/TGUI-0.6-RC/widgets/Black.conf"); // TODO: this causes an exception later when main() finishes. I don't get it all :)
+    button->load("lib/TGUI-0.6-RC/widgets/Black.conf");
     button->setPosition(30, 200);
     button->setText("Quit");
     button->setCallbackId(1);
@@ -90,5 +90,5 @@ void States::MainMenuState::MouseWheelMoved(sf::Event::MouseWheelEvent& wheel)
 void States::MainMenuState::GuiCallback(tgui::Callback& callback)
 {
     if (callback.id == 1)
-        g_Game->GetWindow().close();
+		m_finished = true;
 }

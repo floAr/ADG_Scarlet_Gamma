@@ -35,19 +35,19 @@ private:
 public:
 	/// \brief Loads a new image from file
 	/// \param [in] filename	The filename of the object relative to root folder
-    sf::Image LoadImage(std::string filename);
+    const sf::Image& LoadImage(const std::string& filename);
 	/// \brief Loads a new texture from file
 	/// \param [in] filename	The filename of the object relative to root folder
-	sf::Texture LoadTexture(std::string filename);
+	const sf::Texture& LoadTexture(const std::string& filename);
     /// \brief Loads a new font from file
 	/// \param [in] filename	The filename of the object relative to root folder
-	sf::Font  LoadFont(std::string filename);
+	const sf::Font&  LoadFont(const std::string& filename);
     /// \brief Loads a new shader from file [currently not working due restrictions on shader]
 	/// \param [in] filename	The filename of the object relative to root folder
-	sf::Shader LoadShader(std::string filename);
+	const sf::Shader& LoadShader(const std::string& filename);
     /// \brief Loads a new sound buffer from file
 	/// \param [in] filename	The filename of the object relative to root folder
-	sf::SoundBuffer LoadSoundBuffer(std::string filename);
+	const sf::SoundBuffer& LoadSoundBuffer(const std::string& filename);
 
 };
 

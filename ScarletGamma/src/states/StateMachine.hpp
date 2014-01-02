@@ -6,7 +6,7 @@
 
 namespace States
 {
-	enum GameStateType { GST_INTRO, GST_MAIN_MENU, GST_PLAYER, GST_MASTER };
+	enum GameStateType { GST_INTRO, GST_MAIN_MENU, GST_LAUNCH_MASTER, GST_PLAYER, GST_MASTER };
 
 	/// \brief Factory and manager for GameState implementations.
 	/// This is used to keep track of the GameStates and initialize new ones.

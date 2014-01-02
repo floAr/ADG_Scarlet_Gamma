@@ -10,7 +10,7 @@ namespace States
 	class MasterState : public GameState
 	{
 	public:
-		MasterState() : m_zoom(Utils::Falloff::FT_QUADRATIC, 0.75f, 0.05f), m_selected(nullptr), m_player(nullptr) {}
+		MasterState( const std::string& _loadFile );
 		virtual void OnBegin();
 		virtual void OnEnd();
 		virtual void OnPause() {}

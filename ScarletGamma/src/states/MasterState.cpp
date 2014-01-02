@@ -9,11 +9,20 @@
 #include "network/Messenger.hpp"
 #include <iostream>
 
+namespace States {
 
-void States::MasterState::Update(float dt)
+MasterState::MasterState( const std::string& _loadFile ) :
+	m_zoom(Utils::Falloff::FT_QUADRATIC, 0.75f, 0.05f),
+	m_selected(nullptr), m_player(nullptr)
 {
+	// Load the map
+	Jo::Files::HDDFile file(_loadFile);
+	g_Game->GetWorld()->Load( file );
+}
 
-	//Selection stuff
+void MasterState::Update(float dt)
+{
+	// Selection stuff
 	
 	if(m_selection){//user started a selection process
 		if(m_selection->IsFinished()){//item was selected
@@ -37,7 +46,7 @@ void States::MasterState::Update(float dt)
 	Network::Messenger::Poll( false );
 }
 
-void States::MasterState::Draw(sf::RenderWindow& win)
+void MasterState::Draw(sf::RenderWindow& win)
 {
 	// Hard coded test selection:
 	if( !m_selected ) {
@@ -57,7 +66,7 @@ void States::MasterState::Draw(sf::RenderWindow& win)
 	DrawPathOverlay(win);
 }
 
-void States::MasterState::MouseMoved(int deltaX, int deltaY)
+void MasterState::MouseMoved(int deltaX, int deltaY)
 {
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 	{
@@ -77,7 +86,7 @@ void States::MasterState::MouseMoved(int deltaX, int deltaY)
 	}
 }
 
-void States::MasterState::MouseButtonPressed(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos)
+void MasterState::MouseButtonPressed(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos)
 {
 	switch (button.button)
 	{
@@ -88,7 +97,7 @@ void States::MasterState::MouseButtonPressed(sf::Event::MouseButtonEvent& button
 		auto& tiles = g_Game->GetWorld()->GetMap(0)->GetObjectsAt((int)tilePos.x,(int)tilePos.y);
 		if( tiles.Size() > 0 )
 		{
-			// TODO: intelligent selcet?
+			// TODO: intelligent select?
 			m_selected = g_Game->GetWorld()->GetObject(tiles[tiles.Size()-1]);
 			// Delete current target(s) if not appending
 			if( !sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) )
@@ -103,33 +112,30 @@ void States::MasterState::MouseButtonPressed(sf::Event::MouseButtonEvent& button
 				m_player->AppendToPath( m_selected->ID() );
 			}
 		}
-						  } break;
+		} break;
 	case sf::Mouse::Middle:{
 		m_zoom = 0;
 		sf::RenderWindow& win = g_Game->GetWindow();
 		sf::View newView = win.getView();
 		newView.setSize((float)win.getSize().x, (float)win.getSize().y);
 		win.setView(newView);
-						   }
-						   break;
+		} break;
 	case sf::Mouse::Right:{
 		if(m_selection)
 			delete(m_selection);
 		m_selection=new States::SelectionState();
 		m_selection->AddTilePosition((int)tilePos.x,(int)tilePos.y);
 		g_Game->GetStateMachine()->PushGameState(m_selection);
-						  }
-
-						  break;
+		} break;
 	}
 }
 
-void States::MasterState::MouseWheelMoved(sf::Event::MouseWheelEvent& wheel)
+void MasterState::MouseWheelMoved(sf::Event::MouseWheelEvent& wheel)
 {
 	m_zoom = (float)wheel.delta;
 }
 
-void States::MasterState::ZoomView(float delta)
+void MasterState::ZoomView(float delta)
 {
 	// Get the render window
 	sf::RenderWindow& win = g_Game->GetWindow();
@@ -161,7 +167,7 @@ void States::MasterState::ZoomView(float delta)
 	win.setView(newView);
 }
 
-void States::MasterState::DrawPathOverlay(sf::RenderWindow& win)
+void MasterState::DrawPathOverlay(sf::RenderWindow& win)
 {
 	assert( m_player );
 	try {
@@ -192,20 +198,17 @@ void States::MasterState::DrawPathOverlay(sf::RenderWindow& win)
 }
 
 
-void States::MasterState::OnBegin()
+void MasterState::OnBegin()
 {
 	// Init server
 	Network::Messenger::Initialize(sf::IpAddress());
-
-	// Load the test map
-	Jo::Files::HDDFile file("saves/unittest.json");
-	g_Game->GetWorld()->Load( file );
-
 }
 
-void States::MasterState::OnEnd()
+void MasterState::OnEnd()
 {
 	Network::Messenger::Close();
 	delete(m_selection);
 
 }
+
+}// namespace States

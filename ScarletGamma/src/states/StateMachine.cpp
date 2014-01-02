@@ -3,6 +3,7 @@
 #include "PlayerState.hpp"
 #include "MainMenuState.hpp"
 #include "MasterState.hpp"
+#include "LaunchMasterState.hpp"
 
 States::StateMachine::StateMachine() :
 	m_gameState(0)
@@ -47,22 +48,21 @@ void States::StateMachine::PushGameState(States::GameStateType state)
 	case GST_MAIN_MENU:
 		newState = new States::MainMenuState();
 		break;
+	case GST_LAUNCH_MASTER:
+		newState = new States::LaunchMasterState();
+		break;
 	case GST_PLAYER:
 		newState = new States::PlayerState();
 		break;
 	case GST_MASTER:
-		newState = new States::MasterState();
+		// You mast create the master state your self - it requires input.
+		assert(false);
+		break;
 	}
 
 	// If we have a new state, "push" it
 	if (newState != 0)
-	{
-		if( m_gameState )
-			m_gameState->OnPause();
-		newState->SetPreviousState(m_gameState);
-		newState->OnBegin();
-		m_gameState = newState;
-	}
+		PushGameState(newState);
 }
 
 void States::StateMachine::Update(float dt)

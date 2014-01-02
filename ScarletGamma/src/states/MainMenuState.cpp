@@ -6,6 +6,7 @@
 #include "SFML/Window.hpp"
 #include <iostream>
 #include "utils/Content.hpp"
+#include "MasterState.hpp"
 
 States::MainMenuState::MainMenuState() :
     GameState()
@@ -13,24 +14,18 @@ States::MainMenuState::MainMenuState() :
     for (int i = 0; i < sizeof(m_mousePos) / sizeof(m_mousePos[0]); i++)
         m_mousePos[i] = 0;
 
-    // TODO:: I don't want my own resource management
     // TODO:: I want some way to report errors
-   // m_menuFont.loadFromFile("media/arial.ttf");
 	m_menuFont=Content::Instance()->LoadFont("media/arial.ttf");
 
     //--------------------------------------
-    // EXAMPLE GUI USAGE
+    // CREATE GUI
     // First, create a tgui::Gui object and load a font
     m_gui.setWindow(g_Game->GetWindow());
     m_gui.setGlobalFont(m_menuFont);
+
     // Now create stuff or load using loadWidgetsFromFile()
-    tgui::Button::Ptr button(m_gui);
-    button->load("lib/TGUI-0.6-RC/widgets/Black.conf");
-    button->setPosition(30, 200);
-    button->setText("Quit");
-    button->setCallbackId(1);
-    button->bindCallback(tgui::Button::LeftMouseClicked);
-    button->setSize(300, 40);
+	m_gui.loadWidgetsFromFile( "media/MainMenu.gui" );
+
     // Finally, use SetGui() to activate the GUI (rendering, events, callbacks)
     SetGui(&m_gui);
 }
@@ -67,7 +62,7 @@ void States::MainMenuState::KeyPressed(sf::Event::KeyEvent& key)
         break;
     // Master state with m
     case sf::Keyboard::M:
-        g_Game->GetStateMachine()->PushGameState(GST_MASTER);
+        g_Game->GetStateMachine()->PushGameState(new States::MasterState("saves/unittest.json"));
         break;
     // Quit with escape
     case sf::Keyboard::Escape:
@@ -89,6 +84,15 @@ void States::MainMenuState::MouseWheelMoved(sf::Event::MouseWheelEvent& wheel)
 
 void States::MainMenuState::GuiCallback(tgui::Callback& callback)
 {
-    if (callback.id == 1)
-		m_finished = true;
+	switch (callback.id)
+	{
+	case 1: m_finished = true; break;
+	case 2:
+		// Master state initialization
+		g_Game->GetStateMachine()->PushGameState(GST_LAUNCH_MASTER);
+		break;
+	default:
+		// No such GUI element!
+		assert(false);
+	}
 }

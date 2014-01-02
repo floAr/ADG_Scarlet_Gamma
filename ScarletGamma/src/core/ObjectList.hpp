@@ -23,7 +23,9 @@ public:
 	void Add( ObjectID _id );
 
 	/// \brief Delete a object reference from this list.
-	/// \details The object is searched linear to be removed.
+	/// \details The object is searched linear to be removed. If there are
+	///		multiple references to the same object only the first
+	///		occurrence is removed.
 	///
 	///		This method does not change the original object.
 	void Remove( ObjectID _id );

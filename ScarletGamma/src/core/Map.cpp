@@ -308,7 +308,9 @@ namespace Core {
 		sf::Vector2f position = _object->GetPosition();
 		if(_object->HasProperty(Object::PROP_PATH))
 		{
-			auto& path = _object->GetProperty(Object::PROP_PATH).GetObjects();
+			Property& pathProperty = _object->GetProperty(Object::PROP_PATH);
+			bool loop = pathProperty.Value() == "true";
+			auto& path = pathProperty.GetObjects();
 			sf::Vector2i start, goal;
 			do {
 				if( path.Size() > 0 )
@@ -317,15 +319,22 @@ namespace Core {
 					sf::Vector2f point = position;
 					try { // Maybe the target point was removed from the map?
 						point = pathPoint->GetPosition();
-					} catch(...) {_object->GetProperty(Object::PROP_PATH).RemoveObject( path[0] );}
+					} catch(...) {
+						// Always remove from list - ignore loops
+						pathProperty.PopFront();
+						continue;
+					}
 
 					start = sfUtils::Round(position);
 					goal = sfUtils::Round(point);
 
 					// If we are already at the first path-point remove it.
-					// TODO: loop path
 					if( start == goal )
-						_object->GetProperty(Object::PROP_PATH).RemoveObject( path[0] );
+					{
+						if( loop ) pathProperty.AddObject( path[0] );
+						if( path.Size() == 1 ) break;	// Do not delete the last point from list -> tracking of objects
+						pathProperty.PopFront();
+					}
 				} else return position;
 			} while( start == goal );
 

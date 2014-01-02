@@ -41,6 +41,10 @@ public:
 	/// \throws Exception::NoObjectList.
 	void RemoveObject( ObjectID _id );
 
+	/// \see ObjectList::PopFront();
+	/// \throws Exception::NoObjectList.
+	void PopFront();
+
 	/// \brief Remove all objects from the list.
 	/// \throws Exception::NoObjectList.
 	void ClearObjects();

@@ -51,14 +51,24 @@ public:
 
 	ObjectID ID() const { return m_id; }
 
-	static const std::string PROP_LAYER;
-	static const std::string PROP_X;
-	static const std::string PROP_Y;
-	static const std::string PROP_SPRITE;
-	static const std::string PROP_COLOR;
-	static const std::string PROP_PATH;
-	static const std::string PROP_TARGET;
-	static const std::string PROP_OBSTACLE;
+	// The following constants are names of predefined properties.
+	// This allows faster accesses because string("keks") would cause an
+	// allocation and deallocation which the constants do not.
+	static const std::string PROP_LAYER;	///< Name of layer property: rendering order
+	static const std::string PROP_X;		///< Name of position.x: floating point position
+	static const std::string PROP_Y;		///< Name of position.y: floating point position
+	static const std::string PROP_SPRITE;	///< Name of sprite property: texture name
+	static const std::string PROP_COLOR;	///< Name of color property: hexadecimal string
+	static const std::string PROP_PATH;		///< Name of path property: object list + boolean value
+	static const std::string PROP_TARGET;	///< Name of target property: next point to be reached linearly
+	static const std::string PROP_OBSTACLE;	///< Name of obstacle property: this object collides with the player
+
+	/// \brief Add a new way point to the path list.
+	/// \details If the new object is equal to the first in the list the loop
+	///		property is set to true. Otherwise it is false.
+	///	\param [in] _wayPoint Any object which should be tracked or reached.
+	void AppendToPath( ObjectID _wayPoint );
+
 private:
 	// Hide some of the methods
 	PropertyList::Clear;

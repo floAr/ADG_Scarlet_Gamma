@@ -93,12 +93,14 @@ void States::MasterState::MouseButtonPressed(sf::Event::MouseButtonEvent& button
 			// Delete current target(s) if not appending
 			if( !sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) )
 			{
-				m_player->GetProperty("Target").SetValue("");
-				m_player->GetProperty("Path").ClearObjects();
+				m_player->GetProperty(Core::Object::PROP_TARGET).SetValue("");
+				Core::Property& path = m_player->GetProperty(Core::Object::PROP_PATH);
+				path.ClearObjects();
+				path.SetValue("false");
 			}
-			if(m_selected->GetProperty("Layer").Value()=="0"){
+			if(m_selected->GetProperty(Core::Object::PROP_LAYER).Value()=="0"){
 				// Append to target list
-				m_player->GetProperty("Path").AddObject(m_selected->ID());
+				m_player->AppendToPath( m_selected->ID() );
 			}
 		}
 						  } break;

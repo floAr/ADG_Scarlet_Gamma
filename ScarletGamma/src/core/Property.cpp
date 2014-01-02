@@ -93,6 +93,11 @@ namespace Core {
 		}
 	}
 
+	void Property::PopFront()
+	{
+		{ if( !m_isObjectList ) throw Exception::NoObjectList(); m_objects.PopFront(); }
+	}
+
 
 
 

@@ -97,4 +97,15 @@ namespace Core {
 		PropertyList::Serialize(_node[string("Properties")]);
 	}
 
+	void Object::AppendToPath( ObjectID _wayPoint )
+	{
+		Property& path = GetProperty( PROP_PATH );
+		path.AddObject( _wayPoint );
+		// Check for a loop: a single node cannot be a loop, first and last
+		// node must be the same.
+		bool hasLoop = path.GetObjects().Size() > 1;
+		hasLoop &= path.GetObjects()[0] == path.GetObjects()[path.GetObjects().Size()-1];
+		path.SetValue( hasLoop ? "true" : "false" );
+	}
+
 } // namespace Core

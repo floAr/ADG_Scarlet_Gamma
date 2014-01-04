@@ -6,10 +6,10 @@
 
 namespace States
 {
-	enum GameStateType { GST_INTRO, GST_MAIN_MENU, GST_PLAYER };
+	enum GameStateType { GST_INTRO, GST_MAIN_MENU, GST_LAUNCH_MASTER, GST_LAUNCH_PLAYER, GST_PLAYER, GST_MASTER };
 
 	/// \brief Factory and manager for GameState implementations.
-	/// This is used to keep track of the GameStates and intialize new ones.
+	/// This is used to keep track of the GameStates and initialize new ones.
 	/// Their implementation remains hidden to the other classes.
 	class StateMachine
 	{
@@ -17,12 +17,22 @@ namespace States
 		/// \brief Creates a new StateMachine. Initializes the current GameState to 0.
 		StateMachine();
 
+		/// \brief Remove all remaining states
+		~StateMachine();
+
 		/// \brief Creates the specified GameState and pushes it onto the stack.
 		/// \detail To remove a GameState, the state has to mark itself as
 		///		finished. The game then returns to the previous GameState or
 		///		quits if it was the last one.
 		/// \param [in] state  Identifies the state to be pushed
 		void PushGameState(GameStateType state);
+
+		/// \brief Pushes an existing GameState onto the stack.
+		/// \detail To remove a GameState, the state has to mark itself as
+		///		finished. The game then returns to the previous GameState or
+		///		quits if it was the last one.
+		/// \param [in] state  Identifies the state to be pushed
+		void PushGameState(GameState* state);
 
 		/// \brief Used for quitting the game when the last GameState has ended.
 		/// \return true if at least one state is left, false otherwise
@@ -82,6 +92,20 @@ namespace States
 		/// \brief Gets called when the mouse is moved.
 		/// \param [in] wheel  SFML move event that contains all required information.
 		void MouseMoved(int deltaX, int deltaY);
+
+
+		//----------------------------------------------------------------------
+		// GUI STUFF
+
+		/// \brief Forwards an event to the GUI to be handled.
+		/// \param [in] event  Event information from SFML.
+		void GuiHandleEvent(sf::Event& event);
+
+		/// \brief Handles all GUI callbacks that have occured since the last frame-
+		void GuiHandleCallbacks();
+
+		/// \brief Draws the current GUI.
+		void GuiDraw();
 
 	private:
 		/// \brief Pointer to the current GameState. The previous state is known

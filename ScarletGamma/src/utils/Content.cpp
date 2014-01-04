@@ -1,0 +1,91 @@
+#include "Content.hpp"
+
+
+Content::Content(){
+
+}
+
+
+Content::~Content(void)
+{
+}
+
+Content* Content::m_instance=0;
+Content* Content::Instance(){
+	if(m_instance==0)
+	{
+		m_instance=new Content();
+
+	}
+	return m_instance;
+}
+
+const sf::Image& Content::LoadImage(const std::string& filename){
+	auto it = m_img_cache.find(filename);
+	if(it != m_img_cache.end())
+	{
+		return *it->second;
+	}
+	else
+	{
+		std::shared_ptr<sf::Image> res_handle=m_res_cache.acquire(thor::Resources::fromFile<sf::Image>(filename));
+		m_img_cache.insert(std::make_pair(filename,res_handle));
+		return *res_handle;
+	}	
+}
+
+const sf::Texture& Content::LoadTexture(const std::string& filename){
+	auto it = m_tex_cache.find(filename);
+	if(it != m_tex_cache.end())
+	{
+		return *it->second;
+	}
+	else
+	{
+		std::shared_ptr<sf::Texture> res_handle=m_res_cache.acquire(thor::Resources::fromFile<sf::Texture>(filename));
+		m_tex_cache.insert(std::make_pair(filename,res_handle));
+		return *res_handle;
+	}	
+}
+
+const sf::Font& Content::LoadFont(const std::string& filename){
+	auto it = m_fon_cache.find(filename);
+	if(it != m_fon_cache.end())
+	{
+		return *it->second;
+	}
+	else
+	{
+		std::shared_ptr<sf::Font> res_handle=m_res_cache.acquire(thor::Resources::fromFile<sf::Font>(filename));
+		m_fon_cache.insert(std::make_pair(filename,res_handle));
+		return *res_handle;
+	}	
+}
+
+//sf::Shader Content::LoadShader(std::string filename){
+//	if(m_sha_cache.find(filename)!=m_sha_cache.end())
+//	{
+//		return *m_sha_cache[filename];		
+//	}
+//	else
+//	{
+//		std::shared_ptr<sf::Shader> res_handle=m_res_cache.acquire(thor::Resources::fromFile<sf::Shader>(filename));
+//		m_sha_cache.insert(std::make_pair(filename,res_handle));
+//		return *res_handle;
+//	}	
+//}
+
+const sf::SoundBuffer& Content::LoadSoundBuffer(const std::string& filename){
+	auto it = m_sou_cache.find(filename);
+	if(it != m_sou_cache.end())
+	{
+		return *it->second;
+	}
+	else
+	{
+		std::shared_ptr<sf::SoundBuffer> res_handle=m_res_cache.acquire(thor::Resources::fromFile<sf::SoundBuffer>(filename));
+		m_sou_cache.insert(std::make_pair(filename,res_handle));
+		return *res_handle;
+	}	
+}
+

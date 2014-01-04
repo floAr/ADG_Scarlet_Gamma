@@ -1,5 +1,6 @@
 #include "events/EventHandler.hpp"
 #include "events/InputHandler.hpp"
+#include "states/StateMachine.hpp"
 #include "Game.hpp"
 
 Events::EventHandler::EventHandler(sf::Window& window, States::StateMachine& stateMachine)
@@ -102,4 +103,7 @@ void Events::EventHandler::Update(float dt)
 			break;
 		}
 	}
+
+	// Forward events to GUI
+	g_Game->GetStateMachine()->GuiHandleEvent(event);
 }

@@ -19,6 +19,7 @@ namespace Exception {
 	class NotEvaluateable;
 	class NoObjectList;
 	class NoSuchProperty;
+	class InvalidFormula;
 }
 
 //------------------------------------------------------------------------------
@@ -50,6 +51,13 @@ namespace Events
 }
 
 //------------------------------------------------------------------------------
+// NETWORK
+namespace Network
+{
+	class Messenger;
+}
+
+//------------------------------------------------------------------------------
 // STATES
 namespace States
 {
@@ -73,3 +81,11 @@ namespace Graphics
 namespace UnitTest	{
 	void TestObjects();
 }
+
+
+
+//------------------------------------------------------------------------------
+// sf
+namespace sf {
+	class TcpSocket;
+} // namespace sf

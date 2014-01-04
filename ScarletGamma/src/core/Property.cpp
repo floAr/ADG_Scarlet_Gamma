@@ -1,26 +1,30 @@
 #include "Property.hpp"
-#include "../utils/Exception.hpp"
-#include "../utils/StringUtil.hpp"
+#include "utils/Exception.hpp"
+#include "utils/StringUtil.hpp"
+#include "network/ObjectMessages.hpp"
 
 using namespace std;
 
 namespace Core {
-	Property::Property( const std::string& _name, const std::string& _value ) :
+	Property::Property( ObjectID _parent, const std::string& _name, const std::string& _value ) :
 		m_name(_name),
 		m_isObjectList(false),
-		m_value(_value)
+		m_value(_value),
+		m_parent(_parent)
 	{
 	}
 
-	Property::Property( const std::string& _name, const ObjectList& _list ) :
+	Property::Property( ObjectID _parent, const std::string& _name, const ObjectList& _list ) :
 		m_name(_name),
 		m_isObjectList(true),
 		m_value(""),
-		m_objects(_list)
+		m_objects(_list),
+		m_parent(_parent)
 	{
 	}
 
-	Property::Property( const Jo::Files::MetaFileWrapper::Node& _node )
+	Property::Property( ObjectID _parent, const Jo::Files::MetaFileWrapper::Node& _node ) :
+		m_parent(_parent)
 	{
 		m_name = _node[0].GetName();
 		m_value = _node[0];
@@ -31,10 +35,35 @@ namespace Core {
 		}
 	}
 
-	ObjectList& Property::Objects()
+	const ObjectList& Property::GetObjects()
 	{
 		if( !m_isObjectList ) throw Exception::NoObjectList();
 		return m_objects;
+	}
+
+	void Property::AddObject( ObjectID _id )
+	{
+		if( !m_isObjectList ) throw Exception::NoObjectList();
+
+		m_objects.Add(_id);
+		Network::MsgPropertyChanged( m_parent, this ).Send();
+	}
+
+	void Property::RemoveObject( ObjectID _id )
+	{
+		if( !m_isObjectList ) throw Exception::NoObjectList();
+
+		m_objects.Remove(_id);
+		Network::MsgPropertyChanged( m_parent, this ).Send();
+	}
+
+	void Property::ClearObjects()
+	{
+		if( m_objects.Size() > 0 )
+		{
+			m_objects.Clear();
+			Network::MsgPropertyChanged( m_parent, this ).Send();
+		}
 	}
 
 	float Property::Evaluate() const
@@ -49,10 +78,14 @@ namespace Core {
 
 	void Property::SetValue( const std::string& _new )
 	{
-		m_value = _new;
+		if( m_value != _new )
+		{
+			m_value = _new;
+			Network::MsgPropertyChanged( m_parent, this ).Send();
+		}
 	}
 
-	void Property::Serialize( Jo::Files::MetaFileWrapper::Node& _node )
+	void Property::Serialize( Jo::Files::MetaFileWrapper::Node& _node ) const
 	{
 		_node[m_name] = m_value;
 		if( m_isObjectList ) {
@@ -60,29 +93,38 @@ namespace Core {
 		}
 	}
 
-
-
-
-
-
-	PropertyList::PropertyList( const Jo::Files::MetaFileWrapper::Node& _parent )
+	void Property::PopFront()
 	{
-		for( uint64_t i=0; i<_parent.Size(); ++i )
+		{ if( !m_isObjectList ) throw Exception::NoObjectList(); m_objects.PopFront(); }
+	}
+
+
+
+
+
+
+	PropertyList::PropertyList( ObjectID _parent, const Jo::Files::MetaFileWrapper::Node& _node )
+	{
+		for( uint64_t i=0; i<_node.Size(); ++i )
 		{
-			Add( Property( _parent[i] ) );
+			Add( Property( _parent, _node[i] ) );
 		}
 	}
 
 	void PropertyList::Add( const Property& _property )
 	{
+		// No duplicates!
+		Remove( _property.Name() );
 		// Append at the end
 		m_list.push_back(_property);
+		Network::MsgPropertyChanged( _property.ParentObject(), &_property ).Send();
 	}
 
 	void PropertyList::Remove( Property* _property )
 	{
 		for(auto current = m_list.begin(); current != m_list.end(); ++current )
 			if( &(*current) == _property ) {
+				Network::MsgRemoveProperty( _property->ParentObject(), _property ).Send();
 				m_list.erase( current );
 				return;
 			}
@@ -91,14 +133,14 @@ namespace Core {
 
 	void PropertyList::Remove( const std::string& _name )
 	{
-		for(auto current = m_list.begin(); current != m_list.end(); )
+		for(auto current = m_list.begin(); current != m_list.end(); ++current )
 		{
-			// erase from list returns an iterator to the first element after
-			// the deleted sequence. In this case the iterator should not be
-			// increase -> not in for loop.
-			if( Utils::IStringEqual( (*current).Name(), _name ) )
-				current = m_list.erase(current);
-			else ++current;
+			if( Utils::IStringEqual( current->Name(), _name ) )
+			{
+				Network::MsgRemoveProperty( current->ParentObject(), &(*current) ).Send();
+				m_list.erase(current);
+				return;
+			}
 		}
 	}
 
@@ -153,7 +195,7 @@ namespace Core {
 		return _results;
 	}
 
-	void PropertyList::Serialize( Jo::Files::MetaFileWrapper::Node& _node )
+	void PropertyList::Serialize( Jo::Files::MetaFileWrapper::Node& _node ) const
 	{
 		// Would also run without preallocation but so its faster.
 		_node.Resize(m_list.size(), Jo::Files::MetaFileWrapper::ElementType::NODE);

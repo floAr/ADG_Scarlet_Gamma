@@ -38,19 +38,27 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>
+    </LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>src;lib/SFML-2.1/include;lib/JoFile/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;lib/TGUI-0.6-RC/include;lib/SFML-2.1/include;lib/JoFile/include;lib/Thor-VS11x32/include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>SFML_STATIC;_MBCS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>lib/SFML-2.1/lib;lib/JoFile/lib/Debug</AdditionalLibraryDirectories>
-      <AdditionalDependencies>jofile.lib;sfml-audio-s-d.lib;sfml-graphics-s-d.lib;sfml-network-s-d.lib;sfml-window-s-d.lib;sfml-system-s-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>lib/SFML-2.1/lib;lib/JoFile/lib/Debug;lib/TGUI-0.6-RC/lib;lib\Thor-VS11x32\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>tgui-s-d.lib;jofile.lib;thor-s-d.lib;sfml-audio-s-d.lib;sfml-graphics-s-d.lib;sfml-network-s-d.lib;sfml-window-s-d.lib;sfml-system-s-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OptimizeReferences>false</OptimizeReferences>
+      <DelayLoadDLLs>libsndfile-1.dll</DelayLoadDLLs>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -60,15 +68,15 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>src;lib/SFML-2.1/include;lib/JoFile/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;lib/TGUI-0.6-RC/include;lib/SFML-2.1/include;lib/JoFile/include;lib/Thor-VS11x32/include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>SFML_STATIC;_MBCS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>lib/SFML-2.1/lib;lib/JoFile/lib/Release</AdditionalLibraryDirectories>
-      <AdditionalDependencies>jofile.lib;sfml-audio-s.lib;sfml-graphics-s.lib;sfml-network-s.lib;sfml-window-s.lib;sfml-system-s.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>lib/SFML-2.1/lib;lib/JoFile/lib/Release;lib/TGUI-0.6-RC/lib;lib/Thor-VS11x32/lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>jofile.lib;tgui-s.lib;thor-s.lib;sfml-audio-s.lib;sfml-graphics-s.lib;sfml-network-s.lib;sfml-window-s.lib;sfml-system-s.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -82,18 +90,29 @@
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\graphics\TileRenderer.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\network\MapMessages.cpp" />
+    <ClCompile Include="src\network\Messenger.cpp" />
+    <ClCompile Include="src\network\ObjectMessages.cpp" />
+    <ClCompile Include="src\network\WorldMessages.cpp" />
     <ClCompile Include="src\sfutils\Vectors.cpp" />
     <ClCompile Include="src\sfutils\View.cpp" />
     <ClCompile Include="src\states\IntroState.cpp" />
+    <ClCompile Include="src\states\LaunchMasterState.cpp" />
+    <ClCompile Include="src\states\LaunchPlayerState.cpp" />
     <ClCompile Include="src\states\MainMenuState.cpp" />
+    <ClCompile Include="src\states\MasterState.cpp" />
     <ClCompile Include="src\states\PlayerState.cpp" />
+    <ClCompile Include="src\states\SelectionState.cpp" />
     <ClCompile Include="src\states\StateMachine.cpp" />
+    <ClCompile Include="src\unittest\UTFormulaParser.cpp" />
     <ClCompile Include="src\unittest\UTMap.cpp" />
     <ClCompile Include="src\unittest\UTObject.cpp" />
     <ClCompile Include="src\unittest\UnitTest.cpp" />
+    <ClCompile Include="src\utils\Content.cpp" />
     <ClCompile Include="src\utils\Falloff.cpp" />
     <ClCompile Include="src\utils\Random.cpp" />
     <ClCompile Include="src\utils\StringUtil.cpp" />
+    <ClCompile Include="src\utils\ValueInterpreter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Constants.hpp" />
@@ -106,21 +125,32 @@
     <ClInclude Include="src\events\InputHandler.hpp" />
     <ClInclude Include="src\Game.hpp" />
     <ClInclude Include="src\graphics\TileRenderer.hpp" />
+    <ClInclude Include="src\network\MapMessages.hpp" />
+    <ClInclude Include="src\network\Message.hpp" />
+    <ClInclude Include="src\network\Messenger.hpp" />
+    <ClInclude Include="src\network\ObjectMessages.hpp" />
+    <ClInclude Include="src\network\WorldMessages.hpp" />
     <ClInclude Include="src\Prerequisites.hpp" />
     <ClInclude Include="src\sfutils\View.hpp" />
     <ClInclude Include="src\sfutils\Vectors.hpp" />
     <ClInclude Include="src\states\GameState.hpp" />
     <ClInclude Include="src\states\IntroState.hpp" />
+    <ClInclude Include="src\states\LaunchMasterState.hpp" />
+    <ClInclude Include="src\states\LaunchPlayerState.hpp" />
     <ClInclude Include="src\states\MainMenuState.hpp" />
+    <ClInclude Include="src\states\MasterState.hpp" />
     <ClInclude Include="src\states\PlayerState.hpp" />
+    <ClInclude Include="src\states\SelectionState.hpp" />
     <ClInclude Include="src\states\StateMachine.hpp" />
     <ClInclude Include="src\unittest\UnitTests.hpp" />
+    <ClInclude Include="src\utils\Content.hpp" />
     <ClInclude Include="src\utils\Exception.hpp" />
     <ClInclude Include="src\utils\Falloff.hpp" />
     <ClInclude Include="src\utils\MathUtil.hpp" />
     <ClInclude Include="src\utils\OrFibHeap.h" />
     <ClInclude Include="src\utils\Random.hpp" />
     <ClInclude Include="src\utils\StringUtil.hpp" />
+    <ClInclude Include="src\utils\ValueInterpreter.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

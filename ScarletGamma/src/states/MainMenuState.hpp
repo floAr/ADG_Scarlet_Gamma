@@ -1,6 +1,7 @@
 #pragma once
 
 #include "GameState.hpp"
+#include <TGUI/TGUI.hpp>
 
 namespace States
 {
@@ -17,8 +18,10 @@ namespace States
 		virtual void KeyPressed(sf::Event::KeyEvent& key);
 		virtual void MouseMoved(int deltaX, int deltaY);
 		virtual void MouseWheelMoved(sf::Event::MouseWheelEvent& wheel);
+		virtual void GuiCallback(tgui::Callback& callback);
 	private:
 		sf::Font	m_menuFont;
 		int			m_mousePos[3];
+		tgui::Gui   m_gui;
 	};
 }

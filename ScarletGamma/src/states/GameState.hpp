@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <TGUI/TGUI.hpp>
 
 namespace States
 {
@@ -13,6 +14,8 @@ namespace States
 		/// \brief Empty base constructor that makes sure that the GameState
 		///		isn't finished instantly.
 		GameState() : m_finished(false), m_previousState(0) {}
+
+		virtual ~GameState() {}
 
 		/// \brief Sets the previous GameState, i.e. the GameState that the
 		///		StateMachine will return to when this one is finished.
@@ -58,11 +61,11 @@ namespace States
 
 		/// \brief Pure virtual functions that is called when the GameLoop wants
 		///		to draw everything.
-		/// \details Use this function to specifiy what needs to be drawn: the
+		/// \details Use this function to specify what needs to be drawn: the
 		///		map, certain menus etc.
 		virtual void Draw(sf::RenderWindow& win) = 0;
 
-		/// \brief Tells the StateMachine wether the GameState is to be pop'd
+		/// \brief Tells the StateMachine whether the GameState is to be pop'd
 		///
 		/// The standard implementation returns m_finished, which can be set to
 		/// true by the specific GameState implementation. Don't forget to set
@@ -118,10 +121,50 @@ namespace States
 		/// param [in] deltaY  Relative vertical mouse movement since last frame.
 		virtual void MouseMoved(int deltaX, int deltaY) { }
 
+		//----------------------------------------------------------------------
+		// GUI STUFF
+
+		/// \brief Gets called when a GUI callback is triggered.
+		/// \param [in] callback  TGUI callback information
+		virtual void GuiCallback(tgui::Callback& callback) { }
+
+		/// \brief Handles all GUI callbacks that have occured since the last frame-
+		void GuiHandleCallbacks()
+		{
+			if (m_currentGui)
+			{
+				tgui::Callback callback;
+				while (m_currentGui->pollCallback(callback))
+					GuiCallback(callback);
+			}
+		}
+
+		/// \brief Forwards an event to the GUI to be handled.
+		/// \param [in] event  Event information from SFML.
+		void GuiHandleEvent(sf::Event& event)
+		{
+			if (m_currentGui)
+				m_currentGui->handleEvent(event);
+		}
+
+		/// \brief Draws the current GUI.
+		void GuiDraw()
+		{
+			if (m_currentGui)
+				m_currentGui->draw();
+		}
+
 #pragma endregion
 
 	protected:
 		bool m_finished; ///< set to true if the GameState is finished
 		GameState* m_previousState; ///< Pointer to previous state or null
+
+		/// \brief Sets the GUI to be rendered, updated and used to handle events.
+		/// \param [in] gui  Pointer to the GUI instance.
+		void SetGui(tgui::Gui* gui) { m_currentGui = gui; }
+
+private:
+		tgui::Gui* m_currentGui; ///< GUI to be rendered, updated and used to handle events.
 	};
 }

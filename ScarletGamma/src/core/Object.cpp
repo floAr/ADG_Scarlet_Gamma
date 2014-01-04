@@ -7,14 +7,23 @@ using namespace std;
 
 namespace Core {
 
+	const string Object::PROP_LAYER = string("layer");
+	const string Object::PROP_X = string("x");
+	const string Object::PROP_Y = string("y");
+	const string Object::PROP_SPRITE = string("sprite");
+	const string Object::PROP_COLOR = string("color");
+	const string Object::PROP_PATH = string("path");
+	const string Object::PROP_TARGET = string("target");
+	const string Object::PROP_OBSTACLE = string("obstacle");
+
 	Object::Object( ObjectID _id, const string& _sprite ) :
 		m_id(_id)
 	{
-		Add( Property("Sprite", _sprite) );
+		Add( Property(_id, PROP_SPRITE, _sprite) );
 	}
 
 	Object::Object( const Jo::Files::MetaFileWrapper::Node& _node ) :
-		PropertyList( _node[string("Properties")] )
+		PropertyList( _node[string("ID")], _node[string("Properties")] )
 	{
 		m_id = _node[string("ID")];
 	}
@@ -43,20 +52,11 @@ namespace Core {
 	}
 
 
-	void Object::SetPosition( float _x, float _y )
-	{
-		Property* X = Get("X");
-		Property* Y = Get("Y");
-		if( !X || !Y ) throw Exception::NoSuchProperty();
-		X->SetValue( to_string(_x) );
-		Y->SetValue( to_string(_y) );
-	}
-
 
 	sf::Vector2f Object::GetPosition() const
 	{
-		const Property* X = Get("X");
-		const Property* Y = Get("Y");
+		const Property* X = Get(PROP_X);
+		const Property* Y = Get(PROP_Y);
 		if( !X || !Y ) throw Exception::NoSuchProperty();
 		sf::Vector2f pos;
 		pos.x = (float)atof(X->Value().c_str());
@@ -68,7 +68,7 @@ namespace Core {
 	sf::Color Object::GetColor() const
 	{
 		// The property does not always exists
-		auto colorProp = Get("Color");
+		auto colorProp = Get(PROP_COLOR);
 		if( colorProp ) {
 			// Evaluate the hexadecimal number
 			uint32_t color = strtoul(colorProp->Value().c_str(), nullptr, 16);
@@ -85,16 +85,27 @@ namespace Core {
 //		std::stringstream value;
 		//value << std::hex << (int)_color.r << (int)_color.g << (int)_color.b << (int)_color.a;
 		// Create or set property?
-		auto colorProp = Get("Color");
-		if( !colorProp ) Add(Property(string("Color"), string(value)));
+		auto colorProp = Get(PROP_COLOR);
+		if( !colorProp ) Add(Property(m_id, PROP_COLOR, string(value)));
 		else colorProp->SetValue( value );
 	}
 
 
-	void Object::Serialize( Jo::Files::MetaFileWrapper::Node& _node )
+	void Object::Serialize( Jo::Files::MetaFileWrapper::Node& _node ) const
 	{
 		_node[string("ID")] = m_id;
 		PropertyList::Serialize(_node[string("Properties")]);
+	}
+
+	void Object::AppendToPath( ObjectID _wayPoint )
+	{
+		Property& path = GetProperty( PROP_PATH );
+		path.AddObject( _wayPoint );
+		// Check for a loop: a single node cannot be a loop, first and last
+		// node must be the same.
+		bool hasLoop = path.GetObjects().Size() > 1;
+		hasLoop &= path.GetObjects()[0] == path.GetObjects()[path.GetObjects().Size()-1];
+		path.SetValue( hasLoop ? "true" : "false" );
 	}
 
 } // namespace Core

@@ -26,16 +26,6 @@ public:
 	/// \brief Checks if at least one property with that name exists.
 	bool HasProperty( const std::string& _name ) const;
 
-	/// \brief Updates the two position properties
-	/// \details The position exists only if the object is located on a map.
-	///		Otherwise this method will return a NoSuchProperty exception.
-	/// \param [in] _x X coordinate of the object position. The integral part
-	///		defines the location within the tile-grid.
-	/// \param [in] _y Y coordinate of the object position. The integral part
-	///		defines the location within the tile-grid.
-	/// \throws Exception::NoSuchProperty
-	void SetPosition( float _x, float _y );
-
 	/// \brief Returns the floating position within the tile grid.
 	/// \details The position exists only if the object is located on a map.
 	///		Otherwise this method will return a NoSuchProperty exception.
@@ -57,9 +47,28 @@ public:
 	/// \details Serialization contains the object ids.
 	/// \param [inout] _node A node with ElementType::UNKNOWN which can
 	///		be changed and expanded by serialize.
-	virtual void Serialize( Jo::Files::MetaFileWrapper::Node& _node ) override;
+	virtual void Serialize( Jo::Files::MetaFileWrapper::Node& _node ) const override;
 
 	ObjectID ID() const { return m_id; }
+
+	// The following constants are names of predefined properties.
+	// This allows faster accesses because string("keks") would cause an
+	// allocation and deallocation which the constants do not.
+	static const std::string PROP_LAYER;	///< Name of layer property: rendering order
+	static const std::string PROP_X;		///< Name of position.x: floating point position
+	static const std::string PROP_Y;		///< Name of position.y: floating point position
+	static const std::string PROP_SPRITE;	///< Name of sprite property: texture name
+	static const std::string PROP_COLOR;	///< Name of color property: hexadecimal string
+	static const std::string PROP_PATH;		///< Name of path property: object list + boolean value
+	static const std::string PROP_TARGET;	///< Name of target property: next point to be reached linearly
+	static const std::string PROP_OBSTACLE;	///< Name of obstacle property: this object collides with the player
+
+	/// \brief Add a new way point to the path list.
+	/// \details If the new object is equal to the first in the list the loop
+	///		property is set to true. Otherwise it is false.
+	///	\param [in] _wayPoint Any object which should be tracked or reached.
+	void AppendToPath( ObjectID _wayPoint );
+
 private:
 	// Hide some of the methods
 	PropertyList::Clear;

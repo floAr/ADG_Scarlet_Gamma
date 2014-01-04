@@ -23,7 +23,9 @@ public:
 	void Add( ObjectID _id );
 
 	/// \brief Delete a object reference from this list.
-	/// \details The object is searched linear to be removed.
+	/// \details The object is searched linear to be removed. If there are
+	///		multiple references to the same object only the first
+	///		occurrence is removed.
 	///
 	///		This method does not change the original object.
 	void Remove( ObjectID _id );
@@ -44,7 +46,10 @@ public:
 	/// \brief Write the content of this object to a meta-file.
 	/// \param [inout] _node A node with ElementType::UNKNOWN which can
 	///		be changed and expanded by serialize.
-	void Serialize( Jo::Files::MetaFileWrapper::Node& _node );
+	void Serialize( Jo::Files::MetaFileWrapper::Node& _node ) const;
+
+	/// \brief Gets the current elements in this list
+	std::vector<ObjectID>& Objects();
 private:
 	std::vector<ObjectID> m_objects;
 };

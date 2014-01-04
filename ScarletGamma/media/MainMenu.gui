@@ -1,0 +1,53 @@
+Window:
+{
+	Button: "Launch"
+	{
+		ConfigFile = "lib/TGUI-0.6-RC/widgets/Black.conf"
+		Left = 30
+		Top = 200
+		Width = 300
+		Height = 40
+		Visible = true
+		Enabled = true
+		Transparency = 255
+		Callback = LeftMouseClicked
+		CallbackId = 2
+		Text = "Launch (Master Mode)"
+		TextColor = (200,200,200,255)
+		TextSize = 26
+	}
+	
+	Button: "Enter"
+	{
+		ConfigFile = "lib/TGUI-0.6-RC/widgets/Black.conf"
+		Left = 30
+		Top = 250
+		Width = 300
+		Height = 40
+		Visible = true
+		Enabled = true
+		Transparency = 255
+		Callback = LeftMouseClicked
+		CallbackId = 3
+		Text = "Join Game"
+		TextColor = (200,200,200,255)
+		TextSize = 26
+	}
+
+	Button: "Quit"
+	{
+		ConfigFile = "lib/TGUI-0.6-RC/widgets/Black.conf"
+		Left = 30
+		Top = 300
+		Width = 300
+		Height = 40
+		Visible = true
+		Enabled = true
+		Transparency = 255
+		Callback = LeftMouseClicked
+		CallbackId = 1
+		Text = "Quit"
+		TextColor = (200,200,200,255)
+		TextSize = 26
+	}
+}

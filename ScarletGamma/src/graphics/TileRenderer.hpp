@@ -3,6 +3,7 @@
 #include "Prerequisites.hpp"
 #include <SFML/Graphics.hpp>
 #include <vector>
+#include "utils/Content.hpp"
 
 namespace Graphics
 {

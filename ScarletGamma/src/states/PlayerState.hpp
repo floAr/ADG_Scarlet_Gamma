@@ -10,8 +10,8 @@ namespace States
 	{
 	public:
 		PlayerState() : m_zoom(Utils::Falloff::FT_QUADRATIC, 0.75f, 0.05f), m_selected(nullptr), m_player(nullptr) {}
-		virtual void OnBegin() {}
-		virtual void OnEnd() {}
+		virtual void OnBegin();
+		virtual void OnEnd();
 		virtual void OnPause() {}
 		virtual void OnResume() {}
 		virtual void Update(float dt);

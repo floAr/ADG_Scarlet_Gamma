@@ -15,8 +15,10 @@ namespace Core {
 	{
 		// If the program stops here something with object loading or 
 		// synchronization failed (Every object id should exists only once).
-		for( size_t i=0; i<m_objects.size(); ++i )
-			assert(m_objects[i] != _id);
+		//for( size_t i=0; i<m_objects.size(); ++i )
+		//	assert(m_objects[i] != _id);
+		// Currently it is possible that an object list contains the same obj
+		// multiple times! (E.g. paths)
 
 		m_objects.push_back(_id);
 	}
@@ -48,7 +50,7 @@ namespace Core {
 		return m_objects[_index];
 	}
 
-	void ObjectList::Serialize( Jo::Files::MetaFileWrapper::Node& _node )
+	void ObjectList::Serialize( Jo::Files::MetaFileWrapper::Node& _node ) const
 	{
 		// Would also run without preallocation but so its faster.
 		_node.Resize(m_objects.size(), Jo::Files::MetaFileWrapper::ElementType::UINT32);
@@ -56,5 +58,9 @@ namespace Core {
 			_node[i] = m_objects[i];
 	}
 
+
+	std::vector<ObjectID>& ObjectList::Objects(){
+		return m_objects;
+	}
 
 } // namespace Core

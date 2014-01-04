@@ -5,26 +5,21 @@
 #include "core/World.hpp"
 #include "Constants.hpp"
 #include "utils/Falloff.hpp"
+#include "network/Messenger.hpp"
 #include <iostream>
 
 void States::PlayerState::Update(float dt)
 {
+	// Handle network events
+	Network::Messenger::Poll( false );
+
 	m_zoom.Update(dt);
 	if (m_zoom != 0)
 		ZoomView(m_zoom);
-
-	// Uses the test map 0 for testing purposes.
-	g_Game->GetWorld()->GetMap(0)->Update(dt);
 }
 
 void States::PlayerState::Draw(sf::RenderWindow& win)
 {
-	// Hard coded test selection:
-	if( !m_selected ) {
-		m_selected = g_Game->GetWorld()->GetObject(g_Game->GetWorld()->GetMap(0)->GetObjectsAt(0,2)[1]);
-		m_player = m_selected;
-	}
-
 	// Draw some color to the background
 	static sf::Color c(20, 26, 36);
 	win.clear(c);
@@ -34,7 +29,7 @@ void States::PlayerState::Draw(sf::RenderWindow& win)
 	Graphics::TileRenderer::Render(win, *g_Game->GetWorld()->GetMap(0));
 
 	// If the selected object has a path draw it
-	DrawPathOverlay(win);
+	//DrawPathOverlay(win);
 }
 
 void States::PlayerState::MouseMoved(int deltaX, int deltaY)
@@ -61,25 +56,6 @@ void States::PlayerState::MouseButtonPressed(sf::Event::MouseButtonEvent& button
 {
 	switch (button.button)
 	{
-	case sf::Mouse::Left: {
-		//------------------------------------//
-		// move player to tile position		  //
-		//------------------------------------//
-		auto& tiles = g_Game->GetWorld()->GetMap(0)->GetObjectsAt((int)tilePos.x,(int)tilePos.y);
-		if( tiles.Size() > 0 )
-		{
-			// TODO: intelligent selcet?
-			m_selected = g_Game->GetWorld()->GetObject(tiles[tiles.Size()-1]);
-			// Delete current target(s) if not appending
-			if( !sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) )
-			{
-				m_player->GetProperty("Target").SetValue("");
-				m_player->GetProperty("Path").Objects().Clear();
-			}
-			// Append to target list
-			m_player->GetProperty("Path").Objects().Add(m_selected->ID());
-		}
-		} break;
 	case sf::Mouse::Middle:
 		m_zoom = 0;
 		sf::RenderWindow& win = g_Game->GetWindow();
@@ -136,7 +112,7 @@ void States::PlayerState::DrawPathOverlay(sf::RenderWindow& win)
 		if( m_player->HasProperty("Path") )
 		{
 			// For each way point compute the shortest path
-			auto& wayPoints = m_player->GetProperty("Path").Objects();
+			auto& wayPoints = m_player->GetProperty("Path").GetObjects();
 			for( int i=0; i<wayPoints.Size(); ++i )
 			{
 				sf::Vector2i goal = sfUtils::Round(g_Game->GetWorld()->GetObject(wayPoints[i])->GetPosition());
@@ -155,4 +131,15 @@ void States::PlayerState::DrawPathOverlay(sf::RenderWindow& win)
 	} catch(...) {
 		// In case of an invalid selection just draw no path
 	}
+}
+
+void States::PlayerState::OnBegin()
+{
+	// After connecting the client is receiving the world
+	Network::Messenger::Poll( true );
+}
+
+void States::PlayerState::OnEnd()
+{
+	Network::Messenger::Close();
 }

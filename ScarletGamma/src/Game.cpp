@@ -22,8 +22,6 @@ void Game::Init()
 
 	// Create an empty game world
 	m_world = new Core::World();
-	// Load the test map
-	m_world->Load("saves/unittest.json");
 
 	// Push states. Note that the last state is current!
 	m_stateMachine->PushGameState(States::GST_MAIN_MENU);

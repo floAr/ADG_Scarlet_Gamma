@@ -54,6 +54,7 @@ namespace Core {
 		/// \brief Add a new object between or on top of the existing objects.
 		/// \details If the map position is not inside the current map the map
 		///		will be extended.
+		///		This method will send a network sync message.
 		/// \param [in] _layer Where to insert the object in the render order?
 		///		0 is the ground and objects with negative values are not drawn.
 		void Add(ObjectID _object, int _x, int _y, int _layer);
@@ -61,6 +62,7 @@ namespace Core {
 		/// \brief Remove an object from the map. The object itself is not deleted!
 		/// \details The attributes for position and layer are removed from
 		///		the object.
+		///		This method will send a network sync message.
 		///	\param [in] _object ID of the object which should be deleted. If the
 		///		object is not on the map or has an invalid position state an
 		///		assertion will fail.
@@ -88,7 +90,7 @@ namespace Core {
 		/// \details Serialization contains the map ids.
 		/// \param [inout] _node A node with ElementType::UNKNOWN which can
 		///		be changed and expanded by serialize.
-		void Serialize( Jo::Files::MetaFileWrapper::Node& _node );
+		void Serialize( Jo::Files::MetaFileWrapper::Node& _node ) const;
 
 		/// \brief A* path search from one tile to another.
 		/// \return A stack of points which must be reached one after one
@@ -105,6 +107,15 @@ namespace Core {
 
 		/// \brief return the highest layer of all contained objects.
 		int GetMaxLayer() const { return m_maxLayer; }
+
+		/// \brief Set the object attributes and reinsert object in tile grid
+		///		if necessary.
+		///	\details This also send a message to the network to autosync the
+		///		games.
+		///	\param [inout] _object The object whose position is to be set.
+		///	\param [in] _position Floating position where the integer part
+		///		gives the tile position. The position must be within the grid.
+		void SetObjectPosition( Object* _object, const sf::Vector2f& _position );
 	private:
 		std::string m_name;
 

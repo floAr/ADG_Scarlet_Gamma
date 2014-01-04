@@ -2,6 +2,7 @@
 #include "Object.hpp"
 #include "World.hpp"
 #include "utils/OrFibHeap.h"
+#include "network/MapMessages.hpp"
 
 #include <algorithm>
 #include <unordered_map>
@@ -119,13 +120,16 @@ namespace Core {
 		// Test each object in this cell if it has obstacle property
 		auto list = GetObjectsAt(_position.x, _position.y);
 		for( int i=0; i<list.Size(); ++i )
-			if(m_parentWorld->GetObject(list[i])->HasProperty(string("Obstacle")))
+			if(m_parentWorld->GetObject(list[i])->HasProperty(Object::PROP_OBSTACLE))
 				return false;
 		return true;
 	}
 
 	void Map::Add(ObjectID _object, int _x, int _y, int _layer)
 	{
+		Network::MaskObjectMessage objMessageLock;
+		Network::MsgInsertObjectToMap( m_id, _object, _x, _y, _layer ).Send();
+
 		Extend(std::max(m_minX-_x,0), std::max(_x-m_maxX,0), std::max(m_minY-_y,0), std::max(_y-m_maxY,0));
 
 		auto& list = GetObjectsAt(_x, _y);
@@ -135,12 +139,12 @@ namespace Core {
 
 		// Set correct position for the object itself
 		Object* object = m_parentWorld->GetObject(_object);
-		object->Add( Property("X", to_string((float)_x)) );
-		object->Add( Property("Y", to_string((float)_y)) );
-		object->Add( Property("Layer", to_string(_layer)) );
+		object->Add( Property(_object, Object::PROP_X, to_string((float)_x)) );
+		object->Add( Property(_object, Object::PROP_Y, to_string((float)_y)) );
+		object->Add( Property(_object, Object::PROP_LAYER, to_string(_layer)) );
 
 		// Does the object requires updates?
-		if( object->HasProperty("Target") )
+		if( object->HasProperty(Object::PROP_TARGET) )
 		{
 			m_activeObjects->Add(_object);
 		}
@@ -149,6 +153,9 @@ namespace Core {
 
 	void Map::Remove(ObjectID _object)
 	{
+		Network::MaskObjectMessage objMessageLock;
+		Network::MsgRemoveObjectFromMap( m_id, _object ).Send();
+
 		// Find the object
 		Object* obj = m_parentWorld->GetObject(_object);
 		sf::Vector2i gridPos = sfUtils::Round(obj->GetPosition());
@@ -157,9 +164,9 @@ namespace Core {
 		m_activeObjects->Remove(_object);
 
 		// Remove map-related properties from the object
-		obj->Remove("X");
-		obj->Remove("Y");
-		obj->Remove("Layer");
+		obj->Remove(Object::PROP_X);
+		obj->Remove(Object::PROP_Y);
+		obj->Remove(Object::PROP_LAYER);
 	}
 
 
@@ -174,30 +181,20 @@ namespace Core {
 			if( HasReachedTarget(object, position) )
 			{
 				// If it reached the target choose a new one.
-				object->GetProperty("Target").SetValue( sfUtils::to_string(FindNextTarget(object)) );
+				object->GetProperty(Object::PROP_TARGET).SetValue( sfUtils::to_string(FindNextTarget(object)) );
 			}
-			auto target = sfUtils::to_vector(object->GetProperty("Target").Value());
+			auto target = sfUtils::to_vector(object->GetProperty(Object::PROP_TARGET).Value());
 			target -= position;	// Scaled direction
 			float len = sfUtils::Length(target);
 			if( len > 0.00001 )
 			{
-				sf::Vector2i oldCell(sfUtils::Round(position));
-				// Move with constant speed and don't overshoot the target
-				position += target * std::min(_dt / len, 1.0f);
-				object->SetPosition(position.x, position.y);
-				// Update cells
-				sf::Vector2i newCell(sfUtils::Round(position));
-				if( oldCell != newCell )
-				{
-					GetObjectsAt(oldCell.x, oldCell.y).Remove(object->ID());
-					GetObjectsAt(newCell.x, newCell.y).Add(object->ID());
-				}
+				SetObjectPosition(object, position + target * std::min(_dt / len, 1.0f));
 			}
 		}
 	}
 
 
-	void Map::Serialize( Jo::Files::MetaFileWrapper::Node& _node )
+	void Map::Serialize( Jo::Files::MetaFileWrapper::Node& _node ) const
 	{
 		_node.SetName(m_name);
 		_node[string("ID")] = m_id;
@@ -309,9 +306,11 @@ namespace Core {
 	sf::Vector2f Map::FindNextTarget(Object* _object) const
 	{
 		sf::Vector2f position = _object->GetPosition();
-		if(_object->HasProperty("Path"))
+		if(_object->HasProperty(Object::PROP_PATH))
 		{
-			auto& path = _object->GetProperty("Path").Objects();
+			Property& pathProperty = _object->GetProperty(Object::PROP_PATH);
+			bool loop = pathProperty.Value() == "true";
+			auto& path = pathProperty.GetObjects();
 			sf::Vector2i start, goal;
 			do {
 				if( path.Size() > 0 )
@@ -320,15 +319,22 @@ namespace Core {
 					sf::Vector2f point = position;
 					try { // Maybe the target point was removed from the map?
 						point = pathPoint->GetPosition();
-					} catch(...) {path.PopFront();}
+					} catch(...) {
+						// Always remove from list - ignore loops
+						pathProperty.PopFront();
+						continue;
+					}
 
 					start = sfUtils::Round(position);
 					goal = sfUtils::Round(point);
 
 					// If we are already at the first path-point remove it.
-					// TODO: loop path
 					if( start == goal )
-						path.PopFront();
+					{
+						if( loop ) pathProperty.AddObject( path[0] );
+						if( path.Size() == 1 ) break;	// Do not delete the last point from list -> tracking of objects
+						pathProperty.PopFront();
+					}
 				} else return position;
 			} while( start == goal );
 
@@ -341,10 +347,41 @@ namespace Core {
 
 	bool Map::HasReachedTarget( Object* _object, const sf::Vector2f& _position ) const
 	{
-		auto& targetProp = _object->GetProperty("Target");
+		auto& targetProp = _object->GetProperty(Object::PROP_TARGET);
 		if( targetProp.Value() == "" ) return true;
 		auto target = sfUtils::to_vector(targetProp.Value());
 		return sfUtils::LengthSq(target-_position) < 0.00000001;
+	}
+
+	void Map::SetObjectPosition( Object* _object, const sf::Vector2f& _position )
+	{
+		sf::Vector2f position;
+		try {
+			position = _object->GetPosition();
+		} catch(...) {}
+
+		sf::Vector2i oldCell(sfUtils::Round(position));
+		// Avoid recursive - redundant messages
+		Network::MaskObjectMessage objMessageLock;
+		try {
+			Property* X = &_object->GetProperty(Object::PROP_X);
+			Property* Y = &_object->GetProperty(Object::PROP_Y);
+			X->SetValue( to_string(_position.x) );
+			Y->SetValue( to_string(_position.y) );
+		} catch(...) {
+			// Should never happen - but stable is stable
+			_object->Add( Property( _object->ID(), Object::PROP_X, to_string(_position.x) ) );
+			_object->Add( Property( _object->ID(), Object::PROP_Y, to_string(_position.y) ) );
+		}
+		// Update cells
+		sf::Vector2i newCell(sfUtils::Round(_position));
+		if( oldCell != newCell )
+		{
+			GetObjectsAt(oldCell.x, oldCell.y).Remove(_object->ID());
+			GetObjectsAt(newCell.x, newCell.y).Add(_object->ID());
+		}
+		// Send a map-message
+		Network::MsgObjectPositionChanged(m_id, _object->ID(), _position).Send();
 	}
 
 } // namespace Core

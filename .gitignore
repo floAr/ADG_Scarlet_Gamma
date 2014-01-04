@@ -58,3 +58,4 @@ lib/
 /docs/Paper/*.ist
 /docs/Paper/*.lof
 /docs/Paper/*.lol
+/docs/Paper/literature/*.bak

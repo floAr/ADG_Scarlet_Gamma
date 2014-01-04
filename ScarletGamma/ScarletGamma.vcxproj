@@ -96,6 +96,7 @@
     <ClCompile Include="src\network\WorldMessages.cpp" />
     <ClCompile Include="src\sfutils\Vectors.cpp" />
     <ClCompile Include="src\sfutils\View.cpp" />
+    <ClCompile Include="src\states\CommonState.cpp" />
     <ClCompile Include="src\states\IntroState.cpp" />
     <ClCompile Include="src\states\LaunchMasterState.cpp" />
     <ClCompile Include="src\states\LaunchPlayerState.cpp" />
@@ -133,6 +134,7 @@
     <ClInclude Include="src\Prerequisites.hpp" />
     <ClInclude Include="src\sfutils\View.hpp" />
     <ClInclude Include="src\sfutils\Vectors.hpp" />
+    <ClInclude Include="src\states\CommonState.hpp" />
     <ClInclude Include="src\states\GameState.hpp" />
     <ClInclude Include="src\states\IntroState.hpp" />
     <ClInclude Include="src\states\LaunchMasterState.hpp" />

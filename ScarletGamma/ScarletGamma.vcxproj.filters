@@ -134,6 +134,9 @@
     <ClCompile Include="src\states\LaunchPlayerState.cpp">
       <Filter>Quelldateien\states</Filter>
     </ClCompile>
+    <ClCompile Include="src\states\CommonState.cpp">
+      <Filter>Quelldateien\states</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\core\Map.hpp">
@@ -242,6 +245,9 @@
       <Filter>Quelldateien\states</Filter>
     </ClInclude>
     <ClInclude Include="src\states\LaunchPlayerState.hpp">
+      <Filter>Quelldateien\states</Filter>
+    </ClInclude>
+    <ClInclude Include="src\states\CommonState.hpp">
       <Filter>Quelldateien\states</Filter>
     </ClInclude>
   </ItemGroup>

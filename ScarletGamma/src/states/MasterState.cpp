@@ -17,6 +17,10 @@ MasterState::MasterState( const std::string& _loadFile ) :
 	// Load the map
 	Jo::Files::HDDFile file(_loadFile);
 	g_Game->GetWorld()->Load( file );
+
+	// Set chat color...
+	m_color = sf::Color(80,80,250);
+	m_name = "[Master] ";
 }
 
 void MasterState::Update(float dt)

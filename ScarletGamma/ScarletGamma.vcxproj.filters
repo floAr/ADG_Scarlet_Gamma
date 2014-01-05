@@ -137,6 +137,9 @@
     <ClCompile Include="src\states\CommonState.cpp">
       <Filter>Quelldateien\states</Filter>
     </ClCompile>
+    <ClCompile Include="src\network\ChatMessages.cpp">
+      <Filter>Quelldateien\network</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\core\Map.hpp">
@@ -249,6 +252,9 @@
     </ClInclude>
     <ClInclude Include="src\states\CommonState.hpp">
       <Filter>Quelldateien\states</Filter>
+    </ClInclude>
+    <ClInclude Include="src\network\ChatMessages.hpp">
+      <Filter>Quelldateien\network</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

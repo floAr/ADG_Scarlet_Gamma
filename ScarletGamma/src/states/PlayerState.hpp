@@ -8,7 +8,7 @@ namespace States
 	class PlayerState : public CommonState
 	{
 	public:
-		PlayerState() : m_player(nullptr) {}
+		PlayerState( const std::string& _playerName, const sf::Color& _chatColor);
 		virtual void OnBegin();
 		virtual void OnPause() {}
 		virtual void OnResume() {}

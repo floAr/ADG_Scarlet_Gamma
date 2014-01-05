@@ -51,7 +51,15 @@ void States::LaunchPlayerState::GuiCallback(tgui::Callback& callback)
 	case 2: {
 		// Player state
 		tgui::EditBox::Ptr ipEdit = m_gui.get( "ServerIP" );
+		tgui::EditBox::Ptr nameEdit = m_gui.get( "Name" );
+		tgui::EditBox::Ptr r = m_gui.get("ColorR");
+		tgui::EditBox::Ptr g = m_gui.get("ColorG");
+		tgui::EditBox::Ptr b = m_gui.get("ColorB");
+		sf::Color chatColor( atoi( r->getText().toAnsiString().c_str() ),
+			atoi( g->getText().toAnsiString().c_str() ),
+			atoi( b->getText().toAnsiString().c_str() ));
 
+		// Show that we are working
 		tgui::Label::Ptr status = m_gui.get("Status");
 		status->setTextColor( sf::Color(200, 200, 200, 255) );
 		status->setText("Connecting to server ...");
@@ -59,13 +67,13 @@ void States::LaunchPlayerState::GuiCallback(tgui::Callback& callback)
 		m_gui.draw();
 		m_gui.getWindow()->display();
 
-		// Connect to server: local host for tests
+		// Connect to server
 		try {
 			sf::IpAddress adress(ipEdit->getText());
 			Network::Messenger::Initialize(&adress);
 
 			// Then the player mode can be created
-			g_Game->GetStateMachine()->PushGameState(GST_PLAYER);
+			g_Game->GetStateMachine()->PushGameState(new PlayerState(nameEdit->getText(), chatColor));
 		} catch(std::string _msg) {
 			status->setTextColor( sf::Color(255, 55, 25, 255) );
 			status->setText(_msg);

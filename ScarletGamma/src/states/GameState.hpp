@@ -128,7 +128,7 @@ namespace States
 		/// \param [in] callback  TGUI callback information
 		virtual void GuiCallback(tgui::Callback& callback) { }
 
-		/// \brief Handles all GUI callbacks that have occured since the last frame-
+		/// \brief Handles all GUI callbacks that have occurred since the last frame-
 		void GuiHandleCallbacks()
 		{
 			if (m_currentGui)
@@ -161,6 +161,7 @@ namespace States
 		GameState* m_previousState; ///< Pointer to previous state or null
 
 		/// \brief Sets the GUI to be rendered, updated and used to handle events.
+		/// TODO: more than one GUI
 		/// \param [in] gui  Pointer to the GUI instance.
 		void SetGui(tgui::Gui* gui) { m_currentGui = gui; }
 

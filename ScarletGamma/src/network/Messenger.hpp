@@ -38,6 +38,9 @@ namespace Network {
 		///	\param [in] _data Raw data to be send. Must begin with MessageHeader
 		///	\param [in] _size Size of the data in bytes.
 		static void Send( void* _data, size_t _size );
+
+		/// \brief Returns if this application is the server.
+		static bool IsServer();
 	private:
 		sf::TcpListener* m_listener;			///< Server side listener to find new clients.
 		std::vector<sf::TcpSocket*> m_sockets;	///< An array of connected servers/clients.

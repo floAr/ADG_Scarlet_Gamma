@@ -1,0 +1,44 @@
+Window:
+{
+	ChatBox: "Messages"
+	{
+		ConfigFile = "lib/TGUI-0.6-RC/widgets/Black.conf"
+		Left = 400
+		Top = 360
+		Width = 400
+		Height = 200
+		Visible = true
+		Enabled = true
+		Transparency = 150
+		CallbackId = 0
+		TextSize = 16
+		Borders = (2,2,2,2)
+		BackgroundColor = (50,50,50,150)
+		BorderColor = (0,0,0,150)
+		Lines = ""
+	}
+	
+	EditBox: "EnterText"
+	{
+		ConfigFile = "lib/TGUI-0.6-RC/widgets/Black.conf"
+		Left = 400
+		Top = 560
+		Width = 400
+		Height = 40
+		Visible = false
+		Enabled = true
+		Transparency = 255
+		CallbackId = 0
+		Text = ""
+		TextSize = 26
+		MaximumCharacters = 0
+		Borders = (6,4,6,4)
+		TextColor = (200,200,200,255)
+		SelectedTextColor = (255,255,255,255)
+		SelectedTextBackgroundColor = (10,110,255,255)
+		SelectionPointColor = (110,110,255,255)
+		LimitTextWidth = false
+		SelectionPointWidth = 2
+		NumbersOnly = false
+	}
+}

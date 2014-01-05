@@ -13,13 +13,14 @@ namespace States
 	class CommonState : public GameState
 	{
 	public:
+		/// \brief Creates a Zoom object, The GUI for chats.
 		CommonState();
 
 		/// \brief Close the network connection. (Initialization was state
 		///		dependent).
 		virtual void OnEnd() override;
 
-		/// \brief Poll network messages, updates zoom.
+		/// \brief Poll network messages, updates zoom, pulls chat messages.
 		virtual void Update(float dt) override;
 
 		/// \brief Move the visible position on left mouse button down
@@ -31,9 +32,15 @@ namespace States
 
 		/// \brief Change the zoom.
 		virtual void MouseWheelMoved(sf::Event::MouseWheelEvent& wheel) override;
+
+		/// \brief Open a chat menu on Enter.
+		virtual void KeyPressed(sf::Event::KeyEvent& key) override;
 	protected:
 		Utils::Falloff m_zoom;		///< Zoom for the current map
 		Core::Object* m_selected;	///< A reference to the selected object or nullptr
+		tgui::Gui m_chatFrame;		///< A gui to show chat messages.
+		std::string m_name;			///< Name of the player used in the chat
+		sf::Color m_color;			///< Color of the player in the chat
 
 		/// \brief Checks which actions where done and adjusts the zoom.
 		void ZoomView(float delta);

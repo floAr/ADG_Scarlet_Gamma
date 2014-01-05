@@ -6,6 +6,7 @@
 #include "MapMessages.hpp"
 #include "ObjectMessages.hpp"
 #include "Game.hpp"
+#include "ChatMessages.hpp"
 
 namespace Network {
 
@@ -129,11 +130,20 @@ namespace Network {
 				read += HandleObjectMessage(g_Game->GetWorld()->GetObject(static_cast<Core::ObjectID>(header->targetID)),
 					buffer + sizeof(MessageHeader), _size);
 				break;
+			case Target::CHAT:
+				read += HandleChatMessage( buffer + sizeof(MessageHeader), _size );
+				break;
 			}
 
-			buffer += read;
+			// TODO: bugfix: _size must be reduced before switch! But this causes an error (world is loaded twice???)
 			_size -= read;
+			buffer += read;
 		}
+	}
+
+	bool Messenger::IsServer()
+	{
+		return g_msgInstance->m_listener != nullptr;
 	}
 
 } // namespace Network

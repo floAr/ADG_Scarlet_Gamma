@@ -9,6 +9,14 @@
 #include <iostream>
 
 
+States::PlayerState::PlayerState( const std::string& _playerName, const sf::Color& _chatColor ) :
+	m_player(nullptr)
+{
+	m_color = _chatColor;
+	m_name = '[' + _playerName + "] ";
+}
+
+
 void States::PlayerState::Draw(sf::RenderWindow& win)
 {
 	// Draw some color to the background

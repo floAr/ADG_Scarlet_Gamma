@@ -7,6 +7,7 @@
 #include "graphics/TileRenderer.hpp"
 #include "core/Object.hpp"
 #include "core/World.hpp"
+#include "network/ChatMessages.hpp"
 
 namespace States {
 
@@ -14,7 +15,12 @@ CommonState::CommonState() :
 		m_zoom(Utils::Falloff::FT_QUADRATIC, 0.75f, 0.05f),
 		m_selected(nullptr)
 {
+	m_chatFrame.setWindow(g_Game->GetWindow());
+	m_chatFrame.setGlobalFont(Content::Instance()->LoadFont("media/arial.ttf"));
+	if( !m_chatFrame.loadWidgetsFromFile( "media/Chat.gui" ) )
+		std::cout << "[CommonState::CommonState] Could not load GUI for chat.\n";
 
+	SetGui(&m_chatFrame);
 }
 
 
@@ -33,6 +39,17 @@ void CommonState::Update( float dt )
 	m_zoom.Update(dt);
 	if( m_zoom != 0 )
 		ZoomView(m_zoom);
+
+	while( g_Game->HasLoggedNewChatMessages() )
+	{
+		tgui::ChatBox::Ptr localOut = m_chatFrame.get( "Messages" );
+		const Network::ChatMsg& chatMessage = g_Game->GetNextUntreatedChatMessage();
+		localOut->addLine(chatMessage.Text(), chatMessage.Color());
+		// STRANGE HACK: set the m_Panel property public in ChatBox.hpp.
+		// This solves a bug where lines are cut at the bottom.
+		tgui::Label::Ptr newestLine = localOut->m_Panel->getWidgets().back();
+		newestLine->setSize(newestLine->getSize().x, newestLine->getSize().y+5.0f);
+	}
 }
 
 
@@ -62,6 +79,30 @@ void CommonState::MouseWheelMoved(sf::Event::MouseWheelEvent& wheel)
 	m_zoom = (float)wheel.delta;
 }
 
+
+void CommonState::KeyPressed( sf::Event::KeyEvent& key )
+{
+	if( key.code == sf::Keyboard::Return )
+	{
+		// Show message input field if not visible or submit message.
+		tgui::EditBox::Ptr enterTextEdit = m_chatFrame.get( "EnterText" );
+		if( !enterTextEdit->isVisible() )
+		{
+			enterTextEdit->show();
+			enterTextEdit->setText("");
+			enterTextEdit->focus();
+		} else {
+			enterTextEdit->hide();
+			// Send Message
+			if( enterTextEdit->getText() != "" )
+			{
+				tgui::ChatBox::Ptr localOut = m_chatFrame.get( "Messages" );
+				std::string text = m_name + enterTextEdit->getText().toAnsiString();
+				Network::ChatMsg(text, m_color).Send();
+			}
+		}
+	}
+}
 
 
 void CommonState::ZoomView(float delta)
@@ -134,5 +175,6 @@ void CommonState::DrawPathOverlay(sf::RenderWindow& win, Core::Object* _whosePat
 		// In case of an invalid selection just draw no path
 	}
 }
+
 
 } // namespace States

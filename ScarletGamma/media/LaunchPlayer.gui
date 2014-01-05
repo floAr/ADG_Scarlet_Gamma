@@ -41,6 +41,138 @@ Window:
 		SelectionPointWidth = 2
 		NumbersOnly = false
 	}
+	
+	Label: "NameLabel"
+	{
+		ConfigFile = "lib/TGUI-0.6-RC/widgets/Black.conf"
+		Left = 30
+		Top = 160
+		Width = 300
+		Height = 40
+		Visible = true
+		Enabled = true
+		Transparency = 255
+		CallbackId = 0
+		Text = "Enter your character name:"
+		TextColor = (255,255,255,255)
+		TextSize = 26
+		BackgroundColor = (0,0,0,0)
+		AutoSize = false
+	}
+	
+	EditBox: "Name"
+	{
+		ConfigFile = "lib/TGUI-0.6-RC/widgets/Black.conf"
+		Left = 350
+		Top = 150
+		Width = 400
+		Height = 40
+		Visible = true
+		Enabled = true
+		Transparency = 255
+		CallbackId = 0
+		Text = ""
+		TextSize = 26
+		MaximumCharacters = 0
+		Borders = (6,4,6,4)
+		TextColor = (200,200,200,255)
+		SelectedTextColor = (255,255,255,255)
+		SelectedTextBackgroundColor = (10,110,255,255)
+		SelectionPointColor = (110,110,255,255)
+		LimitTextWidth = false
+		SelectionPointWidth = 2
+		NumbersOnly = false
+	}
+	
+	Label: "ColorLabel"
+	{
+		ConfigFile = "lib/TGUI-0.6-RC/widgets/Black.conf"
+		Left = 30
+		Top = 210
+		Width = 300
+		Height = 40
+		Visible = true
+		Enabled = true
+		Transparency = 255
+		CallbackId = 0
+		Text = "Choose your chat color:"
+		TextColor = (255,255,255,255)
+		TextSize = 26
+		BackgroundColor = (0,0,0,0)
+		AutoSize = false
+	}
+	
+	EditBox: "ColorR"
+	{
+		ConfigFile = "lib/TGUI-0.6-RC/widgets/Black.conf"
+		Left = 350
+		Top = 200
+		Width = 120
+		Height = 40
+		Visible = true
+		Enabled = true
+		Transparency = 255
+		CallbackId = 0
+		Text = "200"
+		TextSize = 26
+		MaximumCharacters = 3
+		Borders = (6,4,6,4)
+		TextColor = (200,200,200,255)
+		SelectedTextColor = (255,255,255,255)
+		SelectedTextBackgroundColor = (10,110,255,255)
+		SelectionPointColor = (110,110,255,255)
+		LimitTextWidth = false
+		SelectionPointWidth = 2
+		NumbersOnly = true
+	}
+	
+	EditBox: "ColorG"
+	{
+		ConfigFile = "lib/TGUI-0.6-RC/widgets/Black.conf"
+		Left = 490
+		Top = 200
+		Width = 120
+		Height = 40
+		Visible = true
+		Enabled = true
+		Transparency = 255
+		CallbackId = 0
+		Text = "200"
+		TextSize = 26
+		MaximumCharacters = 3
+		Borders = (6,4,6,4)
+		TextColor = (200,200,200,255)
+		SelectedTextColor = (255,255,255,255)
+		SelectedTextBackgroundColor = (10,110,255,255)
+		SelectionPointColor = (110,110,255,255)
+		LimitTextWidth = false
+		SelectionPointWidth = 2
+		NumbersOnly = true
+	}
+	
+	EditBox: "ColorB"
+	{
+		ConfigFile = "lib/TGUI-0.6-RC/widgets/Black.conf"
+		Left = 630
+		Top = 200
+		Width = 120
+		Height = 40
+		Visible = true
+		Enabled = true
+		Transparency = 255
+		CallbackId = 0
+		Text = "200"
+		TextSize = 26
+		MaximumCharacters = 3
+		Borders = (6,4,6,4)
+		TextColor = (200,200,200,255)
+		SelectedTextColor = (255,255,255,255)
+		SelectedTextBackgroundColor = (10,110,255,255)
+		SelectionPointColor = (110,110,255,255)
+		LimitTextWidth = false
+		SelectionPointWidth = 2
+		NumbersOnly = true
+	}
 
 	Button: "Start"
 	{

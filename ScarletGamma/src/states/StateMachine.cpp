@@ -56,7 +56,8 @@ void States::StateMachine::PushGameState(States::GameStateType state)
 		newState = new States::LaunchPlayerState();
 		break;
 	case GST_PLAYER:
-		newState = new States::PlayerState();
+		// You mast create the player state your self - it requires input.
+		assert(false);
 		break;
 	case GST_MASTER:
 		// You mast create the master state your self - it requires input.
@@ -96,7 +97,11 @@ void States::StateMachine::Draw(sf::RenderWindow& win)
 	if (win.isOpen() && m_gameState)
 	{
 		m_gameState->Draw(win);
+		// Draw HUD without zoom and move
+		sf::View backup = win.getView();
+		win.setView(win.getDefaultView());
 		m_gameState->GuiDraw();
+		win.setView(backup);
 	}
 }
 

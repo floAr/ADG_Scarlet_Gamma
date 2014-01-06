@@ -102,8 +102,8 @@ void Events::EventHandler::Update(float dt)
 		case sf::Event::JoystickDisconnected:
 			break;
 		}
-	}
 
-	// Forward events to GUI
-	g_Game->GetStateMachine()->GuiHandleEvent(event);
+		// Forward events to GUI
+		g_Game->GetStateMachine()->GuiHandleEvent(event);
+	}
 }

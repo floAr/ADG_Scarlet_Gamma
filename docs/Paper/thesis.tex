@@ -24,14 +24,14 @@
 \newcommand{\logo}{\includegraphics[trim=0mm 0mm 50mm 0mm,clip,height=3cm]{INF_SIGN_druck}}
 \newcommand{\logodbse}{\includegraphics[scale=.45]{DBSE}}
 
-\newcommand{\advisorone}{Prof.\ \todo{Name}}
+\newcommand{\advisorone}{Maria Manneck \& Enrico Gebert}
 \newcommand{\departmentone}{\ifgerman{Institut für}{Department of}\todots}
 
 \newcommand{\advisortwo}{}
 \newcommand{\departmenttwo}{}
 
 % Thesis kind
-\ifgerman{\newcommand{\thesiskind}{Masterarbeit}}{\newcommand{\thesiskind}{Master's Thesis}}
+\newcommand{\thesiskind}{Wissenschaftliche Ausarbeitung}
 %\ifgerman{\newcommand{\thesiskind}{Bachelorarbeit}}{\newcommand{\thesiskind}{Bachelor Thesis}}
 %\newcommand{\thesiskind}{Diplomarbeit} %do not translate
 %\ifgerman{\newcommand{\thesiskind}{Doktorarbeit}}{\newcommand{\thesiskind}{Dissertation}}
@@ -101,7 +101,7 @@
 	{\parskip 0pt\tableofcontents} % toc bitte einzeilig
 	\blankpage
 
-	\ifgerman{
+
 		\listoffigures
 		\addcontentsline{toc}{chapter}{Abbildungsverzeichnis}
 
@@ -114,20 +114,7 @@
 
 		\renewcommand*{\firstacronymfont}[1]{\emph{#1}}
 		\printglossary[type=acronym,title=List of Acronyms,toctitle=Abkürzungsverzeichnis]
-	}{
-		\listoffigures
-		\addcontentsline{toc}{chapter}{List of Figures}
-
-		\listoftables
-		\addcontentsline{toc}{chapter}{List of Tables}
-
-		\renewcommand{\lstlistlistingname}{List of Code Listings}
-		\lstlistoflistings
-		\addcontentsline{toc}{chapter}{List of Code Listings}
-
-		\renewcommand*{\firstacronymfont}[1]{\emph{#1}}
-		\printglossary[type=acronym,title=List of Acronyms,toctitle=List of Acronyms]
-	}
+	
 }
 
 %*********************************************************************%

@@ -44,4 +44,5 @@ lib/
 /docs/Paper/*.lof
 /docs/Paper/*.lol
 /docs/Paper/literature/*.bak
-/docs/Paper/thesis.pdf
+/docs/Paper/literature/*.doc
+*.pdf

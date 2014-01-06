@@ -53,11 +53,7 @@ namespace Network {
 			// Write data
 			WriteData( data );
 
-		//	if( m_client ) {
-				// Only send to the new connected client
-	//			m_client->send( data.GetBuffer(), (size_t)data.GetSize() );
-//			} else // Broadcast
-				Messenger::Send( data.GetBuffer(), (size_t)data.GetSize(), m_client );
+			Messenger::Send( data.GetBuffer(), (size_t)data.GetSize(), m_client );
 		}
 	}
 

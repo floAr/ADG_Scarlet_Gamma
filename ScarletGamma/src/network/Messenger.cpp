@@ -146,33 +146,6 @@ namespace Network {
 		}
 
 		assert(_packet.getDataSize() == read);
-
-		/*while( size > sizeof(MessageHeader) )
-		{
-			MessageHeader* header = reinterpret_cast<MessageHeader*>(buffer);
-			size_t read = sizeof(MessageHeader);
-			switch(header->target)
-			{
-			case Target::WORLD:
-				read += HandleWorldMessage(g_Game->GetWorld(), buffer + sizeof(MessageHeader), _size);
-				break;
-			case Target::MAP:
-				read += HandleMapMessage(g_Game->GetWorld()->GetMap(static_cast<Core::MapID>(header->targetID)),
-					buffer + sizeof(MessageHeader), _size);
-				break;
-			case Target::OBJECT:
-				read += HandleObjectMessage(g_Game->GetWorld()->GetObject(static_cast<Core::ObjectID>(header->targetID)),
-					buffer + sizeof(MessageHeader), _size);
-				break;
-			case Target::CHAT:
-				read += HandleChatMessage( buffer + sizeof(MessageHeader), _size );
-				break;
-			}
-
-			// TODO: bugfix: _size must be reduced before switch! But this causes an error (world is loaded twice???)
-			_size -= read;
-			buffer += read;
-		}*/
 	}
 
 	bool Messenger::IsServer()

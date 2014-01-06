@@ -21,8 +21,8 @@
   \newcommand{\university}{University of Magdeburg}
   \newcommand{\school}{School of Computer Science}
 }
-\newcommand{\logo}{\includegraphics[trim=0mm 0mm 50mm 0mm,clip,height=3cm]{INF_SIGN_druck}}
-\newcommand{\logodbse}{\includegraphics[scale=.45]{DBSE}}
+\newcommand{\logo}{} %\includegraphics[trim=0mm 0mm 50mm 0mm,clip,height=3cm]{INF_SIGN_druck}}
+\newcommand{\logodbse}{} %\includegraphics[scale=.45]{DBSE}}
 
 \newcommand{\advisorone}{Maria Manneck \& Enrico Gebert}
 \newcommand{\departmentone}{\ifgerman{Institut für}{Department of}\todots}
@@ -76,8 +76,9 @@
 	\pagenumbering{roman}
 	\include{tex/titlepage}
 
-	\include{chapters/abstract}
-	\blankpage
+	% TODO: Put on the backside of title page
+	%\include{chapters/abstract}
+	%\blankpage
 
 	%\chapter*{Acknowledgements}
 	%\ldots
@@ -89,8 +90,8 @@
 %*********************************************************************%
 
 % HOWTO: \gls{IDE} for singular or \glspl{IDE} for plural with 's
-\makeglossaries
-\newacronym{IDE}{IDE}{Integrated Development Environment}
+%\makeglossaries
+%\newacronym{IDE}{IDE}{Integrated Development Environment}
 %\glsaddall % use only if you have acronyms that occur only in graphics
 
 %*********************************************************************%
@@ -99,22 +100,18 @@
 
 \ifnotdraft{
 	{\parskip 0pt\tableofcontents} % toc bitte einzeilig
-	\blankpage
+	%\blankpage
 
 
-		\listoffigures
-		\addcontentsline{toc}{chapter}{Abbildungsverzeichnis}
+	%	\listoffigures
+	%	\addcontentsline{toc}{chapter}{Abbildungsverzeichnis}
 
-		\listoftables
-		\addcontentsline{toc}{chapter}{Tabellenverzeichnis}
+	%	\listoftables
+	%	\addcontentsline{toc}{chapter}{Tabellenverzeichnis}
 
-		\renewcommand{\lstlistlistingname}{Quelltextverzeichnis}
-		\lstlistoflistings
-		\addcontentsline{toc}{chapter}{Quelltextverzeichnis}
-
-		\renewcommand*{\firstacronymfont}[1]{\emph{#1}}
-		\printglossary[type=acronym,title=List of Acronyms,toctitle=Abkürzungsverzeichnis]
-	
+	%	\renewcommand{\lstlistlistingname}{Quelltextverzeichnis}
+	%	\lstlistoflistings
+	%	\addcontentsline{toc}{chapter}{Quelltextverzeichnis}
 }
 
 %*********************************************************************%
@@ -135,6 +132,11 @@
 %*********************************************************************%
 % APPENDIX                                                            %
 %*********************************************************************%
+
+\ifnotdraft{
+	\renewcommand*{\firstacronymfont}[1]{\emph{#1}}
+	\printglossary[type=acronym,title=List of Acronyms,toctitle=Abkürzungsverzeichnis]
+}
 
 \appendix
 \include{chapters/appendix}

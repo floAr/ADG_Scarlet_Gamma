@@ -48,8 +48,9 @@ void CommonState::Update( float dt )
 		// STRANGE HACK: set the m_Panel property public in ChatBox.hpp.
 		// This solves a bug where lines are cut at the bottom.
 		tgui::Label::Ptr newestLine = localOut->m_Panel->getWidgets().back();
+		//localOut->m_FullTextHeight = (newestLine->getSize().y+5.0f) * localOut->getLineAmount();
 		newestLine->setSize(newestLine->getSize().x, newestLine->getSize().y+5.0f);
-		localOut->m_FullTextHeight = (newestLine->getSize().y+5.0f) * localOut->getLineAmount();
+		localOut->m_FullTextHeight += localOut->getLineAmount() == 1 ? 10.0f : 5.0f;
 	}
 }
 

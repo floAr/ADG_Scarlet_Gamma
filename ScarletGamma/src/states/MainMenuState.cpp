@@ -40,14 +40,12 @@ void States::MainMenuState::Update(float dt)
 void States::MainMenuState::Draw(sf::RenderWindow& win)
 {
     // Set window color according to mouse position...
-    win.clear(sf::Color((unsigned char)(255 * (float)m_mousePos[0] / (float)win.getSize().x),
-        (unsigned char)(255 * (float)m_mousePos[1] / (float)win.getSize().y),
-        (unsigned char)(m_mousePos[2])));
+	static sf::Color mightySlate(85, 98, 112);
+    win.clear(mightySlate);
     
     sf::Text t("Press enter to open PlayerState\n"
                "or 'm' to open MasterState\n"
-               "or escape to quit.\n\n"
-               "Move mouse or scroll to change background color.", m_menuFont, 24);
+               "or escape to quit.", m_menuFont, 24);
     t.setPosition(30, 30);
     win.draw(t);
 }

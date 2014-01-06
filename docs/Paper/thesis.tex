@@ -1,6 +1,6 @@
 \documentclass[
 %dbse, % include logo of DBSE work group
-  %draft,    % omit title page, listings, and particular chapters selected below using include only
+    draft,    % omit title page, listings, and particular chapters selected below using include only
 	german,   % titles for a thesis in German, A4 paper
 	%print,    % the printed version does not use colored links
 	%final,    % removes all TODOs
@@ -90,9 +90,9 @@
 %*********************************************************************%
 
 % HOWTO: \gls{IDE} for singular or \glspl{IDE} for plural with 's
-%\makeglossaries
-%\newacronym{IDE}{IDE}{Integrated Development Environment}
-%\glsaddall % use only if you have acronyms that occur only in graphics
+\makeglossaries
+\newacronym{RPG}{RPG}{Role Playing Game}
+\glsaddall % use only if you have acronyms that occur only in graphics
 
 %*********************************************************************%
 % LISTINGS                                                            %
@@ -122,12 +122,12 @@
 \pagenumbering{arabic}
 
 \include{chapters/introduction}
-\include{chapters/background}
-\include{chapters/example}
-\include{chapters/evaluation}
-\include{chapters/relatedwork}
-\include{chapters/conclusion}
-\include{chapters/futurework}
+%\include{chapters/background}
+%\include{chapters/example}
+%\include{chapters/evaluation}
+%\include{chapters/relatedwork}
+%\include{chapters/conclusion}
+%\include{chapters/futurework}
 
 %*********************************************************************%
 % APPENDIX                                                            %
@@ -139,7 +139,7 @@
 }
 
 \appendix
-\include{chapters/appendix}
+%\include{chapters/appendix}
 
 %*********************************************************************%
 % LITERATURE                                                          %
@@ -158,10 +158,14 @@
 % ERKLÄRUNG                                                           %
 %*********************************************************************%
 
-\ifnotdraft{
+\ifnotdraft {
 	\cleardoublepage
 	\phantomsection
-	\printindex
+}
+
+\printindex
+
+\ifnotdraft{
 	\include{tex/erklaerung}
 }
 

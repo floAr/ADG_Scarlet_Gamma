@@ -14,10 +14,10 @@ namespace Core {
 	{
 	}
 
-	Property::Property( ObjectID _parent, const std::string& _name, const ObjectList& _list ) :
+	Property::Property( ObjectID _parent, const std::string& _name, const std::string& _value, const ObjectList& _list ) :
 		m_name(_name),
 		m_isObjectList(true),
-		m_value(""),
+		m_value(_value),
 		m_objects(_list),
 		m_parent(_parent)
 	{
@@ -95,7 +95,7 @@ namespace Core {
 
 	void Property::PopFront()
 	{
-		{ if( !m_isObjectList ) throw Exception::NoObjectList(); m_objects.PopFront(); }
+		{ if( !m_isObjectList ) throw Exception::NoObjectList(); m_objects.PopFront(); Network::MsgPropertyChanged( m_parent, this ).Send(); }
 	}
 
 

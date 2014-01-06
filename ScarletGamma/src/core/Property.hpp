@@ -17,7 +17,7 @@ public:
 	/// \brief Create a named object list property.
 	/// \details It is possible to add a standard string property additional
 	///		to the object list with SetValue.
-	Property( ObjectID _parent, const std::string& _name, const ObjectList& _list );
+	Property( ObjectID _parent, const std::string& _name, const std::string& _value, const ObjectList& _list );
 
 	/// \brief Deserialize an object.
 	/// \param [in] _node A serialized object node.
@@ -42,6 +42,7 @@ public:
 	void RemoveObject( ObjectID _id );
 
 	/// \see ObjectList::PopFront();
+	/// \details Additionally sends a message through the network.
 	/// \throws Exception::NoObjectList.
 	void PopFront();
 

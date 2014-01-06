@@ -1,4 +1,5 @@
 #include "core/Object.hpp"
+#include "Constants.hpp"
 #include "unittest/UnitTests.hpp"
 #include "network/WorldMessages.hpp"
 #include <iostream>
@@ -14,7 +15,7 @@ namespace UnitTest {
 		// Create an object and add some stuff
 		Core::Object obj(1, "floor.png");
 		obj.Add( Core::Property(obj.ID(), string("Invisible"), string("true")) );
-		obj.Add( Core::Property(obj.ID(), string("Inventory"), Core::ObjectList()) );
+		obj.Add( Core::Property(obj.ID(), string("Inventory"), STR_EMPTY, Core::ObjectList()) );
 		obj.Add( Core::Property(obj.ID(), string("Dmg"), string("1W8+10")) );
 		auto& inventory = obj.GetProperty(string("Inventory"));
 		inventory.AddObject( 2 );	// Add a probably wrong id

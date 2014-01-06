@@ -3,6 +3,7 @@
 #include "ObjectMessages.hpp"
 #include "core/World.hpp"
 #include <jofilelib.hpp>
+#include <iostream>// TODO: remove
 
 namespace Network {
 
@@ -70,6 +71,8 @@ namespace Network {
 		// Deserialize and than remove the old and add the deserialized one.
 		Jo::Files::MemFile file(_data, _size);
 		Core::Property prop(_object->ID(), Jo::Files::MetaFileWrapper(file).RootNode );
+	//	std::cout << prop.Name() << ' ' << prop.Value() << ' ' << prop.GetObjects().Size() << '\n';
+	//	for(int i=0; i<prop.GetObjects().Size(); ++i) std::cout << prop.GetObjects()[i] << '\n';
 		_object->Add( prop );
 		return (size_t)file.GetCursor();
 	}

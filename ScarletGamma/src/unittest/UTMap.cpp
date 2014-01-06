@@ -4,6 +4,7 @@
 #include "unittest/UnitTests.hpp"
 #include "network/WorldMessages.hpp"
 #include <iostream>
+#include "Constants.hpp"
 
 using namespace std;
 
@@ -36,11 +37,13 @@ namespace UnitTest {
 		// Add one active object
 		Core::ObjectID objID = world->NewObject("media/smile_2.png");
 		Core::Object* obj = world->GetObject(objID);
-		obj->Add(Core::Property(objID, "Target","0:3"));
+		obj->Add(Core::Property(objID, Core::Object::PROP_NAME, "ICH"));
+		obj->Add(Core::Property(objID, Core::Object::PROP_PLAYER, ""));
+		obj->Add(Core::Property(objID, Core::Object::PROP_TARGET,"0:3"));
 		Core::ObjectList path;
 		path.Add(map->GetObjectsAt(0,0)[0]);
 		path.Add(map->GetObjectsAt(9,9)[0]);
-		obj->Add(Core::Property(objID, "Path", path));
+		obj->Add(Core::Property(objID, Core::Object::PROP_PATH, STR_FALSE, path));
 		obj->SetColor(sf::Color(0, 155, 0, 155));
 		map->Add(objID, 0, 2, 4);
 

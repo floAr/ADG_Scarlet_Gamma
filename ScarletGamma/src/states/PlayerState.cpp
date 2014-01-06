@@ -27,14 +27,37 @@ void States::PlayerState::Draw(sf::RenderWindow& win)
 	// Uses the test map 0 for testing purposes.
 	Graphics::TileRenderer::Render(win, *g_Game->GetWorld()->GetMap(0));
 
-	// If the selected object has a path draw it
-	//DrawPathOverlay(win);
+	// Draw the players path
+	DrawPathOverlay(win, m_player);
 }
 
 void States::PlayerState::MouseButtonPressed(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos)
 {
 	switch (button.button)
 	{
+	case sf::Mouse::Left: {
+		//------------------------------------//
+		// move player to tile position		  //
+		//------------------------------------//
+		auto& tiles = g_Game->GetWorld()->GetMap(0)->GetObjectsAt((int)tilePos.x,(int)tilePos.y);
+		if( tiles.Size() > 0 )
+		{
+			// TODO: intelligent select?
+			m_selected = g_Game->GetWorld()->GetObject(tiles[tiles.Size()-1]);
+			// Delete current target(s) if not appending
+			if( !sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) )
+			{
+				m_player->GetProperty(Core::Object::PROP_TARGET).SetValue(STR_EMPTY);
+				Core::Property& path = m_player->GetProperty(Core::Object::PROP_PATH);
+				path.ClearObjects();
+				path.SetValue(STR_FALSE);
+			}
+			if(m_selected->GetProperty(Core::Object::PROP_LAYER).Value()=="0"){
+				// Append to target list
+				m_player->AppendToPath( m_selected->ID() );
+			}
+		}
+	} break;
 	case sf::Mouse::Middle:
 		m_zoom = 0;
 		sf::RenderWindow& win = g_Game->GetWindow();
@@ -51,4 +74,11 @@ void States::PlayerState::OnBegin()
 {
 	// After connecting the client is receiving the world
 	Network::Messenger::Poll( true );
+
+	// The player name is used to find the correct object in the world.
+	// TODO: if player does not exists create one!
+	m_player = g_Game->GetWorld()->FindPlayer( m_name.substr(1, m_name.length()-3) );
+	assert( m_player );
+	// Use the players currently chosen color
+	m_player->SetColor( m_color );
 }

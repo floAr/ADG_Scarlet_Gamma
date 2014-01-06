@@ -62,10 +62,18 @@ namespace Core {
 		/// \brief Stores all maps and objects to a save game.
 		/// TODO: how are players handled?
 		void Save( Jo::Files::IFile& _file ) const;
+
+		/// \brief If a player with that name exists its object is returned.
+		/// \return The player object or nullptr.
+		Object* FindPlayer( std::string _name );
 	private:
 		/// \brief All real existing objects.
 		std::unordered_map<ObjectID, Object> m_objects;
 		ObjectID m_nextFreeObjectID;	///< The next unused object handle
+
+		/// \brief A subset of the objects which is flagged with a player property.
+		/// \details The objects are mapped to there names to search player by name.
+		std::unordered_map<std::string, Core::ObjectID> m_players;
 
 		/// \brief All loaded maps.
 		std::unordered_map<MapID, Map> m_maps;

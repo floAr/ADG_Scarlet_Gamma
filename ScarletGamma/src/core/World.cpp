@@ -66,6 +66,7 @@ namespace Core {
 		// Clear old stuff
 		m_maps.clear();
 		m_objects.clear();
+		m_players.clear();
 		m_nextFreeMapID = 0;
 		m_nextFreeObjectID = 0;
 
@@ -80,10 +81,18 @@ namespace Core {
 			// OK child should be an array of objects.
 			for( unsigned i=0; i<child->Size(); ++i )
 			{
-				NewObject( (*child)[i] );
+				ObjectID id = NewObject( (*child)[i] );
+				Object* object = GetObject(id);
+
+				// Test object if it is a player and add it.
+				if( object->HasProperty( Object::PROP_PLAYER ) )
+				{
+					Property& prop = object->GetProperty( Object::PROP_NAME );
+					m_players[prop.Value()] = id;
+				}
 			}
 		} else {
-			throw std::exception("Map file corrupted: cannot find the objects");
+			throw std::exception("World file corrupted: cannot find the objects");
 		}
 
 		// Do the same for the maps
@@ -95,7 +104,7 @@ namespace Core {
 				NewMap( (*child)[i] );
 			}
 		} else {
-			throw std::exception("Map file corrupted: cannot find the maps");
+			throw std::exception("World file corrupted: cannot find the maps");
 		}
 
 		// The nextFree...ID is now the maximum used id. The increment yields
@@ -147,6 +156,15 @@ namespace Core {
 		Network::MsgRemoveObject( _object ).Send();
 		// TODO: Test if destructor is called proper
 		m_objects.erase( _object );
+	}
+
+	Object* World::FindPlayer( std::string _name )
+	{
+		// The player must not exists
+		auto& it = m_players.find( _name );
+		if( it != m_players.end() )
+			return GetObject( it->second );
+		return nullptr;
 	}
 
 } // namespace Core

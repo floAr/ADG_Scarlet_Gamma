@@ -1,4 +1,5 @@
 #include "Object.hpp"
+#include "Constants.hpp"
 #include "utils/Exception.hpp"
 #include <iomanip>
 #include <sstream>
@@ -15,6 +16,8 @@ namespace Core {
 	const string Object::PROP_PATH = string("path");
 	const string Object::PROP_TARGET = string("target");
 	const string Object::PROP_OBSTACLE = string("obstacle");
+	const string Object::PROP_NAME = string("name");
+	const string Object::PROP_PLAYER = string("player");
 
 	Object::Object( ObjectID _id, const string& _sprite ) :
 		m_id(_id)
@@ -23,9 +26,9 @@ namespace Core {
 	}
 
 	Object::Object( const Jo::Files::MetaFileWrapper::Node& _node ) :
-		PropertyList( _node[string("ID")], _node[string("Properties")] )
+		PropertyList( _node[STR_ID], _node[STR_PROPERTIES] )
 	{
-		m_id = _node[string("ID")];
+		m_id = _node[STR_ID];
 	}
 
 	Property& Object::GetProperty( const string& _name )
@@ -93,8 +96,8 @@ namespace Core {
 
 	void Object::Serialize( Jo::Files::MetaFileWrapper::Node& _node ) const
 	{
-		_node[string("ID")] = m_id;
-		PropertyList::Serialize(_node[string("Properties")]);
+		_node[STR_ID] = m_id;
+		PropertyList::Serialize(_node[STR_PROPERTIES]);
 	}
 
 	void Object::AppendToPath( ObjectID _wayPoint )
@@ -105,7 +108,7 @@ namespace Core {
 		// node must be the same.
 		bool hasLoop = path.GetObjects().Size() > 1;
 		hasLoop &= path.GetObjects()[0] == path.GetObjects()[path.GetObjects().Size()-1];
-		path.SetValue( hasLoop ? "true" : "false" );
+		path.SetValue( hasLoop ? STR_TRUE : STR_FALSE );
 	}
 
 } // namespace Core

@@ -144,14 +144,28 @@ namespace States
 		void GuiHandleEvent(sf::Event& event)
 		{
 			if (m_currentGui)
+			{
+				// Update HUD without zoom and move
+				sf::RenderWindow* win = m_currentGui->getWindow();
+				sf::View backup = win->getView();
+				win->setView(win->getDefaultView());
 				m_currentGui->handleEvent(event);
+				win->setView(backup);
+			}
 		}
 
 		/// \brief Draws the current GUI.
 		void GuiDraw()
 		{
 			if (m_currentGui)
+			{
+				// Draw HUD without zoom and move
+				sf::RenderWindow* win = m_currentGui->getWindow();
+				sf::View backup = win->getView();
+				win->setView(win->getDefaultView());
 				m_currentGui->draw();
+				win->setView(backup);
+			}
 		}
 
 #pragma endregion

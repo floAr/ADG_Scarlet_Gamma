@@ -97,11 +97,7 @@ void States::StateMachine::Draw(sf::RenderWindow& win)
 	if (win.isOpen() && m_gameState)
 	{
 		m_gameState->Draw(win);
-		// Draw HUD without zoom and move
-		sf::View backup = win.getView();
-		win.setView(win.getDefaultView());
 		m_gameState->GuiDraw();
-		win.setView(backup);
 	}
 }
 

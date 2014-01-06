@@ -53,7 +53,7 @@ namespace Network {
 	/// \details The function is called after the MessageHeader header is
 	///		decoded. So data starts with MsgWorldHeader.
 	///	\return Number of bytes which were read: could be smaller than _size.
-	size_t HandleWorldMessage( Core::World* _world, uint8_t* _data, size_t _size );
+	size_t HandleWorldMessage( Core::World* _world, const uint8_t* _data, size_t _size );
 
 	/// \brief Send the whole world to a client.
 	/// \details Since a world is only send once on connection the specific

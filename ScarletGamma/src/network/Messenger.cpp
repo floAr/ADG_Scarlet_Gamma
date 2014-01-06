@@ -85,19 +85,30 @@ namespace Network {
 		for( size_t i=0; i<g_msgInstance->m_sockets.size(); ++i )
 		{
 			g_msgInstance->m_sockets[i]->setBlocking( _blocking );
-			size_t receivedBytes;
-			if( g_msgInstance->m_sockets[i]->receive(g_msgInstance->m_buffer, BUFFER_SIZE, receivedBytes) == sf::Socket::Done )
-				g_msgInstance->HandleMessage(receivedBytes);
+			sf::Packet packet;
+			if( _blocking )
+			{
+				// Handle exactly one message in blocking mode
+				if( g_msgInstance->m_sockets[i]->receive( packet ) == sf::Socket::Done )
+					g_msgInstance->HandleMessage(packet);
+			} else {
+				while( g_msgInstance->m_sockets[i]->receive( packet ) == sf::Socket::Done )
+					g_msgInstance->HandleMessage(packet);
+			}
 		}
 	}
 
-	void Messenger::Send( void* _data, size_t _size )
+	void Messenger::Send( void* _data, size_t _size, sf::TcpSocket* _to )
 	{
 		if( g_msgInstance )
 		{
-			for( size_t i=0; i<g_msgInstance->m_sockets.size(); ++i )
+			sf::Packet packet;
+			packet.append(_data, _size);
+			if( _to )
+				_to->send( packet );
+			else for( size_t i=0; i<g_msgInstance->m_sockets.size(); ++i )
 			{
-				g_msgInstance->m_sockets[i]->send( _data, _size );
+				g_msgInstance->m_sockets[i]->send( packet );
 			}
 		}
 	}
@@ -110,10 +121,33 @@ namespace Network {
 	}
 
 
-	void Messenger::HandleMessage( size_t _size )
+	void Messenger::HandleMessage( sf::Packet& _packet )
 	{
-		uint8_t* buffer = (uint8_t*)m_buffer;
-		while( _size > sizeof(MessageHeader) )
+		const uint8_t* buffer = reinterpret_cast<const uint8_t*>(_packet.getData());
+		const MessageHeader* header = reinterpret_cast<const MessageHeader*>(_packet.getData());
+		size_t size = _packet.getDataSize() - sizeof(MessageHeader);
+		size_t read = sizeof(MessageHeader);
+		switch(header->target)
+		{
+		case Target::WORLD:
+			read += HandleWorldMessage(g_Game->GetWorld(), buffer + sizeof(MessageHeader), size);
+			break;
+		case Target::MAP:
+			read += HandleMapMessage(g_Game->GetWorld()->GetMap(static_cast<Core::MapID>(header->targetID)),
+				buffer + sizeof(MessageHeader), size);
+			break;
+		case Target::OBJECT:
+			read += HandleObjectMessage(g_Game->GetWorld()->GetObject(static_cast<Core::ObjectID>(header->targetID)),
+				buffer + sizeof(MessageHeader), size);
+			break;
+		case Target::CHAT:
+			read += HandleChatMessage( buffer + sizeof(MessageHeader), size );
+			break;
+		}
+
+		assert(_packet.getDataSize() == read);
+
+		/*while( size > sizeof(MessageHeader) )
 		{
 			MessageHeader* header = reinterpret_cast<MessageHeader*>(buffer);
 			size_t read = sizeof(MessageHeader);
@@ -138,7 +172,7 @@ namespace Network {
 			// TODO: bugfix: _size must be reduced before switch! But this causes an error (world is loaded twice???)
 			_size -= read;
 			buffer += read;
-		}
+		}*/
 	}
 
 	bool Messenger::IsServer()

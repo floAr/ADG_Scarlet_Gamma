@@ -51,7 +51,7 @@ namespace Network {
 	/// \details The function is called after the MessageHeader header is
 	///		decoded. So data starts with MsgMapHeader.
 	///	\return Number of bytes which were read: could be smaller than _size.
-	size_t HandleMapMessage( Core::Map* _map, uint8_t* _data, size_t _size );
+	size_t HandleMapMessage( Core::Map* _map, const uint8_t* _data, size_t _size );
 
 	/// \brief Send this message if the position of an object changed.
 	class MsgObjectPositionChanged: public MapMsg
@@ -60,7 +60,7 @@ namespace Network {
 		MsgObjectPositionChanged( const Core::MapID _map, const Core::ObjectID _object, const sf::Vector2f& _position );
 
 		/// \see HandleMapMessage
-		static size_t Receive( Core::Map* _map, uint8_t* _data, size_t _size );
+		static size_t Receive( Core::Map* _map, const uint8_t* _data, size_t _size );
 	protected:
 		virtual void WriteData( Jo::Files::MemFile& _output ) const override;
 	private:
@@ -75,7 +75,7 @@ namespace Network {
 		MsgInsertObjectToMap( const Core::MapID _map, const Core::ObjectID _object, int _x, int _y, int _layer );
 
 		/// \see HandleMapMessage
-		static size_t Receive( Core::Map* _map, uint8_t* _data, size_t _size );
+		static size_t Receive( Core::Map* _map, const uint8_t* _data, size_t _size );
 	protected:
 		virtual void WriteData( Jo::Files::MemFile& _output ) const override;
 	private:
@@ -91,7 +91,7 @@ namespace Network {
 		MsgRemoveObjectFromMap( const Core::MapID _map, const Core::ObjectID _object );
 
 		/// \see HandleMapMessage
-		static size_t Receive( Core::Map* _map, uint8_t* _data, size_t _size );
+		static size_t Receive( Core::Map* _map, const uint8_t* _data, size_t _size );
 	protected:
 		virtual void WriteData( Jo::Files::MemFile& _output ) const override;
 	private:

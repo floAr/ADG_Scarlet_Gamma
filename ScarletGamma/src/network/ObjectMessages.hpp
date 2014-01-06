@@ -45,7 +45,7 @@ namespace Network {
 	/// \details The function is called after the MessageHeader header is
 	///		decoded. So data starts with MsgObjectHeader.
 	///	\return Number of bytes which were read: could be smaller than _size.
-	size_t HandleObjectMessage( Core::Object* _object, uint8_t* _data, size_t _size );
+	size_t HandleObjectMessage( Core::Object* _object, const uint8_t* _data, size_t _size );
 
 	/// \brief Send this message if a property is added or changed.
 	class MsgPropertyChanged: public ObjectMsg
@@ -54,7 +54,7 @@ namespace Network {
 		MsgPropertyChanged( const Core::ObjectID _object, const Core::Property* _property );
 
 		/// \see HandleObjectMessage
-		static size_t Receive( Core::Object* _object, uint8_t* _data, size_t _size );
+		static size_t Receive( Core::Object* _object, const uint8_t* _data, size_t _size );
 	protected:
 		virtual void WriteData( Jo::Files::MemFile& _output ) const override;
 	private:
@@ -68,7 +68,7 @@ namespace Network {
 		MsgRemoveProperty( const Core::ObjectID _object, const Core::Property* _property );
 
 		/// \see HandleObjectMessage
-		static size_t Receive( Core::Object* _object, uint8_t* _data, size_t _size );
+		static size_t Receive( Core::Object* _object, const uint8_t* _data, size_t _size );
 	protected:
 		virtual void WriteData( Jo::Files::MemFile& _output ) const override;
 	private:

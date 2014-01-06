@@ -37,7 +37,11 @@ namespace Network {
 		///		broadcasted per default.
 		///	\param [in] _data Raw data to be send. Must begin with MessageHeader
 		///	\param [in] _size Size of the data in bytes.
-		static void Send( void* _data, size_t _size );
+		///	\param [in] _to If nullptr send broadcasts to all connections. For
+		///		clients that means they send the message to the server.
+		///		In case it is another socket the message is send to one client
+		///		only (relevant for server only).
+		static void Send( void* _data, size_t _size, sf::TcpSocket* _to = nullptr );
 
 		/// \brief Returns if this application is the server.
 		static bool IsServer();
@@ -61,7 +65,7 @@ namespace Network {
 		/// \brief Analyze the headers and deliver the message to the
 		///		appropriate target handler.
 		///	\details The received data must be stored in m_buffer.
-		void HandleMessage( size_t _size );
+		void HandleMessage( sf::Packet& _packet );
 	};
 
 } // namespace Network

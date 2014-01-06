@@ -49,6 +49,7 @@ void CommonState::Update( float dt )
 		// This solves a bug where lines are cut at the bottom.
 		tgui::Label::Ptr newestLine = localOut->m_Panel->getWidgets().back();
 		newestLine->setSize(newestLine->getSize().x, newestLine->getSize().y+5.0f);
+		localOut->m_FullTextHeight = (newestLine->getSize().y+5.0f) * localOut->getLineAmount();
 	}
 }
 

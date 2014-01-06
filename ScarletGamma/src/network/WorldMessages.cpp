@@ -14,7 +14,7 @@ namespace Network {
 	MaskWorldMessage::MaskWorldMessage() { ++g_MaskNewWorldMessages; }
 	MaskWorldMessage::~MaskWorldMessage() { --g_MaskNewWorldMessages; }
 
-	size_t HandleWorldMessage( Core::World* _world, uint8_t* _data, size_t _size )
+	size_t HandleWorldMessage( Core::World* _world, const uint8_t* _data, size_t _size )
 	{
 		assert(_size > sizeof(WorldMsgType));
 		MaskWorldMessage messageLock;
@@ -53,10 +53,11 @@ namespace Network {
 			// Write data
 			WriteData( data );
 
-			if( m_client )
-				m_client->send( data.GetBuffer(), (size_t)data.GetSize() );
-			else // Broadcast
-				Messenger::Send( data.GetBuffer(), (size_t)data.GetSize() );
+		//	if( m_client ) {
+				// Only send to the new connected client
+	//			m_client->send( data.GetBuffer(), (size_t)data.GetSize() );
+//			} else // Broadcast
+				Messenger::Send( data.GetBuffer(), (size_t)data.GetSize(), m_client );
 		}
 	}
 

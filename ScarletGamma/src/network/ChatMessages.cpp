@@ -7,7 +7,7 @@
 
 namespace Network {
 
-	size_t HandleChatMessage( uint8_t* _data, size_t _size )
+	size_t HandleChatMessage( const uint8_t* _data, size_t _size )
 	{
 		sf::Color color = *(sf::Color*)_data;
 		_data += sizeof(sf::Color);
@@ -29,7 +29,7 @@ namespace Network {
 			// Client - store chat message
 			g_Game->AppendToChatLog( chatMessage );
 
-		return 2 + length;
+		return sizeof(sf::Color) + 2 + length;
 	}
 
 	void ChatMsg::Send()

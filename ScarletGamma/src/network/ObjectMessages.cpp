@@ -13,12 +13,12 @@ namespace Network {
 	MaskObjectMessage::MaskObjectMessage() { ++g_MaskNewObjectMessages; }
 	MaskObjectMessage::~MaskObjectMessage() { --g_MaskNewObjectMessages; }
 
-	size_t HandleObjectMessage( Core::Object* _object, uint8_t* _data, size_t _size )
+	size_t HandleObjectMessage( Core::Object* _object, const uint8_t* _data, size_t _size )
 	{
 		assert(_size > sizeof(ObjectMsgType));
 		MaskObjectMessage messageLock;
 
-		ObjectMsgType* header = reinterpret_cast<ObjectMsgType*>(_data);
+		const ObjectMsgType* header = reinterpret_cast<const ObjectMsgType*>(_data);
 		size_t readSize = sizeof(ObjectMsgType);
 
 		switch(*header)
@@ -65,7 +65,7 @@ namespace Network {
 		propertyData.Write( _output, Jo::Files::Format::SRAW );
 	}
 
-	size_t MsgPropertyChanged::Receive( Core::Object* _object, uint8_t* _data, size_t _size )
+	size_t MsgPropertyChanged::Receive( Core::Object* _object, const uint8_t* _data, size_t _size )
 	{
 		// Deserialize and than remove the old and add the deserialized one.
 		Jo::Files::MemFile file(_data, _size);
@@ -92,7 +92,7 @@ namespace Network {
 		propertyData.Write( _output, Jo::Files::Format::SRAW );
 	}
 
-	size_t MsgRemoveProperty::Receive( Core::Object* _object, uint8_t* _data, size_t _size )
+	size_t MsgRemoveProperty::Receive( Core::Object* _object, const uint8_t* _data, size_t _size )
 	{
 		// Deserialize to get the name
 		Jo::Files::MemFile file(_data, _size);

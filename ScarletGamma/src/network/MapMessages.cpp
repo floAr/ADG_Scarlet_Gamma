@@ -14,12 +14,12 @@ namespace Network {
 	MaskMapMessage::MaskMapMessage() { ++g_MaskNewMapMessages; }
 	MaskMapMessage::~MaskMapMessage() { --g_MaskNewMapMessages; }
 
-	size_t HandleMapMessage( Core::Map* _map, uint8_t* _data, size_t _size )
+	size_t HandleMapMessage( Core::Map* _map, const uint8_t* _data, size_t _size )
 	{
 		assert(_size > sizeof(MapMsgType));
 		MaskMapMessage messageLock;
 
-		MapMsgType* header = reinterpret_cast<MapMsgType*>(_data);
+		const MapMsgType* header = reinterpret_cast<const MapMsgType*>(_data);
 		size_t readSize = sizeof(MapMsgType);
 
 		switch(*header)
@@ -69,10 +69,10 @@ namespace Network {
 		_output.Write( &m_position, sizeof(sf::Vector2f) );
 	}
 
-	size_t MsgObjectPositionChanged::Receive( Core::Map* _map, uint8_t* _data, size_t _size )
+	size_t MsgObjectPositionChanged::Receive( Core::Map* _map, const uint8_t* _data, size_t _size )
 	{
-		Core::ObjectID* object = reinterpret_cast<Core::ObjectID*>(_data);
-		sf::Vector2f* position = reinterpret_cast<sf::Vector2f*>(_data + sizeof(Core::ObjectID));
+		const Core::ObjectID* object = reinterpret_cast<const Core::ObjectID*>(_data);
+		const sf::Vector2f* position = reinterpret_cast<const sf::Vector2f*>(_data + sizeof(Core::ObjectID));
 
 		_map->SetObjectPosition( g_Game->GetWorld()->GetObject(*object), *position );
 
@@ -98,13 +98,13 @@ namespace Network {
 		_output.Write( &m_layer, sizeof(int) );
 	}
 
-	size_t MsgInsertObjectToMap::Receive( Core::Map* _map, uint8_t* _data, size_t _size )
+	size_t MsgInsertObjectToMap::Receive( Core::Map* _map, const uint8_t* _data, size_t _size )
 	{
 		size_t readSize = 0;
-		Core::ObjectID* object = reinterpret_cast<Core::ObjectID*>(_data);	readSize += sizeof(Core::ObjectID);
-		int* x = reinterpret_cast<int*>(_data + readSize);			readSize += sizeof(int);
-		int* y = reinterpret_cast<int*>(_data + readSize);			readSize += sizeof(int);
-		int* layer = reinterpret_cast<int*>(_data + readSize);		readSize += sizeof(int);
+		const Core::ObjectID* object = reinterpret_cast<const Core::ObjectID*>(_data);	readSize += sizeof(Core::ObjectID);
+		const int* x = reinterpret_cast<const int*>(_data + readSize);			readSize += sizeof(int);
+		const int* y = reinterpret_cast<const int*>(_data + readSize);			readSize += sizeof(int);
+		const int* layer = reinterpret_cast<const int*>(_data + readSize);		readSize += sizeof(int);
 		_map->Add( *object, *x, *y, *layer );
 		return readSize;
 	}
@@ -123,9 +123,9 @@ namespace Network {
 		_output.Write( &m_object, sizeof(Core::ObjectID) );
 	}
 
-	size_t MsgRemoveObjectFromMap::Receive( Core::Map* _map, uint8_t* _data, size_t _size )
+	size_t MsgRemoveObjectFromMap::Receive( Core::Map* _map, const uint8_t* _data, size_t _size )
 	{
-		Core::ObjectID* object = reinterpret_cast<Core::ObjectID*>(_data);
+		const Core::ObjectID* object = reinterpret_cast<const Core::ObjectID*>(_data);
 		_map->Remove( *object );
 		return sizeof(Core::ObjectID);
 	}

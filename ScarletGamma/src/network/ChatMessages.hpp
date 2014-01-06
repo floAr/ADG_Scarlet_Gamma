@@ -34,6 +34,6 @@ namespace Network {
 	/// \details The function is called after the MessageHeader header is
 	///		decoded. So data starts with ChatMsg.
 	///	\return Number of bytes which were read: could be smaller than _size.
-	size_t HandleChatMessage( uint8_t* _data, size_t _size );
+	size_t HandleChatMessage( const uint8_t* _data, size_t _size );
 
 } // namespace Network

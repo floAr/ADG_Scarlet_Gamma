@@ -142,6 +142,7 @@ namespace Core {
 		object->Add( Property(_object, Object::PROP_X, to_string((float)_x)) );
 		object->Add( Property(_object, Object::PROP_Y, to_string((float)_y)) );
 		object->Add( Property(_object, Object::PROP_LAYER, to_string(_layer)) );
+		object->SetParentMap( m_id );
 
 		// Does the object requires updates?
 		if( object->HasProperty(Object::PROP_TARGET) )

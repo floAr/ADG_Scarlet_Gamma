@@ -17,7 +17,7 @@
     <node id="n0">
       <data key="d6">
         <y:GenericNode configuration="com.yworks.flowchart.offPageReference">
-          <y:Geometry height="48.75" width="42.25" x="-264.25854836363646" y="-174.38061818181825"/>
+          <y:Geometry height="48.75" width="42.25" x="-240.50854836363646" y="-174.38061818181825"/>
           <y:Fill color="#FFFFFF" color2="#00CCFF" transparent="false"/>
           <y:BorderStyle color="#FFFFFF" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" borderDistance="0.0" fontFamily="Trebuchet MS" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="20.255859375" modelName="sides" modelPosition="n" textColor="#000000" visible="true" width="43.5458984375" x="-0.64794921875" y="-20.255859375">Today</y:NodeLabel>
@@ -3399,7 +3399,7 @@ Abschlusspräsentation</y:NodeLabel>
       <data key="d6">
         <y:GenericNode configuration="com.yworks.flowchart.process">
           <y:Geometry height="12.0" width="126.0" x="-357.0" y="-391.3153090909091"/>
-          <y:Fill color="#FFFFFF" color2="#B7C9E3" transparent="false"/>
+          <y:Fill color="#00FF00" color2="#B7C9E3" transparent="false"/>
           <y:BorderStyle color="#FFFFFF" type="line" width="1.0"/>
           <y:NodeLabel alignment="left" autoSizePolicy="content" borderDistance="0.0" fontFamily="Trebuchet MS" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.93359375" modelName="sides" modelPosition="n" textColor="#000000" visible="true" width="76.43359375" x="24.783203125" y="-17.93359375">Paper Suchen</y:NodeLabel>
           <y:StyleProperties>
@@ -4545,7 +4545,6 @@ Abschlusspräsentation</y:NodeLabel>
       </data>
     </edge>
     <edge id="e82" source="n183" target="n215">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="67.50950807272727" sy="6.0" tx="0.0" ty="-6.0">
@@ -4561,7 +4560,6 @@ Abschlusspräsentation</y:NodeLabel>
       </data>
     </edge>
     <edge id="e83" source="n215" target="n192">
-      <data key="d9"/>
       <data key="d10">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="6.0" tx="-10.5" ty="-8.833333333333343">

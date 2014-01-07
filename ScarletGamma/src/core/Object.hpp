@@ -71,6 +71,10 @@ public:
 	///	\param [in] _wayPoint Any object which should be tracked or reached.
 	void AppendToPath( ObjectID _wayPoint );
 
+	/// \brief Is this object directly located on some map?
+	bool IsLocatedOnAMap() const	{ return m_hasParent && HasProperty(PROP_X); }
+	MapID GetParentMap() const		{ return m_parent.map; }
+	void SetParentMap(MapID _map)	{ m_parent.map = _map; m_hasParent = true; }
 private:
 	// Hide some of the methods
 	PropertyList::Clear;
@@ -79,6 +83,11 @@ private:
 
 	ObjectID m_id;	///< Unique identification number for this object.
 
+	union {
+		MapID map;			///< On which map is this object?
+		ObjectID object;	///< In whose object list it is?
+	} m_parent;
+	bool m_hasParent;
 
 	/// Use private constructors such that only the world can create objects.
 	friend class Core::World;

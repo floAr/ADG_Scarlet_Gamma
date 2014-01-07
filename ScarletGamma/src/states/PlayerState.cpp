@@ -25,7 +25,8 @@ void States::PlayerState::Draw(sf::RenderWindow& win)
 
 	// Render
 	// Uses the test map 0 for testing purposes.
-	Graphics::TileRenderer::Render(win, *g_Game->GetWorld()->GetMap(0));
+	assert(m_player->IsLocatedOnAMap());
+	Graphics::TileRenderer::Render(win, *g_Game->GetWorld()->GetMap(m_player->GetParentMap()));
 
 	// Draw the players path
 	DrawPathOverlay(win, m_player);
@@ -39,7 +40,8 @@ void States::PlayerState::MouseButtonPressed(sf::Event::MouseButtonEvent& button
 		//------------------------------------//
 		// move player to tile position		  //
 		//------------------------------------//
-		auto& tiles = g_Game->GetWorld()->GetMap(0)->GetObjectsAt((int)tilePos.x,(int)tilePos.y);
+		assert(m_player->IsLocatedOnAMap());
+		auto& tiles = g_Game->GetWorld()->GetMap(m_player->GetParentMap())->GetObjectsAt((int)tilePos.x,(int)tilePos.y);
 		if( tiles.Size() > 0 )
 		{
 			// TODO: intelligent select?

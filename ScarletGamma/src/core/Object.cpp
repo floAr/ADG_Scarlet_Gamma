@@ -20,7 +20,8 @@ namespace Core {
 	const string Object::PROP_PLAYER = string("player");
 
 	Object::Object( ObjectID _id, const string& _sprite ) :
-		m_id(_id)
+		m_id(_id),
+		m_hasParent(false)
 	{
 		Add( Property(_id, PROP_SPRITE, _sprite) );
 	}
@@ -29,6 +30,14 @@ namespace Core {
 		PropertyList( _node[STR_ID], _node[STR_PROPERTIES] )
 	{
 		m_id = _node[STR_ID];
+		const Jo::Files::MetaFileWrapper::Node* parentNode;
+		if( m_hasParent = _node.HasChild(STR_PARENT, &parentNode) )
+		{
+			if( IsLocatedOnAMap() )
+				m_parent.map = *parentNode;
+			else
+				m_parent.object = *parentNode;
+		}
 	}
 
 	Property& Object::GetProperty( const string& _name )
@@ -97,6 +106,13 @@ namespace Core {
 	void Object::Serialize( Jo::Files::MetaFileWrapper::Node& _node ) const
 	{
 		_node[STR_ID] = m_id;
+		if( m_hasParent )
+		{
+			if( IsLocatedOnAMap() )
+				_node[STR_PARENT] = m_parent.map;
+			else
+				_node[STR_PARENT] = m_parent.object;
+		}
 		PropertyList::Serialize(_node[STR_PROPERTIES]);
 	}
 

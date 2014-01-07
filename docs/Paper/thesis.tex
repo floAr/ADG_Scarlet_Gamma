@@ -63,6 +63,15 @@
 \ifnotdraft{\makeindex}
 
 %*********************************************************************%
+% ACRONYMS                                                            %
+%*********************************************************************%
+
+% HOWTO: \gls{IDE} for singular or \glspl{IDE} for plural with 's
+\makeglossaries
+\newacronym{RPG}{RPG}{Role Playing Game}
+\glsaddall % use only if you have acronyms that occur only in graphics
+
+%*********************************************************************%
 % THE DOCUMENT                                                        %
 %*********************************************************************%
 
@@ -84,15 +93,6 @@
 	%\ldots
 	%\blankpage
 }
-
-%*********************************************************************%
-% ACRONYMS                                                            %
-%*********************************************************************%
-
-% HOWTO: \gls{IDE} for singular or \glspl{IDE} for plural with 's
-\makeglossaries
-\newacronym{RPG}{RPG}{Role Playing Game}
-\glsaddall % use only if you have acronyms that occur only in graphics
 
 %*********************************************************************%
 % LISTINGS                                                            %

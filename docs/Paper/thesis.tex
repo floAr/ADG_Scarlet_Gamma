@@ -24,11 +24,11 @@
 \newcommand{\logo}{} %\includegraphics[trim=0mm 0mm 50mm 0mm,clip,height=3cm]{INF_SIGN_druck}}
 \newcommand{\logodbse}{} %\includegraphics[scale=.45]{DBSE}}
 
-\newcommand{\advisorone}{Maria Manneck \& Enrico Gebert}
-\newcommand{\departmentone}{\ifgerman{Institut für}{Department of}\todots}
+\newcommand{\advisorone}{Prof. Dr. Stefan Schlechtweg-Dorendorf}
+\newcommand{\departmentone}{\ifgerman{Institut für Simulation und Graphik}{Department of}}
 
-\newcommand{\advisortwo}{}
-\newcommand{\departmenttwo}{}
+\newcommand{\advisortwo}{Maria Manneck, Enrico Gebert}
+\newcommand{\departmenttwo}{Acagamics e.V.}
 
 % Thesis kind
 \newcommand{\thesiskind}{Wissenschaftliche Ausarbeitung}
@@ -37,17 +37,15 @@
 %\ifgerman{\newcommand{\thesiskind}{Doktorarbeit}}{\newcommand{\thesiskind}{Dissertation}}
 
 \ifgerman{
-	\newcommand{\theforename}{\todo{Vorname}}
-	\newcommand{\thesurname}{\todo{Nachname}}
-	\newcommand{\thetitle}{\todo{Titel der Arbeit}}
+	\newcommand{\authornames}{Johannes Jendersie, Florian Uhde, David Kuri}
+	\newcommand{\thetitle}{\todo{Scarlet Gamma}}
 	\newcommand{\thedate}{\todo{13. Monat}}
 }{
-	\newcommand{\theforename}{\todo{Forename}}
-	\newcommand{\thesurname}{\todo{Surname}}
+	\newcommand{\authornames}{\todots}
 	\newcommand{\thetitle}{\todo{The Title of the Thesis}}
 	\newcommand{\thedate}{\todo{Month 13}}
 }
-\newcommand{\theyear}{\todo{2013}}
+\newcommand{\theyear}{2014}
 
 %*********************************************************************%
 % SETUP                                                               %
@@ -55,7 +53,7 @@
 
 % meta informations of the document
 \hypersetup{
- pdfauthor={\theforename\ \thesurname},
+ pdfauthor={\authornames},
  pdftitle={\thetitle}
 }
 
@@ -162,7 +160,6 @@
 	\cleardoublepage
 	\phantomsection
 }
-
 \printindex
 
 \ifnotdraft{

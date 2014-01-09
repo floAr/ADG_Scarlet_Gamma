@@ -21,13 +21,8 @@ namespace Network {
 
 		ChatMsg chatMessage(text, color);
 
-		// If server receives a chat message it must be broadcasted back.
-		if( Messenger::IsServer() )
-		{
-			chatMessage.Send();
-		} else
-			// Client - store chat message
-			g_Game->AppendToChatLog( chatMessage );
+		// Store chat message
+		g_Game->AppendToChatLog( chatMessage );
 
 		return sizeof(sf::Color) + 2 + length;
 	}
@@ -45,12 +40,8 @@ namespace Network {
 
 		Messenger::Send( data.GetBuffer(), (size_t)data.GetSize() );
 
-		// If a client sends the message it will get it back through the
-		// broadcast. In case of the server this is not the case.
-		if(Messenger::IsServer())
-		{
-			g_Game->AppendToChatLog( *this );
-		}
+		// We will not receive our own message -> append self.
+		g_Game->AppendToChatLog( *this );
 	}
 
 	

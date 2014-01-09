@@ -90,10 +90,10 @@ namespace Network {
 			{
 				// Handle exactly one message in blocking mode
 				if( g_msgInstance->m_sockets[i]->receive( packet ) == sf::Socket::Done )
-					g_msgInstance->HandleMessage(packet);
+					g_msgInstance->HandleMessage(packet, g_msgInstance->m_sockets[i]);
 			} else {
 				while( g_msgInstance->m_sockets[i]->receive( packet ) == sf::Socket::Done )
-					g_msgInstance->HandleMessage(packet);
+					g_msgInstance->HandleMessage(packet, g_msgInstance->m_sockets[i]);
 			}
 		}
 	}
@@ -121,12 +121,12 @@ namespace Network {
 	}
 
 
-	void Messenger::HandleMessage( sf::Packet& _packet )
+	void Messenger::HandleMessage( sf::Packet& _packet, sf::TcpSocket* _from )
 	{
 		const uint8_t* buffer = reinterpret_cast<const uint8_t*>(_packet.getData());
 		const MessageHeader* header = reinterpret_cast<const MessageHeader*>(_packet.getData());
 		size_t size = _packet.getDataSize() - sizeof(MessageHeader);
-		size_t read = sizeof(MessageHeader);
+		size_t read = sizeof(MessageHeader);	// Deprecated but still here for testing
 		switch(header->target)
 		{
 		case Target::WORLD:
@@ -146,6 +146,16 @@ namespace Network {
 		}
 
 		assert(_packet.getDataSize() == read);
+
+		if( IsServer() && (header->target != Target::MASTER) )
+		{
+			// Forward message to all other clients
+			for( size_t i=0; i<g_msgInstance->m_sockets.size(); ++i )
+			{
+				if( g_msgInstance->m_sockets[i] != _from )
+					g_msgInstance->m_sockets[i]->send( _packet );
+			}
+		}
 	}
 
 	bool Messenger::IsServer()

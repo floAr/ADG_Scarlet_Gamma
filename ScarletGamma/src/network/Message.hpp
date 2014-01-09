@@ -10,7 +10,8 @@ namespace Network {
 		WORLD,		///< Something which changes the whole world
 		MAP,		///< Something which changes a specific map
 		OBJECT,		///< Something which changes a specific map
-		CHAT		///< Text for the chat
+		CHAT,		///< Text for the chat
+		MASTER		///< Request to the game master (e.g. actions)
 	};
 
 	/// \brief Opening of all packets to decide what to do and what data was

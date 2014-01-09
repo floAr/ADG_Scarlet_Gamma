@@ -1,5 +1,6 @@
 #include "states/MainMenuState.hpp"
 #include "graphics/TileRenderer.hpp"
+#include "graphics/EditList.hpp"
 #include "StateMachine.hpp"
 #include "core/Map.hpp"
 #include "Game.hpp"
@@ -26,6 +27,10 @@ States::MainMenuState::MainMenuState() :
     // Now create stuff or load using loadWidgetsFromFile()
 	m_gui.loadWidgetsFromFile( "media/MainMenu.gui" );
 
+	static Graphics::EditList test(m_gui, 400.0f, 50.0f, 240.0f, 200.f, true, true, true);
+	for(int i=0; i<13; ++i)
+		test.Add("keks", std::to_string(i));
+
     // Finally, use SetGui() to activate the GUI (rendering, events, callbacks)
     SetGui(&m_gui);
 }
@@ -43,8 +48,7 @@ void States::MainMenuState::Draw(sf::RenderWindow& win)
 	static sf::Color mightySlate(85, 98, 112);
     win.clear(mightySlate);
     
-    sf::Text t("Press enter to open PlayerState\n"
-               "or 'm' to open MasterState\n"
+    sf::Text t("Press 'm' to open MasterState\n"
                "or escape to quit.", m_menuFont, 24);
     t.setPosition(30, 30);
     win.draw(t);
@@ -54,10 +58,6 @@ void States::MainMenuState::KeyPressed(sf::Event::KeyEvent& key)
 {
     switch (key.code)
     {
-    // Playing state with enter
-    case sf::Keyboard::Return:
-        g_Game->GetStateMachine()->PushGameState(GST_PLAYER);
-        break;
     // Master state with m
     case sf::Keyboard::M:
         g_Game->GetStateMachine()->PushGameState(new States::MasterState("saves/unittest.json"));

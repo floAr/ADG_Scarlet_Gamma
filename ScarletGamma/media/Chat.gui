@@ -2,7 +2,7 @@ Window:
 {
 	ChatBox: "Messages"
 	{
-		ConfigFile = "lib/TGUI-0.6-RC/widgets/Black.conf"
+		ConfigFile = "media/Black.conf"
 		Left = 400
 		Top = 360
 		Width = 400
@@ -20,7 +20,7 @@ Window:
 	
 	EditBox: "EnterText"
 	{
-		ConfigFile = "lib/TGUI-0.6-RC/widgets/Black.conf"
+		ConfigFile = "media/Black.conf"
 		Left = 400
 		Top = 560
 		Width = 400

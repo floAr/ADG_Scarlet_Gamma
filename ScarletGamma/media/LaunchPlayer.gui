@@ -2,7 +2,7 @@ Window:
 {
 	Label: "IPLabel"
 	{
-		ConfigFile = "lib/TGUI-0.6-RC/widgets/Black.conf"
+		ConfigFile = "media/Black.conf"
 		Left = 30
 		Top = 110
 		Width = 300
@@ -20,7 +20,7 @@ Window:
 	
 	EditBox: "ServerIP"
 	{
-		ConfigFile = "lib/TGUI-0.6-RC/widgets/Black.conf"
+		ConfigFile = "media/Black.conf"
 		Left = 350
 		Top = 100
 		Width = 400
@@ -44,7 +44,7 @@ Window:
 	
 	Label: "NameLabel"
 	{
-		ConfigFile = "lib/TGUI-0.6-RC/widgets/Black.conf"
+		ConfigFile = "media/Black.conf"
 		Left = 30
 		Top = 160
 		Width = 300
@@ -62,7 +62,7 @@ Window:
 	
 	EditBox: "Name"
 	{
-		ConfigFile = "lib/TGUI-0.6-RC/widgets/Black.conf"
+		ConfigFile = "media/Black.conf"
 		Left = 350
 		Top = 150
 		Width = 400
@@ -86,7 +86,7 @@ Window:
 	
 	Label: "ColorLabel"
 	{
-		ConfigFile = "lib/TGUI-0.6-RC/widgets/Black.conf"
+		ConfigFile = "media/Black.conf"
 		Left = 30
 		Top = 210
 		Width = 300
@@ -104,7 +104,7 @@ Window:
 	
 	EditBox: "ColorR"
 	{
-		ConfigFile = "lib/TGUI-0.6-RC/widgets/Black.conf"
+		ConfigFile = "media/Black.conf"
 		Left = 350
 		Top = 200
 		Width = 120
@@ -128,7 +128,7 @@ Window:
 	
 	EditBox: "ColorG"
 	{
-		ConfigFile = "lib/TGUI-0.6-RC/widgets/Black.conf"
+		ConfigFile = "media/Black.conf"
 		Left = 490
 		Top = 200
 		Width = 120
@@ -152,7 +152,7 @@ Window:
 	
 	EditBox: "ColorB"
 	{
-		ConfigFile = "lib/TGUI-0.6-RC/widgets/Black.conf"
+		ConfigFile = "media/Black.conf"
 		Left = 630
 		Top = 200
 		Width = 120
@@ -176,7 +176,7 @@ Window:
 
 	Button: "Start"
 	{
-		ConfigFile = "lib/TGUI-0.6-RC/widgets/Black.conf"
+		ConfigFile = "media/Black.conf"
 		Left = 30
 		Top = 250
 		Width = 300
@@ -193,7 +193,7 @@ Window:
 	
 	Label: "Status"
 	{
-		ConfigFile = "lib/TGUI-0.6-RC/widgets/Black.conf"
+		ConfigFile = "media/Black.conf"
 		Left = 350
 		Top = 260
 		Width = 300
@@ -211,7 +211,7 @@ Window:
 	
 	Button: "Back"
 	{
-		ConfigFile = "lib/TGUI-0.6-RC/widgets/Black.conf"
+		ConfigFile = "media/Black.conf"
 		Left = 30
 		Top = 300
 		Width = 300

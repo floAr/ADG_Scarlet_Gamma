@@ -2,7 +2,7 @@ Window:
 {
 	Button: "Launch"
 	{
-		ConfigFile = "lib/TGUI-0.6-RC/widgets/Black.conf"
+		ConfigFile = "media/Black.conf"
 		Left = 30
 		Top = 200
 		Width = 300
@@ -19,7 +19,7 @@ Window:
 	
 	Button: "Enter"
 	{
-		ConfigFile = "lib/TGUI-0.6-RC/widgets/Black.conf"
+		ConfigFile = "media/Black.conf"
 		Left = 30
 		Top = 250
 		Width = 300
@@ -36,7 +36,7 @@ Window:
 
 	Button: "Quit"
 	{
-		ConfigFile = "lib/TGUI-0.6-RC/widgets/Black.conf"
+		ConfigFile = "media/Black.conf"
 		Left = 30
 		Top = 300
 		Width = 300

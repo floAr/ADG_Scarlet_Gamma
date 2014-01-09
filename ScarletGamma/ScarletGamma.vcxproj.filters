@@ -146,6 +146,9 @@
     <ClCompile Include="src\gamerules\CombatRules.cpp">
       <Filter>Quelldateien\gamerules</Filter>
     </ClCompile>
+    <ClCompile Include="src\graphics\EditList.cpp">
+      <Filter>Quelldateien\graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\core\Map.hpp">
@@ -264,6 +267,9 @@
     </ClInclude>
     <ClInclude Include="src\gamerules\CombatRules.hpp">
       <Filter>Quelldateien\gamerules</Filter>
+    </ClInclude>
+    <ClInclude Include="src\graphics\EditList.hpp">
+      <Filter>Quelldateien\graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

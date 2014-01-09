@@ -2,6 +2,9 @@
 #include "utils/Exception.hpp"
 #include "utils/StringUtil.hpp"
 #include "network/ObjectMessages.hpp"
+#include "utils/ValueInterpreter.hpp"
+#include "utils/Random.hpp"
+#include <iostream>
 
 using namespace std;
 
@@ -66,9 +69,20 @@ namespace Core {
 		}
 	}
 
-	float Property::Evaluate() const
+	int Property::Evaluate() const
 	{
-		return 1.0f;	// TODO: Implement
+        // TODO: Where would we store the random generator?
+        static Utils::Random rand(6045800);
+
+        try
+        {
+            return Utils::EvaluateFormula(Value(), &rand);
+        }
+        catch (Exception::InvalidFormula& e)
+        {
+            std::cerr << "Exception::InvalidFormula: " << e.to_string() << std::endl;
+            throw Exception::NotEvaluateable();
+        }
 	}
 
 	const std::string& Property::Value() const

@@ -53,7 +53,7 @@ public:
 	/// \brief Interprets the value as formula/number and returns the result
 	///		after evaluation.
 	/// \throws Exception::NotEvaluateable
-	float Evaluate() const;
+	int Evaluate() const;
 
 	/// \brief Read access to the value string
 	const std::string& Value() const;

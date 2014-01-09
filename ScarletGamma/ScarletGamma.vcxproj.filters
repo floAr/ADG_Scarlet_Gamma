@@ -33,6 +33,9 @@
     <Filter Include="Quelldateien\network">
       <UniqueIdentifier>{649d2e1f-529f-477b-89a8-73181b415c41}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Quelldateien\gamerules">
+      <UniqueIdentifier>{9517e75c-cabf-4f79-b571-b1e1d937ecf6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -139,6 +142,9 @@
     </ClCompile>
     <ClCompile Include="src\network\ChatMessages.cpp">
       <Filter>Quelldateien\network</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gamerules\CombatRules.cpp">
+      <Filter>Quelldateien\gamerules</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -255,6 +261,9 @@
     </ClInclude>
     <ClInclude Include="src\network\ChatMessages.hpp">
       <Filter>Quelldateien\network</Filter>
+    </ClInclude>
+    <ClInclude Include="src\gamerules\CombatRules.hpp">
+      <Filter>Quelldateien\gamerules</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

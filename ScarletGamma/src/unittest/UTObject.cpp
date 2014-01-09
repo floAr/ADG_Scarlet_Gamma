@@ -26,7 +26,7 @@ namespace UnitTest {
 
 		// Take samples to test the restored object
 		Core::Object deserialized( Wrapper.RootNode );
-		if( deserialized.GetProperty(string("Dmg")).Evaluate() != 1.0 )
+		if( deserialized.GetProperty(string("Dmg")).Value() != "1W8+10" )
 			TEST_FAILED("Property not restored properly.");
 		if( !deserialized.GetProperty(string("Inventory")).IsObjectList() )
 			TEST_FAILED("Object list not restored.");

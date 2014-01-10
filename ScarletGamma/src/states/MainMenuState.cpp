@@ -27,11 +27,12 @@ States::MainMenuState::MainMenuState() :
     // Now create stuff or load using loadWidgetsFromFile()
 	m_gui.loadWidgetsFromFile( "media/MainMenu.gui" );
 
-	static Graphics::EditList test(m_gui, 400.0f, 50.0f, 240.0f, 210.f, true, true, true, false, "Attribute");
+	static Graphics::EditList::Ptr test(m_gui);
+	test->Init("Attribute", 400.0f, 50.0f, 240.0f, 210.f, true, true, true, false);
 	for(int i=0; i<13; ++i)
-		test.Add("keks", std::to_string(i));
-	test.Add("Spaceship", "XWing");
-	test.AddNode( "Components" );
+		test->Add("keks", std::to_string(i));
+	test->Add("Spaceship", "XWing");
+	test->AddNode( "Components" );
 
     // Finally, use SetGui() to activate the GUI (rendering, events, callbacks)
     SetGui(&m_gui);

@@ -18,9 +18,11 @@ namespace Graphics {
 		/// \param [in] _rightEditable The edit boxes on the left side are editable.
 		/// \param [in] _autosize If true the component is resized to the required
 		///		height. Otherwise the hight is kept and a scrollbar is shown.
+		///	\param [in] _pid An id set by a parent EditList - must be zero!
 		void Init( const std::string& _title,
 			float _x, float _y, float _w, float _h,
-			bool _addNdel, bool _leftEditable, bool _rightEditable, bool _autosize );
+			bool _addNdel, bool _leftEditable, bool _rightEditable, bool _autosize,
+			unsigned _pid=0);
 
 		void Add( const std::string& _left, const std::string& _right );
 
@@ -28,7 +30,10 @@ namespace Graphics {
 
 		/// \brief Add a separating line which can be closed/opened and
 		///		can contain sub elements.
-		Ptr AddNode(const std::string& _title);
+		///	\param [in] _parentName The name of the property/line which should
+		///		be the parent of this node.
+		///	\param [in] _title What should be written in the separating line?
+		Ptr AddNode(const std::string&  _parentName, const std::string& _title);
 
 
 		virtual void setSize(float width, float height);
@@ -45,12 +50,13 @@ namespace Graphics {
 		bool m_autoSize;
 		int m_oldScrollValue;		///< The damned scrollbar-change does not send the previous value.
 		int m_numPixelLines;		///< Total number of pixels covered by elements inside the list.
+		unsigned m_nextId;			///< Each new line gets its own new id.
 
 		void RemoveBtn(const tgui::Callback& _call);
 		void AddBtn(const tgui::Callback& _call);
 		void Scroll(const tgui::Callback& _call);
 		void MiniMaxi(const tgui::Callback& _call);
-		void ScrollbarVisibilityChanged();
+		//void ScrollbarVisibilityChanged();
 
 		/// \brief Add or remove vertical space.
 		/// \details If autosize is enabled just change container height.

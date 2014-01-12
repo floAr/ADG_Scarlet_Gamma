@@ -32,7 +32,8 @@ States::MainMenuState::MainMenuState() :
 	for(int i=0; i<13; ++i)
 		test->Add("keks", std::to_string(i));
 	test->Add("Spaceship", "XWing");
-	test->AddNode( "Components" );
+	test->AddNode( "Spaceship", "Components" );
+	test->AddNode( "Spaceship", "Store" )->Add("nub", "nub");
 
     // Finally, use SetGui() to activate the GUI (rendering, events, callbacks)
     SetGui(&m_gui);

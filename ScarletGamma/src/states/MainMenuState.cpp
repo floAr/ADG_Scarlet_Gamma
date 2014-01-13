@@ -30,7 +30,7 @@ States::MainMenuState::MainMenuState() :
 	static Graphics::EditList::Ptr test(m_gui);
 	test->Init("Attribute", 400.0f, 50.0f, 240.0f, 210.f, true, true, true, false);
 	for(int i=0; i<13; ++i)
-		test->Add("keks", std::to_string(i));
+		test->Add("keks" + std::to_string(20-i), std::to_string(i));
 	test->Add("Spaceship", "XWing");
 	test->AddNode( "Spaceship", "Components" );
 	test->AddNode( "Spaceship", "Store" )->Add("nub", "nub");

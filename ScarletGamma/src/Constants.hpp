@@ -10,3 +10,11 @@ static const std::string STR_FALSE = std::string("false");
 static const std::string STR_ID = std::string("ID");
 static const std::string STR_PROPERTIES = std::string("Properties");
 static const std::string STR_PARENT = std::string("parent");
+
+// Attack messages
+static const std::string STR_HIT_NO_ARMOR_CLASS = std::string("Target has no Armor Class.");
+static const std::string STR_HIT_NATURAL_TWENTY = std::string("Rolled a natural 20.");
+static const std::string STR_HIT_ARMOR_CLASS_BEAT = std::string("Armor Class was beat.");
+static const std::string STR_HIT_ARMOR_CLASS_NOT_BEAT = std::string("Armor Class was not beat.");
+
+

@@ -100,6 +100,7 @@
     <ClCompile Include="src\sfutils\Vectors.cpp" />
     <ClCompile Include="src\sfutils\View.cpp" />
     <ClCompile Include="src\states\CommonState.cpp" />
+    <ClCompile Include="src\states\GameState.cpp" />
     <ClCompile Include="src\states\IntroState.cpp" />
     <ClCompile Include="src\states\LaunchMasterState.cpp" />
     <ClCompile Include="src\states\LaunchPlayerState.cpp" />

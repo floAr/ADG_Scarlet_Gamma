@@ -79,7 +79,6 @@ private:
 	// Hide some of the methods
 	PropertyList::Clear;
 	PropertyList::Get;
-	PropertyList::GetNumElements;
 
 	ObjectID m_id;	///< Unique identification number for this object.
 

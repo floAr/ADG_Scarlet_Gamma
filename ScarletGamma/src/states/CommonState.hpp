@@ -1,10 +1,8 @@
 #pragma once
 
 #include "states/GameState.hpp"
-#include "states/SelectionState.hpp"
 #include "utils/Falloff.hpp"
 #include "Prerequisites.hpp"
-#include "core/ObjectList.hpp"
 
 namespace States
 {
@@ -37,16 +35,13 @@ namespace States
 
 		/// \brief Open a chat menu on Enter.
 		virtual void KeyPressed(sf::Event::KeyEvent& key) override;
-		
-
-
 	protected:
-		Utils::Falloff m_zoom;			///< Zoom for the current map
-		 Core::Object* m_selected;		///< A reference to the selected object or nullptr
-		tgui::Gui m_chatFrame;			///< A gui to show chat messages.
-		std::string m_name;				///< Name of the player used in the chat
-		sf::Color m_color;				///< Color of the player in the chat
-		States::SelectionState* m_selectionState; ///< Pointer to the selection state
+		Utils::Falloff m_zoom;		///< Zoom for the current map
+		Core::Object* m_selected;	///< A reference to the selected object or nullptr
+		tgui::Gui m_gui;			///< A gui to show chat messages and everything else.
+		std::string m_name;			///< Name of the player used in the chat
+		sf::Color m_color;			///< Color of the player in the chat
+
 		/// \brief Checks which actions where done and adjusts the zoom.
 		void ZoomView(float delta);
 

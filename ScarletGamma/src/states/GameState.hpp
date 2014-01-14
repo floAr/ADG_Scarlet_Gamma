@@ -131,44 +131,14 @@ namespace States
 		virtual void GuiCallback(tgui::Callback& callback) { }
 
 		/// \brief Handles all GUI callbacks that have occurred since the last frame-
-		void GuiHandleCallbacks()
-		{
-			if (m_currentGui)
-			{
-				tgui::Callback callback;
-				while (m_currentGui->pollCallback(callback))
-					GuiCallback(callback);
-			}
-		}
+		void GuiHandleCallbacks();
 
 		/// \brief Forwards an event to the GUI to be handled.
 		/// \param [in] event  Event information from SFML.
-		void GuiHandleEvent(sf::Event& event)
-		{
-			if (m_currentGui)
-			{
-				// Update HUD without zoom and move
-				sf::RenderWindow* win = m_currentGui->getWindow();
-				sf::View backup = win->getView();
-				win->setView(win->getDefaultView());
-				m_currentGui->handleEvent(event);
-				win->setView(backup);
-			}
-		}
+		void GuiHandleEvent(sf::Event& event);
 
 		/// \brief Draws the current GUI.
-		void GuiDraw()
-		{
-			if (m_currentGui)
-			{
-				// Draw HUD without zoom and move
-				sf::RenderWindow* win = m_currentGui->getWindow();
-				sf::View backup = win->getView();
-				win->setView(win->getDefaultView());
-				m_currentGui->draw();
-				win->setView(backup);
-			}
-		}
+		void GuiDraw();
 
 		//----------------------------------------------------------------------
 		// SELECTION STUFF
@@ -200,9 +170,8 @@ namespace States
 
 
 		/// \brief Sets the GUI to be rendered, updated and used to handle events.
-		/// TODO: more than one GUI
 		/// \param [in] gui  Pointer to the GUI instance.
-		void SetGui(tgui::Gui* gui) { m_currentGui = gui; }
+		void SetGui(tgui::Gui* gui) { m_currentGui = gui ; }
 
 	private:
 		tgui::Gui* m_currentGui; ///< GUI to be rendered, updated and used to handle events.

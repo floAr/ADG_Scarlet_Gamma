@@ -1,20 +1,25 @@
 #include "EditList.hpp"
-#include "SFML\System\Vector2.hpp"
-#include "TGUI\EditBox.hpp"
-#include "utils\StringUtil.hpp"
+#include "SFML/System\Vector2.hpp"
+#include "TGUI/EditBox.hpp"
+#include "utils/StringUtil.hpp"
+#include "Constants.hpp"
+#include "core/Object.hpp"
 
 namespace Graphics {
 
 EditList::EditList() :
-	m_newName(),
-	m_newValue(),
+	m_newName(nullptr),
+	m_newValue(nullptr),
+	m_newAdd(nullptr),
+	m_scrollBar(nullptr),
+	m_titleBar(nullptr),
+	m_miniMaxi(nullptr),
 	m_addNdel(false),
 	m_leftEditable(false),
 	m_rightEditable(false),
 	m_autoSize(true),
 	m_oldScrollValue(0),
-	m_numPixelLines(0),
-	m_nextId(1)
+	m_numPixelLines(0)
 {
 }
 
@@ -43,24 +48,25 @@ void EditList::Init( const std::string& _title,
 	m_scrollBar->setLowValue(unsigned(Panel::getSize().y));
 	m_scrollBar->setSize(12.0f, Panel::getSize().y);
 	m_scrollBar->setMaximum(0);
+	m_scrollBar->setCallbackId(0xffffffff);
 	m_scrollBar->bindCallbackEx( &EditList::Scroll, this, tgui::Scrollbar::ValueChanged );
 
 	// The whole component can be minimized..
-	tgui::EditBox::Ptr title( *m_Parent );
-	title->load("media/Black.conf");
-	title->setSize(_w, 20.0f);
-	title->setPosition(_x, _y);
-	title->setCallbackId(_pid);
-	title->disable();
-	title->setText("    " + _title);
-	tgui::AnimatedPicture::Ptr minimize( *m_Parent );
-	minimize->setPosition(_x+4.0f, _y+4.0f);
-	minimize->addFrame("media/Black_ArrowRight.png");
-	minimize->addFrame("media/Black_ArrowDown.png");
-	minimize->setFrame(1);
-	minimize->setCallbackId(_pid);
-	minimize->setSize(12.0f, 12.0f);
-	minimize->bindCallbackEx(&EditList::MiniMaxi, this, tgui::AnimatedPicture::LeftMouseClicked);
+	m_titleBar = tgui::EditBox::Ptr( *m_Parent );
+	m_titleBar->load("media/Black.conf");
+	m_titleBar->setSize(_w, 20.0f);
+	m_titleBar->setPosition(_x, _y);
+	m_titleBar->setCallbackId(_pid);
+	m_titleBar->disable();
+	m_titleBar->setText("    " + _title);
+	m_miniMaxi = tgui::AnimatedPicture::Ptr( *m_Parent );
+	m_miniMaxi->setPosition(_x+4.0f, _y+4.0f);
+	m_miniMaxi->addFrame("media/Black_ArrowRight.png");
+	m_miniMaxi->addFrame("media/Black_ArrowDown.png");
+	m_miniMaxi->setFrame(1);
+	m_miniMaxi->setCallbackId(_pid);
+	m_miniMaxi->setSize(12.0f, 12.0f);
+	m_miniMaxi->bindCallbackEx(&EditList::MiniMaxi, this, tgui::AnimatedPicture::LeftMouseClicked);
 
 	// Add an edit which creates a new line if changed.
 	if( m_addNdel )
@@ -94,7 +100,7 @@ void EditList::Add( const std::string& _left, const std::string& _right )
 	float x = IsScrollbarVisible() ? 12.0f : 0.0f;
 
 	// y coordinate where to insert inside panel
-	float y = m_numPixelLines;
+	float y = (float)m_numPixelLines;
 	unsigned i = 0;
 	// Search the smallest y where for each item string is greater _left.
 	for( size_t i=1; i<m_Widgets.size(); ++i )
@@ -103,67 +109,75 @@ void EditList::Add( const std::string& _left, const std::string& _right )
 		if( abs(m_Widgets[i]->getPosition().x-x) < 1.0f )
 		{
 			tgui::EditBox::Ptr next = m_Widgets[i];
-			if( next != nullptr && Utils::IStringLess(_left, next->getText()) )
+			std::string text = next->getText();
+			if( next != nullptr && Utils::IStringLess(_left, text) )
 			{
 				y = std::min( next->getPosition().y, y );
+			} else if( Utils::IStringEqual(_left, text) )
+			{
+				// Key already contained -> just update and return
+				if( m_lines[next->getCallbackId()].right->getText() != _right )
+					m_lines[next->getCallbackId()].right->setText( _right );
+				return;
 			}
 		}
 	}
 
-	Resize(20, int(y + m_scrollBar->getValue()));
+	Resize(20, int(y));
 
 	// Width of a edit
 	float w = (Panel::getSize().x - x) * 0.5f - (m_addNdel ? 6.0f : 0.0f);
 
+	EntryLine entry;
+
 	// Create component on the left side
-	tgui::EditBox::Ptr left( *this );
-	left->load("media/Black.conf");
-	left->setSize(w, 20.0f);
-	left->setPosition(x, y);
-	left->setCallbackId(m_nextId);
-	if(!m_leftEditable) left->disable();
-	left->setText(_left);
+	entry.left = tgui::EditBox::Ptr( *this, _left );
+	entry.left->load("media/Black.conf");
+	entry.left->setSize(w, 20.0f);
+	entry.left->setPosition(x, y);
+	entry.left->setCallbackId(m_lines.size());
+	if(!m_leftEditable) entry.left->disable();
+	entry.left->setText(_left);
 
 	// Create the one on the right side
-	tgui::EditBox::Ptr right( *this );
-	right->load("media/Black.conf");
-	right->setSize(w, 20.0f);
-	right->setPosition(w+x, y);
-	right->setCallbackId(m_nextId);
-	if(!m_rightEditable) right->disable();
-	right->setText(_right);
+	entry.right = tgui::EditBox::Ptr( *this, _left );
+	entry.right->load("media/Black.conf");
+	entry.right->setSize(w, 20.0f);
+	entry.right->setPosition(w+x, y);
+	entry.right->setCallbackId(m_lines.size());
+	if(!m_rightEditable) entry.right->disable();
+	entry.right->setText(_right);
 
 	// Create a remove line button
 	if( m_addNdel )
 	{
-		tgui::Checkbox::Ptr del( *this );
-		del->load("media/Black.conf");
-		del->setPosition(Panel::getSize().x - 12.0f, y+4.0f);
-		del->setSize(12.0f, 12.0f);
-		del->setCallbackId(m_nextId);
-		del->bindCallbackEx(&EditList::RemoveBtn, this, tgui::Button::LeftMouseClicked);
+		entry.del = tgui::Checkbox::Ptr( *this );
+		entry.del->load("media/Black.conf");
+		entry.del->setPosition(Panel::getSize().x - 12.0f, y+4.0f);
+		entry.del->setSize(12.0f, 12.0f);
+		entry.del->setCallbackId(m_lines.size());
+		entry.del->bindCallbackEx(&EditList::RemoveBtn, this, tgui::Button::LeftMouseClicked);
 	}
 
-	++m_nextId;
+	m_lines.push_back(std::move(entry));
 }
 
 EditList::Ptr EditList::AddNode( const std::string&  _parentName, const std::string& _title )
 {
 	// Determine y coordinate where to insert inside panel.
-	tgui::EditBox::Ptr parent = nullptr;
-	for( size_t i=1; i<m_Widgets.size(); ++i )
+	EntryLine* parent = nullptr;
+	for( size_t i=0; i<m_lines.size(); ++i )
 	{
 		// Find an edit with _parentName - Text
-		tgui::EditBox::Ptr ptr = m_Widgets[i];
-		if( (ptr!=nullptr) && (ptr->getText() == _parentName) )
+		if( m_lines[i].left->getText() == _parentName )
 		{
-			parent = ptr;
+			parent = &m_lines[i];
 			break;
 		}
 	}
 	assert(parent != nullptr);
 
-	float y = parent->getPosition().y + parent->getSize().y;
+	float y = parent->left->getPosition().y + parent->left->getSize().y;
 	Resize(40, (int)y);
 
 	// Level in hierarchy (indention)
@@ -171,12 +185,12 @@ EditList::Ptr EditList::AddNode( const std::string&  _parentName, const std::str
 	// Width of a edit
 	float w = Panel::getSize().x - (m_addNdel ? 12.0f : 0.0f) - x;
 
-	EditList::Ptr newNode( *this );
-	newNode->Init( _title, x, y, w, 0.0f,
+	parent->subNode = EditList::Ptr( *this );
+	parent->subNode->Init( _title, x, y, w, 0.0f,
 		m_addNdel, m_leftEditable, m_rightEditable, true,
-		parent->getCallbackId() );
+		parent->left->getCallbackId() );
 
-	return newNode;
+	return parent->subNode;
 }
 
 void EditList::RemoveBtn(const tgui::Callback& _call)
@@ -192,9 +206,28 @@ void EditList::RemoveBtn(const tgui::Callback& _call)
 		if( (m_Widgets[i]->getCallbackId() == delLine) )
 		{
 			minY = std::min((int)m_Widgets[i]->getPosition().y, minY);
-			maxY = std::max((int)(m_Widgets[i]->getPosition().y + m_Widgets[i]->getSize().y), maxY);
+			maxY = std::max((int)(m_Widgets[i]->getPosition().y + std::min(m_Widgets[i]->getSize().y, 20.0f)), maxY);
 			m_Widgets.erase( m_Widgets.begin() + i );
 			--i;
+		}
+	}
+
+	// Repair m_lines
+	m_lines.erase( m_lines.begin() + delLine );
+	for( size_t i=delLine; i<m_lines.size(); ++i )
+	{
+		m_lines[i].left->setCallbackId(i);
+		m_lines[i].right->setCallbackId(i);
+		if(m_lines[i].del != nullptr) m_lines[i].del->setCallbackId(i);
+		if(m_lines[i].subNode != nullptr)
+		{
+			m_lines[i].subNode->setCallbackId(i);
+			m_lines[i].subNode->m_newName->setCallbackId(i);
+			m_lines[i].subNode->m_newValue->setCallbackId(i);
+			m_lines[i].subNode->m_newAdd->setCallbackId(i);
+			m_lines[i].subNode->m_scrollBar->setCallbackId(i);
+			m_lines[i].subNode->m_titleBar->setCallbackId(i);
+			m_lines[i].subNode->m_miniMaxi->setCallbackId(i);
 		}
 	}
 
@@ -234,9 +267,9 @@ void EditList::MiniMaxi( const tgui::Callback& _call )
 		if( hide )
 		{
 			Panel::hide();
-			m_newName->hide();
-			m_newValue->hide();
-			m_newAdd->hide();
+			if(m_newName != nullptr) m_newName->hide();
+			if(m_newValue != nullptr) m_newValue->hide();
+			if(m_newAdd != nullptr) m_newAdd->hide();
 			EditList* parent = dynamic_cast<EditList*>(m_Parent);
 			if( parent )
 				parent->Resize( -(m_numPixelLines+20), (int)Panel::getPosition().y-1 );
@@ -246,15 +279,22 @@ void EditList::MiniMaxi( const tgui::Callback& _call )
 			if( parent )
 				parent->Resize( m_numPixelLines+20, (int)y0-1 );
 			Panel::show();
-			m_newName->show();
-			m_newValue->show();
-			m_newAdd->show();
 			// As long as they were hidden the 4 components were not moved.
 			Panel::setPosition(Panel::getPosition().x, y0);
 			y0 += Panel::getSize().y;
-			m_newName->setPosition(m_newName->getPosition().x, y0);
-			m_newValue->setPosition(m_newValue->getPosition().x, y0);
-			m_newAdd->setPosition(m_newAdd->getPosition().x, y0);
+
+			if(m_newName != nullptr) {
+				m_newName->show();
+				m_newName->setPosition(m_newName->getPosition().x, y0);
+			}
+			if(m_newValue != nullptr) {
+				m_newValue->show();
+				m_newValue->setPosition(m_newValue->getPosition().x, y0);
+			}
+			if(m_newAdd != nullptr) {
+				m_newAdd->show();
+				m_newAdd->setPosition(m_newAdd->getPosition().x, y0);
+			}
 		}
 	}
 }
@@ -352,6 +392,18 @@ void EditList::setSize( float width, float height )
 sf::Vector2f EditList::getSize() const
 {
 	return sf::Vector2f(Panel::getSize().x, GetHeight());
+}
+
+void EditList::Show( Core::Object* _object )
+{
+	if( _object->HasProperty( Core::Object::PROP_NAME ) )
+	{
+		m_titleBar->setText( "    " + _object->GetProperty( Core::Object::PROP_NAME ).Value() );
+	}
+	for( int i=0; i<_object->GetNumElements(); ++i )
+	{
+		Add( _object->At(i)->Name(), _object->At(i)->Value() );
+	}
 }
 
 } // namespace Graphics

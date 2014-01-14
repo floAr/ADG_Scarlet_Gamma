@@ -70,6 +70,7 @@ namespace States
 namespace Graphics
 {
 	class TileRenderer;
+	class EditList;
 }
 
 //------------------------------------------------------------------------------

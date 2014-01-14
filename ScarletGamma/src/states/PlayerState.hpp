@@ -2,6 +2,7 @@
 
 #include "Prerequisites.hpp"
 #include "states/CommonState.hpp"
+#include "graphics/EditList.hpp"
 
 namespace States
 {
@@ -14,7 +15,13 @@ namespace States
 		virtual void OnResume() {}
 		virtual void Draw(sf::RenderWindow& win);
 		virtual void MouseButtonPressed(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos);
+
+		/// \brief CommonState Update + Player view refreshed.
+		virtual void Update( float _dt ) override;
+
 	private:
 		Core::Object* m_player;		///< The one and only player object
+
+		Graphics::EditList::Ptr m_playerView;	///< Showing the player properties
 	};
 }

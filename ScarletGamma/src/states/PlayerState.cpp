@@ -10,10 +10,14 @@
 
 
 States::PlayerState::PlayerState( const std::string& _playerName, const sf::Color& _chatColor ) :
-	m_player(nullptr)
+	m_player(nullptr),
+	m_playerView(nullptr)
 {
 	m_color = _chatColor;
 	m_name = '[' + _playerName + "] ";
+
+	m_playerView = Graphics::EditList::Ptr(m_gui);
+	m_playerView->Init( _playerName, 0.0f, 0.0f, 300.0f, 600.0f, false, false, true, false );
 }
 
 
@@ -81,6 +85,15 @@ void States::PlayerState::OnBegin()
 	// TODO: if player does not exists create one!
 	m_player = g_Game->GetWorld()->FindPlayer( m_name.substr(1, m_name.length()-3) );
 	assert( m_player );
+	m_playerView->Show( m_player );
 	// Use the players currently chosen color
 	m_player->SetColor( m_color );
+}
+
+void States::PlayerState::Update( float _dt )
+{
+	CommonState::Update( _dt );
+
+	// Go through player object and update all viewed properties
+	m_playerView->Show(m_player);
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "states/GameState.hpp"
+#include "states/SelectionState.hpp"
 #include "utils/Falloff.hpp"
 #include "Prerequisites.hpp"
 
@@ -35,6 +36,29 @@ namespace States
 
 		/// \brief Open a chat menu on Enter.
 		virtual void KeyPressed(sf::Event::KeyEvent& key) override;
+
+
+		//----------------------------------------------------------------------
+		// SELECTION STUFF
+		/// \brief Add an object to the current selection
+		void AddToSelection(Core::ObjectID id){
+			//TODO: Test if already in selection
+			m_selection.Add(id);
+		}
+		/// \brief Remove an object from the current selection
+		void RemoveFromSelection(Core::ObjectID id){
+			//TODO: Test if in selection		
+			m_selection.Remove(id);
+		}
+		/// \brief Clear the current selection
+		void ClearSelection(){
+			m_selection.Clear();
+		}
+		/// \brief Get the current selection
+		Core::ObjectList* GetSelection(){
+			return &m_selection;
+		}
+
 	protected:
 		Utils::Falloff m_zoom;		///< Zoom for the current map
 		Core::Object* m_selected;	///< A reference to the selected object or nullptr
@@ -49,5 +73,8 @@ namespace States
 		/// \param [in] _whosePath An object with the Target or Path property
 		///		whose path should be drawn.
 		void DrawPathOverlay(sf::RenderWindow& win, Core::Object* _whosePath);
+
+		States::SelectionState* m_selectionState;
+		Core::ObjectList m_selection;	///< List of currently selected objects
 	};
 }

@@ -3,6 +3,7 @@
 #include "World.hpp"
 #include "utils/OrFibHeap.h"
 #include "network/MapMessages.hpp"
+#include "utils/MathUtil.hpp"
 
 #include <algorithm>
 #include <unordered_map>
@@ -184,12 +185,21 @@ namespace Core {
 				// If it reached the target choose a new one.
 				object->GetProperty(Object::PROP_TARGET).SetValue( sfUtils::to_string(FindNextTarget(object)) );
 			}
-			auto target = sfUtils::to_vector(object->GetProperty(Object::PROP_TARGET).Value());
-			target -= position;	// Scaled direction
-			float len = sfUtils::Length(target);
+			auto targetDirection = sfUtils::to_vector(object->GetProperty(Object::PROP_TARGET).Value());
+			targetDirection -= position;	// Scaled direction
+
+			// The actor can not move over blocked tiles. Since he is allowed
+			// to move diagonal it may be necessary to clamp the direction.
+			if( !IsFree(sfUtils::Round( position + sf::Vector2f(Utils::Sign(targetDirection.x)*0.5f, 0.0f) )) )
+				targetDirection.x = 0.0f;
+			if( !IsFree(sfUtils::Round( position + sf::Vector2f(0.0f, Utils::Sign(targetDirection.y)*0.5f) )) )
+				targetDirection.y = 0.0f;
+
+			float len = sfUtils::Length(targetDirection);
 			if( len > 0.00001 )
 			{
-				SetObjectPosition(object, position + target * std::min(_dt / len, 1.0f));
+				targetDirection = targetDirection * std::min(_dt / len, 1.0f);
+				SetObjectPosition(object, position + targetDirection);
 			}
 		}
 	}
@@ -265,6 +275,7 @@ namespace Core {
 			node->entry = nullptr;
 			for(int y=-1; y<=1; ++y) {
 				for(int x=-1; x<=1; ++x) {
+					if( x==0 && y==0 ) continue;
 					sf::Vector2i successorPos = node->cell+sf::Vector2i(x,y);
 					int64_t hash = (int64_t(successorPos.x) & 0xffffffff) | (int64_t(successorPos.y) << 32);
 					// Costs to this node + heuristic + to next node
@@ -282,6 +293,9 @@ namespace Core {
 					} else {
 						// Is this neighbor a possible field?
 						if(!IsFree(successorPos)) continue;
+						// For diagonal fields at least one of the two from
+						// 4 neighborhood must be free.
+						if((x*y != 0) && !(IsFree(node->cell+sf::Vector2i(x,0)) || IsFree(node->cell+sf::Vector2i(0,y)) ) ) continue;
 						// Insert
 						visited.push_back( SearchNode(node, costs, successorPos) );
 						visited.back().entry = openList.Insert(&visited.back(), visited.back().costs);

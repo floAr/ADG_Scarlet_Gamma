@@ -2,7 +2,7 @@
 
 #include "Prerequisites.hpp"
 #include "states/CommonState.hpp"
-#include "states/SelectionState.hpp"
+#include "core/ObjectList.hpp"
 
 namespace States
 {
@@ -17,9 +17,8 @@ namespace States
 		virtual void Update(float dt);
 		virtual void Draw(sf::RenderWindow& win);
 		virtual void MouseButtonPressed(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos);
+
 	private:
 		Core::Object* m_player;		///< The one and only player object
-
-		States::SelectionState* m_selectionState;
 	};
 }

@@ -1,4 +1,5 @@
 #include "states/SelectionState.hpp"
+#include "states/CommonState.hpp"
 #include "Game.hpp"
 #include "core/Map.hpp"
 #include "core/World.hpp"
@@ -42,7 +43,7 @@ void States::SelectionState::RecalculateGUI(){
 		Core::Object* o=g_Game->GetWorld()->GetObject(m_objects[i]);
 		tgui::Button::Ptr button(m_gui);
 		button->load("lib/TGUI-0.6-RC/widgets/Black.conf"); // TODO: this causes an exception later when main() finishes. I don't get it all :)
-		button->setPosition(30, 200+i*45);
+		button->setPosition(30.0f, float(200+i*45));
 		if(o->HasProperty(Core::Object::PROP_NAME))
 			button->setText(o->GetProperty(Core::Object::PROP_NAME).Value());
 		else
@@ -71,7 +72,10 @@ void States::SelectionState::GuiCallback(tgui::Callback& args){
 	if(args.id>=100)//item clicked
 	{
 		//todo inject objects
-		m_previousState->AddToSelection(m_objects[args.id-100]);
+		CommonState* previousState = dynamic_cast<CommonState*>(m_previousState);
+		// The parent is not set or not of type CommonState, but it should be!
+		assert(previousState);
+		previousState->AddToSelection(m_objects[args.id-100]);
 		this->m_finished=true;
 	}
 }

@@ -2,8 +2,6 @@
 
 #include <SFML/Graphics.hpp>
 #include <TGUI/TGUI.hpp>
-#include "core/ObjectList.hpp"
-#include "core\Object.hpp"
 
 namespace States
 {
@@ -140,33 +138,11 @@ namespace States
 		/// \brief Draws the current GUI.
 		void GuiDraw();
 
-		//----------------------------------------------------------------------
-		// SELECTION STUFF
-		/// \brief Add an object to the current selection
-		void AddToSelection(Core::ObjectID id){
-			//TODO: Test if already in selection
-			m_selection.Add(id);
-		}
-		/// \brief Remove an object from the current selection
-		virtual void RemoveFromSelection(Core::ObjectID id){
-			//TODO: Test if in selection		
-			m_selection.Remove(id);
-		}
-		/// \brief Clear the current selection
-		virtual void ClearSelection(){
-			m_selection.Clear();
-		}
-		/// \brief Get the current selection
-		virtual Core::ObjectList* GetSelection(){
-			return &m_selection;
-		}
-
 #pragma endregion
 
 	protected:
 		bool m_finished; ///< set to true if the GameState is finished
 		GameState* m_previousState; ///< Pointer to previous state or null
-		Core::ObjectList m_selection;	///< List of currently selected objects
 
 
 		/// \brief Sets the GUI to be rendered, updated and used to handle events.

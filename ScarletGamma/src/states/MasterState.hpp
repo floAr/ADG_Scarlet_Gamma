@@ -20,6 +20,5 @@ namespace States
 	private:
 		Core::Object* m_player;		///< The one and only player object
 
-		States::SelectionState* m_selection;
 	};
 }

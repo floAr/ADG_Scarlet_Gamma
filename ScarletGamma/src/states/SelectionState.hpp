@@ -21,12 +21,10 @@ namespace States
 		virtual void GuiCallback(tgui::Callback&  args);
 		virtual void Draw(sf::RenderWindow& win);
 
-		Core::ObjectID SelectedObject();
-	private:
+		private:
 		tgui::Gui m_gui;
 		sf::Font m_menuFont;
 		std::vector<Core::ObjectID> m_objects;
 		bool m_dirty;
-		Core::ObjectID m_selected;
 	};
 }

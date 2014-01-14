@@ -5,18 +5,19 @@
 #include "Constants.hpp"
 #include "core/ObjectList.hpp"
 #include "utils/Content.hpp"
+#include "core/Object.hpp"
 
 States::SelectionState::SelectionState(){
 	m_menuFont=Content::Instance()->LoadFont("media/arial.ttf");
 	m_gui.setWindow(g_Game->GetWindow());
 	m_gui.setGlobalFont(m_menuFont);
-	m_selected=-1;
 	m_dirty=false;
 
 }
 
 void States::SelectionState::OnBegin(){
 	m_previousState->OnResume();
+	m_objects.clear();
 }
 
 void States::SelectionState::AddObject(Core::ObjectID& value){
@@ -42,8 +43,8 @@ void States::SelectionState::RecalculateGUI(){
 		tgui::Button::Ptr button(m_gui);
 		button->load("lib/TGUI-0.6-RC/widgets/Black.conf"); // TODO: this causes an exception later when main() finishes. I don't get it all :)
 		button->setPosition(30, 200+i*45);
-		if(o->HasProperty("name"))
-			button->setText(o->GetProperty("name").Value());
+		if(o->HasProperty(Core::Object::PROP_NAME))
+			button->setText(o->GetProperty(Core::Object::PROP_NAME).Value());
 		else
 			button->setText(o->ID());
 		button->setCallbackId(100+i);
@@ -69,11 +70,8 @@ void States::SelectionState::Draw(sf::RenderWindow& win){
 void States::SelectionState::GuiCallback(tgui::Callback& args){
 	if(args.id>=100)//item clicked
 	{
-		m_selected=m_objects[args.id-100];
-		m_finished=true;
+		//todo inject objects
+		m_previousState->AddToSelection(m_objects[args.id-100]);
+		this->m_finished=true;
 	}
-}
-
-Core::ObjectID States::SelectionState::SelectedObject(){
-	return m_selected;
 }

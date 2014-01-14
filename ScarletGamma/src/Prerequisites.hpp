@@ -11,66 +11,74 @@ class Game;
 // UTILS
 namespace Utils
 {
-	class Random;
-	class Falloff;
+    class Random;
+    class Falloff;
 }
 
 namespace Exception {
-	class NotEvaluateable;
-	class NoObjectList;
-	class NoSuchProperty;
-	class InvalidFormula;
+    class NotEvaluateable;
+    class NoObjectList;
+    class NoSuchProperty;
+    class InvalidFormula;
 }
 
 //------------------------------------------------------------------------------
 // CORE
 namespace Core
 {
-	class ObjectList;
-	class Property;
-	class PropertyList;
-	class Object;
-	class Map;
-	class World;
+    class ObjectList;
+    class Property;
+    class PropertyList;
+    class Object;
+    class Map;
+    class World;
 
-	/// \brief General definition of an object handle.
-	/// \details This typedef allows to introduce 64Bit or even complexer types
-	///		if necessary.
-	typedef unsigned int ObjectID;
+    /// \brief General definition of an object handle.
+    /// \details This typedef allows to introduce 64Bit or even complexer types
+    ///		if necessary.
+    typedef unsigned int ObjectID;
 
-	/// \brief A map handle inside the world.
-	typedef unsigned int MapID;
+    /// \brief A map handle inside the world.
+    typedef unsigned int MapID;
 }
 
 //------------------------------------------------------------------------------
 // EVENTS
 namespace Events
 {
-	class EventHandler;
-	class InputHandler;
+    class EventHandler;
+    class InputHandler;
 }
 
 //------------------------------------------------------------------------------
 // NETWORK
 namespace Network
 {
-	class Messenger;
+    class Messenger;
+}
+
+//------------------------------------------------------------------------------
+// ACTIONS
+namespace Actions
+{
+    class Action;
+    class ActionPool;
 }
 
 //------------------------------------------------------------------------------
 // STATES
 namespace States
 {
-	class StateMachine;
-	class GameState;
+    class StateMachine;
+    class GameState;
 }
 
 //------------------------------------------------------------------------------
 // GRAPHICS
 namespace Graphics
 {
-	class TileRenderer;
-	class EditList;
+    class TileRenderer;
+    class EditList;
 }
 
 //------------------------------------------------------------------------------
@@ -80,7 +88,7 @@ namespace Graphics
 //------------------------------------------------------------------------------
 // TEST
 namespace UnitTest	{
-	void TestObjects();
+    void TestObjects();
 }
 
 
@@ -88,5 +96,5 @@ namespace UnitTest	{
 //------------------------------------------------------------------------------
 // sf
 namespace sf {
-	class TcpSocket;
+    class TcpSocket;
 } // namespace sf

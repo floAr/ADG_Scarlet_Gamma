@@ -51,6 +51,8 @@ namespace States {
 
 		// If the selected object has a path draw it
 		DrawPathOverlay(win, m_player);
+
+		GameState::Draw(win);
 	}
 
 	void MasterState::MouseButtonPressed(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos)

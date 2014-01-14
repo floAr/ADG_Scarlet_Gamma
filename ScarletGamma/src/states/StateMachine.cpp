@@ -97,7 +97,6 @@ void States::StateMachine::Draw(sf::RenderWindow& win)
 	if (win.isOpen() && m_gameState)
 	{
 		m_gameState->Draw(win);
-		m_gameState->GuiDraw();
 	}
 }
 

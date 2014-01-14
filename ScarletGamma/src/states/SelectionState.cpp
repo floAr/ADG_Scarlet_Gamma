@@ -66,6 +66,8 @@ void States::SelectionState::Update(float dt){
 void States::SelectionState::Draw(sf::RenderWindow& win){
 	m_previousState->Draw(win);
 	//win.clear();
+
+	GameState::Draw(win);
 }
 
 void States::SelectionState::GuiCallback(tgui::Callback& args){

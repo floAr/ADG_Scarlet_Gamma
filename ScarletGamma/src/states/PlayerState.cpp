@@ -34,6 +34,8 @@ void States::PlayerState::Draw(sf::RenderWindow& win)
 
 	// Draw the players path
 	DrawPathOverlay(win, m_player);
+
+	GameState::Draw(win);
 }
 
 void States::PlayerState::MouseButtonPressed(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos)

@@ -29,6 +29,8 @@ void States::LaunchPlayerState::Draw(sf::RenderWindow& win)
 {
     // Set window color according to mouse position...
     win.clear(sf::Color::Black);
+
+	GameState::Draw(win);
 }
 
 void States::LaunchPlayerState::KeyPressed(sf::Event::KeyEvent& key)

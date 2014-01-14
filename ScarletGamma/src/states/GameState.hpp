@@ -59,11 +59,11 @@ namespace States
 		/// \param [in] dt	Delta time since last frame in seconds.
 		virtual void Update(float dt) = 0;
 
-		/// \brief Pure virtual functions that is called when the GameLoop wants
-		///		to draw everything.
+		/// \brief Function that is called when the GameLoop wants to draw
+		///		everything. Derived classes must call this by GameState::Draw.
 		/// \details Use this function to specify what needs to be drawn: the
 		///		map, certain menus etc.
-		virtual void Draw(sf::RenderWindow& win) = 0;
+		virtual void Draw(sf::RenderWindow& win) { GuiDraw(); }
 
 		/// \brief Tells the StateMachine whether the GameState is to be pop'd
 		///

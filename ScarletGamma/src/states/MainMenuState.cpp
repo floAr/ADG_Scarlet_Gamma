@@ -57,6 +57,8 @@ void States::MainMenuState::Draw(sf::RenderWindow& win)
                "or escape to quit.", m_menuFont, 24);
     t.setPosition(30, 30);
     win.draw(t);
+
+	GameState::Draw(win);
 }
 
 void States::MainMenuState::KeyPressed(sf::Event::KeyEvent& key)

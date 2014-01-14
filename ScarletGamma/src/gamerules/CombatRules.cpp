@@ -1,4 +1,5 @@
 #include "gamerules/CombatRules.hpp"
+#include "Constants.hpp"
 #include "core/Object.hpp"
 #include "core/Property.hpp"
 #include "utils/Exception.hpp"
@@ -18,21 +19,21 @@ CombatRules::HitRollInfo CombatRules::TargetHit(Core::Object* target, int diceRo
 
     // Target needs an AC to be hittable
     if (target->HasProperty(PROP_ARMORCLASS) == false)
-        return HitRollInfo(false, "Target has no Armor Class."); // TODO: global string table?
+        return HitRollInfo(false, STR_HIT_NO_ARMOR_CLASS);
 
     // Evaluate AC, may throw an NotEvaluatable exception
     int AC = target->GetProperty(PROP_ARMORCLASS).Evaluate();
 
     // Always hit on natural 20
     if (diceRoll == 20)
-        return HitRollInfo(true, "Rolled a natural 20."); // TODO: global string table?
+        return HitRollInfo(true, STR_HIT_NATURAL_TWENTY);
 
     // Hit if AC is achieved
     if (diceRoll + modifier >= AC)
-        return HitRollInfo(true, "Armor Class was beat."); // TODO: global string table?
+        return HitRollInfo(true, STR_HIT_ARMOR_CLASS_BEAT);
 
     // Don't hit otherwise
-    return HitRollInfo(false, "Armor Class was not beat."); // TODO: global string table?
+    return HitRollInfo(false, STR_HIT_ARMOR_CLASS_NOT_BEAT);
 }
 
 int CombatRules::GetHitPoints(Core::Object* target)

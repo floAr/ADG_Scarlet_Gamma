@@ -1,6 +1,7 @@
 #include "EditList.hpp"
 #include "SFML\System\Vector2.hpp"
 #include "TGUI\EditBox.hpp"
+#include "utils\StringUtil.hpp"
 
 namespace Graphics {
 
@@ -89,13 +90,28 @@ void EditList::Init( const std::string& _title,
 
 void EditList::Add( const std::string& _left, const std::string& _right )
 {
-	// y coordinate where to insert inside panel
-	float y = float(m_numPixelLines - m_scrollBar->getValue());
-
-	Resize(20, m_numPixelLines);
-
-	// indention
+	// Indention
 	float x = IsScrollbarVisible() ? 12.0f : 0.0f;
+
+	// y coordinate where to insert inside panel
+	float y = m_numPixelLines;
+	unsigned i = 0;
+	// Search the smallest y where for each item string is greater _left.
+	for( size_t i=1; i<m_Widgets.size(); ++i )
+	{
+		// Only in left row
+		if( abs(m_Widgets[i]->getPosition().x-x) < 1.0f )
+		{
+			tgui::EditBox::Ptr next = m_Widgets[i];
+			if( next != nullptr && Utils::IStringLess(_left, next->getText()) )
+			{
+				y = std::min( next->getPosition().y, y );
+			}
+		}
+	}
+
+	Resize(20, int(y + m_scrollBar->getValue()));
+
 	// Width of a edit
 	float w = (Panel::getSize().x - x) * 0.5f - (m_addNdel ? 6.0f : 0.0f);
 

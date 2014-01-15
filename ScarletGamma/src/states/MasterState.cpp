@@ -9,20 +9,37 @@
 #include "network/Messenger.hpp"
 #include <iostream>
 
+using namespace Core;
+
 namespace States {
 
 	MasterState::MasterState( const std::string& _loadFile ) :
-		m_player(nullptr)
+		m_player(nullptr),
+		m_propertyPanel(nullptr),
+		m_database(nullptr)
 	{
 		// Load the map
 		Jo::Files::HDDFile file(_loadFile);
 		g_Game->GetWorld()->Load( file );
 
+		// Load the template database
+		m_database = new Core::World();
+		if( !Jo::Files::Utils::Exists( "data/templates.dat" ) )
+			CreateDefaultDatabase();
+		else {
+			Jo::Files::HDDFile database( "data/templates.dat" );
+			m_database->Load( database );
+		}
+
+		// Load properties from database into gui
+		m_propertyPanel = Graphics::EditList::Ptr(m_gui);
+		m_propertyPanel->Init( STR_PROPERTIES, 0.0f, 0.0f, 200.0f, 300.0f, true, true, true, false );
+		m_propertyObject = m_database->GetObject( 0 );	// The all-properties object has ID 0
+		m_propertyPanel->Show( m_propertyObject );
+
 		// Set chat color...
 		m_color = sf::Color(80,80,250);
 		m_name = "[Master] ";
-
-
 	}
 
 	void MasterState::Update(float dt)
@@ -108,6 +125,36 @@ namespace States {
 	{
 		CommonState::OnEnd();
 
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+	void MasterState::CreateDefaultDatabase()
+	{
+		// Create and fill an object with all known properties
+		ObjectID propertyOID = m_database->NewObject( STR_EMPTY );
+		assert( propertyOID == 0 );
+		Object* propertyO = m_database->GetObject( propertyOID );
+
+		propertyO->SetColor( sf::Color::White );
+		propertyO->Add( Property(propertyOID, Property::R_V0EV00V00, Object::PROP_NAME, STR_EMPTY ) );
+		propertyO->Add( Property(propertyOID, Property::R_VC0000000, Object::PROP_OBSTACLE, STR_EMPTY ) );
+		propertyO->Add( Property(propertyOID, Property::R_V0EV0EV0E, STR_INVENTORY, STR_EMPTY, ObjectList() ) );
+		propertyO->Add( Property(propertyOID, Property::R_V0EV0EV0E, STR_STRENGTH, STR_EMPTY ) );
+		propertyO->Add( Property(propertyOID, Property::R_V0EV0EV0E, STR_DEXTERITY, STR_EMPTY ) );
+		propertyO->Add( Property(propertyOID, Property::R_V0EV0EV0E, STR_CONSTITUTION, STR_EMPTY ) );
+		propertyO->Add( Property(propertyOID, Property::R_V0EV0EV0E, STR_INTELLIGENCE, STR_EMPTY ) );
+		propertyO->Add( Property(propertyOID, Property::R_V0EV0EV0E, STR_WISDOM, STR_EMPTY ) );
+		propertyO->Add( Property(propertyOID, Property::R_V0EV0EV0E, STR_CHARISMA, STR_EMPTY ) );
 	}
 
 }// namespace States

@@ -23,7 +23,7 @@ namespace Core {
 		m_id(_id),
 		m_hasParent(false)
 	{
-		Add( Property(_id, PROP_SPRITE, _sprite) );
+		Add( Property(_id, Property::R_V0E000000, PROP_SPRITE, _sprite) );
 	}
 
 	Object::Object( const Jo::Files::MetaFileWrapper::Node& _node ) :
@@ -98,7 +98,7 @@ namespace Core {
 		//value << std::hex << (int)_color.r << (int)_color.g << (int)_color.b << (int)_color.a;
 		// Create or set property?
 		auto colorProp = Get(PROP_COLOR);
-		if( !colorProp ) Add(Property(m_id, PROP_COLOR, string(value)));
+		if( !colorProp ) Add(Property(m_id, Property::R_VCEV0EV00, PROP_COLOR, string(value)));
 		else colorProp->SetValue( value );
 	}
 

@@ -7,6 +7,7 @@
 #include "Constants.hpp"
 
 using namespace std;
+using namespace Core;
 
 namespace UnitTest {
 
@@ -15,35 +16,35 @@ namespace UnitTest {
 		Network::MaskWorldMessage messageLock;
 
 		// Create a map
-		Core::World* world = new Core::World();
-		Core::MapID mapID = world->NewMap("Scarlet Square",10,10);
-		Core::Map* map = world->GetMap( mapID );
+		World* world = new Core::World();
+		MapID mapID = world->NewMap("Scarlet Square",10,10);
+		Map* map = world->GetMap( mapID );
 
 		// Create objects and put them to the map
 		Utils::Random rnd(236);
 		for( int y=0; y<10; ++y ) for( int x=0; x<10; ++x ){
-			Core::ObjectID objID = world->NewObject("media/noise_2.png");
+			ObjectID objID = world->NewObject("media/noise_2.png");
 			map->Add(objID, x, y, 0 );
 		}
 		const char* walls[3] = {"media/bar_hor.png", "media/bar_vert.png", "media/cross_big.png"};
 		for( int i=0; i<16; ++i ) {
-			Core::ObjectID objID = world->NewObject(walls[rnd.Uniform(0,2)]);
-			Core::Object* obj = world->GetObject(objID);
-			obj->Add(Core::Property(objID, "Obstacle",""));
+			ObjectID objID = world->NewObject(walls[rnd.Uniform(0,2)]);
+			Object* obj = world->GetObject(objID);
+			obj->Add(Property(objID, Property::R_VC0000000, Object::PROP_OBSTACLE, ""));
 			obj->SetColor(sf::Color(rnd.Uniform(0,255), rnd.Uniform(0,255), rnd.Uniform(0,255), 255));
 			map->Add(objID, rnd.Uniform(0,9), rnd.Uniform(0,9), 1);
 		}
 
 		// Add one active object
-		Core::ObjectID objID = world->NewObject("media/smile_2.png");
-		Core::Object* obj = world->GetObject(objID);
-		obj->Add(Core::Property(objID, Core::Object::PROP_NAME, "ICH"));
-		obj->Add(Core::Property(objID, Core::Object::PROP_PLAYER, ""));
-		obj->Add(Core::Property(objID, Core::Object::PROP_TARGET,"0:3"));
+		ObjectID objID = world->NewObject("media/smile_2.png");
+		Object* obj = world->GetObject(objID);
+		obj->Add(Property(objID, Property::R_V0EV00V00, Object::PROP_NAME, "ICH"));
+		obj->Add(Property(objID, Property::R_SYSTEMONLY, Object::PROP_PLAYER, "1"));
+		obj->Add(Property(objID, Property::R_SYSTEMONLY, Object::PROP_TARGET, "0:3"));
 		Core::ObjectList path;
 		path.Add(map->GetObjectsAt(0,0)[0]);
 		path.Add(map->GetObjectsAt(9,9)[0]);
-		obj->Add(Core::Property(objID, Core::Object::PROP_PATH, STR_FALSE, path));
+		obj->Add(Property(objID, Property::R_SYSTEMONLY, Object::PROP_PATH, STR_FALSE, path));
 		obj->SetColor(sf::Color(0, 155, 0, 155));
 		map->Add(objID, 0, 2, 4);
 

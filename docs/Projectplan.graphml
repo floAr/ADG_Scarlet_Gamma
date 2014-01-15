@@ -17,7 +17,7 @@
     <node id="n0">
       <data key="d6">
         <y:GenericNode configuration="com.yworks.flowchart.offPageReference">
-          <y:Geometry height="48.75" width="42.25" x="-115.88354836363646" y="-174.38061818181825"/>
+          <y:Geometry height="48.75" width="42.25" x="-73.88354836363646" y="-174.38061818181825"/>
           <y:Fill color="#FFFFFF" color2="#00CCFF" transparent="false"/>
           <y:BorderStyle color="#FFFFFF" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" borderDistance="0.0" fontFamily="Trebuchet MS" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="20.255859375" modelName="sides" modelPosition="n" textColor="#000000" visible="true" width="43.5458984375" x="-0.64794921875" y="-20.255859375">Today</y:NodeLabel>
@@ -3447,6 +3447,19 @@ Abschlusspräsentation</y:NodeLabel>
         </y:GenericNode>
       </data>
     </node>
+    <node id="n216">
+      <data key="d6">
+        <y:GenericNode configuration="com.yworks.flowchart.process">
+          <y:Geometry height="12.0" width="126.0" x="-188.74145163636354" y="-349.3153090909091"/>
+          <y:Fill color="#00FF00" color2="#B7C9E3" transparent="false"/>
+          <y:BorderStyle color="#FFFFFF" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" borderDistance="0.0" fontFamily="Trebuchet MS" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.93359375" modelName="sides" modelPosition="n" textColor="#000000" visible="true" width="78.2265625" x="23.88671875" y="-17.93359375">Rechtesystem</y:NodeLabel>
+          <y:StyleProperties>
+            <y:Property class="java.lang.Boolean" name="y.view.ShadowNodePainter.SHADOW_PAINTING" value="true"/>
+          </y:StyleProperties>
+        </y:GenericNode>
+      </data>
+    </node>
     <edge id="e0" source="n162" target="n163">
       <data key="d10">
         <y:PolyLineEdge>
@@ -4565,6 +4578,22 @@ Abschlusspräsentation</y:NodeLabel>
           <y:Path sx="0.0" sy="6.0" tx="-10.5" ty="-8.833333333333343">
             <y:Point x="136.24145163636354" y="-167.75854836363644"/>
             <y:Point x="154.53604848484838" y="-149.4639515151516"/>
+          </y:Path>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="short"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e84" source="n216" target="n179">
+      <data key="d9"/>
+      <data key="d10">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0">
+            <y:Point x="-100.0" y="-320.0"/>
+            <y:Point x="-100.0" y="-280.0"/>
+            <y:Point x="-20.0" y="-280.0"/>
+            <y:Point x="-10.758548363636464" y="-260.0"/>
           </y:Path>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="short"/>

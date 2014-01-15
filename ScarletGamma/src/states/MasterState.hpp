@@ -3,6 +3,7 @@
 #include "Prerequisites.hpp"
 #include "states/CommonState.hpp"
 #include "core/ObjectList.hpp"
+#include "graphics/EditList.hpp"
 
 namespace States
 {
@@ -20,5 +21,16 @@ namespace States
 
 	private:
 		Core::Object* m_player;		///< The one and only player object
+
+		Core::World* m_database;	///< A container with object templates.
+
+		/// \brief Object builder attribute template panel
+		Graphics::EditList::Ptr m_propertyPanel;
+		/// \brief one object which contains all properties.
+		Core::Object* m_propertyObject;
+
+		/// \brief Creates the initial template database in case of a
+		///		loading failure.
+		void CreateDefaultDatabase();
 	};
 }

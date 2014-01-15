@@ -44,6 +44,10 @@ namespace Core
 
     /// \brief A map handle inside the world.
     typedef unsigned int MapID;
+
+	/// \brief Player IDs are used for the right system and network communication.
+	///		The id 0 is always the game master.
+	typedef unsigned int PlayerID;
 }
 
 //------------------------------------------------------------------------------

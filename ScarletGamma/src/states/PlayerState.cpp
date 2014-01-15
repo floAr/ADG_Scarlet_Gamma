@@ -90,6 +90,8 @@ void States::PlayerState::OnBegin()
 	m_playerView->Show( m_player );
 	// Use the players currently chosen color
 	m_player->SetColor( m_color );
+	m_player->GetProperty( Core::Object::PROP_COLOR ).ApplyRights( 
+		m_player->GetProperty(Core::Object::PROP_PLAYER).Evaluate(), true );
 }
 
 void States::PlayerState::Update( float _dt )

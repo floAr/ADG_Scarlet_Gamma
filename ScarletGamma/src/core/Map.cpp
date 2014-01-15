@@ -140,9 +140,9 @@ namespace Core {
 
 		// Set correct position for the object itself
 		Object* object = m_parentWorld->GetObject(_object);
-		object->Add( Property(_object, Object::PROP_X, to_string((float)_x)) );
-		object->Add( Property(_object, Object::PROP_Y, to_string((float)_y)) );
-		object->Add( Property(_object, Object::PROP_LAYER, to_string(_layer)) );
+		object->Add( Property(_object, Property::R_V0EV00V00, Object::PROP_X, to_string((float)_x)) );
+		object->Add( Property(_object, Property::R_V0EV00V00, Object::PROP_Y, to_string((float)_y)) );
+		object->Add( Property(_object, Property::R_V0E000000, Object::PROP_LAYER, to_string(_layer)) );
 		object->SetParentMap( m_id );
 
 		// Does the object requires updates?
@@ -385,8 +385,8 @@ namespace Core {
 			Y->SetValue( to_string(_position.y) );
 		} catch(...) {
 			// Should never happen - but stable is stable
-			_object->Add( Property( _object->ID(), Object::PROP_X, to_string(_position.x) ) );
-			_object->Add( Property( _object->ID(), Object::PROP_Y, to_string(_position.y) ) );
+			_object->Add( Property( _object->ID(), Property::R_V0EV00V00, Object::PROP_X, to_string(_position.x) ) );
+			_object->Add( Property( _object->ID(), Property::R_V0EV00V00, Object::PROP_Y, to_string(_position.y) ) );
 		}
 		// Update cells
 		sf::Vector2i newCell(sfUtils::Round(_position));

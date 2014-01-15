@@ -12,12 +12,12 @@ class Property
 {
 public:
 	/// \brief Create a name value pair property. This cannot be changed later.
-	Property( ObjectID _parent, const std::string& _name, const std::string& _value );
+	Property( ObjectID _parent, uint64_t _rights, const std::string& _name, const std::string& _value );
 
 	/// \brief Create a named object list property.
 	/// \details It is possible to add a standard string property additional
 	///		to the object list with SetValue.
-	Property( ObjectID _parent, const std::string& _name, const std::string& _value, const ObjectList& _list );
+	Property( ObjectID _parent, uint64_t _rights, const std::string& _name, const std::string& _value, const ObjectList& _list );
 
 	/// \brief Deserialize an object.
 	/// \param [in] _node A serialized object node.
@@ -71,6 +71,31 @@ public:
 	void Serialize( Jo::Files::MetaFileWrapper::Node& _node ) const;
 
 	ObjectID ParentObject() const		{ return m_parent; }
+
+	// A list of standard rights to be used in the constructor.
+	enum Rights: uint64_t {
+		R_SYSTEMONLY = 0x000,
+		R_V00000000 = 0x001,	///< Master: See
+		R_VC0000000 = 0x003,	///< Master: See, Change
+		R_V00V00000 = 0x009,	///< Master: See; APlayer: See
+		R_V00V00V00 = 0x049,	///< Everybody: See
+		R_V0E000000 = 0x005,	///< Master: See, Edit
+		R_V0EV00V00 = 0x04d,	///< Master: See, Edit; APlayer: See; Player: See
+		R_VCEV0EV00 = 0x0f6,	///< Master: See, Change, Edit; APlayer: See, Edit; Player: See
+		R_V0EV0EV0E = 0x16d,	///< Everybody: See, Edit
+		R_VCEVCEVCE = 0x1ff		///< Full rights for all
+	};
+
+	/// \brief Check visible right
+	bool CanSee( PlayerID _player ) const;
+	/// \brief Check right to rename, add and delete properties
+	bool CanChange( PlayerID _player ) const;
+	/// \brief Check edit value right
+	bool CanEdit( PlayerID _player ) const;
+
+	/// \brief Sets if the player have no rights or player rights
+	void ApplyRights( PlayerID _player, bool _hasAdvancedPlayer );
+
 private:
 	std::string m_name;
 	ObjectID m_parent;		///< The object to which this property belongs
@@ -80,6 +105,13 @@ private:
 	// union {... is not allowed in this context because both are complex objects
 	std::string m_value;	///< The value string - might contain: text, number, formula, ...
 	ObjectList m_objects;	///< List of object references. Not always available.
+
+	/// \brief A system of rights who can do what.
+	/// \details 3 Bits: Visible, Change (EditName, Add, Delete), EditValue.
+	///		Once for the master and twice for players, 
+	///		then 1 Bit per player if he has advanced player
+	///		rights or basic rights
+	uint32_t m_rights;
 };
 
 

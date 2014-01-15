@@ -116,9 +116,12 @@ void States::SelectionState::MouseButtonPressed(sf::Event::MouseButtonEvent& but
 {
 	if(button.button==sf::Mouse::Button::Right)
 	{
-	//	m_finished=true;
-	//	m_previousState->MouseButtonPressed(button,tilePos);
-		
+        // This selection state is finished
+		m_finished = true;
+
+        // Pushing a new state. This effectively deletes the current state,
+        // so DON'T TOUCH this object in any way after the push!
+		m_previousState->MouseButtonPressed(button,tilePos);
 	}
 }
 

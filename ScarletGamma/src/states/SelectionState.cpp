@@ -50,7 +50,7 @@ void States::SelectionState::RecalculateGUI(){
 		if(o->HasProperty(Core::Object::PROP_NAME))
 			button->setText(o->GetProperty(Core::Object::PROP_NAME).Value());
 		else
-			button->setText(o->ID());
+			button->setText(std::to_string(o->ID()));
 		if(std::find(selection.Objects().begin(), selection.Objects().end(), m_objects[i]) != selection.Objects().end()) {
 			//already selected
 			button->setTransparency(255);

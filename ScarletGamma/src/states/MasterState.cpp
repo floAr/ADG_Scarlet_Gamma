@@ -90,11 +90,8 @@ namespace States {
 			win.setView(newView);
 							   } break;
 		case sf::Mouse::Right:{
-			if(m_selectionState)//TODO: Better way doing this? Without deleting there is a mermory exception when calling on begin the second time
-				delete(m_selectionState);
-			m_selectionState=new States::SelectionState();
-			g_Game->GetStateMachine()->PushGameState(m_selectionState);
-			m_selectionState->AddTilePosition((int)tilePos.x,(int)tilePos.y);
+			SelectionState* gs = dynamic_cast<SelectionState*>(g_Game->GetStateMachine()->PushGameState(GST_SELECTION));
+			gs->AddTilePosition((int)tilePos.x,(int)tilePos.y);
 			
 							  } break;
 		}
@@ -105,13 +102,10 @@ namespace States {
 	{
 		// Init server
 		Network::Messenger::Initialize(nullptr);
-		m_selectionState=new States::SelectionState();
 	}
 
 	void MasterState::OnEnd()
 	{
-		if(m_selectionState)
-			delete(m_selectionState);
 		CommonState::OnEnd();
 
 	}

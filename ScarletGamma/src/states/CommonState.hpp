@@ -60,10 +60,6 @@ namespace States
 		}
 
 	protected:
-		States::SelectionState* m_selectionState;
-		Core::ObjectList m_selection;	///< List of currently selected objects
-
-	protected:
 		Utils::Falloff m_zoom;		///< Zoom for the current map
 		Core::Object* m_selected;	///< A reference to the selected object or nullptr
 		tgui::Gui m_gui;			///< A gui to show chat messages and everything else.
@@ -78,5 +74,6 @@ namespace States
 		///		whose path should be drawn.
 		void DrawPathOverlay(sf::RenderWindow& win, Core::Object* _whosePath);
 
+		Core::ObjectList m_selection;	///< List of currently selected objects
 	};
 }

@@ -23,7 +23,7 @@ States::StateMachine::~StateMachine()
 	}
 }
 
-void States::StateMachine::PushGameState(States::GameState* newState){
+States::GameState* States::StateMachine::PushGameState(States::GameState* newState){
 	// If we have a new state, "push" it
 	if (newState != 0)
 	{
@@ -33,9 +33,11 @@ void States::StateMachine::PushGameState(States::GameState* newState){
 		newState->OnBegin();
 		m_gameState = newState;
 	}
+
+	return newState;
 }
 
-void States::StateMachine::PushGameState(States::GameStateType state)
+States::GameState* States::StateMachine::PushGameState(States::GameStateType state)
 {
 	// Create initialized pointer
 	GameState* newState = 0;
@@ -63,11 +65,16 @@ void States::StateMachine::PushGameState(States::GameStateType state)
 		// You mast create the master state your self - it requires input.
 		assert(false);
 		break;
+	case GST_SELECTION:
+		newState = new States::SelectionState();
+		break;
 	}
 
 	// If we have a new state, "push" it
 	if (newState != 0)
 		PushGameState(newState);
+
+	return newState;
 }
 
 void States::StateMachine::Update(float dt)

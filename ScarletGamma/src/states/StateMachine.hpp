@@ -6,7 +6,7 @@
 
 namespace States
 {
-	enum GameStateType { GST_INTRO, GST_MAIN_MENU, GST_LAUNCH_MASTER, GST_LAUNCH_PLAYER, GST_PLAYER, GST_MASTER };
+	enum GameStateType { GST_INTRO, GST_MAIN_MENU, GST_LAUNCH_MASTER, GST_LAUNCH_PLAYER, GST_PLAYER, GST_MASTER, GST_SELECTION };
 
 	/// \brief Factory and manager for GameState implementations.
 	/// This is used to keep track of the GameStates and initialize new ones.
@@ -25,14 +25,14 @@ namespace States
 		///		finished. The game then returns to the previous GameState or
 		///		quits if it was the last one.
 		/// \param [in] state  Identifies the state to be pushed
-		void PushGameState(GameStateType state);
+		GameState* PushGameState(GameStateType state);
 
 		/// \brief Pushes an existing GameState onto the stack.
 		/// \detail To remove a GameState, the state has to mark itself as
 		///		finished. The game then returns to the previous GameState or
 		///		quits if it was the last one.
 		/// \param [in] state  Identifies the state to be pushed
-		void PushGameState(GameState* state);
+		GameState* PushGameState(GameState* state);
 
 		/// \brief Used for quitting the game when the last GameState has ended.
 		/// \return true if at least one state is left, false otherwise

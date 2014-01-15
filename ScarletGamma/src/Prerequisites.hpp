@@ -38,6 +38,10 @@ namespace Core
     ///		if necessary.
     typedef unsigned int ObjectID;
 
+    /// \brief General definition of an action handle.
+    /// \details This is an index to one of the actions in the ActionPool.
+    typedef unsigned int ActionID;
+
     /// \brief A map handle inside the world.
     typedef unsigned int MapID;
 }

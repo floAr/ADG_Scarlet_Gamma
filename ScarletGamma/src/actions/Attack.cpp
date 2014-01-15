@@ -1,9 +1,10 @@
 #include "Attack.hpp"
+#include "Constants.hpp"
 #include "gamerules/CombatRules.hpp"
 
 using namespace Actions;
 
-Attack::Attack()
+Attack::Attack() : Action(STR_ACT_ATTACK)
 {
     // Set requirements
     m_Requirements.push_back(GameRules::CombatRules::PROP_HITPOINTS);

@@ -35,6 +35,9 @@ void States::SelectionState::AddTilePosition(int x,int y){
 void States::SelectionState::RecalculateGUI(){
 	m_gui.removeAllWidgets(); //clear gui
 
+	//TODO Get current selection to make buttons transparent when they not selected
+	Core::ObjectList selection;
+
 
 	int count=m_objects.size();
 
@@ -48,6 +51,13 @@ void States::SelectionState::RecalculateGUI(){
 			button->setText(o->GetProperty(Core::Object::PROP_NAME).Value());
 		else
 			button->setText(o->ID());
+		if(std::find(selection.Objects().begin(), selection.Objects().end(), m_objects[i]) != selection.Objects().end()) {
+			//already selected
+			button->setTransparency(255);
+		} else {
+			button->setTransparency(170);
+		}
+
 		button->setCallbackId(100+i);
 		button->bindCallback(tgui::Button::LeftMouseClicked);
 		button->setSize(50, 40);

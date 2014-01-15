@@ -20,8 +20,11 @@ namespace States
 		virtual void Update(float dt);
 		virtual void GuiCallback(tgui::Callback&  args);
 		virtual void Draw(sf::RenderWindow& win);
+		virtual void MouseButtonPressed(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos);
 
 		private:
+			void positionButton(tgui::Button::Ptr b,float angle,float radius);
+
 		tgui::Gui m_gui;
 		sf::Font m_menuFont;
 		std::vector<Core::ObjectID> m_objects;

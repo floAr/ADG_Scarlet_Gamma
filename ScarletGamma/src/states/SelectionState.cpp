@@ -7,6 +7,7 @@
 #include "core/ObjectList.hpp"
 #include "utils/Content.hpp"
 #include "core/Object.hpp"
+#include <math.h>
 
 States::SelectionState::SelectionState(){
 	m_menuFont=Content::Instance()->LoadFont("media/arial.ttf");
@@ -50,7 +51,8 @@ void States::SelectionState::RecalculateGUI(){
 		Core::Object* o=g_Game->GetWorld()->GetObject(m_objects[i]);
 		tgui::Button::Ptr button(m_gui);
 		button->load("lib/TGUI-0.6-RC/widgets/Black.conf"); // TODO: this causes an exception later when main() finishes. I don't get it all :)
-		button->setPosition(m_x*TILESIZE, float(m_y*TILESIZE+i*45));
+		//button->setPosition(m_x*TILESIZE, float(m_y*TILESIZE+i*45));
+		positionButton(button,360/count*i,45);
 		if(o->HasProperty(Core::Object::PROP_NAME))
 			button->setText(o->GetProperty(Core::Object::PROP_NAME).Value());
 		else
@@ -106,4 +108,24 @@ void States::SelectionState::GuiCallback(tgui::Callback& args){
 	m_selected=true;
 
 	}
+}
+
+
+
+void States::SelectionState::MouseButtonPressed(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos)
+{
+	if(button.button==sf::Mouse::Button::Right)
+	{
+	//	m_finished=true;
+	//	m_previousState->MouseButtonPressed(button,tilePos);
+		
+	}
+}
+
+
+void  States::SelectionState::positionButton(tgui::Button::Ptr b,float angle,float radius){
+	float bx = m_x*TILESIZE + radius * sin(angle*0.01745329251); //0.01745329251 is to got radians from degrees
+	float by = m_y*TILESIZE + radius * cos(angle*0.01745329251 );
+   b->setPosition(bx,by);
+
 }

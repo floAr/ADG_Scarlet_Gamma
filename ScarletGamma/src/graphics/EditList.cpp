@@ -7,37 +7,35 @@
 
 namespace Graphics {
 
-EditList::EditList() :
+PropertyPanel::PropertyPanel() :
 	m_newName(nullptr),
 	m_newValue(nullptr),
 	m_newAdd(nullptr),
 	m_scrollBar(nullptr),
 	m_titleBar(nullptr),
 	m_miniMaxi(nullptr),
-	m_addNdel(false),
-	m_leftEditable(false),
-	m_rightEditable(false),
+	m_addAble(false),
 	m_autoSize(true),
 	m_oldScrollValue(0),
-	m_numPixelLines(0)
+	m_numPixelLines(0),
+	m_player(0)
 {
 }
 
 
-void EditList::Init( const std::string& _title,
-	float _x, float _y, float _w, float _h,
-	bool _addNdel, bool _leftEditable, bool _rightEditable, bool _autosize,
-	unsigned _pid )
+void PropertyPanel::Init( const std::string& _title,
+		float _x, float _y, float _w, float _h,
+		bool _addAble, bool _autosize, Core::PlayerID _player,
+		unsigned _pid )
 {
-	m_addNdel = _addNdel;
-	m_leftEditable = _leftEditable;
-	m_rightEditable = _rightEditable;
+	m_addAble = _addAble;
 	m_autoSize = _autosize;
+	m_player = _player;
 
 	Panel::setPosition(_x, _y + 20.0f);
 	if( _autosize )
 		Panel::setSize(_w, 0.0f);
-	else Panel::setSize(_w, _h - (m_addNdel ? 40.0f : 20.0f));
+	else Panel::setSize(_w, _h - (m_addAble ? 40.0f : 20.0f));
 	Panel::setBackgroundColor( sf::Color(50,50,50,150) );
 	Panel::setCallbackId(_pid);
 
@@ -49,7 +47,7 @@ void EditList::Init( const std::string& _title,
 	m_scrollBar->setSize(12.0f, Panel::getSize().y);
 	m_scrollBar->setMaximum(0);
 	m_scrollBar->setCallbackId(0xffffffff);
-	m_scrollBar->bindCallbackEx( &EditList::Scroll, this, tgui::Scrollbar::ValueChanged );
+	m_scrollBar->bindCallbackEx( &PropertyPanel::Scroll, this, tgui::Scrollbar::ValueChanged );
 
 	// The whole component can be minimized..
 	m_titleBar = tgui::EditBox::Ptr( *m_Parent );
@@ -66,10 +64,10 @@ void EditList::Init( const std::string& _title,
 	m_miniMaxi->setFrame(1);
 	m_miniMaxi->setCallbackId(_pid);
 	m_miniMaxi->setSize(12.0f, 12.0f);
-	m_miniMaxi->bindCallbackEx(&EditList::MiniMaxi, this, tgui::AnimatedPicture::LeftMouseClicked);
+	m_miniMaxi->bindCallbackEx(&PropertyPanel::MiniMaxi, this, tgui::AnimatedPicture::LeftMouseClicked);
 
 	// Add an edit which creates a new line if changed.
-	if( m_addNdel )
+	if( m_addAble )
 	{
 		float w = Panel::getSize().x * 0.5f - 20.0f;
 		m_newName = tgui::EditBox::Ptr( *m_Parent );
@@ -88,13 +86,13 @@ void EditList::Init( const std::string& _title,
 		m_newAdd->load("media/Black.conf");
 		m_newAdd->setPosition(_x+Panel::getSize().x - 40.0f, _y+Panel::getSize().y+20.0f);
 		m_newAdd->setSize(20.0f, 20.0f);
-		m_newAdd->bindCallbackEx(&EditList::AddBtn, this, tgui::Button::LeftMouseClicked);
+		m_newAdd->bindCallbackEx(&PropertyPanel::AddBtn, this, tgui::Button::LeftMouseClicked);
 		m_newAdd->setText("+");
 		m_newAdd->setCallbackId(_pid);
 	}
 }
 
-void EditList::Add( const std::string& _left, const std::string& _right )
+void PropertyPanel::Add( const std::string& _left, bool _changable, const std::string& _right, bool _editable )
 {
 	// Indention
 	float x = IsScrollbarVisible() ? 12.0f : 0.0f;
@@ -126,7 +124,7 @@ void EditList::Add( const std::string& _left, const std::string& _right )
 	Resize(20, int(y));
 
 	// Width of a edit
-	float w = (Panel::getSize().x - x) * 0.5f - (m_addNdel ? 6.0f : 0.0f);
+	float w = (Panel::getSize().x - x) * 0.5f - (m_addAble ? 6.0f : 0.0f);
 
 	EntryLine entry;
 
@@ -136,7 +134,8 @@ void EditList::Add( const std::string& _left, const std::string& _right )
 	entry.left->setSize(w, 20.0f);
 	entry.left->setPosition(x, y);
 	entry.left->setCallbackId(m_lines.size());
-	if(!m_leftEditable) entry.left->disable();
+	//if(!_changable) // Always disable to avoid careless changes
+		entry.left->disable();
 	entry.left->setText(_left);
 
 	// Create the one on the right side
@@ -145,24 +144,25 @@ void EditList::Add( const std::string& _left, const std::string& _right )
 	entry.right->setSize(w, 20.0f);
 	entry.right->setPosition(w+x, y);
 	entry.right->setCallbackId(m_lines.size());
-	if(!m_rightEditable) entry.right->disable();
+	if(!_editable)
+		entry.right->disable();
 	entry.right->setText(_right);
 
 	// Create a remove line button
-	if( m_addNdel )
+	if( m_addAble && _changable )
 	{
 		entry.del = tgui::Checkbox::Ptr( *this );
 		entry.del->load("media/Black.conf");
 		entry.del->setPosition(Panel::getSize().x - 12.0f, y+4.0f);
 		entry.del->setSize(12.0f, 12.0f);
 		entry.del->setCallbackId(m_lines.size());
-		entry.del->bindCallbackEx(&EditList::RemoveBtn, this, tgui::Button::LeftMouseClicked);
+		entry.del->bindCallbackEx(&PropertyPanel::RemoveBtn, this, tgui::Button::LeftMouseClicked);
 	}
 
 	m_lines.push_back(std::move(entry));
 }
 
-EditList::Ptr EditList::AddNode( const std::string&  _parentName, const std::string& _title )
+PropertyPanel::Ptr PropertyPanel::AddNode( const std::string&  _parentName, const std::string& _title )
 {
 	// Determine y coordinate where to insert inside panel.
 	EntryLine* parent = nullptr;
@@ -183,17 +183,17 @@ EditList::Ptr EditList::AddNode( const std::string&  _parentName, const std::str
 	// Level in hierarchy (indention)
 	float x = 12.0f + (IsScrollbarVisible() ? 12.0f : 0.0f);
 	// Width of a edit
-	float w = Panel::getSize().x - (m_addNdel ? 12.0f : 0.0f) - x;
+	float w = Panel::getSize().x - (m_addAble ? 12.0f : 0.0f) - x;
 
-	parent->subNode = EditList::Ptr( *this );
+	parent->subNode = PropertyPanel::Ptr( *this );
 	parent->subNode->Init( _title, x, y, w, 0.0f,
-		m_addNdel, m_leftEditable, m_rightEditable, true,
+		m_addAble, true, m_player,
 		parent->left->getCallbackId() );
 
 	return parent->subNode;
 }
 
-void EditList::RemoveBtn(const tgui::Callback& _call)
+void PropertyPanel::RemoveBtn(const tgui::Callback& _call)
 {
 	int posY = (int)_call.widget->getPosition().y;
 	int minY = posY, maxY = posY + (int)_call.widget->getSize().y;
@@ -234,17 +234,17 @@ void EditList::RemoveBtn(const tgui::Callback& _call)
 	Resize(minY - maxY, posY);
 }
 
-void EditList::AddBtn( const tgui::Callback& _call )
+void PropertyPanel::AddBtn( const tgui::Callback& _call )
 {
 	if( !m_newName->getText().isEmpty() )
 	{
-		Add( m_newName->getText(), m_newValue->getText() );
+		Add( m_newName->getText(), true, m_newValue->getText(), true );
 		m_newName->setText("");
 		m_newValue->setText("");
 	}
 }
 
-void EditList::Scroll( const tgui::Callback& _call )
+void PropertyPanel::Scroll( const tgui::Callback& _call )
 {
 	int dif = m_oldScrollValue - _call.value;
 	m_oldScrollValue = _call.value;
@@ -254,7 +254,7 @@ void EditList::Scroll( const tgui::Callback& _call )
 		m_Widgets[i]->move(0.0f, float(dif));
 }
 
-void EditList::MiniMaxi( const tgui::Callback& _call )
+void PropertyPanel::MiniMaxi( const tgui::Callback& _call )
 {
 	// Switch frame
 	tgui::AnimatedPicture* button = (tgui::AnimatedPicture*)_call.widget;
@@ -270,11 +270,11 @@ void EditList::MiniMaxi( const tgui::Callback& _call )
 			if(m_newName != nullptr) m_newName->hide();
 			if(m_newValue != nullptr) m_newValue->hide();
 			if(m_newAdd != nullptr) m_newAdd->hide();
-			EditList* parent = dynamic_cast<EditList*>(m_Parent);
+			PropertyPanel* parent = dynamic_cast<PropertyPanel*>(m_Parent);
 			if( parent )
 				parent->Resize( -(m_numPixelLines+20), (int)Panel::getPosition().y-1 );
 		} else {
-			EditList* parent = dynamic_cast<EditList*>(m_Parent);
+			PropertyPanel* parent = dynamic_cast<PropertyPanel*>(m_Parent);
 			float y0 = button->getPosition().y + 16.0f;
 			if( parent )
 				parent->Resize( m_numPixelLines+20, (int)y0-1 );
@@ -322,7 +322,7 @@ void EditList::MiniMaxi( const tgui::Callback& _call )
 	}
 }*/
 
-void EditList::Resize( int _addLines, int _where )
+void PropertyPanel::Resize( int _addLines, int _where )
 {
 	// If _where is not at the end move elements after that mark
 	for( size_t i=1; i<m_Widgets.size(); ++i )
@@ -340,12 +340,12 @@ void EditList::Resize( int _addLines, int _where )
 		Panel::setSize(Panel::getSize().x, float(m_numPixelLines));
 
 		// If parent is another EditList it has to be resized too
-		EditList* parent = dynamic_cast<EditList*>(m_Parent);
+		PropertyPanel* parent = dynamic_cast<PropertyPanel*>(m_Parent);
 		if( parent )
 			parent->Resize( _addLines, (int)Panel::getPosition().y + m_numPixelLines - _addLines + 20 );
 
 		// Move the 3 things below
-		if( m_addNdel )
+		if( m_addAble )
 		{
 			float y = Panel::getPosition().y + m_numPixelLines;
 			m_newName->setPosition(m_newName->getPosition().x, y);
@@ -361,23 +361,23 @@ void EditList::Resize( int _addLines, int _where )
 	}
 }
 
-bool EditList::IsScrollbarVisible()
+bool PropertyPanel::IsScrollbarVisible()
 {
 	if( m_autoSize ) return false;
 	return true;//m_scrollBar->getLowValue()<m_scrollBar->getMaximum();
 }
 
-float EditList::GetHeight() const
+float PropertyPanel::GetHeight() const
 {
-	return Panel::getSize().y + (m_addNdel ? 40.0f : 20.0f);
+	return Panel::getSize().y + (m_addAble ? 40.0f : 20.0f);
 }
 
-void EditList::setSize( float width, float height )
+void PropertyPanel::setSize( float width, float height )
 {
 	// Method untested / does not run correctly
 	assert(false);
 
-	Panel::setSize(width, std::max(0.0f, height - (m_addNdel ? 40.0f : 20.0f)));
+	Panel::setSize(width, std::max(0.0f, height - (m_addAble ? 40.0f : 20.0f)));
 	float w = Panel::getSize().x * 0.5f - 20.0f;
 	m_newName->setSize(w, 20.0f);
 	m_newName->setPosition(Panel::getPosition().x,
@@ -389,20 +389,23 @@ void EditList::setSize( float width, float height )
 		Panel::getPosition().y + Panel::getSize().y);
 }
 
-sf::Vector2f EditList::getSize() const
+sf::Vector2f PropertyPanel::getSize() const
 {
 	return sf::Vector2f(Panel::getSize().x, GetHeight());
 }
 
-void EditList::Show( Core::Object* _object )
+void PropertyPanel::Show( Core::Object* _object )
 {
+	// Use the name property in title bar
 	if( _object->HasProperty( Core::Object::PROP_NAME ) )
 	{
 		m_titleBar->setText( "    " + _object->GetProperty( Core::Object::PROP_NAME ).Value() );
 	}
 	for( int i=0; i<_object->GetNumElements(); ++i )
 	{
-		Add( _object->At(i)->Name(), _object->At(i)->Value() );
+		if( _object->At(i)->CanSee(m_player) )
+			Add( _object->At(i)->Name(), _object->At(i)->CanChange(m_player),
+				_object->At(i)->Value(), _object->At(i)->CanEdit(m_player) );
 	}
 }
 

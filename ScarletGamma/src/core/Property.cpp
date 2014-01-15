@@ -10,7 +10,7 @@
 using namespace std;
 
 namespace Core {
-	Property::Property( ObjectID _parent, uint64_t _rights, const std::string& _name, const std::string& _value ) :
+	Property::Property( ObjectID _parent, uint32_t _rights, const std::string& _name, const std::string& _value ) :
 		m_name(_name),
 		m_isObjectList(false),
 		m_value(_value),
@@ -19,7 +19,7 @@ namespace Core {
 	{
 	}
 
-	Property::Property( ObjectID _parent, uint64_t _rights, const std::string& _name, const std::string& _value, const ObjectList& _list ) :
+	Property::Property( ObjectID _parent, uint32_t _rights, const std::string& _name, const std::string& _value, const ObjectList& _list ) :
 		m_name(_name),
 		m_isObjectList(true),
 		m_value(_value),
@@ -125,7 +125,7 @@ namespace Core {
 		} else {	// Check if player has rights and if so check flags
 			if( m_rights & (1 << (_player+8)) )
 				return (m_rights & 0x008) != 0;
-			else (m_rights & 0x040) != 0;
+			else return (m_rights & 0x040) != 0;
 		}
 	}
 

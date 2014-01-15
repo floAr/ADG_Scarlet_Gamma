@@ -116,7 +116,7 @@ void States::SelectionState::MouseButtonPressed(sf::Event::MouseButtonEvent& but
 {
 	if(button.button==sf::Mouse::Button::Right)
 	{
-	//	m_finished=true;
+		m_finished=true;
 	//	m_previousState->MouseButtonPressed(button,tilePos);
 		
 	}

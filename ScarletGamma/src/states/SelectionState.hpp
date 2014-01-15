@@ -25,6 +25,8 @@ namespace States
 		tgui::Gui m_gui;
 		sf::Font m_menuFont;
 		std::vector<Core::ObjectID> m_objects;
+		Core::ObjectList* m_alreadySelected;
 		bool m_dirty;
+		bool m_selected;
 	};
 }

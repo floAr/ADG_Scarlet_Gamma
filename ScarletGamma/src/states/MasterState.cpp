@@ -47,7 +47,7 @@ namespace States {
 		CommonState::Update(dt);
 		// Uses the test map 0 for testing purposes.
 		g_Game->GetWorld()->GetMap(0)->Update(dt);
-		std::cout<<m_selection.Size();
+		//std::cout<<m_selection.Size();
 	}
 
 	void MasterState::Draw(sf::RenderWindow& win)

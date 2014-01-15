@@ -19,6 +19,7 @@ States::SelectionState::SelectionState(){
 void States::SelectionState::OnBegin(){
 	m_previousState->OnResume();
 	m_objects.clear();
+	m_selected=false;
 }
 
 void States::SelectionState::AddObject(Core::ObjectID& value){
@@ -36,7 +37,8 @@ void States::SelectionState::RecalculateGUI(){
 	m_gui.removeAllWidgets(); //clear gui
 
 	//TODO Get current selection to make buttons transparent when they not selected
-	Core::ObjectList selection;
+	CommonState* previousState = dynamic_cast<CommonState*>(m_previousState);
+	m_alreadySelected=previousState->GetSelection();
 
 
 	int count=m_objects.size();
@@ -51,11 +53,11 @@ void States::SelectionState::RecalculateGUI(){
 			button->setText(o->GetProperty(Core::Object::PROP_NAME).Value());
 		else
 			button->setText(std::to_string(o->ID()));
-		if(std::find(selection.Objects().begin(), selection.Objects().end(), m_objects[i]) != selection.Objects().end()) {
+		if(std::find(m_alreadySelected->Objects().begin(), m_alreadySelected->Objects().end(), m_objects[i]) != m_alreadySelected->Objects().end()) {
 			//already selected
 			button->setTransparency(255);
 		} else {
-			button->setTransparency(170);
+			button->setTransparency(150);
 		}
 
 		button->setCallbackId(100+i);
@@ -72,12 +74,15 @@ void States::SelectionState::Update(float dt){
 	if(m_dirty)
 		RecalculateGUI();
 	m_previousState->Update(dt);
+	if(m_selected)
+		m_finished=true;
 }
 void States::SelectionState::Draw(sf::RenderWindow& win){
 	m_previousState->Draw(win);
 	//win.clear();
 
 	GameState::Draw(win);
+
 }
 
 void States::SelectionState::GuiCallback(tgui::Callback& args){
@@ -87,7 +92,15 @@ void States::SelectionState::GuiCallback(tgui::Callback& args){
 		CommonState* previousState = dynamic_cast<CommonState*>(m_previousState);
 		// The parent is not set or not of type CommonState, but it should be!
 		assert(previousState);
-		previousState->AddToSelection(m_objects[args.id-100]);
-		this->m_finished=true;
+	m_alreadySelected=previousState->GetSelection();
+
+	if(std::find(m_alreadySelected->Objects().begin(), m_alreadySelected->Objects().end(), m_objects[args.id-100]) != m_alreadySelected->Objects().end()) {
+			//already selected
+		previousState->RemoveFromSelection(m_objects[args.id-100]);
+		} else {
+			previousState->AddToSelection(m_objects[args.id-100]);
+		}
+	m_selected=true;
+
 	}
 }

@@ -28,5 +28,6 @@ namespace States
 		Core::ObjectList* m_alreadySelected;
 		bool m_dirty;
 		bool m_selected;
+		int m_x,m_y;
 	};
 }

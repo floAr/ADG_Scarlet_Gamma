@@ -30,6 +30,8 @@ void States::SelectionState::AddObject(Core::ObjectID& value){
 void States::SelectionState::AddTilePosition(int x,int y){
 	Core::ObjectList objects= g_Game->GetWorld()->GetMap(0)->GetObjectsAt(x,y);
 	m_objects.insert(m_objects.end(), objects.Objects().begin(), objects.Objects().end());
+	m_x=x;
+	m_y=y;
 	m_dirty=true;
 }
 
@@ -48,7 +50,7 @@ void States::SelectionState::RecalculateGUI(){
 		Core::Object* o=g_Game->GetWorld()->GetObject(m_objects[i]);
 		tgui::Button::Ptr button(m_gui);
 		button->load("lib/TGUI-0.6-RC/widgets/Black.conf"); // TODO: this causes an exception later when main() finishes. I don't get it all :)
-		button->setPosition(30.0f, float(200+i*45));
+		button->setPosition(m_x*TILESIZE, float(m_y*TILESIZE+i*45));
 		if(o->HasProperty(Core::Object::PROP_NAME))
 			button->setText(o->GetProperty(Core::Object::PROP_NAME).Value());
 		else

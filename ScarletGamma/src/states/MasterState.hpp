@@ -25,7 +25,7 @@ namespace States
 		Core::World* m_database;	///< A container with object templates.
 
 		/// \brief Object builder attribute template panel
-		Graphics::EditList::Ptr m_propertyPanel;
+		Graphics::PropertyPanel::Ptr m_propertyPanel;
 		/// \brief one object which contains all properties.
 		Core::Object* m_propertyObject;
 

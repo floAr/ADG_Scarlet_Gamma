@@ -22,6 +22,6 @@ namespace States
 	private:
 		Core::Object* m_player;		///< The one and only player object
 
-		Graphics::EditList::Ptr m_playerView;	///< Showing the player properties
+		Graphics::PropertyPanel::Ptr m_playerView;	///< Showing the player properties
 	};
 }

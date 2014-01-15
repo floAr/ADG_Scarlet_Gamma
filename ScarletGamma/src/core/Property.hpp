@@ -12,12 +12,12 @@ class Property
 {
 public:
 	/// \brief Create a name value pair property. This cannot be changed later.
-	Property( ObjectID _parent, uint64_t _rights, const std::string& _name, const std::string& _value );
+	Property( ObjectID _parent, uint32_t _rights, const std::string& _name, const std::string& _value );
 
 	/// \brief Create a named object list property.
 	/// \details It is possible to add a standard string property additional
 	///		to the object list with SetValue.
-	Property( ObjectID _parent, uint64_t _rights, const std::string& _name, const std::string& _value, const ObjectList& _list );
+	Property( ObjectID _parent, uint32_t _rights, const std::string& _name, const std::string& _value, const ObjectList& _list );
 
 	/// \brief Deserialize an object.
 	/// \param [in] _node A serialized object node.
@@ -81,8 +81,9 @@ public:
 		R_V00V00V00 = 0x049,	///< Everybody: See
 		R_V0E000000 = 0x005,	///< Master: See, Edit
 		R_V0EV00V00 = 0x04d,	///< Master: See, Edit; APlayer: See; Player: See
-		R_VCEV0EV00 = 0x0f6,	///< Master: See, Change, Edit; APlayer: See, Edit; Player: See
+		R_VCEV0EV00 = 0x06f,	///< Master: See, Change, Edit; APlayer: See, Edit; Player: See
 		R_V0EV0EV0E = 0x16d,	///< Everybody: See, Edit
+		R_VCEV0EV0E = 0x16f,	///< Master: Change; Everybody: See, Edit
 		R_VCEVCEVCE = 0x1ff		///< Full rights for all
 	};
 

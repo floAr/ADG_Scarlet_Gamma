@@ -74,7 +74,7 @@ void States::SelectionState::Update(float dt){
 	if(m_dirty)
 		RecalculateGUI();
 	m_previousState->Update(dt);
-	if(m_selected)
+	if(m_selected&&!sf::Keyboard::isKeyPressed(sf::Keyboard::LControl))
 		m_finished=true;
 }
 void States::SelectionState::Draw(sf::RenderWindow& win){
@@ -100,6 +100,7 @@ void States::SelectionState::GuiCallback(tgui::Callback& args){
 		} else {
 			previousState->AddToSelection(m_objects[args.id-100]);
 		}
+	m_dirty=true;
 	m_selected=true;
 
 	}

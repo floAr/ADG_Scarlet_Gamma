@@ -8,10 +8,15 @@ ActionPool::ActionPool()
 {
     // Adding actions
     m_Actions.push_back(new Attack());
-
     //------------------------------//
     // TODO: add more actions here! //
     //------------------------------//
+
+    // Set action IDs
+    for (int id = 0; id < m_Actions.size(); ++id)
+    {
+        m_Actions.at(id)->SetID(id);
+    }
 }
 
 std::vector<Action*> ActionPool::GetAllowedActions(Core::Object& object)

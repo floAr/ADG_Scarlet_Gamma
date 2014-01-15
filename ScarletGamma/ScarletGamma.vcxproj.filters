@@ -161,6 +161,9 @@
     <ClCompile Include="src\actions\ActionPool.cpp">
       <Filter>Quelldateien\actions</Filter>
     </ClCompile>
+    <ClCompile Include="src\network\ActionMessages.cpp">
+      <Filter>Quelldateien\network</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\core\Map.hpp">
@@ -292,7 +295,7 @@
     <ClInclude Include="src\actions\ActionPool.hpp">
       <Filter>Quelldateien\actions</Filter>
     </ClInclude>
-    <ClInclude Include="network\ActionMessages.hpp">
+    <ClInclude Include="src\network\ActionMessages.hpp">
       <Filter>Quelldateien\network</Filter>
     </ClInclude>
   </ItemGroup>

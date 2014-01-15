@@ -7,18 +7,14 @@ namespace Actions
 {
     class Attack : public Action
     {
-    public:
-        /// \brief Returns the list of required properties for this action.
-        /// \return  Reference to list of requirements
-        virtual const std::string* GetRequirements()
-        {
-            return REQUIREMENTS;
-        }
+        friend class ActionPool;
 
+    public:
         /// \brief Initialize an attack action.
         virtual void Execute();
 
     private:
-        static const std::string REQUIREMENTS[];
+        /// \brief Private constructor, fills requirements list.
+        Attack();
     };
 }

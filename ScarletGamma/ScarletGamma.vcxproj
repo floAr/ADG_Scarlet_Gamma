@@ -80,6 +80,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\actions\ActionPool.cpp" />
+    <ClCompile Include="src\actions\Attack.cpp" />
     <ClCompile Include="src\core\Map.cpp" />
     <ClCompile Include="src\core\Object.cpp" />
     <ClCompile Include="src\core\ObjectList.cpp" />
@@ -120,6 +122,9 @@
     <ClCompile Include="src\utils\ValueInterpreter.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\actions\Action.hpp" />
+    <ClInclude Include="src\actions\ActionPool.hpp" />
+    <ClInclude Include="src\actions\Attack.hpp" />
     <ClInclude Include="src\Constants.hpp" />
     <ClInclude Include="src\core\Map.hpp" />
     <ClInclude Include="src\core\Object.hpp" />

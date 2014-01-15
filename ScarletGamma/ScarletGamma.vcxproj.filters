@@ -36,6 +36,9 @@
     <Filter Include="Quelldateien\gamerules">
       <UniqueIdentifier>{9517e75c-cabf-4f79-b571-b1e1d937ecf6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Quelldateien\actions">
+      <UniqueIdentifier>{148c69ec-fd0a-4602-ba3f-ee091e3ea91d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -151,6 +154,12 @@
     </ClCompile>
     <ClCompile Include="src\states\GameState.cpp">
       <Filter>Quelldateien\states</Filter>
+    </ClCompile>
+    <ClCompile Include="src\actions\Attack.cpp">
+      <Filter>Quelldateien\actions</Filter>
+    </ClCompile>
+    <ClCompile Include="src\actions\ActionPool.cpp">
+      <Filter>Quelldateien\actions</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -273,6 +282,15 @@
     </ClInclude>
     <ClInclude Include="src\graphics\EditList.hpp">
       <Filter>Quelldateien\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\actions\Action.hpp">
+      <Filter>Quelldateien\actions</Filter>
+    </ClInclude>
+    <ClInclude Include="src\actions\Attack.hpp">
+      <Filter>Quelldateien\actions</Filter>
+    </ClInclude>
+    <ClInclude Include="src\actions\ActionPool.hpp">
+      <Filter>Quelldateien\actions</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -11,8 +11,8 @@ namespace Network {
 		MAP,		///< Something which changes a specific map
 		OBJECT,		///< Something which changes a specific map
 		CHAT,		///< Text for the chat
-		MASTER,		///< Request to the game master (e.g. actions)
-        PLAYER      ///< Request to a player (e.g. ask for values)
+		MASTER,		///< Action message: request to the game master
+        PLAYER      ///< Action message: request to a player
 	};
 
 	/// \brief Opening of all packets to decide what to do and what data was

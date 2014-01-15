@@ -94,6 +94,7 @@
     <ClCompile Include="src\graphics\EditList.cpp" />
     <ClCompile Include="src\graphics\TileRenderer.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\network\ActionMessages.cpp" />
     <ClCompile Include="src\network\ChatMessages.cpp" />
     <ClCompile Include="src\network\MapMessages.cpp" />
     <ClCompile Include="src\network\Messenger.cpp" />
@@ -122,7 +123,6 @@
     <ClCompile Include="src\utils\ValueInterpreter.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="network\ActionMessages.hpp" />
     <ClInclude Include="src\actions\Action.hpp" />
     <ClInclude Include="src\actions\ActionPool.hpp" />
     <ClInclude Include="src\actions\Attack.hpp" />
@@ -138,6 +138,7 @@
     <ClInclude Include="src\gamerules\CombatRules.hpp" />
     <ClInclude Include="src\graphics\EditList.hpp" />
     <ClInclude Include="src\graphics\TileRenderer.hpp" />
+    <ClInclude Include="src\network\ActionMessages.hpp" />
     <ClInclude Include="src\network\ChatMessages.hpp" />
     <ClInclude Include="src\network\MapMessages.hpp" />
     <ClInclude Include="src\network\Message.hpp" />

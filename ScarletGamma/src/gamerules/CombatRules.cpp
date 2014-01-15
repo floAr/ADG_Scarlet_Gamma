@@ -19,21 +19,21 @@ CombatRules::HitRollInfo CombatRules::TargetHit(Core::Object* target, int diceRo
 
     // Target needs an AC to be hittable
     if (target->HasProperty(PROP_ARMORCLASS) == false)
-        return HitRollInfo(false, STR_HIT_NO_ARMOR_CLASS);
+        return HitRollInfo(false, STR_MSG_HIT_NO_ARMOR_CLASS);
 
     // Evaluate AC, may throw an NotEvaluatable exception
     int AC = target->GetProperty(PROP_ARMORCLASS).Evaluate();
 
     // Always hit on natural 20
     if (diceRoll == 20)
-        return HitRollInfo(true, STR_HIT_NATURAL_TWENTY);
+        return HitRollInfo(true, STR_MSG_HIT_NATURAL_TWENTY);
 
     // Hit if AC is achieved
     if (diceRoll + modifier >= AC)
-        return HitRollInfo(true, STR_HIT_ARMOR_CLASS_BEAT);
+        return HitRollInfo(true, STR_MSG_HIT_ARMOR_CLASS_BEAT);
 
     // Don't hit otherwise
-    return HitRollInfo(false, STR_HIT_ARMOR_CLASS_NOT_BEAT);
+    return HitRollInfo(false, STR_MSG_HIT_ARMOR_CLASS_NOT_BEAT);
 }
 
 int CombatRules::GetHitPoints(Core::Object* target)

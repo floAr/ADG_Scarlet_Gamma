@@ -12,7 +12,7 @@ namespace Network {
 		REMOVE_PROPERTY		///< Delete a property from an object
 	};
 
-	/// \brief A base class for all map related messages.
+	/// \brief A base class for all object related messages.
 	class ObjectMsg
 	{
 	public:

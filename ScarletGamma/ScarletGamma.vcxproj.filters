@@ -292,6 +292,9 @@
     <ClInclude Include="src\actions\ActionPool.hpp">
       <Filter>Quelldateien\actions</Filter>
     </ClInclude>
+    <ClInclude Include="network\ActionMessages.hpp">
+      <Filter>Quelldateien\network</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />

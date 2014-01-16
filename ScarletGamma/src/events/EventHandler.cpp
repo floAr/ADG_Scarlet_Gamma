@@ -23,6 +23,10 @@ void Events::EventHandler::Update(float dt)
 	sf::Event event;
 	while (m_window.pollEvent(event))
 	{
+		// Forward events to GUI
+		if (g_Game->GetStateMachine()->GuiHandleEvent(event) )
+			continue;
+
 		switch (event.type)
 		{
 
@@ -102,8 +106,5 @@ void Events::EventHandler::Update(float dt)
 		case sf::Event::JoystickDisconnected:
 			break;
 		}
-
-		// Forward events to GUI
-		g_Game->GetStateMachine()->GuiHandleEvent(event);
 	}
 }

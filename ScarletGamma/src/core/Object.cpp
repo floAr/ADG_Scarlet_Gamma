@@ -8,15 +8,15 @@ using namespace std;
 
 namespace Core {
 
-	const string Object::PROP_LAYER = string("layer");
-	const string Object::PROP_X = string("x");
-	const string Object::PROP_Y = string("y");
-	const string Object::PROP_SPRITE = string("sprite");
-	const string Object::PROP_COLOR = string("color");
+	const string Object::PROP_LAYER = string("Layer");
+	const string Object::PROP_X = string("X");
+	const string Object::PROP_Y = string("Y");
+	const string Object::PROP_SPRITE = string("Bild");
+	const string Object::PROP_COLOR = string("Farbe");
 	const string Object::PROP_PATH = string("path");
 	const string Object::PROP_TARGET = string("target");
-	const string Object::PROP_OBSTACLE = string("obstacle");
-	const string Object::PROP_NAME = string("name");
+	const string Object::PROP_OBSTACLE = string("Hindernis");
+	const string Object::PROP_NAME = string("Name");
 	const string Object::PROP_PLAYER = string("player");
 
 	Object::Object( ObjectID _id, const string& _sprite ) :

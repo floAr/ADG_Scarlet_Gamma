@@ -18,22 +18,22 @@ PropertyPanel::PropertyPanel() :
 	m_autoSize(true),
 	m_oldScrollValue(0),
 	m_numPixelLines(0),
-	m_player(0)
+	m_player(0),
+	m_object(nullptr)
 {
 }
 
 
-void PropertyPanel::Init( const std::string& _title,
-		float _x, float _y, float _w, float _h,
-		bool _addAble, bool _autosize, Core::PlayerID _player,
+void PropertyPanel::Init( float _x, float _y, float _w, float _h,
+		bool _addAble, bool _autoSize, Core::PlayerID _player,
 		unsigned _pid )
 {
 	m_addAble = _addAble;
-	m_autoSize = _autosize;
+	m_autoSize = _autoSize;
 	m_player = _player;
 
 	Panel::setPosition(_x, _y + 20.0f);
-	if( _autosize )
+	if( _autoSize )
 		Panel::setSize(_w, 0.0f);
 	else Panel::setSize(_w, _h - (m_addAble ? 40.0f : 20.0f));
 	Panel::setBackgroundColor( sf::Color(50,50,50,150) );
@@ -55,10 +55,10 @@ void PropertyPanel::Init( const std::string& _title,
 	m_titleBar->setSize(_w, 20.0f);
 	m_titleBar->setPosition(_x, _y);
 	m_titleBar->setCallbackId(_pid);
-	m_titleBar->disable();
-	m_titleBar->setText("    " + _title);
+	m_titleBar->setText( "" );
+	m_titleBar->bindCallback( &PropertyPanel::RefreshFilter, this, tgui::EditBox::TextChanged );
 	m_miniMaxi = tgui::AnimatedPicture::Ptr( *m_Parent );
-	m_miniMaxi->setPosition(_x+4.0f, _y+4.0f);
+	m_miniMaxi->setPosition(_x+_w-16.0f, _y+4.0f);
 	m_miniMaxi->addFrame("media/Black_ArrowRight.png");
 	m_miniMaxi->addFrame("media/Black_ArrowDown.png");
 	m_miniMaxi->setFrame(1);
@@ -144,6 +144,7 @@ void PropertyPanel::Add( const std::string& _left, bool _changable, const std::s
 	entry.right->setSize(w, 20.0f);
 	entry.right->setPosition(w+x, y);
 	entry.right->setCallbackId(m_lines.size());
+	entry.right->bindCallbackEx(&PropertyPanel::ValueChanged, this, tgui::EditBox::Unfocused);
 	if(!_editable)
 		entry.right->disable();
 	entry.right->setText(_right);
@@ -162,7 +163,7 @@ void PropertyPanel::Add( const std::string& _left, bool _changable, const std::s
 	m_lines.push_back(std::move(entry));
 }
 
-PropertyPanel::Ptr PropertyPanel::AddNode( const std::string&  _parentName, const std::string& _title )
+PropertyPanel::Ptr PropertyPanel::AddNode( const std::string&  _parentName )
 {
 	// Determine y coordinate where to insert inside panel.
 	EntryLine* parent = nullptr;
@@ -186,7 +187,7 @@ PropertyPanel::Ptr PropertyPanel::AddNode( const std::string&  _parentName, cons
 	float w = Panel::getSize().x - (m_addAble ? 12.0f : 0.0f) - x;
 
 	parent->subNode = PropertyPanel::Ptr( *this );
-	parent->subNode->Init( _title, x, y, w, 0.0f,
+	parent->subNode->Init( x, y, w, 0.0f,
 		m_addAble, true, m_player,
 		parent->left->getCallbackId() );
 
@@ -244,6 +245,7 @@ void PropertyPanel::AddBtn( const tgui::Callback& _call )
 	}
 }
 
+
 void PropertyPanel::Scroll( const tgui::Callback& _call )
 {
 	int dif = m_oldScrollValue - _call.value;
@@ -254,6 +256,7 @@ void PropertyPanel::Scroll( const tgui::Callback& _call )
 		m_Widgets[i]->move(0.0f, float(dif));
 }
 
+
 void PropertyPanel::MiniMaxi( const tgui::Callback& _call )
 {
 	// Switch frame
@@ -262,65 +265,58 @@ void PropertyPanel::MiniMaxi( const tgui::Callback& _call )
 	bool hide = button->getCurrentFrame() == 0;
 
 	// If it was the title bar toggle whole components on/of.
-	//if( _call.id == 0 )
+	if( hide )
 	{
-		if( hide )
-		{
-			Panel::hide();
-			if(m_newName != nullptr) m_newName->hide();
-			if(m_newValue != nullptr) m_newValue->hide();
-			if(m_newAdd != nullptr) m_newAdd->hide();
-			PropertyPanel* parent = dynamic_cast<PropertyPanel*>(m_Parent);
-			if( parent )
-				parent->Resize( -(m_numPixelLines+20), (int)Panel::getPosition().y-1 );
-		} else {
-			PropertyPanel* parent = dynamic_cast<PropertyPanel*>(m_Parent);
-			float y0 = button->getPosition().y + 16.0f;
-			if( parent )
-				parent->Resize( m_numPixelLines+20, (int)y0-1 );
-			Panel::show();
-			// As long as they were hidden the 4 components were not moved.
-			Panel::setPosition(Panel::getPosition().x, y0);
-			y0 += Panel::getSize().y;
+		Panel::hide();
+		if(m_newName != nullptr) m_newName->hide();
+		if(m_newValue != nullptr) m_newValue->hide();
+		if(m_newAdd != nullptr) m_newAdd->hide();
+		PropertyPanel* parent = dynamic_cast<PropertyPanel*>(m_Parent);
+		if( parent )
+			parent->Resize( -(m_numPixelLines+20), (int)Panel::getPosition().y-1 );
 
-			if(m_newName != nullptr) {
-				m_newName->show();
-				m_newName->setPosition(m_newName->getPosition().x, y0);
-			}
-			if(m_newValue != nullptr) {
-				m_newValue->show();
-				m_newValue->setPosition(m_newValue->getPosition().x, y0);
-			}
-			if(m_newAdd != nullptr) {
-				m_newAdd->show();
-				m_newAdd->setPosition(m_newAdd->getPosition().x, y0);
-			}
+		// If minimized show component name in the title bar
+		if( m_object && m_object->HasProperty( Core::Object::PROP_NAME ) )
+			m_titleBar->setText( m_object->GetProperty( Core::Object::PROP_NAME ).Value() );
+		m_titleBar->disable();
+	} else {
+		PropertyPanel* parent = dynamic_cast<PropertyPanel*>(m_Parent);
+		float y0 = button->getPosition().y + 16.0f;
+		if( parent )
+			parent->Resize( m_numPixelLines+20, (int)y0-1 );
+		Panel::show();
+		// As long as they were hidden the 4 components were not moved.
+		Panel::setPosition(Panel::getPosition().x, y0);
+		y0 += Panel::getSize().y;
+
+		if(m_newName != nullptr) {
+			m_newName->show();
+			m_newName->setPosition(m_newName->getPosition().x, y0);
 		}
+		if(m_newValue != nullptr) {
+			m_newValue->show();
+			m_newValue->setPosition(m_newValue->getPosition().x, y0);
+		}
+		if(m_newAdd != nullptr) {
+			m_newAdd->show();
+			m_newAdd->setPosition(m_newAdd->getPosition().x, y0);
+		}
+		// Use as filter
+		m_titleBar->enable();
+		m_titleBar->setText( "" );
 	}
 }
 
-/*void EditList::ScrollbarVisibilityChanged()
+
+void PropertyPanel::ValueChanged(const tgui::Callback& _call)
 {
-	float offset = -12.0f;
-	if( m_scrollBar->getLowValue()<m_scrollBar->getMaximum() )
-		offset = 12.0f;
+	// Find the property in the object over its name.
+	auto name = m_lines[_call.id].left->getText();
+	Core::Property& prop = m_object->GetProperty( name );
 
-	float w = (Panel::getSize().x - (m_addNdel ? 12.0f : 0.0f) - offset) * 0.5f;
-	float aspect = (Panel::getSize().x - (m_addNdel ? 12.0f : 0.0f) - offset) / (Panel::getSize().x - (m_addNdel ? 12.0f : 0.0f));
+	prop.SetValue(m_lines[_call.id].right->getText());
+}
 
-	// Move and scale everything inside the panel
-	for( size_t i=1; i<m_Widgets.size(); ++i )
-	{
-		// Do not move delete buttons (right aligned)
-		if( m_Widgets[i]->getPosition().x < Panel::getSize().x-12.0f )
-		{
-			m_Widgets[i]->scale(aspect, 1.0f);
-			if( m_Widgets[i]->getPosition().x < w )
-				m_Widgets[i]->setPosition(m_Widgets[i]->getPosition().x+offset, m_Widgets[i]->getPosition().y);
-			else m_Widgets[i]->setPosition(m_Widgets[i]->getPosition().x+offset*0.5f, m_Widgets[i]->getPosition().y);
-		}
-	}
-}*/
 
 void PropertyPanel::Resize( int _addLines, int _where )
 {
@@ -354,17 +350,14 @@ void PropertyPanel::Resize( int _addLines, int _where )
 		}
 	} else {
 		// Move all the other stuff on line adding
-		//bool scrollVisib = IsScrollbarVisible();
 		m_scrollBar->setMaximum(m_numPixelLines);
-	//	if( scrollVisib != IsScrollbarVisible() )
-//			ScrollbarVisibilityChanged();
 	}
 }
 
 bool PropertyPanel::IsScrollbarVisible()
 {
 	if( m_autoSize ) return false;
-	return true;//m_scrollBar->getLowValue()<m_scrollBar->getMaximum();
+	return true;
 }
 
 float PropertyPanel::GetHeight() const
@@ -396,16 +389,45 @@ sf::Vector2f PropertyPanel::getSize() const
 
 void PropertyPanel::Show( Core::Object* _object )
 {
-	// Use the name property in title bar
-	if( _object->HasProperty( Core::Object::PROP_NAME ) )
+	m_object = _object;
+
+	// Use the name property in title bar.
+/*	if( IsMinimized() && _object->HasProperty( Core::Object::PROP_NAME ) )
 	{
-		m_titleBar->setText( "    " + _object->GetProperty( Core::Object::PROP_NAME ).Value() );
-	}
-	for( int i=0; i<_object->GetNumElements(); ++i )
+		m_titleBar->setText( _object->GetProperty( Core::Object::PROP_NAME ).Value() );
+	} else {
+		// The call to the titlebar will cause a re-filtering
+		if(m_titleBar->getText().isEmpty())
+			RefreshFilter();
+		else
+			m_titleBar->setText( "" );
+	}*/
+	if( !IsMinimized() ) RefreshFilter();
+	else if( _object->HasProperty( Core::Object::PROP_NAME ) )
+		m_titleBar->setText( _object->GetProperty( Core::Object::PROP_NAME ).Value() );
+}
+
+
+void PropertyPanel::Clear()
+{
+	m_Widgets.erase( m_Widgets.begin() + 1, m_Widgets.end() );
+	m_lines.clear();
+	Resize(-m_numPixelLines, 0);
+}
+
+
+void PropertyPanel::RefreshFilter()
+{
+	if(IsMinimized()) return;
+	
+	Clear();
+
+	auto allProperties = m_object->FilterByName( m_titleBar->getText() );
+	for( size_t i=0; i<allProperties.size(); ++i )
 	{
-		if( _object->At(i)->CanSee(m_player) )
-			Add( _object->At(i)->Name(), _object->At(i)->CanChange(m_player),
-				_object->At(i)->Value(), _object->At(i)->CanEdit(m_player) );
+		if( allProperties[i]->CanSee(m_player) )
+			Add( allProperties[i]->Name(), allProperties[i]->CanChange(m_player),
+				 allProperties[i]->Value(), allProperties[i]->CanEdit(m_player) );
 	}
 }
 

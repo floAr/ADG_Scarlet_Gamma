@@ -28,7 +28,7 @@ States::PlayerState::PlayerState( const std::string& _playerName, const sf::Colo
 		id, true );
 
 	m_playerView = Graphics::PropertyPanel::Ptr(m_gui);
-	m_playerView->Init( _playerName, 0.0f, 0.0f, 300.0f, 600.0f, false, false,
+	m_playerView->Init( 0.0f, 0.0f, 300.0f, 600.0f, false, false,
 		id );
 }
 

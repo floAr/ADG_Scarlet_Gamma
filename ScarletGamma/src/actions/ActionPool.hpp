@@ -33,7 +33,7 @@ namespace Actions
         /// \returns  Pointer to action, may be 0
         Action* GetCurrentAction(int index = 0);
 
-        /// \brief Start an action by ID.
+        /// \brief Start an action on the local machine by ID.
         /// \param [in] id     ID of the action to start, \see GetAllowedActions
         /// \param [in] index  Optional: specify an index (i.e. player ID when you
         ///   are the server)

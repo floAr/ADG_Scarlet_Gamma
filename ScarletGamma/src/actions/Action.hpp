@@ -25,10 +25,10 @@ namespace Actions
             return m_Name;
         }
 
+    protected:
         /// \brief Do whatever the action does.
         virtual void Execute() = 0;
 
-    protected:
         /// \brief Create a copy of the action.
         virtual Action* Clone() = 0;
 

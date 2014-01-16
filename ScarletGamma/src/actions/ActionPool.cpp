@@ -67,9 +67,14 @@ Action* ActionPool::StartAction(Core::ActionID id, int index)
 
     // Create a copy of the action and return it
     if (toCopy)
-        return toCopy->Clone();
-    else
-        return 0;
+    {
+        Action* newAction = toCopy->Clone();
+        newAction->Execute();
+        return newAction;
+    }
+    
+    // Action not found
+    return 0;
 }
 
 Action* ActionPool::GetCurrentAction(int index)

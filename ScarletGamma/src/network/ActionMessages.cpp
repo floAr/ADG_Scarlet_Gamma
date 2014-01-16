@@ -66,7 +66,8 @@ size_t MsgActionBegin::Receive(Core::ActionID _action, const uint8_t* _data, siz
     Jo::Files::MemFile file(_data, _size);
 
     // TODO: If server, where to get the player ID from?!
-    Actions::ActionPool::Instance().StartAction(_action);
+    //Actions::ActionPool::Instance().RemoteStartAction(_action);
+    // TODO: implement function to start remote Action on the server
 
     return (size_t)file.GetCursor();
 }

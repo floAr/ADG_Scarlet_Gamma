@@ -105,7 +105,7 @@ namespace States {
 			//------------------------------------//
 			// move player to tile position		  //
 			//------------------------------------//
-			auto& tiles = g_Game->GetWorld()->GetMap(0)->GetObjectsAt((int)tilePos.x,(int)tilePos.y);
+			auto& tiles = g_Game->GetWorld()->GetMap(0)->GetObjectsAt((int)floor(tilePos.x),(int)floor(tilePos.y));
 			if( tiles.Size() > 0 )
 			{
 				// TODO: intelligent select?
@@ -223,7 +223,8 @@ namespace States {
 				{
 					// Insert object copy to the map
 					ObjectID id = g_Game->GetWorld()->NewObject( m_draggedContent->object );
-					g_Game->GetWorld()->GetMap(0)->Add( id, (int)tilePos.x, (int)tilePos.y, 1 );
+					// TODO: meaningful layer
+					g_Game->GetWorld()->GetMap(0)->Add( id, (int)floor(tilePos.x), (int)floor(tilePos.y), 0 );
 				}
 			}
 

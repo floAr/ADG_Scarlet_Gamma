@@ -74,6 +74,8 @@ namespace States
 		///		whose path should be drawn.
 		void DrawPathOverlay(sf::RenderWindow& win, Core::Object* _whosePath);
 
+		void SubmitChat(const tgui::Callback& _call);
+
 		Core::ObjectList m_selection;	///< List of currently selected objects
 	};
 }

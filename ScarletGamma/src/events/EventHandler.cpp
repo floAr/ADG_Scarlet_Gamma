@@ -24,7 +24,7 @@ void Events::EventHandler::Update(float dt)
 	while (m_window.pollEvent(event))
 	{
 		// Forward events to GUI
-		if (g_Game->GetStateMachine()->GuiHandleEvent(event) )
+		if (g_Game->GetStateMachine()->GuiHandleEvent(event))
 			continue;
 
 		switch (event.type)

@@ -47,8 +47,8 @@ PropertyPanel::PropertyPanel() :
 
 		m_basicAddButton = tgui::Button::Ptr();
 		m_basicAddButton->load("media/Black.conf");
-		m_basicAddButton->setSize(20.0f, 20.0f);
 		m_basicAddButton->setText("+");
+		m_basicAddButton->setSize(20.0f, 20.0f);
 
 		m_basicScrollBar = tgui::Scrollbar::Ptr();
 		m_basicScrollBar->load("media/Black.conf");
@@ -115,7 +115,7 @@ void PropertyPanel::Init( float _x, float _y, float _w, float _h,
 		m_newValue->setPosition(_x+w, _y+Panel::getSize().y+20.0f);
 		m_newValue->setCallbackId(_pid);
 		m_newAdd = m_basicAddButton.clone();
-		m_Parent->add(m_basicAddButton);
+		m_Parent->add(m_newAdd);
 		m_newAdd->setPosition(_x+Panel::getSize().x - 40.0f, _y+Panel::getSize().y+20.0f);
 		m_newAdd->bindCallbackEx(&PropertyPanel::AddBtn, this, tgui::Button::LeftMouseClicked);
 		m_newAdd->setCallbackId(_pid);

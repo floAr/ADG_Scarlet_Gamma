@@ -16,7 +16,8 @@ namespace Interfaces {
 
 		/// \param [in] _addAble Add and delete buttons for lines are shown.
 		void Init( float _x, float _y, float _w, float _h,
-			bool _addAble, Core::World* _world );
+			bool _addAble, Core::World* _world,
+			Interfaces::DragContent** _dragNDropHandler );
 
 		bool IsMinimized() const { return m_miniMaxi->getCurrentFrame() == 0; }
 
@@ -31,11 +32,13 @@ namespace Interfaces {
 		int m_oldScrollValue;		///< The damned scrollbar-change does not send the previous value.
 		int m_numPixelLines;		///< Total number of pixels covered by elements inside the list.
 		Core::World* m_world;
+		Interfaces::DragContent** m_dragNDropHandler;	///< A pointer to a pointer which must be filled if a mouse down event occures.
 
 		void RemoveBtn(const tgui::Callback& _call);
 		void AddBtn(const tgui::Callback& _call);
 		void Scroll(const tgui::Callback& _call);
 		void MiniMaxi(const tgui::Callback& _call);
+		void StartDrag(const tgui::Callback& _call);
 
 		/// \brief Extract all properties of an object recursively.
 		void Add( Core::ObjectID _object );

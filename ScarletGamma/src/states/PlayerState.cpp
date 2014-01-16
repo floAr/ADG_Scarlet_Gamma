@@ -93,7 +93,7 @@ void States::PlayerState::OnBegin()
 		id, true );
 
 	m_playerView->Init( 0.0f, 0.0f, 300.0f, 600.0f, false, false,
-		id );
+		id, nullptr );
 	m_playerView->Show( m_player );
 }
 

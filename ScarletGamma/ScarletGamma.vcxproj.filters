@@ -304,6 +304,9 @@
     <ClInclude Include="src\interfaces\ObjectPanel.hpp">
       <Filter>Quelldateien\interfaces</Filter>
     </ClInclude>
+    <ClInclude Include="src\interfaces\DragNDrop.hpp">
+      <Filter>Quelldateien\interfaces</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />

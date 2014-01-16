@@ -62,6 +62,20 @@ namespace Core {
 	}
 
 
+	ObjectID World::NewObject( const Object* _object )
+	{
+		// Serialize old one and deserialize to new one
+		Jo::Files::MetaFileWrapper wrapper;
+		_object->Serialize( wrapper.RootNode );
+		Object newObj( wrapper.RootNode );
+		// The copy has a wrong id - give it a new one
+		newObj.m_id = m_nextFreeObjectID++;
+		// Final insertion
+		m_objects.insert(std::make_pair<ObjectID,Object>( newObj.ID(), std::move(newObj) ) );
+		return newObj.ID();
+	}
+
+
 	void World::Load( Jo::Files::IFile& _file )
 	{
 		// Clear old stuff

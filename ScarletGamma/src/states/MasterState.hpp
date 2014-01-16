@@ -19,6 +19,7 @@ namespace States
 		virtual void Update(float dt);
 		virtual void Draw(sf::RenderWindow& win);
 		virtual void MouseButtonPressed(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos);
+		virtual void MouseButtonReleased(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos, float time);
 
 	private:
 		Core::Object* m_player;			///< The one and only player object
@@ -31,6 +32,12 @@ namespace States
 		Interfaces::PropertyPanel::Ptr m_propertyPanel;
 		/// \brief Object builder modules panel
 		Interfaces::ObjectPanel::Ptr m_modulePanel;
+		/// \brief Object builder objects panel
+		Interfaces::ObjectPanel::Ptr m_objectsPanel;
+
+		/// \brief Some components fill this with content if mouse is pushed.
+		///		On release an according action should be done.
+		Interfaces::DragContent* m_draggedContent;
 
 		/// \brief Creates the initial property database in case of a
 		///		loading failure.

@@ -21,6 +21,7 @@ namespace Interfaces {
 		///	\param [in] _pid An id set by a parent PropertyPanel - must be 0xffffffff!
 		void Init( float _x, float _y, float _w, float _h,
 			bool _addAble, bool _autoSize, Core::PlayerID _player,
+			Interfaces::DragContent** _dragNDropHandler,
 			unsigned _pid=0xffffffff);
 
 		/// \brief Extract all properties of an object recursively.
@@ -77,12 +78,14 @@ namespace Interfaces {
 		int m_numPixelLines;		///< Total number of pixels covered by elements inside the list.
 		Core::PlayerID m_player;	///< The accessing player to apply rights system
 		Core::Object* m_object;		///< Associated object which is visualized
+		Interfaces::DragContent** m_dragNDropHandler;	///< A pointer to a pointer which must be filled if a mouse down event occures.
 
 		void RemoveBtn(const tgui::Callback& _call);
 		void AddBtn(const tgui::Callback& _call);
 		void Scroll(const tgui::Callback& _call);
 		void MiniMaxi(const tgui::Callback& _call);
 		void ValueChanged(const tgui::Callback& _call);
+		void StartDrag(const tgui::Callback& _call);
 
 		/// \brief Add or remove vertical space.
 		/// \details If auto size is enabled just change container height.

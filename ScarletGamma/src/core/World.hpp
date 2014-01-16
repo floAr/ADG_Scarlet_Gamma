@@ -45,6 +45,9 @@ namespace Core {
 		/// \details This method does not send messages to the network.
 		ObjectID NewObject( const Jo::Files::MetaFileWrapper::Node& _node );
 
+		/// \brief Add a new object by cloning.
+		ObjectID NewObject( const Object* _object );
+
 		/// \brief Delete a map from world.
 		/// \details Objects from that map are deleted too!
 		/// \param [in] _map ID of the map which has to be deleted.

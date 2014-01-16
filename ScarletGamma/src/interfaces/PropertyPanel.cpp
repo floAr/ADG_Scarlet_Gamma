@@ -4,6 +4,7 @@
 #include "utils/StringUtil.hpp"
 #include "Constants.hpp"
 #include "core/Object.hpp"
+#include "DragNDrop.hpp"
 
 namespace Interfaces {
 
@@ -68,11 +69,13 @@ PropertyPanel::PropertyPanel() :
 
 void PropertyPanel::Init( float _x, float _y, float _w, float _h,
 		bool _addAble, bool _autoSize, Core::PlayerID _player,
+		Interfaces::DragContent** _dragNDropHandler,
 		unsigned _pid )
 {
 	m_addAble = _addAble;
 	m_autoSize = _autoSize;
 	m_player = _player;
+	m_dragNDropHandler = _dragNDropHandler;
 
 	Panel::setPosition(_x, _y + 20.0f);
 	if( _autoSize )
@@ -80,6 +83,8 @@ void PropertyPanel::Init( float _x, float _y, float _w, float _h,
 	else Panel::setSize(_w, _h - (m_addAble ? 40.0f : 20.0f));
 	Panel::setBackgroundColor( sf::Color(50,50,50,150) );
 	Panel::setCallbackId(_pid);
+	if(m_dragNDropHandler)
+		Panel::bindCallbackEx(&PropertyPanel::StartDrag, this, tgui::Panel::LeftMousePressed);
 
 	// Create a scrollbar for long lists.
 	m_scrollBar = m_basicScrollBar.clone();
@@ -218,7 +223,7 @@ PropertyPanel::Ptr PropertyPanel::AddNode( const std::string&  _parentName )
 	parent->subNode = PropertyPanel::Ptr( *this );
 	parent->subNode->Init( x, y, w, 0.0f,
 		m_addAble, true, m_player,
-		parent->left->getCallbackId() );
+		m_dragNDropHandler, parent->left->getCallbackId() );
 
 	return parent->subNode;
 }
@@ -344,6 +349,27 @@ void PropertyPanel::ValueChanged(const tgui::Callback& _call)
 	Core::Property& prop = m_object->GetProperty( name );
 
 	prop.SetValue(m_lines[_call.id].right->getText());
+}
+
+
+void PropertyPanel::StartDrag(const tgui::Callback& _call)
+{
+	// mouseOnWhichWidget does not work for disabled components to search manually
+	for( size_t i=0; i<m_lines.size(); ++i )
+	{
+		bool onThisLine = false;
+		onThisLine |= m_lines[i].left->mouseOnWidget((float)_call.mouse.x, (float)_call.mouse.y);
+		onThisLine |= m_lines[i].right->mouseOnWidget((float)_call.mouse.x, (float)_call.mouse.y);
+		if( onThisLine )
+		{
+			// Overwrite the last referenced content if it was not handled.
+			if( !*m_dragNDropHandler ) *m_dragNDropHandler = new Interfaces::DragContent();
+			(*m_dragNDropHandler)->from = DragContent::PROPERTY_PANEL;
+			(*m_dragNDropHandler)->object = m_object;
+			(*m_dragNDropHandler)->prop = &m_object->GetProperty( m_lines[i].left->getText() );
+			return;
+		}
+	}
 }
 
 

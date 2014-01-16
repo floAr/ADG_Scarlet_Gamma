@@ -5,6 +5,7 @@
 #include "Constants.hpp"
 #include "core/Object.hpp"
 #include "core/World.hpp"
+#include "DragNDrop.hpp"
 
 using namespace Core;
 
@@ -24,15 +25,19 @@ ObjectPanel::ObjectPanel() :
 
 
 void ObjectPanel::Init( float _x, float _y, float _w, float _h,
-		bool _addAble, Core::World* _world )
+		bool _addAble, Core::World* _world,
+		Interfaces::DragContent** _dragNDropHandler )
 {
 	m_addAble = _addAble;
 	m_world = _world;
+	m_dragNDropHandler = _dragNDropHandler;
 	assert(_world);
 
 	Panel::setPosition(_x, _y + 20.0f);
 	Panel::setSize(_w, _h - (m_addAble ? 40.0f : 20.0f));
 	Panel::setBackgroundColor( sf::Color(50,50,50,150) );
+	if(m_dragNDropHandler)
+		Panel::bindCallbackEx(&ObjectPanel::StartDrag, this, tgui::Panel::LeftMousePressed);
 
 	// Create a scrollbar for long lists.
 	m_scrollBar = tgui::Scrollbar::Ptr( *this );
@@ -216,6 +221,24 @@ void ObjectPanel::MiniMaxi( const tgui::Callback& _call )
 		}
 		// Use as filter
 		m_titleBar->enable();
+	}
+}
+
+
+void ObjectPanel::StartDrag(const tgui::Callback& _call)
+{
+	// mouseOnWhichWidget does not work for disabled components to search manually
+	for( size_t i=1; i<m_Widgets.size(); ++i )
+	{
+		if( m_Widgets[i]->mouseOnWidget((float)_call.mouse.x, (float)_call.mouse.y) )
+		{
+			// Overwrite the last referenced content if it was not handled.
+			if( !*m_dragNDropHandler ) *m_dragNDropHandler = new Interfaces::DragContent();
+			(*m_dragNDropHandler)->from = DragContent::OBJECT_PANEL;
+			(*m_dragNDropHandler)->object = m_world->GetObject( m_Widgets[i]->getCallbackId() );
+			(*m_dragNDropHandler)->prop = nullptr;
+			return;
+		}
 	}
 }
 

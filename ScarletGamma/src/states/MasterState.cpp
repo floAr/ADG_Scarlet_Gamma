@@ -7,6 +7,7 @@
 #include "Constants.hpp"
 #include "utils/Falloff.hpp"
 #include "network/Messenger.hpp"
+#include "interfaces/DragNDrop.hpp"
 #include <iostream>
 
 using namespace Core;
@@ -39,16 +40,27 @@ namespace States {
 			Jo::Files::HDDFile database( "data/modules.dat" );
 			m_dbModules->Load( database );
 		}
+		m_dbTemplates = new Core::World();
+		if( !Jo::Files::Utils::Exists( "data/objects.dat" ) )
+			CreateDefaultTemplateBase();
+		else {
+			Jo::Files::HDDFile database( "data/objects.dat" );
+			m_dbModules->Load( database );
+		}
 
 		// Load properties from database into gui
 		m_propertyPanel = Interfaces::PropertyPanel::Ptr(m_gui);
-		m_propertyPanel->Init( 0.0f, 0.0f, 240.0f, 300.0f, true, false, 0 );
+		m_propertyPanel->Init( 0.0f, 0.0f, 240.0f, 300.0f, true, false, 0, &m_draggedContent );
 		// The all-properties object has ID 0
 		m_propertyPanel->Show( m_dbProperties->GetObject( 0 ) );
 
 		// Load Modules from database into gui
 		m_modulePanel = Interfaces::ObjectPanel::Ptr(m_gui);
-		m_modulePanel->Init( 0.0f, 300.0f, 240.0f, 300.0f, true, m_dbModules );
+		m_modulePanel->Init( 0.0f, 300.0f, 240.0f, 300.0f, true, m_dbModules, &m_draggedContent );
+
+		// Load Objects from database into gui
+		m_objectsPanel = Interfaces::ObjectPanel::Ptr(m_gui);
+		m_objectsPanel->Init( 240.0f, 0.0f, 240.0f, 300.0f, true, m_dbTemplates, &m_draggedContent );
 
 		// Set chat color...
 		m_color = sf::Color(80,80,250);
@@ -111,19 +123,19 @@ namespace States {
 					m_player->AppendToPath( m_selected->ID() );
 				}
 			}
-							  } break;
-		case sf::Mouse::Middle:{
+			} break;
+		case sf::Mouse::Middle: {
 			m_zoom = 0;
 			sf::RenderWindow& win = g_Game->GetWindow();
 			sf::View newView = win.getView();
 			newView.setSize((float)win.getSize().x, (float)win.getSize().y);
 			win.setView(newView);
-							   } break;
-		case sf::Mouse::Right:{
+			} break;
+		case sf::Mouse::Right: {
 			SelectionState* gs = dynamic_cast<SelectionState*>(g_Game->GetStateMachine()->PushGameState(GST_SELECTION));
 			gs->AddTilePosition((int)tilePos.x,(int)tilePos.y);
 			
-							  } break;
+			} break;
 		}
 	}
 
@@ -179,6 +191,45 @@ namespace States {
 
 	void MasterState::CreateDefaultTemplateBase()
 	{
+		ObjectID OID = m_dbTemplates->NewObject( "media/gobbo.png" );
+		Object* object = m_dbTemplates->GetObject( OID );
+		object->Add( Property(OID, Property::R_V0E000000, Object::PROP_NAME, STR_GOBBO ));
+		// TODO: add modules
+
+		OID = m_dbTemplates->NewObject( "media/bar_hor.png" );
+		object = m_dbTemplates->GetObject( OID );
+		object->Add( Property(OID, Property::R_V0E000000, Object::PROP_NAME, STR_WALLH ));
+		object->Add( Property(OID, Property::R_VC0000000, Object::PROP_OBSTACLE, STR_EMPTY ));
+		OID = m_dbTemplates->NewObject( "media/bar_vert.png" );
+		object = m_dbTemplates->GetObject( OID );
+		object->Add( Property(OID, Property::R_V0E000000, Object::PROP_NAME, STR_WALLV ));
+		object->Add( Property(OID, Property::R_VC0000000, Object::PROP_OBSTACLE, STR_EMPTY ));
+		OID = m_dbTemplates->NewObject( "media/cross_big.png" );
+		object = m_dbTemplates->GetObject( OID );
+		object->Add( Property(OID, Property::R_V0E000000, Object::PROP_NAME, STR_WALLC ));
+		object->Add( Property(OID, Property::R_VC0000000, Object::PROP_OBSTACLE, STR_EMPTY ));
+	}
+
+	void MasterState::MouseButtonReleased( sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos, float time )
+	{
+		// Handle drop-event of drag&drop action
+		if( m_draggedContent )
+		{
+			// Where is the element dropped?
+			if( m_objectsPanel->mouseOnWidget( (float)button.x, (float)button.y ) )
+			{			// Just ignore things dragged to the object list
+			} else {	// Things where dragged to the map.
+				if( m_draggedContent->from == Interfaces::DragContent::OBJECT_PANEL )
+				{
+					// Insert object copy to the map
+					ObjectID id = g_Game->GetWorld()->NewObject( m_draggedContent->object );
+					g_Game->GetWorld()->GetMap(0)->Add( id, (int)tilePos.x, (int)tilePos.y, 1 );
+				}
+			}
+
+			delete m_draggedContent;
+			m_draggedContent = nullptr;
+		}
 	}
 
 }// namespace States

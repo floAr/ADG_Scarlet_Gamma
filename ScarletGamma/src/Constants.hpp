@@ -47,3 +47,12 @@ static const std::string STR_CHARISMA = std::string("Charisma");
 /* MODULES			                                                    */
 /************************************************************************/
 static const std::string STR_ATTACKABLE = std::string("Angreifbar");
+
+
+/************************************************************************/
+/* TEMPLATES		                                                    */
+/************************************************************************/
+static const std::string STR_GOBBO = std::string("Gobbo");
+static const std::string STR_WALLH = std::string("Wand_H");
+static const std::string STR_WALLV = std::string("Wand_V");
+static const std::string STR_WALLC = std::string("Wand_K");

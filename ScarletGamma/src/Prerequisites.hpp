@@ -94,6 +94,7 @@ namespace Interfaces
 {
 	class PropertyPanel;
 	class ObjectPanel;
+	struct DragContent;
 }
 
 

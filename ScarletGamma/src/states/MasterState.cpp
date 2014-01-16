@@ -32,7 +32,7 @@ namespace States {
 		}
 
 		// Load properties from database into gui
-		m_propertyPanel = Graphics::PropertyPanel::Ptr(m_gui);
+		m_propertyPanel = Interfaces::PropertyPanel::Ptr(m_gui);
 		m_propertyPanel->Init( 0.0f, 0.0f, 240.0f, 300.0f, true, false, 0 );
 		m_propertyObject = m_database->GetObject( 0 );	// The all-properties object has ID 0
 		m_propertyPanel->Show( m_propertyObject );

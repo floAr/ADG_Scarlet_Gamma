@@ -2,7 +2,7 @@
 
 #include "Prerequisites.hpp"
 #include "states/CommonState.hpp"
-#include "graphics/PropertyPanel.hpp"
+#include "interfaces/PropertyPanel.hpp"
 
 namespace States
 {
@@ -22,6 +22,6 @@ namespace States
 	private:
 		Core::Object* m_player;		///< The one and only player object
 
-		Graphics::PropertyPanel::Ptr m_playerView;	///< Showing the player properties
+		Interfaces::PropertyPanel::Ptr m_playerView;	///< Showing the player properties
 	};
 }

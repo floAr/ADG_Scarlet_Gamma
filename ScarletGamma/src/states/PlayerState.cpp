@@ -27,7 +27,7 @@ States::PlayerState::PlayerState( const std::string& _playerName, const sf::Colo
 	m_player->GetProperty( Core::Object::PROP_COLOR ).ApplyRights( 
 		id, true );
 
-	m_playerView = Graphics::PropertyPanel::Ptr(m_gui);
+	m_playerView = Interfaces::PropertyPanel::Ptr(m_gui);
 	m_playerView->Init( 0.0f, 0.0f, 300.0f, 600.0f, false, false,
 		id );
 }

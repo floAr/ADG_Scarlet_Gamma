@@ -39,6 +39,9 @@
     <Filter Include="Quelldateien\actions">
       <UniqueIdentifier>{148c69ec-fd0a-4602-ba3f-ee091e3ea91d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Quelldateien\interfaces">
+      <UniqueIdentifier>{7b9a4b6a-8e09-4efa-8ede-490a572e28e1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -158,8 +161,8 @@
     <ClCompile Include="src\actions\ActionPool.cpp">
       <Filter>Quelldateien\actions</Filter>
     </ClCompile>
-    <ClCompile Include="src\graphics\PropertyPanel.cpp">
-      <Filter>Quelldateien\graphics</Filter>
+    <ClCompile Include="src\interfaces\PropertyPanel.cpp">
+      <Filter>Quelldateien\interfaces</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -292,8 +295,8 @@
     <ClInclude Include="network\ActionMessages.hpp">
       <Filter>Quelldateien\network</Filter>
     </ClInclude>
-    <ClInclude Include="src\graphics\PropertyPanel.hpp">
-      <Filter>Quelldateien\graphics</Filter>
+    <ClInclude Include="src\interfaces\PropertyPanel.hpp">
+      <Filter>Quelldateien\interfaces</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

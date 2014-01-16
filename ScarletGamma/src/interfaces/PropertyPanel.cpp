@@ -5,7 +5,7 @@
 #include "Constants.hpp"
 #include "core/Object.hpp"
 
-namespace Graphics {
+namespace Interfaces {
 
 PropertyPanel::PropertyPanel() :
 	m_newName(nullptr),

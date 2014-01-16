@@ -4,7 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include "Prerequisites.hpp"
 
-namespace Graphics {
+namespace Interfaces {
 
 	/// \brief A container to show a list of editable values.
 	class PropertyPanel: public tgui::Panel
@@ -98,4 +98,4 @@ namespace Graphics {
 		void RefreshFilter();
 	};
 
-} // namespace Graphics
+} // namespace Interfaces

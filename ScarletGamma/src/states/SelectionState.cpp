@@ -52,7 +52,7 @@ void States::SelectionState::RecalculateGUI(){
 		tgui::Button::Ptr button(m_gui);
 		button->load("lib/TGUI-0.6-RC/widgets/Black.conf"); // TODO: this causes an exception later when main() finishes. I don't get it all :)
 		//button->setPosition(m_x*TILESIZE, float(m_y*TILESIZE+i*45));
-		positionButton(button,360/count*i,45);
+		positionButton(button,360.0f/count*i,45.0f);
 		if(o->HasProperty(Core::Object::PROP_NAME))
 			button->setText(o->GetProperty(Core::Object::PROP_NAME).Value());
 		else
@@ -127,8 +127,8 @@ void States::SelectionState::MouseButtonPressed(sf::Event::MouseButtonEvent& but
 
 
 void  States::SelectionState::positionButton(tgui::Button::Ptr b,float angle,float radius){
-	float bx = m_x*TILESIZE + radius * sin(angle*0.01745329251); //0.01745329251 is to got radians from degrees
-	float by = m_y*TILESIZE + radius * cos(angle*0.01745329251 );
+	float bx = m_x*TILESIZE + radius * sin(angle*0.01745329251f); //0.01745329251 is to got radians from degrees
+	float by = m_y*TILESIZE + radius * cos(angle*0.01745329251f);
    b->setPosition(bx,by);
 
 }

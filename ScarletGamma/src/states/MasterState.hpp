@@ -3,7 +3,7 @@
 #include "Prerequisites.hpp"
 #include "states/CommonState.hpp"
 #include "core/ObjectList.hpp"
-#include "graphics/PropertyPanel.hpp"
+#include "interfaces/PropertyPanel.hpp"
 
 namespace States
 {
@@ -25,7 +25,7 @@ namespace States
 		Core::World* m_database;	///< A container with object templates.
 
 		/// \brief Object builder attribute template panel
-		Graphics::PropertyPanel::Ptr m_propertyPanel;
+		Interfaces::PropertyPanel::Ptr m_propertyPanel;
 		/// \brief one object which contains all properties.
 		Core::Object* m_propertyObject;
 

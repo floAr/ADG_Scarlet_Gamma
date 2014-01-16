@@ -39,7 +39,7 @@ namespace States {
 
 		// Set chat color...
 		m_color = sf::Color(80,80,250);
-		m_name = "[Master] ";
+		m_name = "Master";
 	}
 
 	void MasterState::Update(float dt)

@@ -92,6 +92,7 @@
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\gamerules\CombatRules.cpp" />
     <ClCompile Include="src\graphics\TileRenderer.cpp" />
+    <ClCompile Include="src\interfaces\ObjectPanel.cpp" />
     <ClCompile Include="src\interfaces\PropertyPanel.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\network\ChatMessages.cpp" />
@@ -137,6 +138,7 @@
     <ClInclude Include="src\Game.hpp" />
     <ClInclude Include="src\gamerules\CombatRules.hpp" />
     <ClInclude Include="src\graphics\TileRenderer.hpp" />
+    <ClInclude Include="src\interfaces\ObjectPanel.hpp" />
     <ClInclude Include="src\interfaces\PropertyPanel.hpp" />
     <ClInclude Include="src\network\ChatMessages.hpp" />
     <ClInclude Include="src\network\MapMessages.hpp" />

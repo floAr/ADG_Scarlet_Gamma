@@ -14,22 +14,9 @@ States::PlayerState::PlayerState( const std::string& _playerName, const sf::Colo
 	m_playerView(nullptr)
 {
 	m_color = _chatColor;
-	m_name = '[' + _playerName + "] ";
-
-	// The player name is used to find the correct object in the world.
-	// TODO: if player does not exists create one!
-	m_player = g_Game->GetWorld()->FindPlayer( _playerName );
-	assert( m_player );
-	m_playerView->Show( m_player );
-	// Use the players currently chosen color
-	m_player->SetColor( m_color );
-	Core::PlayerID id = m_player->GetProperty(Core::Object::PROP_PLAYER).Evaluate();
-	m_player->GetProperty( Core::Object::PROP_COLOR ).ApplyRights( 
-		id, true );
+	m_name = _playerName;
 
 	m_playerView = Interfaces::PropertyPanel::Ptr(m_gui);
-	m_playerView->Init( 0.0f, 0.0f, 300.0f, 600.0f, false, false,
-		id );
 }
 
 
@@ -94,6 +81,20 @@ void States::PlayerState::OnBegin()
 {
 	// After connecting the client is receiving the world
 	Network::Messenger::Poll( true );
+
+	// The player name is used to find the correct object in the world.
+	// TODO: if player does not exists create one!
+	m_player = g_Game->GetWorld()->FindPlayer( m_name );
+	assert( m_player );
+	Core::PlayerID id = m_player->GetProperty(Core::Object::PROP_PLAYER).Evaluate();
+	// Use the players currently chosen color
+	m_player->SetColor( m_color );
+	m_player->GetProperty( Core::Object::PROP_COLOR ).ApplyRights( 
+		id, true );
+
+	m_playerView->Init( 0.0f, 0.0f, 300.0f, 600.0f, false, false,
+		id );
+	m_playerView->Show( m_player );
 }
 
 void States::PlayerState::Update( float _dt )

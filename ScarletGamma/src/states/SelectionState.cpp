@@ -53,10 +53,7 @@ void States::SelectionState::RecalculateGUI(){
 		button->load("lib/TGUI-0.6-RC/widgets/Black.conf"); // TODO: this causes an exception later when main() finishes. I don't get it all :)
 		//button->setPosition(m_x*TILESIZE, float(m_y*TILESIZE+i*45));
 		positionButton(button,360.0f/count*i,45.0f);
-		if(o->HasProperty(Core::Object::PROP_NAME))
-			button->setText(o->GetProperty(Core::Object::PROP_NAME).Value());
-		else
-			button->setText(std::to_string(o->ID()));
+		button->setText(o->GetName());
 		if(std::find(m_alreadySelected->Objects().begin(), m_alreadySelected->Objects().end(), m_objects[i]) != m_alreadySelected->Objects().end()) {
 			//already selected
 			button->setTransparency(255);

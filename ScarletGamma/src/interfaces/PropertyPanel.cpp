@@ -123,7 +123,7 @@ void PropertyPanel::Add( const std::string& _left, bool _changable, const std::s
 
 	Resize(20, int(y));
 
-	// Width of a edit
+	// Width of an edit
 	float w = (Panel::getSize().x - x) * 0.5f - (m_addAble ? 6.0f : 0.0f);
 
 	EntryLine entry;
@@ -134,8 +134,8 @@ void PropertyPanel::Add( const std::string& _left, bool _changable, const std::s
 	entry.left->setSize(w, 20.0f);
 	entry.left->setPosition(x, y);
 	entry.left->setCallbackId(m_lines.size());
-	//if(!_changable) // Always disable to avoid careless changes
-		entry.left->disable();
+	// Always disable to avoid careless changes
+	entry.left->disable();
 	entry.left->setText(_left);
 
 	// Create the one on the right side
@@ -198,7 +198,7 @@ void PropertyPanel::RemoveBtn(const tgui::Callback& _call)
 {
 	int posY = (int)_call.widget->getPosition().y;
 	int minY = posY, maxY = posY + (int)_call.widget->getSize().y;
-	unsigned delLine = _call.widget->getCallbackId();
+	unsigned delLine = _call.id;
 	
 	// First element is always the scrollbar
 	for( size_t i=1; i<m_Widgets.size(); ++i )
@@ -276,8 +276,8 @@ void PropertyPanel::MiniMaxi( const tgui::Callback& _call )
 			parent->Resize( -(m_numPixelLines+20), (int)Panel::getPosition().y-1 );
 
 		// If minimized show component name in the title bar
-		if( m_object && m_object->HasProperty( Core::Object::PROP_NAME ) )
-			m_titleBar->setText( m_object->GetProperty( Core::Object::PROP_NAME ).Value() );
+		if( m_object )
+			m_titleBar->setText( m_object->GetName() );
 		m_titleBar->disable();
 	} else {
 		PropertyPanel* parent = dynamic_cast<PropertyPanel*>(m_Parent);
@@ -391,20 +391,9 @@ void PropertyPanel::Show( Core::Object* _object )
 {
 	m_object = _object;
 
-	// Use the name property in title bar.
-/*	if( IsMinimized() && _object->HasProperty( Core::Object::PROP_NAME ) )
-	{
-		m_titleBar->setText( _object->GetProperty( Core::Object::PROP_NAME ).Value() );
-	} else {
-		// The call to the titlebar will cause a re-filtering
-		if(m_titleBar->getText().isEmpty())
-			RefreshFilter();
-		else
-			m_titleBar->setText( "" );
-	}*/
+	// Use the name property in title bar in minimized mode.
 	if( !IsMinimized() ) RefreshFilter();
-	else if( _object->HasProperty( Core::Object::PROP_NAME ) )
-		m_titleBar->setText( _object->GetProperty( Core::Object::PROP_NAME ).Value() );
+	else m_titleBar->setText( _object->GetName() );
 }
 
 

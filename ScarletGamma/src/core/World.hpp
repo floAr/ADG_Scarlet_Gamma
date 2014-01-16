@@ -66,6 +66,12 @@ namespace Core {
 		/// \brief If a player with that name exists its object is returned.
 		/// \return The player object or nullptr.
 		Object* FindPlayer( std::string _name );
+
+		/// \brief Search all objects which have a certain text sequence in
+		///		there name.
+		/// \details This method is case insensitive.
+		/// \return An array with read access to all found objects.
+		std::vector<ObjectID> FilterObjectsByName( const std::string& _text ) const;
 	private:
 		/// \brief All real existing objects.
 		std::unordered_map<ObjectID, Object> m_objects;

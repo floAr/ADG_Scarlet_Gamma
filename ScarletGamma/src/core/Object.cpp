@@ -77,6 +77,14 @@ namespace Core {
 	}
 
 
+	const std::string& Object::GetName() const
+	{
+		const Property* name = Get(PROP_NAME);
+		if( !name ) return std::to_string(m_id);
+		return name->Value();
+	}
+
+
 	sf::Color Object::GetColor() const
 	{
 		// The property does not always exists

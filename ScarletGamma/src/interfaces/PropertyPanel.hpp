@@ -76,7 +76,10 @@ namespace Interfaces {
 		///		components after where are moved down.
 		void Resize(int _addLines, int _where);
 
+		/// \brief Check if scrollbar is used. In auto size mode it is not.
 		bool IsScrollbarVisible();
+
+		/// \brief Compute total height: Panel+TitleBar+AddLine
 		float GetHeight() const;
 
 		/// \brief Add or replace a line. The left side is the unique key.

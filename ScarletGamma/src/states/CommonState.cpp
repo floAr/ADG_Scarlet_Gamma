@@ -99,7 +99,7 @@ void CommonState::KeyPressed( sf::Event::KeyEvent& key )
 			if( enterTextEdit->getText() != "" )
 			{
 				tgui::ChatBox::Ptr localOut = m_gui.get( "Messages" );
-				std::string text = m_name + enterTextEdit->getText().toAnsiString();
+				std::string text = '[' + m_name + "] " + enterTextEdit->getText().toAnsiString();
 				Network::ChatMsg(text, m_color).Send();
 			}
 		}

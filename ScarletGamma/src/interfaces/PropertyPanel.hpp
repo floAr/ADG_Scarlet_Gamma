@@ -31,6 +31,14 @@ namespace Interfaces {
 		virtual void setSize(float width, float height);
 		virtual sf::Vector2f getSize() const;
 	protected:
+		// A list of preloaded objects to increase creation time by a very large
+		// factor.
+		tgui::EditBox::Ptr m_basicEdit;
+		tgui::Checkbox::Ptr m_basicDeleteButton;
+		tgui::Button::Ptr m_basicAddButton;
+		tgui::Scrollbar::Ptr m_basicScrollBar;
+		tgui::AnimatedPicture::Ptr m_basicMiniMaxi;
+
 		tgui::EditBox::Ptr m_newName;
 		tgui::EditBox::Ptr m_newValue;
 		tgui::Button::Ptr m_newAdd;
@@ -47,6 +55,14 @@ namespace Interfaces {
 			PropertyPanel::Ptr subNode;
 
 			EntryLine() : left(nullptr), right(nullptr), del(nullptr), subNode(nullptr)	{}
+
+			/*~EntryLine()
+			{
+				delete left;
+				delete right;
+				delete del;
+				delete subNode;
+			}*/
 		};
 
 		/// \brief A map of references to find the 2/3 objects belonging to

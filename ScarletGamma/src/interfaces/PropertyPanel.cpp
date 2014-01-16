@@ -8,6 +8,11 @@
 namespace Interfaces {
 
 PropertyPanel::PropertyPanel() :
+	m_basicEdit(nullptr),
+	m_basicDeleteButton(nullptr),
+	m_basicAddButton(nullptr),
+	m_basicScrollBar(nullptr),
+	m_basicMiniMaxi(nullptr),
 	m_newName(nullptr),
 	m_newValue(nullptr),
 	m_newAdd(nullptr),
@@ -21,6 +26,43 @@ PropertyPanel::PropertyPanel() :
 	m_player(0),
 	m_object(nullptr)
 {
+	// Use the same basic components as the parent if possible.
+	PropertyPanel* parent = dynamic_cast<PropertyPanel*>(m_Parent);
+	if( parent )
+	{
+		m_basicEdit = parent->m_basicEdit;
+		m_basicDeleteButton = parent->m_basicDeleteButton;
+		m_basicAddButton = parent->m_basicAddButton;
+		m_basicScrollBar = parent->m_basicScrollBar;
+		m_basicMiniMaxi = parent->m_basicMiniMaxi;
+	} else {
+		// Otherwise create a set of base components
+		m_basicEdit = tgui::EditBox::Ptr();
+		m_basicEdit->load("media/Black.conf");
+		m_basicEdit->setText("");
+
+		m_basicDeleteButton = tgui::Checkbox::Ptr();
+		m_basicDeleteButton->load("media/Black.conf");
+		m_basicDeleteButton->setSize(12.0f, 12.0f);
+
+		m_basicAddButton = tgui::Button::Ptr();
+		m_basicAddButton->load("media/Black.conf");
+		m_basicAddButton->setSize(20.0f, 20.0f);
+		m_basicAddButton->setText("+");
+
+		m_basicScrollBar = tgui::Scrollbar::Ptr();
+		m_basicScrollBar->load("media/Black.conf");
+		m_basicScrollBar->setAutoHide(false);
+		m_basicScrollBar->setCallbackId(0xffffffff);
+		m_basicScrollBar->bindCallbackEx( &PropertyPanel::Scroll, this, tgui::Scrollbar::ValueChanged );
+		m_basicScrollBar->setMaximum(0);
+
+		m_basicMiniMaxi = tgui::AnimatedPicture::Ptr();
+		m_basicMiniMaxi->addFrame("media/Black_ArrowRight.png");
+		m_basicMiniMaxi->addFrame("media/Black_ArrowDown.png");
+		m_basicMiniMaxi->setFrame(1);
+		m_basicMiniMaxi->setSize(12.0f, 12.0f);
+	}
 }
 
 
@@ -40,54 +82,42 @@ void PropertyPanel::Init( float _x, float _y, float _w, float _h,
 	Panel::setCallbackId(_pid);
 
 	// Create a scrollbar for long lists.
-	m_scrollBar = tgui::Scrollbar::Ptr( *this );
-	m_scrollBar->load("media/Black.conf");
-	m_scrollBar->setAutoHide(false);
+	m_scrollBar = m_basicScrollBar.clone();
+	this->add(m_scrollBar);
 	m_scrollBar->setLowValue(unsigned(Panel::getSize().y));
 	m_scrollBar->setSize(12.0f, Panel::getSize().y);
-	m_scrollBar->setMaximum(0);
-	m_scrollBar->setCallbackId(0xffffffff);
-	m_scrollBar->bindCallbackEx( &PropertyPanel::Scroll, this, tgui::Scrollbar::ValueChanged );
 
 	// The whole component can be minimized..
-	m_titleBar = tgui::EditBox::Ptr( *m_Parent );
-	m_titleBar->load("media/Black.conf");
+	m_titleBar = m_basicEdit.clone();
+	m_Parent->add(m_titleBar);
 	m_titleBar->setSize(_w, 20.0f);
 	m_titleBar->setPosition(_x, _y);
 	m_titleBar->setCallbackId(_pid);
-	m_titleBar->setText( "" );
 	m_titleBar->bindCallback( &PropertyPanel::RefreshFilter, this, tgui::EditBox::TextChanged );
-	m_miniMaxi = tgui::AnimatedPicture::Ptr( *m_Parent );
+	m_miniMaxi = m_basicMiniMaxi.clone();
+	m_Parent->add(m_miniMaxi);
 	m_miniMaxi->setPosition(_x+_w-16.0f, _y+4.0f);
-	m_miniMaxi->addFrame("media/Black_ArrowRight.png");
-	m_miniMaxi->addFrame("media/Black_ArrowDown.png");
-	m_miniMaxi->setFrame(1);
 	m_miniMaxi->setCallbackId(_pid);
-	m_miniMaxi->setSize(12.0f, 12.0f);
 	m_miniMaxi->bindCallbackEx(&PropertyPanel::MiniMaxi, this, tgui::AnimatedPicture::LeftMouseClicked);
 
 	// Add an edit which creates a new line if changed.
 	if( m_addAble )
 	{
 		float w = Panel::getSize().x * 0.5f - 20.0f;
-		m_newName = tgui::EditBox::Ptr( *m_Parent );
-		m_newName->load("media/Black.conf");
+		m_newName = m_basicEdit.clone();
+		m_Parent->add(m_newName);
 		m_newName->setSize(w, 20.0f);
 		m_newName->setPosition(_x, _y+Panel::getSize().y+20.0f);
-		m_newName->setText("");
 		m_newName->setCallbackId(_pid);
-		m_newValue = tgui::EditBox::Ptr( *m_Parent );
-		m_newValue->load("media/Black.conf");
+		m_newValue = m_basicEdit.clone();
+		m_Parent->add(m_newValue);
 		m_newValue->setSize(w, 20.0f);
 		m_newValue->setPosition(_x+w, _y+Panel::getSize().y+20.0f);
-		m_newValue->setText("");
 		m_newValue->setCallbackId(_pid);
-		m_newAdd = tgui::Button::Ptr( *m_Parent );
-		m_newAdd->load("media/Black.conf");
+		m_newAdd = m_basicAddButton.clone();
+		m_Parent->add(m_basicAddButton);
 		m_newAdd->setPosition(_x+Panel::getSize().x - 40.0f, _y+Panel::getSize().y+20.0f);
-		m_newAdd->setSize(20.0f, 20.0f);
 		m_newAdd->bindCallbackEx(&PropertyPanel::AddBtn, this, tgui::Button::LeftMouseClicked);
-		m_newAdd->setText("+");
 		m_newAdd->setCallbackId(_pid);
 	}
 }
@@ -129,8 +159,8 @@ void PropertyPanel::Add( const std::string& _left, bool _changable, const std::s
 	EntryLine entry;
 
 	// Create component on the left side
-	entry.left = tgui::EditBox::Ptr( *this, _left );
-	entry.left->load("media/Black.conf");
+	entry.left = m_basicEdit.clone();
+	this->add(entry.left);
 	entry.left->setSize(w, 20.0f);
 	entry.left->setPosition(x, y);
 	entry.left->setCallbackId(m_lines.size());
@@ -139,8 +169,8 @@ void PropertyPanel::Add( const std::string& _left, bool _changable, const std::s
 	entry.left->setText(_left);
 
 	// Create the one on the right side
-	entry.right = tgui::EditBox::Ptr( *this, _left );
-	entry.right->load("media/Black.conf");
+	entry.right = m_basicEdit.clone();
+	this->add(entry.right);
 	entry.right->setSize(w, 20.0f);
 	entry.right->setPosition(w+x, y);
 	entry.right->setCallbackId(m_lines.size());
@@ -152,10 +182,9 @@ void PropertyPanel::Add( const std::string& _left, bool _changable, const std::s
 	// Create a remove line button
 	if( m_addAble && _changable )
 	{
-		entry.del = tgui::Checkbox::Ptr( *this );
-		entry.del->load("media/Black.conf");
+		entry.del = m_basicDeleteButton.clone();
+		this->add(entry.del);
 		entry.del->setPosition(Panel::getSize().x - 12.0f, y+4.0f);
-		entry.del->setSize(12.0f, 12.0f);
 		entry.del->setCallbackId(m_lines.size());
 		entry.del->bindCallbackEx(&PropertyPanel::RemoveBtn, this, tgui::Button::LeftMouseClicked);
 	}

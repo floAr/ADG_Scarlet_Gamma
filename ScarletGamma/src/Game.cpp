@@ -6,6 +6,7 @@
 #include "core/World.hpp"
 #include "core/Map.hpp"
 #include <math.h>
+#include "sfutils/View.hpp"
 
 void Game::Init()
 {
@@ -61,8 +62,7 @@ void Game::Run()
 			m_dFpsTime = 0;
 			m_dFpsCounter = 0;
 		}
-		sf::View backup = m_window.getView();
-		m_window.setView(m_window.getDefaultView());
+		sf::View backup = sfUtils::View::SetDefault(&m_window);
 		sf::Text t(std::to_string(m_dFps), m_dFpsFont, 12);
 		if (m_dFps < 30)
 			t.setColor(sf::Color::Red);

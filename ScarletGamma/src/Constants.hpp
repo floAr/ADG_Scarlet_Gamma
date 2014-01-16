@@ -12,6 +12,7 @@ static const std::string STR_PROPERTIES = std::string("Properties");
 static const std::string STR_PARENT = std::string("parent");
 static const std::string STR_OBJECTS = std::string("objects");
 static const std::string STR_RIGHTS = std::string("rights");
+static const std::string STR_0 = std::string("0");
 
 
 
@@ -41,3 +42,17 @@ static const std::string STR_CONSTITUTION = std::string("Konstitution");
 static const std::string STR_INTELLIGENCE = std::string("Intelligenz");
 static const std::string STR_WISDOM = std::string("Weisheit");
 static const std::string STR_CHARISMA = std::string("Charisma");
+
+/************************************************************************/
+/* MODULES			                                                    */
+/************************************************************************/
+static const std::string STR_ATTACKABLE = std::string("Angreifbar");
+
+
+/************************************************************************/
+/* TEMPLATES		                                                    */
+/************************************************************************/
+static const std::string STR_GOBBO = std::string("Gobbo");
+static const std::string STR_WALLH = std::string("Wand_H");
+static const std::string STR_WALLV = std::string("Wand_V");
+static const std::string STR_WALLC = std::string("Wand_K");

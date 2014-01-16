@@ -65,17 +65,16 @@ void Events::InputHandler::MouseButtonPressed(sf::Event::MouseButtonEvent& butto
 
 void Events::InputHandler::MouseButtonReleased(sf::Event::MouseButtonEvent& button)
 {
-	if (m_mouseBtnLastPressed.find(button.button) != m_mouseBtnLastPressed.end())
-	{
-		// calculate tile position
-		sf::Vector2f tilePos = g_Game->GetWindow().mapPixelToCoords(sf::Vector2i(button.x, button.y));
-		tilePos.x /= TILESIZE;
-		tilePos.y /= TILESIZE;
+	// calculate tile position
+	sf::Vector2f tilePos = g_Game->GetWindow().mapPixelToCoords(sf::Vector2i(button.x, button.y));
+	tilePos.x /= TILESIZE;
+	tilePos.y /= TILESIZE;
 
-		float time = m_totalTime - m_mouseBtnLastPressed[button.button];
-		m_mouseBtnLastPressed.erase(button.button);
-		m_stateMachine.MouseButtonReleased(button, tilePos, time);
-	}
+	float time = 0.0f;
+	if (m_mouseBtnLastPressed.find(button.button) != m_mouseBtnLastPressed.end())
+		time = m_totalTime - m_mouseBtnLastPressed[button.button];
+	m_mouseBtnLastPressed.erase(button.button);
+	m_stateMachine.MouseButtonReleased(button, tilePos, time);
 }
 
 void Events::InputHandler::MouseMoved(sf::Event::MouseMoveEvent& move)

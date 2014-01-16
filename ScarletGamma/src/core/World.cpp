@@ -2,6 +2,7 @@
 #include "Object.hpp"
 #include "Map.hpp"
 #include "network/WorldMessages.hpp"
+#include "utils/StringUtil.hpp"
 
 using namespace std;
 
@@ -56,6 +57,20 @@ namespace Core {
 		// Deserialize -> update maximum used ObjectID
 		Object newObj(_node);
 		m_nextFreeObjectID = max(m_nextFreeObjectID, newObj.ID());
+		m_objects.insert(std::make_pair<ObjectID,Object>( newObj.ID(), std::move(newObj) ) );
+		return newObj.ID();
+	}
+
+
+	ObjectID World::NewObject( const Object* _object )
+	{
+		// Serialize old one and deserialize to new one
+		Jo::Files::MetaFileWrapper wrapper;
+		_object->Serialize( wrapper.RootNode );
+		Object newObj( wrapper.RootNode );
+		// The copy has a wrong id - give it a new one
+		newObj.m_id = m_nextFreeObjectID++;
+		// Final insertion
 		m_objects.insert(std::make_pair<ObjectID,Object>( newObj.ID(), std::move(newObj) ) );
 		return newObj.ID();
 	}
@@ -165,6 +180,21 @@ namespace Core {
 		if( it != m_players.end() )
 			return GetObject( it->second );
 		return nullptr;
+	}
+
+	std::vector<ObjectID> World::FilterObjectsByName( const std::string& _text ) const
+	{
+		std::vector<ObjectID> _results;
+
+		// For each object
+		for( auto it=m_objects.begin(); it!=m_objects.end(); ++it )
+		{
+			// Test if the name contains the correct part
+			if( Utils::IStringContains(it->second.GetName(), _text) )
+				// Add reference to output
+				_results.push_back( it->second.ID() );
+		}
+		return _results;
 	}
 
 } // namespace Core

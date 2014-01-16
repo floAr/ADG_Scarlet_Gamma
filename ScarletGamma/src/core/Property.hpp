@@ -156,9 +156,6 @@ public:
 	/// \brief Returns the counter for the size of this list.
 	int GetNumElements() const		{ return (int)m_list.size(); }
 
-	/// \brief Fast index access. DO NOT STORE INDICES they can change!
-	const Property* At( int _index ) const	{ return &m_list[_index]; }
-
 	/// \brief Search all properties which have a certain text sequence in
 	///		there name.
 	/// \details This method is case insensitive.

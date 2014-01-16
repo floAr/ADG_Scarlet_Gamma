@@ -27,17 +27,12 @@ States::GameState* States::StateMachine::PushGameState(States::GameState* newSta
     // If we have a new state, "push" it
     if (newState != 0)
     {
-        bool poppedSomething = false;
-
         // Remove finished GameStates before pushing a new one
         while (m_gameState && m_gameState->IsFinished())
-        {
-            poppedSomething = true;
             PopGameState();
-        }
         
         // Pause current game state
-        if (poppedSomething && m_gameState)
+        if (m_gameState)
             m_gameState->OnPause();
 
         newState->SetPreviousState(m_gameState);
@@ -105,7 +100,7 @@ void States::StateMachine::PopGameState()
 void States::StateMachine::Update(float dt)
 {
     // Replace game state with predecessor - may be 0
-    if (m_gameState && m_gameState->IsFinished())
+    while (m_gameState && m_gameState->IsFinished())
     {
         PopGameState();
     }
@@ -169,10 +164,11 @@ void States::StateMachine::MouseMoved(int deltaX, int deltaY)
         m_gameState->MouseMoved(deltaX, deltaY);
 }
 
-void States::StateMachine::GuiHandleEvent(sf::Event& event)
+bool States::StateMachine::GuiHandleEvent(sf::Event& event)
 {
     if (m_gameState)
-        m_gameState->GuiHandleEvent(event);
+		return m_gameState->GuiHandleEvent(event);
+	return false;
 }
 
 void States::StateMachine::GuiHandleCallbacks()

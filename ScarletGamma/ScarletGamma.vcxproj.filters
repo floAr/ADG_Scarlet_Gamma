@@ -39,6 +39,9 @@
     <Filter Include="Quelldateien\actions">
       <UniqueIdentifier>{148c69ec-fd0a-4602-ba3f-ee091e3ea91d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Quelldateien\interfaces">
+      <UniqueIdentifier>{7b9a4b6a-8e09-4efa-8ede-490a572e28e1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -149,9 +152,6 @@
     <ClCompile Include="src\gamerules\CombatRules.cpp">
       <Filter>Quelldateien\gamerules</Filter>
     </ClCompile>
-    <ClCompile Include="src\graphics\EditList.cpp">
-      <Filter>Quelldateien\graphics</Filter>
-    </ClCompile>
     <ClCompile Include="src\states\GameState.cpp">
       <Filter>Quelldateien\states</Filter>
     </ClCompile>
@@ -160,6 +160,12 @@
     </ClCompile>
     <ClCompile Include="src\actions\ActionPool.cpp">
       <Filter>Quelldateien\actions</Filter>
+    </ClCompile>
+    <ClCompile Include="src\interfaces\PropertyPanel.cpp">
+      <Filter>Quelldateien\interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="src\interfaces\ObjectPanel.cpp">
+      <Filter>Quelldateien\interfaces</Filter>
     </ClCompile>
     <ClCompile Include="src\network\ActionMessages.cpp">
       <Filter>Quelldateien\network</Filter>
@@ -283,9 +289,6 @@
     <ClInclude Include="src\gamerules\CombatRules.hpp">
       <Filter>Quelldateien\gamerules</Filter>
     </ClInclude>
-    <ClInclude Include="src\graphics\EditList.hpp">
-      <Filter>Quelldateien\graphics</Filter>
-    </ClInclude>
     <ClInclude Include="src\actions\Action.hpp">
       <Filter>Quelldateien\actions</Filter>
     </ClInclude>
@@ -297,6 +300,15 @@
     </ClInclude>
     <ClInclude Include="src\network\ActionMessages.hpp">
       <Filter>Quelldateien\network</Filter>
+    </ClInclude>
+    <ClInclude Include="src\interfaces\PropertyPanel.hpp">
+      <Filter>Quelldateien\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="src\interfaces\ObjectPanel.hpp">
+      <Filter>Quelldateien\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="src\interfaces\DragNDrop.hpp">
+      <Filter>Quelldateien\interfaces</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

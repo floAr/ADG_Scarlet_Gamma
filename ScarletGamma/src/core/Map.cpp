@@ -76,7 +76,7 @@ namespace Core {
 
 		// Allocate a new larger memory
 		ObjectList* mapArray = new ObjectList[(Width()+_nx+_px) * (Height()+_ny+_py)];
-		int newWidth = Width() + _nx + _ny;
+		int newWidth = Width() + _nx + _px;
 		// Copy old part
 		for( int y=0; y<Height(); ++y ) {
 			for( int x=0; x<Width(); ++x ) {
@@ -88,7 +88,7 @@ namespace Core {
 		// itself. The rest is moved to the new one.
 		delete[] m_mapArray;
 
-		m_mapArray = m_mapArray;
+		m_mapArray = mapArray;
 		m_minX -= _nx;
 		m_minY -= _ny;
 		m_maxX += _px;
@@ -120,6 +120,7 @@ namespace Core {
 
 		// Test each object in this cell if it has obstacle property
 		auto list = GetObjectsAt(_position.x, _position.y);
+		if( list.Size() == 0 ) return false;
 		for( int i=0; i<list.Size(); ++i )
 			if(m_parentWorld->GetObject(list[i])->HasProperty(Object::PROP_OBSTACLE))
 				return false;

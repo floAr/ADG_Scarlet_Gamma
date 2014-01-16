@@ -86,8 +86,17 @@ namespace States
 namespace Graphics
 {
     class TileRenderer;
-    class PropertyPanel;
 }
+
+//------------------------------------------------------------------------------
+// INTERFACES
+namespace Interfaces
+{
+	class PropertyPanel;
+	class ObjectPanel;
+	struct DragContent;
+}
+
 
 //------------------------------------------------------------------------------
 // MATHEMATICS

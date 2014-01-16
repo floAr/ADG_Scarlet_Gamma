@@ -1,4 +1,5 @@
 #include "GameState.hpp"
+#include "sfutils\View.hpp"
 
 namespace States {
 
@@ -20,8 +21,7 @@ namespace States {
 		{
 			// Update HUD without zoom and move
 			sf::RenderWindow* win = m_currentGui->getWindow();
-			sf::View backup = win->getView();
-			win->setView(win->getDefaultView());
+			sf::View backup = sfUtils::View::SetDefault(win);
 			result = m_currentGui->handleEvent(event);
 			win->setView(backup);
 		}
@@ -34,8 +34,7 @@ namespace States {
 		{
 			// Draw HUD without zoom and move
 			sf::RenderWindow* win = m_currentGui->getWindow();
-			sf::View backup = win->getView();
-			win->setView(win->getDefaultView());
+			sf::View backup = sfUtils::View::SetDefault(win);
 			m_currentGui->draw();
 			win->setView(backup);
 		}

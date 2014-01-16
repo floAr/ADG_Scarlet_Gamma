@@ -223,8 +223,12 @@ namespace States {
 				{
 					// Insert object copy to the map
 					ObjectID id = g_Game->GetWorld()->NewObject( m_draggedContent->object );
-					// TODO: meaningful layer
-					g_Game->GetWorld()->GetMap(0)->Add( id, (int)floor(tilePos.x), (int)floor(tilePos.y), 0 );
+
+					int x = (int)floor(tilePos.x);
+					int y = (int)floor(tilePos.y);
+					// Meaningful layer: on top
+					int l = g_Game->GetWorld()->GetMap(0)->GetObjectsAt(x,y).Size();
+					g_Game->GetWorld()->GetMap(0)->Add( id, x, y, l );
 				}
 			}
 

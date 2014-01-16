@@ -37,8 +37,11 @@ void Events::EventHandler::Update(float dt)
 			m_window.close();
 			break;
 
-		case sf::Event::Resized:
-			break;
+		case sf::Event::Resized: {
+			sf::View V = dynamic_cast<sf::RenderWindow&>(m_window).getView();
+			V.setSize( event.size.width, event.size.height );
+			dynamic_cast<sf::RenderWindow&>(m_window).setView(V);
+			} break;
 
 		case sf::Event::LostFocus:
 			break;

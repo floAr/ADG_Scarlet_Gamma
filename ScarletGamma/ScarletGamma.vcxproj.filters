@@ -149,9 +149,6 @@
     <ClCompile Include="src\gamerules\CombatRules.cpp">
       <Filter>Quelldateien\gamerules</Filter>
     </ClCompile>
-    <ClCompile Include="src\graphics\EditList.cpp">
-      <Filter>Quelldateien\graphics</Filter>
-    </ClCompile>
     <ClCompile Include="src\states\GameState.cpp">
       <Filter>Quelldateien\states</Filter>
     </ClCompile>
@@ -160,6 +157,9 @@
     </ClCompile>
     <ClCompile Include="src\actions\ActionPool.cpp">
       <Filter>Quelldateien\actions</Filter>
+    </ClCompile>
+    <ClCompile Include="src\graphics\PropertyPanel.cpp">
+      <Filter>Quelldateien\graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -280,9 +280,6 @@
     <ClInclude Include="src\gamerules\CombatRules.hpp">
       <Filter>Quelldateien\gamerules</Filter>
     </ClInclude>
-    <ClInclude Include="src\graphics\EditList.hpp">
-      <Filter>Quelldateien\graphics</Filter>
-    </ClInclude>
     <ClInclude Include="src\actions\Action.hpp">
       <Filter>Quelldateien\actions</Filter>
     </ClInclude>
@@ -294,6 +291,9 @@
     </ClInclude>
     <ClInclude Include="network\ActionMessages.hpp">
       <Filter>Quelldateien\network</Filter>
+    </ClInclude>
+    <ClInclude Include="src\graphics\PropertyPanel.hpp">
+      <Filter>Quelldateien\graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,4 +1,4 @@
-#include "EditList.hpp"
+#include "PropertyPanel.hpp"
 #include "SFML/System\Vector2.hpp"
 #include "TGUI/EditBox.hpp"
 #include "utils/StringUtil.hpp"

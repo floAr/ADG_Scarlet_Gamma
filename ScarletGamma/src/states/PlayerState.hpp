@@ -2,7 +2,7 @@
 
 #include "Prerequisites.hpp"
 #include "states/CommonState.hpp"
-#include "graphics/EditList.hpp"
+#include "graphics/PropertyPanel.hpp"
 
 namespace States
 {

@@ -1,6 +1,7 @@
 #include "ActionMessages.hpp"
 #include "Message.hpp"
 #include "Messenger.hpp"
+#include "Actions/ActionPool.hpp"
 #include <assert.h>
 
 using namespace Network;
@@ -14,16 +15,26 @@ size_t Network::HandleActionMessage(Core::ActionID _action, const uint8_t* _data
 
     switch(*header)
     {
-    case ActionMsgType::BEGIN_ACTION:
-        readSize += MsgBeginAction::Receive(_action, _data + readSize, _size - readSize);
+    case ActionMsgType::ACTION_BEGIN:
+        // Start a new action
+        readSize += MsgActionBegin::Receive(_action, _data + readSize, _size - readSize);
         break;
-    case ActionMsgType::END_ACTION:
+    case ActionMsgType::ACTION_END:
+        // End the current action
+        //readSize += MsgEndAction::Receive(_action, _data + readSize, _size - readSize);
+        break;
+    case ActionMsgType::ACTION_INFO:
+        // Notify the action about something
         //readSize += MsgEndAction::Receive(_action, _data + readSize, _size - readSize);
         break;
     }
 
     return readSize;
 }
+
+
+////////////////////////////////////////////////////////////////////////////////
+// ActionMsg
 
 void ActionMsg::Send()
 {
@@ -36,21 +47,55 @@ void ActionMsg::Send()
     Messenger::Send(data.GetBuffer(), (size_t)data.GetSize());
 }
 
-MsgBeginAction::MsgBeginAction(Core::ActionID _action)
-    : ActionMsg(ActionMsgType::BEGIN_ACTION, _action)
+
+////////////////////////////////////////////////////////////////////////////////
+// MsgActionBegin
+
+MsgActionBegin::MsgActionBegin(Core::ActionID _action)
+    : ActionMsg(ActionMsgType::ACTION_BEGIN, _action)
 {
 }
 
-void MsgBeginAction::WriteData(Jo::Files::MemFile& _output) const
+void MsgActionBegin::WriteData(Jo::Files::MemFile& _output) const
 {
     // Write nothing, ActionMsgType and ActionID are sufficient
 }
 
-size_t MsgBeginAction::Receive(Core::ActionID _action, const uint8_t* _data, size_t _size)
+size_t MsgActionBegin::Receive(Core::ActionID _action, const uint8_t* _data, size_t _size)
 {
     Jo::Files::MemFile file(_data, _size);
 
-    // TODO: Bring the action!
+    // TODO: If server, where to get the player ID from?!
+    Actions::ActionPool::Instance().StartAction(_action);
 
     return (size_t)file.GetCursor();
 }
+
+
+////////////////////////////////////////////////////////////////////////////////
+// MsgActionEnd
+
+MsgActionEnd::MsgActionEnd(Core::ActionID _action)
+    : ActionMsg(ActionMsgType::ACTION_END, _action)
+{
+}
+
+void MsgActionEnd::WriteData(Jo::Files::MemFile& _output) const
+{
+    // Write nothing, ActionMsgType and ActionID are sufficient
+}
+
+size_t MsgActionEnd::Receive(Core::ActionID _action, const uint8_t* _data, size_t _size)
+{
+    Jo::Files::MemFile file(_data, _size);
+
+    // TODO: End an action!
+
+    return (size_t)file.GetCursor();
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// MsgActionInfo
+
+// ...

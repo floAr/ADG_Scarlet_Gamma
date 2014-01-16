@@ -18,7 +18,7 @@ void Attack::Execute()
     // TODO: Enable DM-side attacking!!
 
     // Tell the server that we are starting an attack
-    Network::MsgBeginAction message(this->GetID());
+    Network::MsgActionBegin message(this->GetID());
     message.Send();
    
 
@@ -40,4 +40,13 @@ void Attack::Execute()
     //     message "damage is auto-doubled") and send it to the server
     //
     // done!
+}
+
+Action* Attack::Clone()
+{
+    Attack* result = new Attack();
+
+    // TODO: copy all values
+
+    return dynamic_cast<Action*>(result);
 }

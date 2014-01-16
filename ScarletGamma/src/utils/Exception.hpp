@@ -14,6 +14,9 @@ namespace Exception {
 	/// \brief Thrown if the existence of a property was expected but is not there.
 	class NoSuchProperty {};
 
+    /// \brief Thrown if the existence of an action was expected but is not there.
+	class NoSuchAction {};
+
 	/// \brief Thrown if an expression cannot be evaluated.
 	class InvalidFormula {
 	public:

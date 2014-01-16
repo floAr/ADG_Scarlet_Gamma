@@ -14,6 +14,9 @@ namespace Actions
         virtual void Execute();
 
     private:
+        /// \brief Clones an attack action.
+        virtual Action* Clone();
+
         /// \brief Private constructor, fills requirements list.
         Attack();
     };

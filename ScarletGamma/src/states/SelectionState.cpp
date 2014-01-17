@@ -8,6 +8,8 @@
 #include "utils/Content.hpp"
 #include "core/Object.hpp"
 #include <math.h>
+#include "StateMachine.hpp"
+#include "ActionState.hpp"
 
 States::SelectionState::SelectionState() :
 	m_defaultButton()
@@ -100,6 +102,12 @@ void States::SelectionState::GuiCallback(tgui::Callback& args)
 {
 	if(args.id>=100)//item clicked
 	{
+		Core::ObjectID id = (*m_objects)[args.id-100];
+		auto action=dynamic_cast<ActionState*>( g_Game->GetStateMachine()->PushGameState(States::GST_ACTION));
+		action->SetObject(id);
+		m_finished=true;
+
+		/* previous implementation
 		CommonState* previousState = dynamic_cast<CommonState*>(m_previousState);
 		// The parent is not set or not of type CommonState, but it should be!
 		assert(previousState);
@@ -116,6 +124,7 @@ void States::SelectionState::GuiCallback(tgui::Callback& args)
 		m_dirty=true;
 		if( !sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) )
 			m_finished = true;
+			*/
 	}
 }
 

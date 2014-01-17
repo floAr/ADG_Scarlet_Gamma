@@ -5,6 +5,7 @@
 #include "MasterState.hpp"
 #include "LaunchMasterState.hpp"
 #include "LaunchPlayerState.hpp"
+#include "ActionState.hpp"
 
 States::StateMachine::StateMachine() :
     m_gameState(0)
@@ -71,10 +72,13 @@ States::GameState* States::StateMachine::PushGameState(States::GameStateType sta
         // You mast create the master state your self - it requires input.
         assert(false);
         break;
-    case GST_SELECTION:
-        newState = new States::SelectionState();
-        break;
-    }
+	case GST_SELECTION:
+		newState = new States::SelectionState();
+		break;
+	case GST_ACTION:
+		newState = new States::ActionState();
+		break;
+	}
 
     // If we have a new state, "push" it
     if (newState != 0)

@@ -34,17 +34,23 @@ void States::ActionState::OnBegin()
 void States::ActionState::RecalculateGUI()
 {
 	m_gui.removeAllWidgets(); //clear gui
+	//get the current object
 	Core::Object* o=g_Game->GetWorld()->GetObject(m_object);
+	auto pos=o->GetPosition();
+	m_screenX=pos.x*TILESIZE;
+	m_screenY=pos.y*TILESIZE;
+	//get action list
 	std::vector<Core::ActionID> actions=Actions::ActionPool::Instance().GetAllowedActions(*o);
 
 	int i=0;
 	int count =actions.size();
+	//for each action 
 	for(std::vector<Core::ActionID>::iterator it = actions.begin(); it != actions.end(); ++it) {
 		tgui::Button::Ptr button = m_defaultButton.clone();
 		m_gui.add(button);
 		button->setSize(50, 40);
-		positionButton(button, 360.0f / count * i, 45.0f + count * 3.0f);
-
+		//button->setPosition(100,100);
+		positionButton(button, 360.01f / count * i, 45.0f + count * 3.0f);
 		button->setText(Actions::ActionPool::Instance().GetActionName((*it)));
 
 		button->setCallbackId(100+(*it));
@@ -79,6 +85,7 @@ void States::ActionState::GuiCallback(tgui::Callback& args)
 	if(args.id>=100)//item clicked
 	{
 		Actions::ActionPool::Instance().StartAction(args.id-100);
+		m_finished=true;
 	}
 }
 

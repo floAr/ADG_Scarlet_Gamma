@@ -33,7 +33,7 @@ namespace Core {
 				return;
 			}
 		// You tried to remove an object which is not in the list.
-		assert(false);
+		// assert(false);
 	}
 
 

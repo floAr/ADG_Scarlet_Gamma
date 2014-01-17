@@ -21,7 +21,7 @@ States::SelectionState::SelectionState() :
 
 void States::SelectionState::OnBegin()
 {
-	m_selected = false;
+	m_controlWasPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::LControl);
 
 	// If control is not hold clear old selection
 	if( !sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) )
@@ -43,10 +43,9 @@ void States::SelectionState::RecalculateGUI()
 {
 	m_gui.removeAllWidgets(); //clear gui
 
-	//TODO Get current selection to make buttons transparent when they not selected
+	// Get current selection to make buttons transparent when they not selected
 	CommonState* previousState = dynamic_cast<CommonState*>(m_previousState);
-	m_alreadySelected=previousState->GetSelection();
-
+	const Core::ObjectList* alreadySelected = previousState->GetSelection();
 
 	int count = m_objects->Size();
 
@@ -61,7 +60,7 @@ void States::SelectionState::RecalculateGUI()
 			button->setText(o->GetProperty(Core::Object::PROP_NAME).Value());
 		else
 			button->setText(std::to_string(o->ID()));
-		if( m_alreadySelected->Contains((*m_objects)[i]) ) {
+		if( alreadySelected->Contains((*m_objects)[i]) ) {
 			// already selected
 			button->setTransparency(255);
 		} else {
@@ -82,8 +81,9 @@ void States::SelectionState::Update(float dt)
 	if(m_dirty)
 		RecalculateGUI();
 	m_previousState->Update(dt);
-	if(m_selected && !sf::Keyboard::isKeyPressed(sf::Keyboard::LControl))
+	if(m_controlWasPressed && !sf::Keyboard::isKeyPressed(sf::Keyboard::LControl))
 		m_finished=true;
+	m_controlWasPressed |= sf::Keyboard::isKeyPressed(sf::Keyboard::LControl);
 }
 
 
@@ -100,21 +100,22 @@ void States::SelectionState::GuiCallback(tgui::Callback& args)
 {
 	if(args.id>=100)//item clicked
 	{
-		//todo inject objects
 		CommonState* previousState = dynamic_cast<CommonState*>(m_previousState);
 		// The parent is not set or not of type CommonState, but it should be!
 		assert(previousState);
-		m_alreadySelected=previousState->GetSelection();
+		const Core::ObjectList* alreadySelected = previousState->GetSelection();
 
-		if( m_alreadySelected->Contains((*m_objects)[args.id-100]) )
+		Core::ObjectID id = (*m_objects)[args.id-100];
+		if( alreadySelected->Contains(id) )
 		{
 			// already selected
-			previousState->RemoveFromSelection((*m_objects)[args.id-100]);
+			previousState->RemoveFromSelection(id);
 		} else {
-			previousState->AddToSelection((*m_objects)[args.id-100]);
+			previousState->AddToSelection(id);
 		}
 		m_dirty=true;
-		m_selected=true;
+		if( !sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) )
+			m_finished = true;
 	}
 }
 
@@ -132,6 +133,8 @@ void States::SelectionState::MouseButtonPressed(sf::Event::MouseButtonEvent& but
 		// If clicked somewhere not on the gui finish in single selection mode
 		if( !sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) )
 			m_finished = true;
+		else
+			SetTilePosition((int)floor(tilePos.x), (int)floor(tilePos.y), (float)button.x, (float)button.y);
 	}
 }
 

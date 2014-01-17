@@ -194,5 +194,18 @@ void CommonState::SubmitChat(const tgui::Callback& _call)
 	}
 }
 
+void CommonState::AddToSelection( Core::ObjectID _id )
+{
+	// Assumes that the selection state only calls this if possible
+	// which is the case due to toggeling
+	assert( !m_selection.Contains(_id) );
+	m_selection.Add(_id);
+}
+
+void CommonState::RemoveFromSelection( Core::ObjectID _id )
+{
+	m_selection.Remove(_id);
+}
+
 
 } // namespace States

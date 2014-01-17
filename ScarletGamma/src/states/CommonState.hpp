@@ -44,21 +44,18 @@ namespace States
 		//----------------------------------------------------------------------
 		// SELECTION STUFF
 		/// \brief Add an object to the current selection
-		void AddToSelection(Core::ObjectID id){
-			//TODO: Test if already in selection
-			m_selection.Add(id);
-		}
+		void AddToSelection(Core::ObjectID id);
+
 		/// \brief Remove an object from the current selection
-		void RemoveFromSelection(Core::ObjectID id){
-			//TODO: Test if in selection		
-			m_selection.Remove(id);
-		}
+		void RemoveFromSelection(Core::ObjectID id);
+
 		/// \brief Clear the current selection
-		void ClearSelection(){
+		void ClearSelection() {
 			m_selection.Clear();
 		}
+
 		/// \brief Get the current selection
-		Core::ObjectList* GetSelection(){
+		const Core::ObjectList* GetSelection() const {
 			return &m_selection;
 		}
 

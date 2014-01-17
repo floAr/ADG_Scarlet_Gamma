@@ -32,6 +32,10 @@ namespace Interfaces {
 		virtual void setSize(float _width, float _height) override;
 		virtual sf::Vector2f getSize() const override;
 		virtual void setPosition(float _x, float _y) override;
+
+		/// \brief If an object is dragged to this panel all properties which
+		///		are not existent are copied and the same holds for single properties.
+		void HandleDropEvent();
 	protected:
 		// A list of preloaded objects to increase creation time by a very large
 		// factor.

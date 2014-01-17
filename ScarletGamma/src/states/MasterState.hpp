@@ -35,6 +35,8 @@ namespace States
 		Interfaces::ObjectPanel::Ptr m_modulePanel;
 		/// \brief Object builder objects panel
 		Interfaces::ObjectPanel::Ptr m_objectsPanel;
+		/// \brief Panel used to show either a module or an object to be edited.
+		Interfaces::PropertyPanel::Ptr m_viewPanel;
 
 		/// \brief Some components fill this with content if mouse is pushed.
 		///		On release an according action should be done.

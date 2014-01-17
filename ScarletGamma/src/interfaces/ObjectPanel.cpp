@@ -19,25 +19,31 @@ ObjectPanel::ObjectPanel() :
 	m_miniMaxi(nullptr),
 	m_addAble(false),
 	m_oldScrollValue(0),
-	m_numPixelLines(0)
+	m_numPixelLines(0),
+	m_viewer(nullptr),
+	m_dragNDropSource(DragContent::OBJECT_PANEL)
 {
 }
 
 
 void ObjectPanel::Init( float _x, float _y, float _w, float _h,
-		bool _addAble, Core::World* _world,
-		Interfaces::DragContent** _dragNDropHandler )
+		bool _addAble, Core::World* _world, Interfaces::DragContent::Sources _source,
+		Interfaces::DragContent** _dragNDropHandler,
+		Interfaces::PropertyPanel::Ptr _viewer )
 {
 	m_addAble = _addAble;
 	m_world = _world;
 	m_dragNDropHandler = _dragNDropHandler;
+	m_dragNDropSource = _source;
 	assert(_world);
+	m_viewer = _viewer;
 
 	Panel::setPosition(_x, _y + 20.0f);
 	Panel::setSize(_w, _h - (m_addAble ? 40.0f : 20.0f));
 	Panel::setBackgroundColor( sf::Color(50,50,50,150) );
 	if(m_dragNDropHandler)
 		Panel::bindCallbackEx(&ObjectPanel::StartDrag, this, tgui::Panel::LeftMousePressed);
+	Panel::bindCallbackEx( &ObjectPanel::SelectObject, this, tgui::EditBox::LeftMouseClicked );
 
 	// Create a scrollbar for long lists.
 	m_scrollBar = tgui::Scrollbar::Ptr( *this );
@@ -147,11 +153,14 @@ void ObjectPanel::setSize( float _width, float _height )
 	Panel::setSize(_width, ceil(std::max(0.0f, _height - (m_addAble ? 40.0f : 20.0f))));
 	m_titleBar->setSize( _width, 20.0f );
 	float w = ceil(Panel::getSize().x - 40.0f);
-	m_newName->setSize(w, 20.0f);
-	m_newName->setPosition(ceil(Panel::getPosition().x),
-		ceil(Panel::getPosition().y + Panel::getSize().y));
-	m_newAdd->setPosition(ceil(Panel::getPosition().x + Panel::getSize().x - 40.0f),
-		ceil(Panel::getPosition().y + Panel::getSize().y));
+	if( m_addAble )
+	{
+		m_newName->setSize(w, 20.0f);
+		m_newName->setPosition(ceil(Panel::getPosition().x),
+			ceil(Panel::getPosition().y + Panel::getSize().y));
+		m_newAdd->setPosition(ceil(Panel::getPosition().x + Panel::getSize().x - 40.0f),
+			ceil(Panel::getPosition().y + Panel::getSize().y));
+	}
 	m_scrollBar->setLowValue( (unsigned)Panel::getSize().y );
 	m_scrollBar->setSize( 12.0f, Panel::getSize().y );
 }
@@ -168,9 +177,12 @@ void ObjectPanel::setPosition(float _x, float _y)
 	Panel::setPosition(_x, _y + 20.0f);
 	m_titleBar->setPosition(_x, _y);
 	m_miniMaxi->setPosition(_x+Panel::getSize().x-16.0f, _y+4.0f);
-	m_newName->setPosition(_x, _y + 20.0f + Panel::getSize().y);
-	m_newAdd->setPosition(_x + Panel::getSize().x - 40.0f,
-		_y + 20.0f + Panel::getSize().y);
+	if( m_addAble )
+	{
+		m_newName->setPosition(_x, _y + 20.0f + Panel::getSize().y);
+		m_newAdd->setPosition(_x + Panel::getSize().x - 40.0f,
+			_y + 20.0f + Panel::getSize().y);
+	}
 }
 
 
@@ -178,6 +190,8 @@ void ObjectPanel::RemoveBtn(const tgui::Callback& _call)
 {
 	int posY = (int)_call.widget->getPosition().y;
 	unsigned delLine = _call.id;
+	// Remove object from world
+	m_world->RemoveObject( delLine );
 	
 	// First element is always the scrollbar
 	for( size_t i=1; i<m_Widgets.size(); ++i )
@@ -266,9 +280,23 @@ void ObjectPanel::StartDrag(const tgui::Callback& _call)
 		{
 			// Overwrite the last referenced content if it was not handled.
 			if( !*m_dragNDropHandler ) *m_dragNDropHandler = new Interfaces::DragContent();
-			(*m_dragNDropHandler)->from = DragContent::OBJECT_PANEL;
+			(*m_dragNDropHandler)->from = m_dragNDropSource;
 			(*m_dragNDropHandler)->object = m_world->GetObject( m_Widgets[i]->getCallbackId() );
 			(*m_dragNDropHandler)->prop = nullptr;
+			return;
+		}
+	}
+}
+
+
+void ObjectPanel::SelectObject(const tgui::Callback& _call)
+{
+	// Find the clicked object
+	for( size_t i=1; i<m_Widgets.size(); ++i )
+	{
+		if( m_Widgets[i]->mouseOnWidget((float)_call.mouse.x, (float)_call.mouse.y) )
+		{
+			m_viewer->Show( m_world->GetObject(m_Widgets[i]->getCallbackId()) );
 			return;
 		}
 	}

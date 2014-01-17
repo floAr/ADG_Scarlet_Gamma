@@ -99,13 +99,15 @@ namespace States {
 
 	void MasterState::MouseButtonPressed(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos)
 	{
+		int tileX = (int)floor(tilePos.x);
+		int tileY = (int)floor(tilePos.y);
 		switch (button.button)
 		{
 		case sf::Mouse::Left: {
 			//------------------------------------//
 			// move player to tile position		  //
 			//------------------------------------//
-			auto& tiles = g_Game->GetWorld()->GetMap(0)->GetObjectsAt((int)floor(tilePos.x),(int)floor(tilePos.y));
+			auto& tiles = g_Game->GetWorld()->GetMap(0)->GetObjectsAt(tileX, tileY);
 			if( tiles.Size() > 0 )
 			{
 				// TODO: intelligent select?
@@ -132,8 +134,11 @@ namespace States {
 			win.setView(newView);
 			} break;
 		case sf::Mouse::Right: {
-			SelectionState* gs = dynamic_cast<SelectionState*>(g_Game->GetStateMachine()->PushGameState(GST_SELECTION));
-			gs->AddTilePosition((int)tilePos.x,(int)tilePos.y);
+			if( g_Game->GetWorld()->GetMap(0)->GetObjectsAt(tileX, tileY).Size() > 0 )
+			{
+				SelectionState* gs = dynamic_cast<SelectionState*>(g_Game->GetStateMachine()->PushGameState(GST_SELECTION));
+				gs->AddTilePosition(tileX, tileY);
+			}
 			
 			} break;
 		}

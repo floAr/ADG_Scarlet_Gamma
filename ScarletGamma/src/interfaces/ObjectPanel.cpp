@@ -153,11 +153,14 @@ void ObjectPanel::setSize( float _width, float _height )
 	Panel::setSize(_width, ceil(std::max(0.0f, _height - (m_addAble ? 40.0f : 20.0f))));
 	m_titleBar->setSize( _width, 20.0f );
 	float w = ceil(Panel::getSize().x - 40.0f);
-	m_newName->setSize(w, 20.0f);
-	m_newName->setPosition(ceil(Panel::getPosition().x),
-		ceil(Panel::getPosition().y + Panel::getSize().y));
-	m_newAdd->setPosition(ceil(Panel::getPosition().x + Panel::getSize().x - 40.0f),
-		ceil(Panel::getPosition().y + Panel::getSize().y));
+	if( m_addAble )
+	{
+		m_newName->setSize(w, 20.0f);
+		m_newName->setPosition(ceil(Panel::getPosition().x),
+			ceil(Panel::getPosition().y + Panel::getSize().y));
+		m_newAdd->setPosition(ceil(Panel::getPosition().x + Panel::getSize().x - 40.0f),
+			ceil(Panel::getPosition().y + Panel::getSize().y));
+	}
 	m_scrollBar->setLowValue( (unsigned)Panel::getSize().y );
 	m_scrollBar->setSize( 12.0f, Panel::getSize().y );
 }
@@ -174,9 +177,12 @@ void ObjectPanel::setPosition(float _x, float _y)
 	Panel::setPosition(_x, _y + 20.0f);
 	m_titleBar->setPosition(_x, _y);
 	m_miniMaxi->setPosition(_x+Panel::getSize().x-16.0f, _y+4.0f);
-	m_newName->setPosition(_x, _y + 20.0f + Panel::getSize().y);
-	m_newAdd->setPosition(_x + Panel::getSize().x - 40.0f,
-		_y + 20.0f + Panel::getSize().y);
+	if( m_addAble )
+	{
+		m_newName->setPosition(_x, _y + 20.0f + Panel::getSize().y);
+		m_newAdd->setPosition(_x + Panel::getSize().x - 40.0f,
+			_y + 20.0f + Panel::getSize().y);
+	}
 }
 
 
@@ -285,12 +291,6 @@ void ObjectPanel::StartDrag(const tgui::Callback& _call)
 
 void ObjectPanel::SelectObject(const tgui::Callback& _call)
 {
-	// Check if we have a double click
-//	clock_t currentTime = clock();
-//	if( (m_lastClick - currentTime) / float(CLOCKS_PER_SEC) < 0.01f )
-//		assert(false);
-//	m_lastClick = currentTime;
-
 	// Find the clicked object
 	for( size_t i=1; i<m_Widgets.size(); ++i )
 	{

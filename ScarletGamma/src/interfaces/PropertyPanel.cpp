@@ -436,14 +436,17 @@ void PropertyPanel::setSize( float _width, float _height )
 	Panel::setSize(_width, ceil(std::max(0.0f, _height - (m_addAble ? 40.0f : 20.0f))));
 	m_titleBar->setSize( _width, 20.0f );
 	float w = ceil(Panel::getSize().x * 0.5f - 20.0f);
-	m_newName->setSize(w, 20.0f);
-	m_newName->setPosition(ceil(Panel::getPosition().x),
-		ceil(Panel::getPosition().y + Panel::getSize().y));
-	m_newValue->setSize(w, 20.0f);
-	m_newValue->setPosition(ceil(Panel::getPosition().x + w),
-		ceil(Panel::getPosition().y + Panel::getSize().y));
-	m_newAdd->setPosition(ceil(Panel::getPosition().x + Panel::getSize().x - 40.0f),
-		ceil(Panel::getPosition().y + Panel::getSize().y));
+	if( m_addAble )
+	{
+		m_newName->setSize(w, 20.0f);
+		m_newName->setPosition(ceil(Panel::getPosition().x),
+			ceil(Panel::getPosition().y + Panel::getSize().y));
+		m_newValue->setSize(w, 20.0f);
+		m_newValue->setPosition(ceil(Panel::getPosition().x + w),
+			ceil(Panel::getPosition().y + Panel::getSize().y));
+		m_newAdd->setPosition(ceil(Panel::getPosition().x + Panel::getSize().x - 40.0f),
+			ceil(Panel::getPosition().y + Panel::getSize().y));
+	}
 	m_scrollBar->setLowValue( (unsigned)Panel::getSize().y );
 	m_scrollBar->setSize( 12.0f, Panel::getSize().y );
 }
@@ -461,11 +464,14 @@ void PropertyPanel::setPosition(float _x, float _y)
 	Panel::setPosition(_x, _y + 20.0f);
 	m_titleBar->setPosition(_x, _y);
 	m_miniMaxi->setPosition(_x+Panel::getSize().x-16.0f, _y+4.0f);
-	m_newName->setPosition(_x, _y + 20.0f + Panel::getSize().y);
-	m_newValue->setPosition(ceil(Panel::getPosition().x + Panel::getSize().x * 0.5f - 20.0f),
-		_y + 20.0f + Panel::getSize().y);
-	m_newAdd->setPosition(_x + Panel::getSize().x - 40.0f,
-		_y + 20.0f + Panel::getSize().y);
+	if( m_addAble )
+	{
+		m_newName->setPosition(_x, _y + 20.0f + Panel::getSize().y);
+		m_newValue->setPosition(ceil(Panel::getPosition().x + Panel::getSize().x * 0.5f - 20.0f),
+			_y + 20.0f + Panel::getSize().y);
+		m_newAdd->setPosition(_x + Panel::getSize().x - 40.0f,
+			_y + 20.0f + Panel::getSize().y);
+	}
 }
 
 

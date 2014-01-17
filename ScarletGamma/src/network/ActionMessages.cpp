@@ -40,8 +40,11 @@ void ActionMsg::Send()
 {
     // Write headers
     Jo::Files::MemFile data;
-    data.Write(&MessageHeader(Target::OBJECT, m_action), sizeof(MessageHeader));
+    data.Write(&MessageHeader(Target::ACTION, m_action), sizeof(MessageHeader));
     data.Write(&m_purpose, sizeof(ActionMsgType));
+
+    // TODO write ActionID?!
+
     // Write data
     WriteData(data);
     Messenger::Send(data.GetBuffer(), (size_t)data.GetSize());

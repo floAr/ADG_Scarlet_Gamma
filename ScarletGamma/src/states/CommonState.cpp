@@ -8,6 +8,7 @@
 #include "core/Object.hpp"
 #include "core/World.hpp"
 #include "network/ChatMessages.hpp"
+#include "actions/ActionPool.hpp"
 
 namespace States {
 
@@ -97,6 +98,13 @@ void CommonState::KeyPressed( sf::Event::KeyEvent& key )
 			enterTextEdit->focus();
 		}
 	}
+
+    // Testing attack action
+    // TODO: remove
+    if ( key.code == sf::Keyboard::Space )
+    {
+        Actions::ActionPool::Instance().StartAction(0);
+    }
 }
 
 

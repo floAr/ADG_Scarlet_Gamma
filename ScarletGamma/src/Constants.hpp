@@ -20,16 +20,16 @@ static const std::string STR_0 = std::string("0");
 /* ACTIONS                                                              */
 /************************************************************************/
 
-static const std::string STR_ACT_ATTACK = std::string("Attack");
+static const std::string STR_ACT_ATTACK = std::string("Angreifen");
 
 /************************************************************************/
 /* MESSAGES                                                             */
 /************************************************************************/
 // Attack messages
-static const std::string STR_MSG_HIT_NO_ARMOR_CLASS = std::string("Target has no Armor Class.");
-static const std::string STR_MSG_HIT_NATURAL_TWENTY = std::string("Rolled a natural 20.");
-static const std::string STR_MSG_HIT_ARMOR_CLASS_BEAT = std::string("Armor Class was beat.");
-static const std::string STR_MSG_HIT_ARMOR_CLASS_NOT_BEAT = std::string("Armor Class was not beat.");
+static const std::string STR_MSG_HIT_NO_ARMOR_CLASS = std::string("Das Ziel hat keine Rüstungsklasse.");
+static const std::string STR_MSG_HIT_NATURAL_TWENTY = std::string("Natürliche 20 gewürfelt.");
+static const std::string STR_MSG_HIT_ARMOR_CLASS_BEAT = std::string("Rüstungsklasse wurde geschlagen.");
+static const std::string STR_MSG_HIT_ARMOR_CLASS_NOT_BEAT = std::string("Rüstungsklasse wurde nicht geschlagen.");
 
 
 /************************************************************************/

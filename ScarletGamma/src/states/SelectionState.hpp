@@ -11,7 +11,7 @@ namespace States
 	public:
 		SelectionState();
 		void AddObject(Core::ObjectID &value );
-		void AddTilePosition(int x,int y);
+		void AddTilePosition(int x, int y, float _screenX, float _screenY);
 		void RecalculateGUI();
 		virtual void OnBegin();
 		virtual void OnEnd() {}
@@ -31,6 +31,6 @@ namespace States
 		Core::ObjectList* m_alreadySelected;
 		bool m_dirty;
 		bool m_selected;
-		int m_x,m_y;
+		float m_screenX, m_screenY;
 	};
 }

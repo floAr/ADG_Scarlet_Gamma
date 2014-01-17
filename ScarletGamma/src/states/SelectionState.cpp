@@ -9,7 +9,8 @@
 #include "core/Object.hpp"
 #include <math.h>
 
-States::SelectionState::SelectionState(){
+States::SelectionState::SelectionState()
+{
 	m_menuFont=Content::Instance()->LoadFont("media/arial.ttf");
 	m_gui.setWindow(g_Game->GetWindow());
 	m_gui.setGlobalFont(m_menuFont);
@@ -17,26 +18,30 @@ States::SelectionState::SelectionState(){
 
 }
 
-void States::SelectionState::OnBegin(){
+void States::SelectionState::OnBegin()
+{
 	m_previousState->OnResume();
 	m_objects.clear();
 	m_selected=false;
 }
 
-void States::SelectionState::AddObject(Core::ObjectID& value){
+void States::SelectionState::AddObject(Core::ObjectID& value)
+{
 	m_objects.push_back(value);
 	m_dirty=true;
 }
 
-void States::SelectionState::AddTilePosition(int x,int y){
+void States::SelectionState::AddTilePosition(int x, int y, float _screenX, float _screenY)
+{
 	Core::ObjectList objects= g_Game->GetWorld()->GetMap(0)->GetObjectsAt(x,y);
 	m_objects.insert(m_objects.end(), objects.Objects().begin(), objects.Objects().end());
-	m_x=x;
-	m_y=y;
+	m_screenX = _screenX;
+	m_screenY = _screenY;
 	m_dirty=true;
 }
 
-void States::SelectionState::RecalculateGUI(){
+void States::SelectionState::RecalculateGUI()
+{
 	m_gui.removeAllWidgets(); //clear gui
 
 	//TODO Get current selection to make buttons transparent when they not selected
@@ -50,8 +55,8 @@ void States::SelectionState::RecalculateGUI(){
 	for(i=0;i<count;i++){
 		Core::Object* o=g_Game->GetWorld()->GetObject(m_objects[i]);
 		tgui::Button::Ptr button(m_gui);
-		button->load("lib/TGUI-0.6-RC/widgets/Black.conf"); // TODO: this causes an exception later when main() finishes. I don't get it all :)
-		//button->setPosition(m_x*TILESIZE, float(m_y*TILESIZE+i*45));
+		button->load("lib/TGUI-0.6-RC/widgets/Black.conf");
+		button->setSize(50, 40);
 		positionButton(button, 360.0f / count * i, 45.0f);
 		if(o->HasProperty(Core::Object::PROP_NAME))
 			button->setText(o->GetProperty(Core::Object::PROP_NAME).Value());
@@ -66,22 +71,25 @@ void States::SelectionState::RecalculateGUI(){
 
 		button->setCallbackId(100+i);
 		button->bindCallback(tgui::Button::LeftMouseClicked);
-		button->setSize(50, 40);
-		// Finally, use SetGui() to activate the GUI (rendering, events, callbacks)
 	}
 
+	// Finally, use SetGui() to activate the GUI (rendering, events, callbacks)
 	SetGui(&m_gui);
 	m_dirty=false;
 }
 
-void States::SelectionState::Update(float dt){
+void States::SelectionState::Update(float dt)
+{
 	if(m_dirty)
 		RecalculateGUI();
 	m_previousState->Update(dt);
 	if(m_selected&&!sf::Keyboard::isKeyPressed(sf::Keyboard::LControl))
 		m_finished=true;
 }
-void States::SelectionState::Draw(sf::RenderWindow& win){
+
+
+void States::SelectionState::Draw(sf::RenderWindow& win)
+{
 	m_previousState->Draw(win);
 	//win.clear();
 
@@ -89,7 +97,9 @@ void States::SelectionState::Draw(sf::RenderWindow& win){
 
 }
 
-void States::SelectionState::GuiCallback(tgui::Callback& args){
+
+void States::SelectionState::GuiCallback(tgui::Callback& args)
+{
 	if(args.id>=100)//item clicked
 	{
 		//todo inject objects
@@ -126,9 +136,9 @@ void States::SelectionState::MouseButtonPressed(sf::Event::MouseButtonEvent& but
 }
 
 
-void  States::SelectionState::positionButton(tgui::Button::Ptr b,float angle,float radius){
-	float bx = m_x*TILESIZE + radius * sin(angle*0.01745329251f); //0.01745329251 is to got radians from degrees
-	float by = m_y*TILESIZE + radius * cos(angle*0.01745329251f);
-   b->setPosition(bx,by);
-
+void  States::SelectionState::positionButton(tgui::Button::Ptr b, float angle, float radius)
+{
+	float bx = m_screenX - b->getSize().x*0.5f + radius * sin(angle*0.01745329251f); //0.01745329251 is to got radians from degrees
+	float by = m_screenY - b->getSize().y*0.5f + radius * cos(angle*0.01745329251f);
+	b->setPosition(bx, by);
 }

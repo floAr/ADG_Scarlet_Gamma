@@ -21,6 +21,7 @@ static const std::string STR_0 = std::string("0");
 /************************************************************************/
 
 static const std::string STR_ACT_ATTACK = std::string("Angreifen");
+static const std::string STR_ACT_WALKTO = std::string("Hierher gehen");
 
 /************************************************************************/
 /* MESSAGES                                                             */

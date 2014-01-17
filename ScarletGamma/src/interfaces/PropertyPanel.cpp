@@ -84,7 +84,10 @@ void PropertyPanel::Init( float _x, float _y, float _w, float _h,
 	Panel::setBackgroundColor( sf::Color(50,50,50,150) );
 	Panel::setCallbackId(_pid);
 	if(m_dragNDropHandler)
+	{
 		Panel::bindCallbackEx(&PropertyPanel::StartDrag, this, tgui::Panel::LeftMousePressed);
+		Panel::bindCallback(&PropertyPanel::HandleDropEvent, this, tgui::Panel::LeftMouseReleased);
+	}
 
 	// Create a scrollbar for long lists.
 	m_scrollBar = m_basicScrollBar.clone();
@@ -159,7 +162,7 @@ void PropertyPanel::Add( const std::string& _left, bool _changable, const std::s
 	Resize(20, int(y));
 
 	// Width of an edit
-	float w = (Panel::getSize().x - x) * 0.5f - (m_addAble ? 6.0f : 0.0f);
+	float w = (Panel::getSize().x - x) * 0.5f - 6.0f;
 
 	EntryLine entry;
 
@@ -185,7 +188,7 @@ void PropertyPanel::Add( const std::string& _left, bool _changable, const std::s
 	entry.right->setText(_right);
 
 	// Create a remove line button
-	if( m_addAble && _changable )
+	if( _changable )
 	{
 		entry.del = m_basicDeleteButton.clone();
 		this->add(entry.del);
@@ -218,7 +221,7 @@ PropertyPanel::Ptr PropertyPanel::AddNode( const std::string&  _parentName )
 	// Level in hierarchy (indention)
 	float x = 12.0f + (IsScrollbarVisible() ? 12.0f : 0.0f);
 	// Width of a edit
-	float w = Panel::getSize().x - (m_addAble ? 12.0f : 0.0f) - x;
+	float w = Panel::getSize().x - 12.0f - x;
 
 	parent->subNode = PropertyPanel::Ptr( *this );
 	parent->subNode->Init( x, y, w, 0.0f,
@@ -233,6 +236,10 @@ void PropertyPanel::RemoveBtn(const tgui::Callback& _call)
 	int posY = (int)_call.widget->getPosition().y;
 	int minY = posY, maxY = posY + (int)_call.widget->getSize().y;
 	unsigned delLine = _call.id;
+
+	// Remove from object
+	auto name = m_lines[delLine].left->getText();
+	m_object->Remove( name );
 	
 	// First element is always the scrollbar
 	for( size_t i=1; i<m_Widgets.size(); ++i )
@@ -273,6 +280,10 @@ void PropertyPanel::AddBtn( const tgui::Callback& _call )
 {
 	if( !m_newName->getText().isEmpty() )
 	{
+		// Add to object
+		auto name = m_newName->getText();
+		m_object->Add( Core::Property(m_object->ID(), Core::Property::R_VCEV0EV00, name, STR_EMPTY) );
+		// Add to gui
 		Add( m_newName->getText(), true, m_newValue->getText(), true );
 		m_newName->setText("");
 		m_newValue->setText("");
@@ -456,6 +467,41 @@ void PropertyPanel::setPosition(float _x, float _y)
 	m_newAdd->setPosition(_x + Panel::getSize().x - 40.0f,
 		_y + 20.0f + Panel::getSize().y);
 }
+
+
+void PropertyPanel::HandleDropEvent()
+{
+	if( !(*m_dragNDropHandler) ) return;
+
+	bool addedSomething = false;
+	if( (*m_dragNDropHandler)->from == DragContent::MODULES_PANEL )
+	{
+		// Go over all properties of the reference object
+		const Core::Object* obj = (*m_dragNDropHandler)->object;
+		for( int i=0; i<obj->GetNumElements(); ++i )
+		{
+			const Core::Property* prop = obj->At(i);
+			// Check if the property is new and do not overwrite if it already exists.
+			if( !m_object->HasProperty( prop->Name() ) )
+			{
+				m_object->Add( *prop );		
+				addedSomething = true;
+			}
+		}
+	} else if( (*m_dragNDropHandler)->from == DragContent::PROPERTY_PANEL )
+	{
+		// Check if the property is new and do not overwrite if it already exists.
+		if( !m_object->HasProperty( (*m_dragNDropHandler)->prop->Name() ) )
+		{
+			m_object->Add( *(*m_dragNDropHandler)->prop );		
+			addedSomething = true;
+		}
+	}
+	// Update gui - there are new properties
+	if( addedSomething )
+		RefreshFilter();
+}
+
 
 void PropertyPanel::Show( Core::Object* _object )
 {

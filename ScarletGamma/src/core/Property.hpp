@@ -80,6 +80,7 @@ public:
 		R_V00V00000 = 0x009,	///< Master: See; APlayer: See
 		R_V00V00V00 = 0x049,	///< Everybody: See
 		R_V0E000000 = 0x005,	///< Master: See, Edit
+		R_VCEV00000 = 0x00f,	///< Master: See, Change, Edit; APlayer: See
 		R_V0EV00V00 = 0x04d,	///< Master: See, Edit; APlayer: See; Player: See
 		R_VCEV0EV00 = 0x06f,	///< Master: See, Change, Edit; APlayer: See, Edit; Player: See
 		R_V0EV0EV0E = 0x16d,	///< Everybody: See, Edit
@@ -154,7 +155,10 @@ public:
 	void Clear();
 
 	/// \brief Returns the counter for the size of this list.
-	int GetNumElements() const		{ return (int)m_list.size(); }
+	int GetNumElements() const				{ return (int)m_list.size(); }
+
+	/// \brief Indexed property read access for iteration purposes
+	const Property* At( int _index ) const	{ return &m_list[_index];}
 
 	/// \brief Search all properties which have a certain text sequence in
 	///		there name.

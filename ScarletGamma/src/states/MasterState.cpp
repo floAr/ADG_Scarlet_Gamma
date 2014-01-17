@@ -48,6 +48,9 @@ namespace States {
 			m_dbModules->Load( database );
 		}
 
+		m_viewPanel = Interfaces::PropertyPanel::Ptr(m_gui);
+		m_viewPanel->Init( 240.0f, 300.0f, 240.0f, 300.0f, false, false, 0, &m_draggedContent );
+
 		// Load properties from database into gui
 		m_propertyPanel = Interfaces::PropertyPanel::Ptr(m_gui);
 		m_propertyPanel->Init( 0.0f, 0.0f, 240.0f, 300.0f, true, false, 0, &m_draggedContent );
@@ -56,11 +59,11 @@ namespace States {
 
 		// Load Modules from database into gui
 		m_modulePanel = Interfaces::ObjectPanel::Ptr(m_gui);
-		m_modulePanel->Init( 0.0f, 300.0f, 240.0f, 300.0f, true, m_dbModules, &m_draggedContent );
+		m_modulePanel->Init( 0.0f, 300.0f, 240.0f, 300.0f, true, m_dbModules, Interfaces::DragContent::MODULES_PANEL, &m_draggedContent, m_viewPanel );
 
 		// Load Objects from database into gui
 		m_objectsPanel = Interfaces::ObjectPanel::Ptr(m_gui);
-		m_objectsPanel->Init( 240.0f, 0.0f, 240.0f, 300.0f, true, m_dbTemplates, &m_draggedContent );
+		m_objectsPanel->Init( 240.0f, 0.0f, 240.0f, 300.0f, true, m_dbTemplates, Interfaces::DragContent::OBJECT_PANEL, &m_draggedContent, m_viewPanel );
 
 		// Set chat color...
 		m_color = sf::Color(80,80,250);
@@ -154,7 +157,58 @@ namespace States {
 	void MasterState::OnEnd()
 	{
 		CommonState::OnEnd();
+	}
 
+	void MasterState::MouseButtonReleased( sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos, float time )
+	{
+		// Handle drop-event of drag&drop action
+		if( m_draggedContent )
+		{
+			// Where is the element dropped?
+			if( m_objectsPanel->mouseOnWidget( (float)button.x, (float)button.y ) )
+			{
+				m_objectsPanel->HandleDropEvent();
+			} else if( m_modulePanel->mouseOnWidget( (float)button.x, (float)button.y ) )
+			{
+				m_modulePanel->HandleDropEvent();
+			} else if( m_viewPanel->mouseOnWidget( (float)button.x, (float)button.y ) )
+			{
+				m_viewPanel->HandleDropEvent();
+			} else if( m_propertyPanel->mouseOnWidget( (float)button.x, (float)button.y ) )
+			{
+						// Just ignore things dragged to the property list
+			} else {	// Things where dragged to the map.
+				if( m_draggedContent->from == Interfaces::DragContent::OBJECT_PANEL )
+				{
+					// Insert object copy to the map
+					ObjectID id = g_Game->GetWorld()->NewObject( m_draggedContent->object );
+
+					int x = (int)floor(tilePos.x);
+					int y = (int)floor(tilePos.y);
+					// Meaningful layer: on top
+					int l = g_Game->GetWorld()->GetMap(0)->GetObjectsAt(x,y).Size();
+					g_Game->GetWorld()->GetMap(0)->Add( id, x, y, l );
+				}
+			}
+
+			delete m_draggedContent;
+			m_draggedContent = nullptr;
+		}
+	}
+
+
+	void MasterState::Resize(const sf::Vector2f& _size)
+	{
+		// Scale chat too
+		CommonState::Resize( _size );
+
+		// Scale editor sidebar
+		m_objectsPanel->setSize( m_objectsPanel->getSize().x, _size.y * 0.5f );
+		m_modulePanel->setSize( m_modulePanel->getSize().x, _size.y * 0.5f );
+		m_modulePanel->setPosition( 0.0f, _size.y * 0.5f );
+		m_propertyPanel->setSize( m_propertyPanel->getSize().x, _size.y * 0.5f );
+		m_viewPanel->setSize( m_viewPanel->getSize().x, _size.y * 0.5f );
+		m_viewPanel->setPosition( m_modulePanel->getSize().x, _size.y * 0.5f );
 	}
 
 
@@ -191,7 +245,9 @@ namespace States {
 	{
 		ObjectID OID = m_dbModules->NewObject( STR_EMPTY );
 		Object* object = m_dbModules->GetObject( OID );
-		object->Add( Property(OID, Property::R_V0E000000, Object::PROP_NAME, STR_ATTACKABLE ));
+		object->Add( Property(OID, Property::R_SYSTEMONLY, Object::PROP_NAME, STR_ATTACKABLE ));
+		object->Add( Property(OID, Property::R_SYSTEMONLY, Object::PROP_SPRITE, STR_EMPTY ));	// Hide the sprite property
+		object->Add( Property(OID, Property::R_VCEV00000, STR_HEALTH, STR_0 ));
 	}
 
 	void MasterState::CreateDefaultTemplateBase()
@@ -213,46 +269,6 @@ namespace States {
 		object = m_dbTemplates->GetObject( OID );
 		object->Add( Property(OID, Property::R_V0E000000, Object::PROP_NAME, STR_WALLC ));
 		object->Add( Property(OID, Property::R_VC0000000, Object::PROP_OBSTACLE, STR_EMPTY ));
-	}
-
-	void MasterState::MouseButtonReleased( sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos, float time )
-	{
-		// Handle drop-event of drag&drop action
-		if( m_draggedContent )
-		{
-			// Where is the element dropped?
-			if( m_objectsPanel->mouseOnWidget( (float)button.x, (float)button.y ) )
-			{			// Just ignore things dragged to the object list
-			} else {	// Things where dragged to the map.
-				if( m_draggedContent->from == Interfaces::DragContent::OBJECT_PANEL )
-				{
-					// Insert object copy to the map
-					ObjectID id = g_Game->GetWorld()->NewObject( m_draggedContent->object );
-
-					int x = (int)floor(tilePos.x);
-					int y = (int)floor(tilePos.y);
-					// Meaningful layer: on top
-					int l = g_Game->GetWorld()->GetMap(0)->GetObjectsAt(x,y).Size();
-					g_Game->GetWorld()->GetMap(0)->Add( id, x, y, l );
-				}
-			}
-
-			delete m_draggedContent;
-			m_draggedContent = nullptr;
-		}
-	}
-
-
-	void MasterState::Resize(const sf::Vector2f& _size)
-	{
-		// Scale chat too
-		CommonState::Resize( _size );
-
-		// Scale editor sidebar
-		m_objectsPanel->setSize( m_objectsPanel->getSize().x, _size.y * 0.5f );
-		m_modulePanel->setSize( m_modulePanel->getSize().x, _size.y * 0.5f );
-		m_modulePanel->setPosition( 0.0f, _size.y * 0.5f );
-		m_propertyPanel->setSize( m_propertyPanel->getSize().x, _size.y * 0.5f );
 	}
 
 }// namespace States

@@ -19,25 +19,31 @@ ObjectPanel::ObjectPanel() :
 	m_miniMaxi(nullptr),
 	m_addAble(false),
 	m_oldScrollValue(0),
-	m_numPixelLines(0)
+	m_numPixelLines(0),
+	m_viewer(nullptr),
+	m_dragNDropSource(DragContent::OBJECT_PANEL)
 {
 }
 
 
 void ObjectPanel::Init( float _x, float _y, float _w, float _h,
-		bool _addAble, Core::World* _world,
-		Interfaces::DragContent** _dragNDropHandler )
+		bool _addAble, Core::World* _world, Interfaces::DragContent::Sources _source,
+		Interfaces::DragContent** _dragNDropHandler,
+		Interfaces::PropertyPanel::Ptr _viewer )
 {
 	m_addAble = _addAble;
 	m_world = _world;
 	m_dragNDropHandler = _dragNDropHandler;
+	m_dragNDropSource = _source;
 	assert(_world);
+	m_viewer = _viewer;
 
 	Panel::setPosition(_x, _y + 20.0f);
 	Panel::setSize(_w, _h - (m_addAble ? 40.0f : 20.0f));
 	Panel::setBackgroundColor( sf::Color(50,50,50,150) );
 	if(m_dragNDropHandler)
 		Panel::bindCallbackEx(&ObjectPanel::StartDrag, this, tgui::Panel::LeftMousePressed);
+	Panel::bindCallbackEx( &ObjectPanel::SelectObject, this, tgui::EditBox::LeftMouseClicked );
 
 	// Create a scrollbar for long lists.
 	m_scrollBar = tgui::Scrollbar::Ptr( *this );
@@ -178,6 +184,8 @@ void ObjectPanel::RemoveBtn(const tgui::Callback& _call)
 {
 	int posY = (int)_call.widget->getPosition().y;
 	unsigned delLine = _call.id;
+	// Remove object from world
+	m_world->RemoveObject( delLine );
 	
 	// First element is always the scrollbar
 	for( size_t i=1; i<m_Widgets.size(); ++i )
@@ -266,9 +274,29 @@ void ObjectPanel::StartDrag(const tgui::Callback& _call)
 		{
 			// Overwrite the last referenced content if it was not handled.
 			if( !*m_dragNDropHandler ) *m_dragNDropHandler = new Interfaces::DragContent();
-			(*m_dragNDropHandler)->from = DragContent::OBJECT_PANEL;
+			(*m_dragNDropHandler)->from = m_dragNDropSource;
 			(*m_dragNDropHandler)->object = m_world->GetObject( m_Widgets[i]->getCallbackId() );
 			(*m_dragNDropHandler)->prop = nullptr;
+			return;
+		}
+	}
+}
+
+
+void ObjectPanel::SelectObject(const tgui::Callback& _call)
+{
+	// Check if we have a double click
+//	clock_t currentTime = clock();
+//	if( (m_lastClick - currentTime) / float(CLOCKS_PER_SEC) < 0.01f )
+//		assert(false);
+//	m_lastClick = currentTime;
+
+	// Find the clicked object
+	for( size_t i=1; i<m_Widgets.size(); ++i )
+	{
+		if( m_Widgets[i]->mouseOnWidget((float)_call.mouse.x, (float)_call.mouse.y) )
+		{
+			m_viewer->Show( m_world->GetObject(m_Widgets[i]->getCallbackId()) );
 			return;
 		}
 	}

@@ -42,6 +42,8 @@ static const std::string STR_CONSTITUTION = std::string("Konstitution");
 static const std::string STR_INTELLIGENCE = std::string("Intelligenz");
 static const std::string STR_WISDOM = std::string("Weisheit");
 static const std::string STR_CHARISMA = std::string("Charisma");
+static const std::string STR_HEALTH = std::string("Trefferpunkte");
+
 
 /************************************************************************/
 /* MODULES			                                                    */

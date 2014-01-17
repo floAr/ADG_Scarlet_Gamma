@@ -25,14 +25,37 @@ namespace Actions
             return m_Name;
         }
 
+    protected:
         /// \brief Do whatever the action does.
         virtual void Execute() = 0;
 
-    protected:
+        /// \brief Create a copy of the action.
+        virtual Action* Clone() = 0;
+
         /// \brief Default constructor, setting the name of the action
         Action(std::string name) : m_Name(name) {}
 
+        /// \brief Get the ID of the action, mainly for networking
+        /// \return ID of the action
+        Core::ActionID GetID()
+        {
+            return m_ID;
+        }
+
         std::vector<std::string> m_Requirements; ///< List of required properties for this action
         const std::string m_Name; ///< Human readable name of the action
+
+    private:
+        /// \brief Prevent copying.
+        Action(const Action& other) {}
+
+        /// \brief Sets the ID of the actual. Should only be called by the ActionPool!
+        /// \param [in] _id  The ID of the action, i.e. the index in the ActionPool
+        void SetID(Core::ActionID _id)
+        {
+            m_ID = _id;
+        }
+
+        Core::ActionID m_ID;
     };
 }

@@ -1,6 +1,5 @@
 #include "states/MainMenuState.hpp"
 #include "graphics/TileRenderer.hpp"
-#include "graphics/EditList.hpp"
 #include "StateMachine.hpp"
 #include "core/Map.hpp"
 #include "Game.hpp"

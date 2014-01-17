@@ -133,10 +133,15 @@ namespace States
 
 		/// \brief Forwards an event to the GUI to be handled.
 		/// \param [in] event  Event information from SFML.
-		void GuiHandleEvent(sf::Event& event);
+		/// \return false if the event was ignored.
+		bool GuiHandleEvent(sf::Event& event);
 
 		/// \brief Draws the current GUI.
 		void GuiDraw();
+
+		/// \brief Rescale or realign your GUI stuff.
+		/// \param [in] _size New size of the window (size of view).
+		virtual void Resize(const sf::Vector2f& _size) { }
 
 #pragma endregion
 

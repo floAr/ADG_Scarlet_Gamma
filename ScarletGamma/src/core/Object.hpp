@@ -35,6 +35,10 @@ public:
 	/// \throws Exception::NoSuchProperty
 	sf::Vector2f GetPosition() const;
 
+	/// \brief Returns the value of the name property and the id as string
+	///		if there is no such property.
+	const std::string& GetName() const;
+
 	/// \brief Returns a color if the according property exists and white
 	///		otherwise.
 	sf::Color GetColor() const;
@@ -63,7 +67,7 @@ public:
 	static const std::string PROP_TARGET;	///< Name of target property: next point to be reached linearly
 	static const std::string PROP_OBSTACLE;	///< Name of obstacle property: this object collides with the player
 	static const std::string PROP_NAME;		///< Name of name property: object's name
-	static const std::string PROP_PLAYER;	///< Name of player: flags an object as player
+	static const std::string PROP_PLAYER;	///< Name of player: flags an object as player, the value is its ID
 
 	/// \brief Add a new way point to the path list.
 	/// \details If the new object is equal to the first in the list the loop

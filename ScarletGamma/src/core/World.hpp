@@ -45,6 +45,9 @@ namespace Core {
 		/// \details This method does not send messages to the network.
 		ObjectID NewObject( const Jo::Files::MetaFileWrapper::Node& _node );
 
+		/// \brief Add a new object by cloning.
+		ObjectID NewObject( const Object* _object );
+
 		/// \brief Delete a map from world.
 		/// \details Objects from that map are deleted too!
 		/// \param [in] _map ID of the map which has to be deleted.
@@ -66,6 +69,12 @@ namespace Core {
 		/// \brief If a player with that name exists its object is returned.
 		/// \return The player object or nullptr.
 		Object* FindPlayer( std::string _name );
+
+		/// \brief Search all objects which have a certain text sequence in
+		///		there name.
+		/// \details This method is case insensitive.
+		/// \return An array with read access to all found objects.
+		std::vector<ObjectID> FilterObjectsByName( const std::string& _text ) const;
 	private:
 		/// \brief All real existing objects.
 		std::unordered_map<ObjectID, Object> m_objects;

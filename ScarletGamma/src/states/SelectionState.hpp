@@ -10,8 +10,7 @@ namespace States
 	{
 	public:
 		SelectionState();
-		void AddObject(Core::ObjectID &value );
-		void AddTilePosition(int x,int y);
+		void SetTilePosition(int x, int y, float _screenX, float _screenY);
 		void RecalculateGUI();
 		virtual void OnBegin();
 		virtual void OnEnd() {}
@@ -20,11 +19,16 @@ namespace States
 		virtual void Update(float dt);
 		virtual void GuiCallback(tgui::Callback&  args);
 		virtual void Draw(sf::RenderWindow& win);
+		virtual void MouseButtonPressed(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos);
 
-		private:
+	private:
+		void positionButton(tgui::Button::Ptr b, float angle, float radius);
+
 		tgui::Gui m_gui;
-		sf::Font m_menuFont;
-		std::vector<Core::ObjectID> m_objects;
+		tgui::Button::Ptr m_defaultButton;	///< This is a preloaded button to increase RecalculateGUI performance by a height factor
+		const Core::ObjectList* m_objects;	///< The object list reference for the current tile
 		bool m_dirty;
+		bool m_controlWasPressed;
+		float m_screenX, m_screenY;
 	};
 }

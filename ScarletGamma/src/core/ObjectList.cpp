@@ -33,7 +33,7 @@ namespace Core {
 				return;
 			}
 		// You tried to remove an object which is not in the list.
-		assert(false);
+		// assert(false);
 	}
 
 
@@ -59,8 +59,13 @@ namespace Core {
 	}
 
 
-	std::vector<ObjectID>& ObjectList::Objects(){
-		return m_objects;
+	bool ObjectList::Contains( ObjectID _id ) const
+	{
+		// Not using the iterator is faster
+		for( size_t i=0; i<m_objects.size(); ++i )
+			if( m_objects[i] == _id ) return true;
+		return false;
 	}
+
 
 } // namespace Core

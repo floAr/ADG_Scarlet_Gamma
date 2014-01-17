@@ -37,31 +37,27 @@ namespace States
 		/// \brief Open a chat menu on Enter.
 		virtual void KeyPressed(sf::Event::KeyEvent& key) override;
 
+		/// \brief Right-aligns the chat.
+		virtual void Resize(const sf::Vector2f& _size) override;
+
 
 		//----------------------------------------------------------------------
 		// SELECTION STUFF
 		/// \brief Add an object to the current selection
-		void AddToSelection(Core::ObjectID id){
-			//TODO: Test if already in selection
-			m_selection.Add(id);
-		}
+		void AddToSelection(Core::ObjectID id);
+
 		/// \brief Remove an object from the current selection
-		void RemoveFromSelection(Core::ObjectID id){
-			//TODO: Test if in selection		
-			m_selection.Remove(id);
-		}
+		void RemoveFromSelection(Core::ObjectID id);
+
 		/// \brief Clear the current selection
-		void ClearSelection(){
+		void ClearSelection() {
 			m_selection.Clear();
 		}
+
 		/// \brief Get the current selection
-		Core::ObjectList* GetSelection(){
+		const Core::ObjectList* GetSelection() const {
 			return &m_selection;
 		}
-
-	protected:
-		States::SelectionState* m_selectionState;
-		Core::ObjectList m_selection;	///< List of currently selected objects
 
 	protected:
 		Utils::Falloff m_zoom;		///< Zoom for the current map
@@ -78,5 +74,8 @@ namespace States
 		///		whose path should be drawn.
 		void DrawPathOverlay(sf::RenderWindow& win, Core::Object* _whosePath);
 
+		void SubmitChat(const tgui::Callback& _call);
+
+		Core::ObjectList m_selection;	///< List of currently selected objects
 	};
 }

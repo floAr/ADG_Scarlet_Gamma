@@ -14,9 +14,9 @@ namespace UnitTest {
 
 		// Create an object and add some stuff
 		Core::Object obj(1, "floor.png");
-		obj.Add( Core::Property(obj.ID(), string("Invisible"), string("true")) );
-		obj.Add( Core::Property(obj.ID(), string("Inventory"), STR_EMPTY, Core::ObjectList()) );
-		obj.Add( Core::Property(obj.ID(), string("Dmg"), string("1W8+10")) );
+		obj.Add( Core::Property(obj.ID(), Core::Property::R_V0EV0EV0E, string("Invisible"), string("true")) );
+		obj.Add( Core::Property(obj.ID(), Core::Property::R_V0EV0EV0E, string("Inventory"), STR_EMPTY, Core::ObjectList()) );
+		obj.Add( Core::Property(obj.ID(), Core::Property::R_V0EV0EV0E, string("Dmg"), string("1W8+10")) );
 		auto& inventory = obj.GetProperty(string("Inventory"));
 		inventory.AddObject( 2 );	// Add a probably wrong id
 

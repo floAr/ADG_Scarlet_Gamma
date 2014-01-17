@@ -76,7 +76,7 @@ namespace Core {
 
 		// Allocate a new larger memory
 		ObjectList* mapArray = new ObjectList[(Width()+_nx+_px) * (Height()+_ny+_py)];
-		int newWidth = Width() + _nx + _ny;
+		int newWidth = Width() + _nx + _px;
 		// Copy old part
 		for( int y=0; y<Height(); ++y ) {
 			for( int x=0; x<Width(); ++x ) {
@@ -88,7 +88,7 @@ namespace Core {
 		// itself. The rest is moved to the new one.
 		delete[] m_mapArray;
 
-		m_mapArray = m_mapArray;
+		m_mapArray = mapArray;
 		m_minX -= _nx;
 		m_minY -= _ny;
 		m_maxX += _px;
@@ -120,6 +120,7 @@ namespace Core {
 
 		// Test each object in this cell if it has obstacle property
 		auto list = GetObjectsAt(_position.x, _position.y);
+		if( list.Size() == 0 ) return false;
 		for( int i=0; i<list.Size(); ++i )
 			if(m_parentWorld->GetObject(list[i])->HasProperty(Object::PROP_OBSTACLE))
 				return false;
@@ -140,9 +141,9 @@ namespace Core {
 
 		// Set correct position for the object itself
 		Object* object = m_parentWorld->GetObject(_object);
-		object->Add( Property(_object, Object::PROP_X, to_string((float)_x)) );
-		object->Add( Property(_object, Object::PROP_Y, to_string((float)_y)) );
-		object->Add( Property(_object, Object::PROP_LAYER, to_string(_layer)) );
+		object->Add( Property(_object, Property::R_V0EV00V00, Object::PROP_X, to_string((float)_x)) );
+		object->Add( Property(_object, Property::R_V0EV00V00, Object::PROP_Y, to_string((float)_y)) );
+		object->Add( Property(_object, Property::R_V0E000000, Object::PROP_LAYER, to_string(_layer)) );
 		object->SetParentMap( m_id );
 
 		// Does the object requires updates?
@@ -385,8 +386,8 @@ namespace Core {
 			Y->SetValue( to_string(_position.y) );
 		} catch(...) {
 			// Should never happen - but stable is stable
-			_object->Add( Property( _object->ID(), Object::PROP_X, to_string(_position.x) ) );
-			_object->Add( Property( _object->ID(), Object::PROP_Y, to_string(_position.y) ) );
+			_object->Add( Property( _object->ID(), Property::R_V0EV00V00, Object::PROP_X, to_string(_position.x) ) );
+			_object->Add( Property( _object->ID(), Property::R_V0EV00V00, Object::PROP_Y, to_string(_position.y) ) );
 		}
 		// Update cells
 		sf::Vector2i newCell(sfUtils::Round(_position));

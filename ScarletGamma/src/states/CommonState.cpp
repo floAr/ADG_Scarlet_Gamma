@@ -19,6 +19,8 @@ CommonState::CommonState() :
 	m_gui.setGlobalFont(Content::Instance()->LoadFont("media/arial.ttf"));
 	if( !m_gui.loadWidgetsFromFile( "media/Chat.gui" ) )
 		std::cout << "[CommonState::CommonState] Could not load GUI for chat.\n";
+	tgui::EditBox::Ptr enterTextEdit = m_gui.get( "EnterText" );
+	enterTextEdit->bindCallbackEx( &CommonState::SubmitChat, this, tgui::EditBox::ReturnKeyPressed );
 
 	SetGui(&m_gui);
 }
@@ -93,17 +95,17 @@ void CommonState::KeyPressed( sf::Event::KeyEvent& key )
 			enterTextEdit->show();
 			enterTextEdit->setText("");
 			enterTextEdit->focus();
-		} else if(enterTextEdit->isFocused()) {
-			enterTextEdit->hide();
-			// Send Message
-			if( enterTextEdit->getText() != "" )
-			{
-				tgui::ChatBox::Ptr localOut = m_gui.get( "Messages" );
-				std::string text = m_name + enterTextEdit->getText().toAnsiString();
-				Network::ChatMsg(text, m_color).Send();
-			}
 		}
 	}
+}
+
+
+void CommonState::Resize(const sf::Vector2f& _size)
+{
+	tgui::ChatBox::Ptr localOut = m_gui.get( "Messages" );
+	tgui::EditBox::Ptr enterTextEdit = m_gui.get( "EnterText" );
+	localOut->setPosition( _size - localOut->getSize() - sf::Vector2f(0.0f, enterTextEdit->getSize().y) );
+	enterTextEdit->setPosition( _size - enterTextEdit->getSize() );
 }
 
 
@@ -176,6 +178,33 @@ void CommonState::DrawPathOverlay(sf::RenderWindow& win, Core::Object* _whosePat
 	} catch(...) {
 		// In case of an invalid selection just draw no path
 	}
+}
+
+
+void CommonState::SubmitChat(const tgui::Callback& _call)
+{
+	tgui::EditBox* enterTextEdit = (tgui::EditBox*)_call.widget;
+	enterTextEdit->hide();
+	// Send Message
+	if( enterTextEdit->getText() != "" )
+	{
+		tgui::ChatBox::Ptr localOut = m_gui.get( "Messages" );
+		std::string text = '[' + m_name + "] " + enterTextEdit->getText().toAnsiString();
+		Network::ChatMsg(text, m_color).Send();
+	}
+}
+
+void CommonState::AddToSelection( Core::ObjectID _id )
+{
+	// Assumes that the selection state only calls this if possible
+	// which is the case due to toggeling
+	assert( !m_selection.Contains(_id) );
+	m_selection.Add(_id);
+}
+
+void CommonState::RemoveFromSelection( Core::ObjectID _id )
+{
+	m_selection.Remove(_id);
 }
 
 

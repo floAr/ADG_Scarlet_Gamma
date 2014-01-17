@@ -7,6 +7,7 @@
 #include "ObjectMessages.hpp"
 #include "Game.hpp"
 #include "ChatMessages.hpp"
+#include "ActionMessages.hpp"
 
 namespace Network {
 
@@ -142,7 +143,11 @@ namespace Network {
 			break;
 		case Target::CHAT:
 			read += HandleChatMessage( buffer + sizeof(MessageHeader), size );
-			break;
+            break;
+        case Target::MASTER:
+        case Target::PLAYER:
+            read += HandleActionMessage( static_cast<Core::ActionID>(header->targetID), buffer + sizeof(MessageHeader), size );
+            break;
 		}
 
 		assert(_packet.getDataSize() == read);

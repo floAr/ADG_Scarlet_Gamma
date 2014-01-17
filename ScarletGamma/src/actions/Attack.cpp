@@ -1,6 +1,7 @@
 #include "Attack.hpp"
 #include "Constants.hpp"
 #include "gamerules/CombatRules.hpp"
+#include "network/ActionMessages.hpp"
 
 using namespace Actions;
 
@@ -14,10 +15,21 @@ Attack::Attack() : Action(STR_ACT_ATTACK)
 void Attack::Execute()
 {
     // This functions is called when a player clicks "Attack" on an object
-    // What should happen next?
+    // TODO: Enable DM-side attacking!!
 
-    // 1)  Check if the player is in proximity to the enemy or has a ranged weapon
+    // Tell the server that we are starting an attack
+    Network::MsgActionBegin message(this->GetID());
+    message.Send();
+   
+
+    //////////////////////////////////////////////////////////////////////////
+    // all TODO below!
+    //////////////////////////////////////////////////////////////////////////
+
     // 2)  Show a dialog to the player, asking for the Hit Roll values
+    // TODO Show a dialog to the player
+    // Assuming some given string for now
+
     // 3)  Send the entered values to the Game Master
     //     Server side is handled elsewhere I hope?!
     //
@@ -28,4 +40,13 @@ void Attack::Execute()
     //     message "damage is auto-doubled") and send it to the server
     //
     // done!
+}
+
+Action* Attack::Clone()
+{
+    Attack* result = new Attack();
+
+    // TODO: copy all values
+
+    return dynamic_cast<Action*>(result);
 }

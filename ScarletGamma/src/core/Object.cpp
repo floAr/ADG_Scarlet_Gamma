@@ -8,22 +8,22 @@ using namespace std;
 
 namespace Core {
 
-	const string Object::PROP_LAYER = string("layer");
-	const string Object::PROP_X = string("x");
-	const string Object::PROP_Y = string("y");
-	const string Object::PROP_SPRITE = string("sprite");
-	const string Object::PROP_COLOR = string("color");
+	const string Object::PROP_LAYER = string("Layer");
+	const string Object::PROP_X = string("X");
+	const string Object::PROP_Y = string("Y");
+	const string Object::PROP_SPRITE = string("Bild");
+	const string Object::PROP_COLOR = string("Farbe");
 	const string Object::PROP_PATH = string("path");
 	const string Object::PROP_TARGET = string("target");
-	const string Object::PROP_OBSTACLE = string("obstacle");
-	const string Object::PROP_NAME = string("name");
+	const string Object::PROP_OBSTACLE = string("Hindernis");
+	const string Object::PROP_NAME = string("Name");
 	const string Object::PROP_PLAYER = string("player");
 
 	Object::Object( ObjectID _id, const string& _sprite ) :
 		m_id(_id),
 		m_hasParent(false)
 	{
-		Add( Property(_id, PROP_SPRITE, _sprite) );
+		Add( Property(_id, Property::R_V0E000000, PROP_SPRITE, _sprite) );
 	}
 
 	Object::Object( const Jo::Files::MetaFileWrapper::Node& _node ) :
@@ -77,6 +77,14 @@ namespace Core {
 	}
 
 
+	const std::string& Object::GetName() const
+	{
+		const Property* name = Get(PROP_NAME);
+		if( !name ) return std::to_string(m_id);
+		return name->Value();
+	}
+
+
 	sf::Color Object::GetColor() const
 	{
 		// The property does not always exists
@@ -98,7 +106,7 @@ namespace Core {
 		//value << std::hex << (int)_color.r << (int)_color.g << (int)_color.b << (int)_color.a;
 		// Create or set property?
 		auto colorProp = Get(PROP_COLOR);
-		if( !colorProp ) Add(Property(m_id, PROP_COLOR, string(value)));
+		if( !colorProp ) Add(Property(m_id, Property::R_VCEV0EV00, PROP_COLOR, string(value)));
 		else colorProp->SetValue( value );
 	}
 

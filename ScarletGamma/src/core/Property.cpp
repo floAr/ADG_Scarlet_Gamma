@@ -4,25 +4,28 @@
 #include "network/ObjectMessages.hpp"
 #include "utils/ValueInterpreter.hpp"
 #include "utils/Random.hpp"
+#include "Constants.hpp"
 #include <iostream>
 
 using namespace std;
 
 namespace Core {
-	Property::Property( ObjectID _parent, const std::string& _name, const std::string& _value ) :
+	Property::Property( ObjectID _parent, uint32_t _rights, const std::string& _name, const std::string& _value ) :
 		m_name(_name),
 		m_isObjectList(false),
 		m_value(_value),
-		m_parent(_parent)
+		m_parent(_parent),
+		m_rights(_rights)
 	{
 	}
 
-	Property::Property( ObjectID _parent, const std::string& _name, const std::string& _value, const ObjectList& _list ) :
+	Property::Property( ObjectID _parent, uint32_t _rights, const std::string& _name, const std::string& _value, const ObjectList& _list ) :
 		m_name(_name),
 		m_isObjectList(true),
 		m_value(_value),
 		m_objects(_list),
-		m_parent(_parent)
+		m_parent(_parent),
+		m_rights(_rights)
 	{
 	}
 
@@ -31,8 +34,9 @@ namespace Core {
 	{
 		m_name = _node[0].GetName();
 		m_value = _node[0];
+		m_rights = _node[STR_RIGHTS];
 		const Jo::Files::MetaFileWrapper::Node* objects;
-		if( _node.HasChild( string("objects"), &objects ) )
+		if( _node.HasChild( string(STR_OBJECTS), &objects ) )
 		{
 			m_objects = ObjectList(*objects);
 		}
@@ -102,8 +106,9 @@ namespace Core {
 	void Property::Serialize( Jo::Files::MetaFileWrapper::Node& _node ) const
 	{
 		_node[m_name] = m_value;
+		_node[STR_RIGHTS] = m_rights;
 		if( m_isObjectList ) {
-			m_objects.Serialize(_node[std::string("objects")]);
+			m_objects.Serialize(_node[std::string(STR_OBJECTS)]);
 		}
 	}
 
@@ -111,6 +116,56 @@ namespace Core {
 	{
 		{ if( !m_isObjectList ) throw Exception::NoObjectList(); m_objects.PopFront(); Network::MsgPropertyChanged( m_parent, this ).Send(); }
 	}
+
+	bool Property::CanSee( PlayerID _player ) const
+	{
+		if( _player == 0 )
+		{			// Check master flags
+			return (m_rights & 0x001) != 0;
+		} else {	// Check if player has rights and if so check flags
+			if( m_rights & (1 << (_player+8)) )
+				return (m_rights & 0x008) != 0;
+			else return (m_rights & 0x040) != 0;
+		}
+	}
+
+	bool Property::CanChange( PlayerID _player ) const
+	{
+		if( _player == 0 )
+		{			// Check master flags
+			return (m_rights & 0x2) != 0;
+		} else {	// Check if player has rights and if so check flags
+			if( m_rights & (1 << (_player+8)) )
+				return (m_rights & 0x010) != 0;
+			else return (m_rights & 0x080) != 0;
+		}
+	}
+
+	bool Property::CanEdit( PlayerID _player ) const
+	{
+		if( _player == 0 )
+		{			// Check master flags
+			return (m_rights & 0x004) != 0;
+		} else {	// Check if player has rights and if so check flags
+			if( m_rights & (1 << (_player+8)) )
+				return (m_rights & 0x020) != 0;
+			else return (m_rights & 0x100) != 0;
+		}
+	}
+
+	void Property::ApplyRights( PlayerID _player, bool _hasAdvancedPlayer )
+	{
+		// Set or delete the advanced flag for the player
+		uint32_t oldRights = m_rights;
+		uint32_t flag = uint32_t(1) << (_player+8);
+		if( _hasAdvancedPlayer ) m_rights |= flag;
+		else m_rights &= ~flag;
+
+		// Everybody has to know the property change.
+		if(oldRights != m_rights)
+			Network::MsgPropertyChanged( m_parent, this ).Send();
+	}
+
 
 
 

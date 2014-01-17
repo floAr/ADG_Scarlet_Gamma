@@ -23,6 +23,10 @@ void Events::EventHandler::Update(float dt)
 	sf::Event event;
 	while (m_window.pollEvent(event))
 	{
+		// Forward events to GUI
+		if (g_Game->GetStateMachine()->GuiHandleEvent(event))
+			continue;
+
 		switch (event.type)
 		{
 
@@ -33,8 +37,12 @@ void Events::EventHandler::Update(float dt)
 			m_window.close();
 			break;
 
-		case sf::Event::Resized:
-			break;
+		case sf::Event::Resized: {
+			sf::View V = dynamic_cast<sf::RenderWindow&>(m_window).getView();
+			V.setSize( event.size.width, event.size.height );
+			dynamic_cast<sf::RenderWindow&>(m_window).setView(V);
+			g_Game->GetStateMachine()->Resize( sf::Vector2f(event.size.width, event.size.height) );
+			} break;
 
 		case sf::Event::LostFocus:
 			break;
@@ -102,8 +110,5 @@ void Events::EventHandler::Update(float dt)
 		case sf::Event::JoystickDisconnected:
 			break;
 		}
-
-		// Forward events to GUI
-		g_Game->GetStateMachine()->GuiHandleEvent(event);
 	}
 }

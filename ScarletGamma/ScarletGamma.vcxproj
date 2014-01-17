@@ -82,6 +82,7 @@
   <ItemGroup>
     <ClCompile Include="src\actions\ActionPool.cpp" />
     <ClCompile Include="src\actions\Attack.cpp" />
+    <ClCompile Include="src\actions\WalkTo.cpp" />
     <ClCompile Include="src\core\Map.cpp" />
     <ClCompile Include="src\core\Object.cpp" />
     <ClCompile Include="src\core\ObjectList.cpp" />
@@ -103,6 +104,7 @@
     <ClCompile Include="src\network\WorldMessages.cpp" />
     <ClCompile Include="src\sfutils\Vectors.cpp" />
     <ClCompile Include="src\sfutils\View.cpp" />
+    <ClCompile Include="src\states\ActionState.cpp" />
     <ClCompile Include="src\states\CommonState.cpp" />
     <ClCompile Include="src\states\GameState.cpp" />
     <ClCompile Include="src\states\IntroState.cpp" />
@@ -127,6 +129,7 @@
     <ClInclude Include="src\actions\Action.hpp" />
     <ClInclude Include="src\actions\ActionPool.hpp" />
     <ClInclude Include="src\actions\Attack.hpp" />
+    <ClInclude Include="src\actions\WalkTo.hpp" />
     <ClInclude Include="src\Constants.hpp" />
     <ClInclude Include="src\core\Map.hpp" />
     <ClInclude Include="src\core\Object.hpp" />
@@ -151,6 +154,7 @@
     <ClInclude Include="src\Prerequisites.hpp" />
     <ClInclude Include="src\sfutils\View.hpp" />
     <ClInclude Include="src\sfutils\Vectors.hpp" />
+    <ClInclude Include="src\states\ActionState.hpp" />
     <ClInclude Include="src\states\CommonState.hpp" />
     <ClInclude Include="src\states\GameState.hpp" />
     <ClInclude Include="src\states\IntroState.hpp" />

@@ -1,6 +1,7 @@
 #include "actions/ActionPool.hpp"
 #include "core/Object.hpp"
 #include "actions/Attack.hpp"
+#include "actions/WalkTo.hpp"
 
 using namespace Actions;
 
@@ -11,6 +12,7 @@ ActionPool::ActionPool()
 {
     // Adding actions
     m_Actions.push_back(new Attack());
+	m_Actions.push_back(new WalkTo());
     //------------------------------//
     // TODO: add more actions here! //
     //------------------------------//

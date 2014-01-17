@@ -27,8 +27,8 @@ namespace States
 		tgui::Gui m_gui;
 		tgui::Button::Ptr m_defaultButton;	///< This is a preloaded button to increase RecalculateGUI performance by a height factor
 		const Core::ObjectList* m_objects;	///< The object list reference for the current tile
-		bool m_dirty;
-		bool m_controlWasPressed;
-		float m_screenX, m_screenY;
+		bool m_dirty;						///< Flag to mark a change in the GUI
+		bool m_controlWasPressed;			///< Buffer for control key
+		float m_screenX, m_screenY;			///< Position on screen
 	};
 }

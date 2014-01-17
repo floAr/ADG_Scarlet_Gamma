@@ -48,8 +48,8 @@ public:
 	///		be changed and expanded by serialize.
 	void Serialize( Jo::Files::MetaFileWrapper::Node& _node ) const;
 
-	/// \brief Gets the current elements in this list
-	std::vector<ObjectID>& Objects();
+	/// \brief Test if a certain object is inside the list.
+	bool Contains( ObjectID _id ) const;
 private:
 	std::vector<ObjectID> m_objects;
 };

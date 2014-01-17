@@ -9,35 +9,34 @@
 #include "core/Object.hpp"
 #include <math.h>
 
-States::SelectionState::SelectionState()
+States::SelectionState::SelectionState() :
+	m_defaultButton()
 {
-	m_menuFont=Content::Instance()->LoadFont("media/arial.ttf");
 	m_gui.setWindow(g_Game->GetWindow());
-	m_gui.setGlobalFont(m_menuFont);
-	m_dirty=false;
+	m_gui.setGlobalFont( Content::Instance()->LoadFont("media/arial.ttf") );
+	m_dirty = false;
 
+	m_defaultButton->load("lib/TGUI-0.6-RC/widgets/Black.conf");
 }
 
 void States::SelectionState::OnBegin()
 {
-	m_previousState->OnResume();
-	m_objects.clear();
-	m_selected=false;
+	m_selected = false;
+
+	// If control is not hold clear old selection
+	if( !sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) )
+	{
+		CommonState* previousState = dynamic_cast<CommonState*>(m_previousState);
+		previousState->ClearSelection();
+	}
 }
 
-void States::SelectionState::AddObject(Core::ObjectID& value)
+void States::SelectionState::SetTilePosition(int x, int y, float _screenX, float _screenY)
 {
-	m_objects.push_back(value);
-	m_dirty=true;
-}
-
-void States::SelectionState::AddTilePosition(int x, int y, float _screenX, float _screenY)
-{
-	Core::ObjectList objects= g_Game->GetWorld()->GetMap(0)->GetObjectsAt(x,y);
-	m_objects.insert(m_objects.end(), objects.Objects().begin(), objects.Objects().end());
+	m_objects = &g_Game->GetWorld()->GetMap(0)->GetObjectsAt(x,y);
 	m_screenX = _screenX;
 	m_screenY = _screenY;
-	m_dirty=true;
+	m_dirty = true;
 }
 
 void States::SelectionState::RecalculateGUI()
@@ -49,21 +48,21 @@ void States::SelectionState::RecalculateGUI()
 	m_alreadySelected=previousState->GetSelection();
 
 
-	int count=m_objects.size();
+	int count = m_objects->Size();
 
 	int i;
 	for(i=0;i<count;i++){
-		Core::Object* o=g_Game->GetWorld()->GetObject(m_objects[i]);
-		tgui::Button::Ptr button(m_gui);
-		button->load("lib/TGUI-0.6-RC/widgets/Black.conf");
+		Core::Object* o=g_Game->GetWorld()->GetObject((*m_objects)[i]);
+		tgui::Button::Ptr button = m_defaultButton.clone();
+		m_gui.add(button);
 		button->setSize(50, 40);
-		positionButton(button, 360.0f / count * i, 45.0f);
+		positionButton(button, 360.0f / count * i, 45.0f + count * 3.0f);
 		if(o->HasProperty(Core::Object::PROP_NAME))
 			button->setText(o->GetProperty(Core::Object::PROP_NAME).Value());
 		else
 			button->setText(std::to_string(o->ID()));
-		if(std::find(m_alreadySelected->Objects().begin(), m_alreadySelected->Objects().end(), m_objects[i]) != m_alreadySelected->Objects().end()) {
-			//already selected
+		if( m_alreadySelected->Contains((*m_objects)[i]) ) {
+			// already selected
 			button->setTransparency(255);
 		} else {
 			button->setTransparency(150);
@@ -83,7 +82,7 @@ void States::SelectionState::Update(float dt)
 	if(m_dirty)
 		RecalculateGUI();
 	m_previousState->Update(dt);
-	if(m_selected&&!sf::Keyboard::isKeyPressed(sf::Keyboard::LControl))
+	if(m_selected && !sf::Keyboard::isKeyPressed(sf::Keyboard::LControl))
 		m_finished=true;
 }
 
@@ -91,7 +90,6 @@ void States::SelectionState::Update(float dt)
 void States::SelectionState::Draw(sf::RenderWindow& win)
 {
 	m_previousState->Draw(win);
-	//win.clear();
 
 	GameState::Draw(win);
 
@@ -106,17 +104,17 @@ void States::SelectionState::GuiCallback(tgui::Callback& args)
 		CommonState* previousState = dynamic_cast<CommonState*>(m_previousState);
 		// The parent is not set or not of type CommonState, but it should be!
 		assert(previousState);
-	m_alreadySelected=previousState->GetSelection();
+		m_alreadySelected=previousState->GetSelection();
 
-	if(std::find(m_alreadySelected->Objects().begin(), m_alreadySelected->Objects().end(), m_objects[args.id-100]) != m_alreadySelected->Objects().end()) {
-			//already selected
-		previousState->RemoveFromSelection(m_objects[args.id-100]);
+		if( m_alreadySelected->Contains((*m_objects)[args.id-100]) )
+		{
+			// already selected
+			previousState->RemoveFromSelection((*m_objects)[args.id-100]);
 		} else {
-			previousState->AddToSelection(m_objects[args.id-100]);
+			previousState->AddToSelection((*m_objects)[args.id-100]);
 		}
-	m_dirty=true;
-	m_selected=true;
-
+		m_dirty=true;
+		m_selected=true;
 	}
 }
 
@@ -124,14 +122,16 @@ void States::SelectionState::GuiCallback(tgui::Callback& args)
 
 void States::SelectionState::MouseButtonPressed(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos)
 {
-	if(button.button==sf::Mouse::Button::Right)
+	if(button.button == sf::Mouse::Button::Right)
 	{
-        // This selection state is finished
-		m_finished = true;
+		// Reset menu position
+		SetTilePosition((int)floor(tilePos.x), (int)floor(tilePos.y), (float)button.x, (float)button.y);
 
-        // Pushing a new state. This effectively deletes the current state,
-        // so DON'T TOUCH this object in any way after the push!
-		m_previousState->MouseButtonPressed(button,tilePos);
+	} else if(button.button == sf::Mouse::Left)
+	{
+		// If clicked somewhere not on the gui finish in single selection mode
+		if( !sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) )
+			m_finished = true;
 	}
 }
 

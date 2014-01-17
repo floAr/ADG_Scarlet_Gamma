@@ -137,7 +137,7 @@ namespace States {
 			if( g_Game->GetWorld()->GetMap(0)->GetObjectsAt(tileX, tileY).Size() > 0 )
 			{
 				SelectionState* gs = dynamic_cast<SelectionState*>(g_Game->GetStateMachine()->PushGameState(GST_SELECTION));
-				gs->AddTilePosition(tileX, tileY, button.x, button.y);
+				gs->SetTilePosition(tileX, tileY, (float)button.x, (float)button.y);
 			}
 			
 			} break;

@@ -37,7 +37,7 @@ public:
 
 	/// \brief Returns the value of the name property and the id as string
 	///		if there is no such property.
-	const std::string& GetName() const;
+	std::string GetName() const;
 
 	/// \brief Returns a color if the according property exists and white
 	///		otherwise.

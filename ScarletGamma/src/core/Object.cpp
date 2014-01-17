@@ -77,11 +77,11 @@ namespace Core {
 	}
 
 
-	const std::string& Object::GetName() const
+	std::string Object::GetName() const
 	{
 		const Property* name = Get(PROP_NAME);
-		if( !name ) return std::to_string(m_id);
-		return name->Value();
+		if( !name ) return std::to_string(m_id);	// Will use move semantic
+		return name->Value();						// Uses copy - bad but safe
 	}
 
 

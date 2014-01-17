@@ -144,15 +144,14 @@ namespace Network {
 		case Target::CHAT:
 			read += HandleChatMessage( buffer + sizeof(MessageHeader), size );
             break;
-        case Target::MASTER:
-        case Target::PLAYER:
+        case Target::ACTION:
             read += HandleActionMessage( static_cast<Core::ActionID>(header->targetID), buffer + sizeof(MessageHeader), size );
             break;
 		}
 
 		assert(_packet.getDataSize() == read);
 
-		if( IsServer() && (header->target != Target::MASTER) )
+		if( IsServer() && (header->target != Target::ACTION) )
 		{
 			// Forward message to all other clients
 			for( size_t i=0; i<g_msgInstance->m_sockets.size(); ++i )

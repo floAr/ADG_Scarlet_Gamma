@@ -3,6 +3,8 @@
 #include <TGUI/TGUI.hpp>
 #include <SFML/Graphics.hpp>
 #include "Prerequisites.hpp"
+#include "PropertyPanel.hpp"
+#include "DragNDrop.hpp"
 
 namespace Interfaces {
 
@@ -15,15 +17,20 @@ namespace Interfaces {
 		ObjectPanel();
 
 		/// \param [in] _addAble Add and delete buttons for lines are shown.
+		/// \param [in] _source As what should this GUI fill the DragNDrop handler.
 		void Init( float _x, float _y, float _w, float _h,
-			bool _addAble, Core::World* _world,
-			Interfaces::DragContent** _dragNDropHandler );
+			bool _addAble, Core::World* _world, Interfaces::DragContent::Sources _source,
+			Interfaces::DragContent** _dragNDropHandler,
+			Interfaces::PropertyPanel::Ptr _viewer );
 
 		bool IsMinimized() const { return m_miniMaxi->getCurrentFrame() == 0; }
 
 		virtual void setSize(float _width, float _height) override;
 		virtual sf::Vector2f getSize() const override;
 		virtual void setPosition(float _x, float _y) override;
+
+		/// \brief Just ignore things dragged to the object list
+		void HandleDropEvent()	{}
 
 	protected:
 		tgui::EditBox::Ptr m_newName;
@@ -35,14 +42,18 @@ namespace Interfaces {
 		bool m_addAble;
 		int m_oldScrollValue;		///< The damned scrollbar-change does not send the previous value.
 		int m_numPixelLines;		///< Total number of pixels covered by elements inside the list.
+	//	clock_t m_lastClick;		///< Timestamp when was the last mouse click? Required to detect double click.
 		Core::World* m_world;
 		Interfaces::DragContent** m_dragNDropHandler;	///< A pointer to a pointer which must be filled if a mouse down event occures.
+		Interfaces::DragContent::Sources m_dragNDropSource;		///< As what should this GUI fill the DragNDrop handler.
+		Interfaces::PropertyPanel::Ptr m_viewer;		///< A panel to view a selected object.
 
 		void RemoveBtn(const tgui::Callback& _call);
 		void AddBtn(const tgui::Callback& _call);
 		void Scroll(const tgui::Callback& _call);
 		void MiniMaxi(const tgui::Callback& _call);
 		void StartDrag(const tgui::Callback& _call);
+		void SelectObject(const tgui::Callback& _call);
 
 		/// \brief Extract all properties of an object recursively.
 		void Add( Core::ObjectID _object );

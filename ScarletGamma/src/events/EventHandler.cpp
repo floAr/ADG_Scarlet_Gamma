@@ -39,9 +39,10 @@ void Events::EventHandler::Update(float dt)
 
 		case sf::Event::Resized: {
 			sf::View V = dynamic_cast<sf::RenderWindow&>(m_window).getView();
-			V.setSize( event.size.width, event.size.height );
+			V.setSize( (float) event.size.width, (float) event.size.height );
 			dynamic_cast<sf::RenderWindow&>(m_window).setView(V);
-			g_Game->GetStateMachine()->Resize( sf::Vector2f(event.size.width, event.size.height) );
+			g_Game->GetStateMachine()->Resize( sf::Vector2f((float) event.size.width,
+                (float)event.size.height) );
 			} break;
 
 		case sf::Event::LostFocus:

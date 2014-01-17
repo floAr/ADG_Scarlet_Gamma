@@ -37,6 +37,9 @@ namespace States
 		/// \brief Open a chat menu on Enter.
 		virtual void KeyPressed(sf::Event::KeyEvent& key) override;
 
+		/// \brief Right-aligns the chat.
+		virtual void Resize(const sf::Vector2f& _size) override;
+
 
 		//----------------------------------------------------------------------
 		// SELECTION STUFF

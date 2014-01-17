@@ -100,6 +100,15 @@ void CommonState::KeyPressed( sf::Event::KeyEvent& key )
 }
 
 
+void CommonState::Resize(const sf::Vector2f& _size)
+{
+	tgui::ChatBox::Ptr localOut = m_gui.get( "Messages" );
+	tgui::EditBox::Ptr enterTextEdit = m_gui.get( "EnterText" );
+	localOut->setPosition( _size - localOut->getSize() - sf::Vector2f(0.0f, enterTextEdit->getSize().y) );
+	enterTextEdit->setPosition( _size - enterTextEdit->getSize() );
+}
+
+
 void CommonState::ZoomView(float delta)
 {
 	// Get the render window

@@ -182,3 +182,14 @@ void States::StateMachine::GuiDraw()
     if (m_gameState)
         m_gameState->GuiDraw();
 }
+
+
+void States::StateMachine::Resize( const sf::Vector2f& _size )
+{
+	GameState* state = m_gameState;
+	while( state )
+	{
+		state->Resize( _size );
+		state = state->GetPreviousState();
+	}
+}

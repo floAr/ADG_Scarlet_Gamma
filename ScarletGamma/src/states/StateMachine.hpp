@@ -111,6 +111,9 @@ namespace States
         /// \brief Draws the current GUI.
         void GuiDraw();
 
+		/// \brief Call the resize event for all game states
+		void Resize( const sf::Vector2f& _size );
+
     private:
         /// \brief Pointer to the current GameState. The previous state is known
         ///		by the current GameState.

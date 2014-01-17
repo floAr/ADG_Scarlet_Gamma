@@ -20,6 +20,7 @@ namespace States
 		virtual void Draw(sf::RenderWindow& win);
 		virtual void MouseButtonPressed(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos);
 		virtual void MouseButtonReleased(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos, float time);
+		virtual void Resize(const sf::Vector2f& _size) override;
 
 	private:
 		Core::Object* m_player;			///< The one and only player object

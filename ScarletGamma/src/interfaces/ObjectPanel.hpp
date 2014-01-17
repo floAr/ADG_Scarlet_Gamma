@@ -21,6 +21,10 @@ namespace Interfaces {
 
 		bool IsMinimized() const { return m_miniMaxi->getCurrentFrame() == 0; }
 
+		virtual void setSize(float _width, float _height) override;
+		virtual sf::Vector2f getSize() const override;
+		virtual void setPosition(float _x, float _y) override;
+
 	protected:
 		tgui::EditBox::Ptr m_newName;
 		tgui::Button::Ptr m_newAdd;

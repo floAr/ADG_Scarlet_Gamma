@@ -237,4 +237,17 @@ namespace States {
 		}
 	}
 
+
+	void MasterState::Resize(const sf::Vector2f& _size)
+	{
+		// Scale chat too
+		CommonState::Resize( _size );
+
+		// Scale editor sidebar
+		m_objectsPanel->setSize( m_objectsPanel->getSize().x, _size.y * 0.5f );
+		m_modulePanel->setSize( m_modulePanel->getSize().x, _size.y * 0.5f );
+		m_modulePanel->setPosition( 0.0f, _size.y * 0.5f );
+		m_propertyPanel->setSize( m_propertyPanel->getSize().x, _size.y * 0.5f );
+	}
+
 }// namespace States

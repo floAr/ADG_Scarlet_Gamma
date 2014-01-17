@@ -29,8 +29,9 @@ namespace Interfaces {
 
 		bool IsMinimized() const { return m_miniMaxi->getCurrentFrame() == 0; }
 
-		virtual void setSize(float width, float height);
-		virtual sf::Vector2f getSize() const;
+		virtual void setSize(float _width, float _height) override;
+		virtual sf::Vector2f getSize() const override;
+		virtual void setPosition(float _x, float _y) override;
 	protected:
 		// A list of preloaded objects to increase creation time by a very large
 		// factor.
@@ -56,14 +57,6 @@ namespace Interfaces {
 			PropertyPanel::Ptr subNode;
 
 			EntryLine() : left(nullptr), right(nullptr), del(nullptr), subNode(nullptr)	{}
-
-			/*~EntryLine()
-			{
-				delete left;
-				delete right;
-				delete del;
-				delete subNode;
-			}*/
 		};
 
 		/// \brief A map of references to find the 2/3 objects belonging to

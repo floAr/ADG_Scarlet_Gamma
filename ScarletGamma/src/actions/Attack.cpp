@@ -20,7 +20,6 @@ void Attack::Execute()
     // Tell the server that we are starting an attack
     Network::MsgActionBegin message(this->GetID());
     message.Send();
-   
 
     //////////////////////////////////////////////////////////////////////////
     // all TODO below!
@@ -47,6 +46,7 @@ Action* Attack::Clone()
     Attack* result = new Attack();
 
     // TODO: copy all values
+    result->m_ID = m_ID;
 
     return dynamic_cast<Action*>(result);
 }

@@ -25,7 +25,7 @@ namespace Actions
         /// \brief Get the name of an action by ID.
         /// \param [in] id  ID of the action to start, \see GetAllowedActions
         /// \returns  Name of the action specified by ID
-        const std::string GetActionName(Core::ActionID id);
+        const std::string& GetActionName(Core::ActionID id);
 
         /// \brief Get an action that is currently in progress.
         /// \param [in] index  Optional: specify an index (i.e. player ID when you
@@ -35,10 +35,14 @@ namespace Actions
 
         /// \brief Start an action on the local machine by ID.
         /// \param [in] id     ID of the action to start, \see GetAllowedActions
-        /// \param [in] index  Optional: specify an index (i.e. player ID when you
-        ///   are the server)
         /// \returns  Pointer to action, may be 0
-        Action* StartAction(Core::ActionID id, int index = 0);
+        Action* StartAction(Core::ActionID id);
+
+        /// \brief Start an action that a remote machine requested.
+        /// \param [in] id     ID of the action to start, \see GetAllowedActions
+        /// \param [in] index  Optional: specify an index (i.e. player ID)
+        /// \returns  Pointer to action, may be 0
+        Action* StartClientAction(Core::ActionID id, uint8_t index);
 
     private:
         /// \brief Private constructor prohibits more than one instance

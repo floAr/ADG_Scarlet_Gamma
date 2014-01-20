@@ -37,7 +37,7 @@ namespace Network
     /// \details The function is called after the MessageHeader header is
     ///		decoded. So data starts with MsgActionHeader.
     ///	\return Number of bytes which were read: could be smaller than _size.
-    size_t HandleActionMessage(Core::ActionID _action, const uint8_t* _data, size_t _size);
+    size_t HandleActionMessage(Core::ActionID _action, const uint8_t* _data, size_t _size, uint8_t _sender);
 
     ////////////////////////////////////////////////////////////////////////////
 
@@ -48,7 +48,7 @@ namespace Network
         MsgActionBegin(Core::ActionID id);
 
         /// \see HandleActionMessage
-        static size_t Receive(Core::ActionID _action, const uint8_t* _data, size_t _size);
+        static size_t Receive(Core::ActionID _action, uint8_t _sender, const uint8_t* _data, size_t _size);
     protected:
         virtual void WriteData(Jo::Files::MemFile& _output) const override;
     };
@@ -62,7 +62,7 @@ namespace Network
         MsgActionEnd(Core::ActionID id);
 
         /// \see HandleActionMessage
-        static size_t Receive(Core::ActionID _action, const uint8_t* _data, size_t _size);
+        static size_t Receive(Core::ActionID _action, uint8_t _sender, const uint8_t* _data, size_t _size);
     protected:
         virtual void WriteData(Jo::Files::MemFile& _output) const override;
     };

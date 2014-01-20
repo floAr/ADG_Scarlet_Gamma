@@ -6,9 +6,12 @@
 
 using namespace Network;
 
-size_t Network::HandleActionMessage(Core::ActionID _action, const uint8_t* _data, size_t _size)
+size_t Network::HandleActionMessage(Core::ActionID _action, const uint8_t* _data,
+                                    size_t _size, uint8_t _sender)
 {
-    assert(_size > sizeof(ActionMsgType));
+    assert(_size >= sizeof(ActionMsgType));
+
+    // TODO: use _sender id
 
     const ActionMsgType* header = reinterpret_cast<const ActionMsgType*>(_data);
     size_t readSize = sizeof(ActionMsgType);
@@ -17,15 +20,15 @@ size_t Network::HandleActionMessage(Core::ActionID _action, const uint8_t* _data
     {
     case ActionMsgType::ACTION_BEGIN:
         // Start a new action
-        readSize += MsgActionBegin::Receive(_action, _data + readSize, _size - readSize);
+        readSize += MsgActionBegin::Receive(_action, _sender, _data + readSize, _size - readSize);
         break;
     case ActionMsgType::ACTION_END:
         // End the current action
-        //readSize += MsgEndAction::Receive(_action, _data + readSize, _size - readSize);
+        //readSize += MsgEndAction::Receive(_action, _sender, _data + readSize, _size - readSize);
         break;
     case ActionMsgType::ACTION_INFO:
         // Notify the action about something
-        //readSize += MsgEndAction::Receive(_action, _data + readSize, _size - readSize);
+        //readSize += MsgEndAction::Receive(_action, _sender, _data + readSize, _size - readSize);
         break;
     }
 
@@ -42,8 +45,6 @@ void ActionMsg::Send()
     Jo::Files::MemFile data;
     data.Write(&MessageHeader(Target::ACTION, m_action), sizeof(MessageHeader));
     data.Write(&m_purpose, sizeof(ActionMsgType));
-
-    // TODO write ActionID?!
 
     // Write data
     WriteData(data);
@@ -64,13 +65,13 @@ void MsgActionBegin::WriteData(Jo::Files::MemFile& _output) const
     // Write nothing, ActionMsgType and ActionID are sufficient
 }
 
-size_t MsgActionBegin::Receive(Core::ActionID _action, const uint8_t* _data, size_t _size)
+size_t MsgActionBegin::Receive(Core::ActionID _action, uint8_t _sender,
+                               const uint8_t* _data, size_t _size)
 {
     Jo::Files::MemFile file(_data, _size);
-
-    // TODO: If server, where to get the player ID from?!
-    //Actions::ActionPool::Instance().RemoteStartAction(_action);
-    // TODO: implement function to start remote Action on the server
+    
+    assert(Messenger::IsServer());
+    Actions::ActionPool::Instance().StartClientAction(_action, _sender);
 
     return (size_t)file.GetCursor();
 }
@@ -89,7 +90,8 @@ void MsgActionEnd::WriteData(Jo::Files::MemFile& _output) const
     // Write nothing, ActionMsgType and ActionID are sufficient
 }
 
-size_t MsgActionEnd::Receive(Core::ActionID _action, const uint8_t* _data, size_t _size)
+size_t MsgActionEnd::Receive(Core::ActionID _action, uint8_t _sender,
+                             const uint8_t* _data, size_t _size)
 {
     Jo::Files::MemFile file(_data, _size);
 

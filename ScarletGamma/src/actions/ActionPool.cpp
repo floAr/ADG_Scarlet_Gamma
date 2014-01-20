@@ -57,13 +57,13 @@ std::vector<Core::ActionID> ActionPool::GetAllowedActions(Core::Object& object)
     return result;
 }
 
-const std::string ActionPool::GetActionName(Core::ActionID id)
+const std::string& ActionPool::GetActionName(Core::ActionID id)
 {
     Action* unknown = m_Actions.at(id);
     return unknown->GetName();
 }
 
-Action* ActionPool::StartAction(Core::ActionID id, int index)
+Action* ActionPool::StartAction(Core::ActionID id)
 {
     Action* toCopy = m_Actions.at(id);
 
@@ -71,10 +71,28 @@ Action* ActionPool::StartAction(Core::ActionID id, int index)
     if (toCopy)
     {
         Action* newAction = toCopy->Clone();
+        m_CurrentActions[0] = newAction;
         newAction->Execute();
         return newAction;
     }
     
+    // Action not found
+    return 0;
+}
+
+
+Action* ActionPool::StartClientAction(Core::ActionID id, uint8_t index)
+{
+    Action* toCopy = m_Actions.at(id);
+
+    // Create a copy of the action and return it
+    if (toCopy)
+    {
+        Action* newAction = toCopy->Clone();
+        m_CurrentActions[index] = newAction;
+        return newAction;
+    }
+
     // Action not found
     return 0;
 }

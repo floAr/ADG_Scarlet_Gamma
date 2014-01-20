@@ -35,7 +35,7 @@ void States::SelectionState::OnBegin()
 
 void States::SelectionState::SetTilePosition(int x, int y, float _screenX, float _screenY)
 {
-	m_objects = &g_Game->GetWorld()->GetMap(0)->GetObjectsAt(x,y);
+	m_objects = g_Game->GetWorld()->GetMap(0)->GetObjectsAt(x,y);
 	m_screenX = _screenX;
 	m_screenY = _screenY;
 	m_dirty = true;
@@ -49,11 +49,11 @@ void States::SelectionState::RecalculateGUI()
 	CommonState* previousState = dynamic_cast<CommonState*>(m_previousState);
 	const Core::ObjectList* alreadySelected = previousState->GetSelection();
 
-	int count = m_objects->Size();
+	int count = m_objects.Size();
 
 	int i;
 	for(i=0;i<count;i++){
-		Core::Object* o=g_Game->GetWorld()->GetObject((*m_objects)[i]);
+		Core::Object* o=g_Game->GetWorld()->GetObject(m_objects[i]);
 		tgui::Button::Ptr button = m_defaultButton.clone();
 		m_gui.add(button);
 		button->setSize(50, 40);
@@ -62,7 +62,7 @@ void States::SelectionState::RecalculateGUI()
 			button->setText(o->GetProperty(Core::Object::PROP_NAME).Value());
 		else
 			button->setText(std::to_string(o->ID()));
-		if( alreadySelected->Contains((*m_objects)[i]) ) {
+		if( alreadySelected->Contains(m_objects[i]) ) {
 			// already selected
 			button->setTransparency(255);
 		} else {
@@ -114,7 +114,7 @@ void States::SelectionState::GuiCallback(tgui::Callback& args)
 		assert(previousState);
 		const Core::ObjectList* alreadySelected = previousState->GetSelection();
 
-		Core::ObjectID id = (*m_objects)[args.id-100];
+		Core::ObjectID id = m_objects[args.id-100];
 		if( alreadySelected->Contains(id) )
 		{
 			// already selected

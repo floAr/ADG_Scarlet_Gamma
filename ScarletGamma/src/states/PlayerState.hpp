@@ -15,6 +15,7 @@ namespace States
 		virtual void OnResume() {}
 		virtual void Draw(sf::RenderWindow& win);
 		virtual void MouseButtonPressed(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos);
+		virtual void Resize(const sf::Vector2f& _size) override;
 
 		/// \brief CommonState Update + Player view refreshed.
 		virtual void Update( float _dt ) override;

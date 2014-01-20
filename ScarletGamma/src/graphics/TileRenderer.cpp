@@ -65,13 +65,27 @@ void Graphics::TileRenderer::Render(sf::RenderWindow& window, Core::Map& map)
 
 void Graphics::TileRenderer::RenderPath( sf::RenderWindow& window, const std::vector<sf::Vector2i>& _path )
 {
+	const sf::Texture& tex = Content::Instance()->LoadTexture("media/way_point.png");
+	sf::Sprite drawSprite(tex);
+	drawSprite.setColor(sf::Color(255, 144, 1, 130));
 	for( size_t i=0; i<_path.size(); ++i )
 	{
-		const sf::Texture& tex = Content::Instance()->LoadTexture("media/way_point.png");
-		sf::Sprite drawSprite(tex);
 		drawSprite.setPosition(sf::Vector2f(_path[i]) * float(TILESIZE));
 		drawSprite.setScale(float(TILESIZE)/tex.getSize().x, float(TILESIZE)/tex.getSize().y);
-		drawSprite.setColor(sf::Color(255, 144, 1, 130));
+		window.draw(drawSprite);
+	}
+}
+
+void Graphics::TileRenderer::RenderSelection( sf::RenderWindow& window, const Core::ObjectList& _selection )
+{
+	const sf::Texture& tex = Content::Instance()->LoadTexture("media/selected.png");
+	sf::Sprite drawSprite(tex);
+	drawSprite.setColor(sf::Color(255, 255, 1, 255));
+	for( int i=0; i<_selection.Size(); ++i )
+	{
+		Core::Object* obj = g_Game->GetWorld()->GetObject( _selection[i] );
+		drawSprite.setPosition(obj->GetPosition() * float(TILESIZE));
+		drawSprite.setScale(float(TILESIZE)/tex.getSize().x, float(TILESIZE)/tex.getSize().y);
 		window.draw(drawSprite);
 	}
 }

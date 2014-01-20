@@ -34,6 +34,8 @@ void States::PlayerState::Draw(sf::RenderWindow& win)
 	// Draw the players path
 	DrawPathOverlay(win, m_player);
 
+	Graphics::TileRenderer::RenderSelection( win, m_selection );
+
 	GameState::Draw(win);
 }
 
@@ -92,10 +94,12 @@ void States::PlayerState::OnBegin()
 	m_player->GetProperty( Core::Object::PROP_COLOR ).ApplyRights( 
 		id, true );
 
-	m_playerView->Init( 0.0f, 0.0f, 300.0f, 600.0f, false, false,
+	tgui::ChatBox::Ptr localOut = m_gui.get( "Messages" );
+	m_playerView->Init( 624.0f, 0.0f, 400.0f, localOut->getPosition().y, false, false,
 		id, nullptr );
 	m_playerView->Show( m_player );
 }
+
 
 void States::PlayerState::Update( float _dt )
 {
@@ -103,4 +107,17 @@ void States::PlayerState::Update( float _dt )
 
 	// Go through player object and update all viewed properties
 	m_playerView->Show(m_player);
+}
+
+
+void States::PlayerState::Resize(const sf::Vector2f& _size)
+{
+	// Scale chat too
+	CommonState::Resize( _size );
+
+	tgui::ChatBox::Ptr localOut = m_gui.get( "Messages" );
+
+	// Scale player view
+	m_playerView->setSize( m_playerView->getSize().x, localOut->getPosition().y );
+	m_playerView->setPosition( _size.x - m_playerView->getSize().x, 0.0f );
 }

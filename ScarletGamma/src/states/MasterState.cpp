@@ -49,21 +49,21 @@ namespace States {
 		}
 
 		m_viewPanel = Interfaces::PropertyPanel::Ptr(m_gui);
-		m_viewPanel->Init( 240.0f, 300.0f, 240.0f, 300.0f, false, false, 0, &m_draggedContent );
+		m_viewPanel->Init( 240.0f, 384.0f, 240.0f, 384.0f, false, false, 0, &m_draggedContent );
 
 		// Load properties from database into gui
 		m_propertyPanel = Interfaces::PropertyPanel::Ptr(m_gui);
-		m_propertyPanel->Init( 0.0f, 0.0f, 240.0f, 300.0f, true, false, 0, &m_draggedContent );
+		m_propertyPanel->Init( 0.0f, 0.0f, 240.0f, 384.0f, true, false, 0, &m_draggedContent );
 		// The all-properties object has ID 0
 		m_propertyPanel->Show( m_dbProperties->GetObject( 0 ) );
 
 		// Load Modules from database into gui
 		m_modulePanel = Interfaces::ObjectPanel::Ptr(m_gui);
-		m_modulePanel->Init( 0.0f, 300.0f, 240.0f, 300.0f, true, m_dbModules, Interfaces::DragContent::MODULES_PANEL, &m_draggedContent, m_viewPanel );
+		m_modulePanel->Init( 0.0f, 384.0f, 240.0f, 384.0f, true, m_dbModules, Interfaces::DragContent::MODULES_PANEL, &m_draggedContent, m_viewPanel );
 
 		// Load Objects from database into gui
 		m_objectsPanel = Interfaces::ObjectPanel::Ptr(m_gui);
-		m_objectsPanel->Init( 240.0f, 0.0f, 240.0f, 300.0f, true, m_dbTemplates, Interfaces::DragContent::OBJECT_PANEL, &m_draggedContent, m_viewPanel );
+		m_objectsPanel->Init( 240.0f, 0.0f, 240.0f, 384.0f, true, m_dbTemplates, Interfaces::DragContent::OBJECT_PANEL, &m_draggedContent, m_viewPanel );
 
 		// Set chat color...
 		m_color = sf::Color(80,80,250);
@@ -96,6 +96,8 @@ namespace States {
 
 		// If the selected object has a path draw it
 		DrawPathOverlay(win, m_player);
+
+		Graphics::TileRenderer::RenderSelection( win, m_selection );
 
 		GameState::Draw(win);
 	}

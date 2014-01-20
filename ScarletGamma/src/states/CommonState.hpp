@@ -72,7 +72,7 @@ namespace States
 
 		/// \param [in] _whosePath An object with the Target or Path property
 		///		whose path should be drawn.
-		void DrawPathOverlay(sf::RenderWindow& win, Core::Object* _whosePath);
+		void DrawPathOverlay(sf::RenderWindow& _window, Core::Object* _whosePath);
 
 		void SubmitChat(const tgui::Callback& _call);
 

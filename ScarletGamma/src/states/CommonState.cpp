@@ -150,7 +150,7 @@ void CommonState::ZoomView(float delta)
 }
 
 
-void CommonState::DrawPathOverlay(sf::RenderWindow& win, Core::Object* _whosePath)
+void CommonState::DrawPathOverlay(sf::RenderWindow& _window, Core::Object* _whosePath)
 {
 	assert( _whosePath );
 	try {
@@ -182,11 +182,12 @@ void CommonState::DrawPathOverlay(sf::RenderWindow& win, Core::Object* _whosePat
 		}
 
 		if( path.size() > 0 )
-			Graphics::TileRenderer::RenderPath(win, path);
+			Graphics::TileRenderer::RenderPath(_window, path);
 	} catch(...) {
 		// In case of an invalid selection just draw no path
 	}
 }
+
 
 
 void CommonState::SubmitChat(const tgui::Callback& _call)

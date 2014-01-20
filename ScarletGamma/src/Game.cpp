@@ -14,7 +14,7 @@ void Game::Init()
 	m_stateMachine = new States::StateMachine();
 
 	// Set up SFML window
-	m_window.create(sf::VideoMode(800, 600), "Scarlet Gamma");
+	m_window.create(sf::VideoMode(1024, 768), "Scarlet Gamma");
 	m_window.setVerticalSyncEnabled(true);
 	m_window.setKeyRepeatEnabled(true); // PLEASE LEAVE THIS ON, because the GUI will suck otherwise.
 										// If this has a bad effect on gameplay, we'll need to find a workaround.

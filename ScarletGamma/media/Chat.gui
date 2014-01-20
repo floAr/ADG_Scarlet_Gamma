@@ -3,8 +3,8 @@ Window:
 	ChatBox: "Messages"
 	{
 		ConfigFile = "media/Black.conf"
-		Left = 400
-		Top = 360
+		Left = 624
+		Top = 528
 		Width = 400
 		Height = 200
 		Visible = true
@@ -21,8 +21,8 @@ Window:
 	EditBox: "EnterText"
 	{
 		ConfigFile = "media/Black.conf"
-		Left = 400
-		Top = 560
+		Left = 624
+		Top = 728
 		Width = 400
 		Height = 40
 		Visible = false

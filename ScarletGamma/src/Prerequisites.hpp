@@ -79,6 +79,7 @@ namespace States
 {
     class StateMachine;
     class GameState;
+    class PromptState;
 }
 
 //------------------------------------------------------------------------------

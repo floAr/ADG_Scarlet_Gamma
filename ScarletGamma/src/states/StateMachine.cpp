@@ -6,6 +6,7 @@
 #include "LaunchMasterState.hpp"
 #include "LaunchPlayerState.hpp"
 #include "ActionState.hpp"
+#include "PromptState.hpp"
 
 States::StateMachine::StateMachine() :
     m_gameState(0)
@@ -72,13 +73,17 @@ States::GameState* States::StateMachine::PushGameState(States::GameStateType sta
         // You mast create the master state your self - it requires input.
         assert(false);
         break;
-	case GST_SELECTION:
-		newState = new States::SelectionState();
-		break;
-	case GST_ACTION:
-		newState = new States::ActionState();
-		break;
-	}
+    case GST_SELECTION:
+        newState = new States::SelectionState();
+        break;
+    case GST_ACTION:
+        newState = new States::ActionState();
+        break;
+    case GST_PROMPT:
+        newState = new States::PromptState();
+    }
+
+    assert(newState && "StateMachine::PushGameState returned 0, didn't you add your enum");
 
     // If we have a new state, "push" it
     if (newState != 0)
@@ -93,6 +98,7 @@ void States::StateMachine::PopGameState()
     if (m_gameState)
     {
         m_gameState->OnEnd();
+        m_gameState->NotifyPopCallback();
         GameState* oldState = m_gameState;
         m_gameState = m_gameState->GetPreviousState();
         delete oldState;
@@ -171,8 +177,8 @@ void States::StateMachine::MouseMoved(int deltaX, int deltaY)
 bool States::StateMachine::GuiHandleEvent(sf::Event& event)
 {
     if (m_gameState)
-		return m_gameState->GuiHandleEvent(event);
-	return false;
+        return m_gameState->GuiHandleEvent(event);
+    return false;
 }
 
 void States::StateMachine::GuiHandleCallbacks()
@@ -190,10 +196,10 @@ void States::StateMachine::GuiDraw()
 
 void States::StateMachine::Resize( const sf::Vector2f& _size )
 {
-	GameState* state = m_gameState;
-	while( state )
-	{
-		state->Resize( _size );
-		state = state->GetPreviousState();
-	}
+    GameState* state = m_gameState;
+    while( state )
+    {
+        state->Resize( _size );
+        state = state->GetPreviousState();
+    }
 }

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Action.hpp"
-#include "core/Property.hpp"
+#include "Prerequisites.hpp"
 
 namespace Actions
 {
@@ -12,6 +12,8 @@ namespace Actions
     public:
         /// \brief Initialize an attack action.
         virtual void Execute();
+
+        void HitRollPromptFinished(States::GameState* promptState);
 
     private:
         /// \brief Clones an attack action.

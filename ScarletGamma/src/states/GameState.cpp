@@ -40,5 +40,19 @@ namespace States {
 		}
 	}
 
-} // namespace States
+	void GameState::AddPopCallback(std::function<void(GameState*)> callback)
+	{
+		m_popCallbacks.push_back(callback);
+	}
 
+	void GameState::NotifyPopCallback()
+	{
+		for (std::vector<std::function<void(GameState*)>>::iterator it = m_popCallbacks.begin();
+			it != m_popCallbacks.end(); ++it)
+		{
+			// Call callback function
+			(*it)(this);
+		}
+	}
+
+} // namespace States

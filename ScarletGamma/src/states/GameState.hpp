@@ -35,29 +35,29 @@ namespace States
 			return m_previousState;
 		}
 
-		/// \brief Pure virtual function that is called when the GameState is
+		/// \brief Virtual function that is called when the GameState is
 		///		first entered and pushed.
-		virtual void OnBegin() = 0;
+		virtual void OnBegin() {}
 
-		/// \brief Pure virtual function that is called when the GameState is
+		/// \brief Virtual function that is called when the GameState is
 		///		finally pop'd from the stack.
-		virtual void OnEnd() = 0;
+		virtual void OnEnd() {}
 
-		/// \brief Pure virtual function that is called when the GameState is
+		/// \brief Virtual function that is called when the GameState is
 		///		paused due to another GameState being pushed on top of it.
-		virtual void OnPause() = 0;
+		virtual void OnPause() {}
 
-		/// \brief Pure virtual function that is called when the GameState is
+		/// \brief Virtual function that is called when the GameState is
 		///		resume due to all GameStates above being pop'd.
-		virtual void OnResume() = 0;
+		virtual void OnResume() {}
 
-		/// \brief Pure virtual function that is called when the GameLoop wants
+		/// \brief Virtual function that is called when the GameLoop wants
 		///		to update the GameState.
 		///	\details This should calculate all the game logic that is required
 		///		for the specific GameState, e.g. updating the objects, advancing
 		///		timers etc.
 		/// \param [in] dt	Delta time since last frame in seconds.
-		virtual void Update(float dt) = 0;
+        virtual void Update(float dt) {}
 
 		/// \brief Function that is called when the GameLoop wants to draw
 		///		everything. Derived classes must call this by GameState::Draw.
@@ -143,11 +143,22 @@ namespace States
 		/// \param [in] _size New size of the window (size of view).
 		virtual void Resize(const sf::Vector2f& _size) { }
 
-#pragma endregion
+
+		//----------------------------------------------------------------------
+		// EVENT CALLBACK STUFF
+
+		/// \brief Add a function to be notified before this GameState is popped.
+		/// \param [in] callback  Use std::bind to pass the callback function
+		void AddPopCallback(std::function<void(GameState*)> callback);
+
+		/// \brief Notify all registered functions that this GameState is about
+		///   to end. Should ONLY be called by the StateMachine!
+		void NotifyPopCallback();
 
 	protected:
 		bool m_finished; ///< set to true if the GameState is finished
 		GameState* m_previousState; ///< Pointer to previous state or null
+		std::vector<std::function<void(GameState*)>> m_popCallbacks; ///< Functions to be notified before I'm gone
 
 
 		/// \brief Sets the GUI to be rendered, updated and used to handle events.

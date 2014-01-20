@@ -100,12 +100,12 @@ void CommonState::KeyPressed( sf::Event::KeyEvent& key )
 		}
 	}
 
-    // Testing attack action
-    // TODO: remove
-    if ( key.code == sf::Keyboard::Space )
-    {
-        Actions::ActionPool::Instance().StartAction(0);
-    }
+	// Testing attack action
+	// TODO: remove
+	if ( key.code == sf::Keyboard::Space )
+	{
+		Actions::ActionPool::Instance().StartAction(0);
+	}
 }
 
 

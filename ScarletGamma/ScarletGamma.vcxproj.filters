@@ -176,6 +176,9 @@
     <ClCompile Include="src\actions\WalkTo.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="src\states\PromptState.cpp">
+      <Filter>Quelldateien\states</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\core\Map.hpp">
@@ -318,6 +321,9 @@
     </ClInclude>
     <ClInclude Include="src\states\ActionState.hpp" />
     <ClInclude Include="src\actions\WalkTo.hpp" />
+    <ClInclude Include="src\states\PromptState.hpp">
+      <Filter>Quelldateien\states</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />

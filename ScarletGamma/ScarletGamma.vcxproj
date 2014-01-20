@@ -113,6 +113,7 @@
     <ClCompile Include="src\states\MainMenuState.cpp" />
     <ClCompile Include="src\states\MasterState.cpp" />
     <ClCompile Include="src\states\PlayerState.cpp" />
+    <ClCompile Include="src\states\PromptState.cpp" />
     <ClCompile Include="src\states\SelectionState.cpp" />
     <ClCompile Include="src\states\StateMachine.cpp" />
     <ClCompile Include="src\unittest\UTFormulaParser.cpp" />
@@ -163,6 +164,7 @@
     <ClInclude Include="src\states\MainMenuState.hpp" />
     <ClInclude Include="src\states\MasterState.hpp" />
     <ClInclude Include="src\states\PlayerState.hpp" />
+    <ClInclude Include="src\states\PromptState.hpp" />
     <ClInclude Include="src\states\SelectionState.hpp" />
     <ClInclude Include="src\states\StateMachine.hpp" />
     <ClInclude Include="src\unittest\UnitTests.hpp" />

@@ -1,7 +1,10 @@
 #include "Attack.hpp"
+#include "Game.hpp"
 #include "Constants.hpp"
 #include "gamerules/CombatRules.hpp"
 #include "network/ActionMessages.hpp"
+#include "states/StateMachine.hpp"
+#include "states/PromptState.hpp"
 
 using namespace Actions;
 
@@ -20,27 +23,21 @@ void Attack::Execute()
     // Tell the server that we are starting an attack
     Network::MsgActionBegin(this->GetID()).Send();
 
-    // Conclude the attack but with wrong ID!!!
-    Network::MsgActionEnd(this->GetID() + 1).Send();
+    // Open prompt for hit roll value
+    States::PromptState* prompt = dynamic_cast<States::PromptState*>(g_Game->GetStateMachine()->PushGameState(States::GST_PROMPT));
+    //prompt->SetText("...");
+    prompt->AddPopCallback(std::bind(&Attack::HitRollPromptFinished, this, std::placeholders::_1));
+}
 
-    //////////////////////////////////////////////////////////////////////////
-    // all TODO below!
-    //////////////////////////////////////////////////////////////////////////
+void Attack::HitRollPromptFinished(States::GameState* promptState)
+{
+    promptState = dynamic_cast<States::PromptState*>(promptState);
+    assert(promptState);
 
-    // 2)  Show a dialog to the player, asking for the Hit Roll values
-    // TODO Show a dialog to the player
-    // Assuming some given string for now
+    // TODO: Notification for testing, remove
+    std::cout << "Hit roll prompt state finished! It is here: " << promptState << std::endl;
 
-    // 3)  Send the entered values to the Game Master
-    //     Server side is handled elsewhere I hope?!
-    //
-    //     Server replies:
-    // 4a) MISSED, were done. Kill the action!
-    // 4b) CRIT CHANCE, roll again and send it to the server
-    // 4c) HIT, enter damage (remember wether we did critical damage to show
-    //     message "damage is auto-doubled") and send it to the server
-    //
-    // done!
+    // TODO: read hit roll value from promptState and process...
 }
 
 Action* Attack::Clone()

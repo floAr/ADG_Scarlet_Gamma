@@ -3,6 +3,9 @@
 #include "utils/Exception.hpp"
 #include <iomanip>
 #include <sstream>
+#include "utils/StringUtil.hpp"
+#include "World.hpp"
+#include "Game.hpp"
 
 using namespace std;
 
@@ -23,12 +26,14 @@ namespace Core {
 		m_id(_id),
 		m_hasParent(false)
 	{
+		// Everything has an representation
 		Add( Property(_id, Property::R_V0E000000, PROP_SPRITE, _sprite) );
 	}
 
 	Object::Object( const Jo::Files::MetaFileWrapper::Node& _node ) :
 		PropertyList( _node[STR_ID], _node[STR_PROPERTIES] )
 	{
+		// Deserialize
 		m_id = _node[STR_ID];
 		const Jo::Files::MetaFileWrapper::Node* parentNode;
 		if( m_hasParent = _node.HasChild(STR_PARENT, &parentNode) )
@@ -63,6 +68,39 @@ namespace Core {
 		return Get(_name) != nullptr;
 	}
 
+
+	void Object::SetPropertyValue( const std::string& _name, const std::string& _value )
+	{
+		Property* prop = Get(_name);
+		if( !prop ) throw Exception::NoSuchProperty();
+
+		// Check if the map must be updated
+		if( Utils::IStringEqual( _name, PROP_X ) || Utils::IStringEqual( _name, PROP_Y ) )
+		{
+			// Do a lot of things to make sure the map is valid.
+			assert( IsLocatedOnAMap() );
+			Core::Map* map = g_Game->GetWorld()->GetMap( GetParentMap() );
+			sf::Vector2i oldCell = sfUtils::Round( GetPosition() );
+			prop->SetValue( _value );
+			sf::Vector2f newPosition = GetPosition();
+			sf::Vector2i newCell = sfUtils::Round( newPosition );
+			map->ResetGridPosition( ID(), oldCell, newCell );
+
+			// Setting positions of active objects confuses them
+			if( HasProperty(PROP_TARGET) )
+			{
+				prop = Get(PROP_TARGET);
+				prop->SetValue( sfUtils::to_string(newPosition) );
+				Remove(PROP_PATH);
+				//prop = Get(PROP_PATH);
+				//prop->ClearObjects();
+				//prop->SetValue(STR_FALSE);
+			}
+		} else
+			// The property self is always set.
+			prop->SetValue( _value );
+
+	}
 
 
 	sf::Vector2f Object::GetPosition() const

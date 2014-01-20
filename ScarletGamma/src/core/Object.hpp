@@ -26,6 +26,11 @@ public:
 	/// \brief Checks if at least one property with that name exists.
 	bool HasProperty( const std::string& _name ) const;
 
+	/// \brief A saver variant to change object properties. If something depends
+	///		on the change it is modified too.
+	///	\throws Exception::NoSuchProperty
+	void SetPropertyValue( const std::string& _name, const std::string& _value );
+
 	/// \brief Returns the floating position within the tile grid.
 	/// \details The position exists only if the object is located on a map.
 	///		Otherwise this method will return a NoSuchProperty exception.
@@ -90,7 +95,7 @@ private:
 		MapID map;			///< On which map is this object?
 		ObjectID object;	///< In whose object list it is?
 	} m_parent;
-	bool m_hasParent;
+	bool m_hasParent;		///< m_parent is defined. Which one is used depends on the existence of the "X"-property.
 
 	/// Use private constructors such that only the world can create objects.
 	friend class Core::World;

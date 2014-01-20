@@ -12,7 +12,6 @@ using namespace std;
 namespace Core {
 	Property::Property( ObjectID _parent, uint32_t _rights, const std::string& _name, const std::string& _value ) :
 		m_name(_name),
-		m_isObjectList(false),
 		m_value(_value),
 		m_parent(_parent),
 		m_rights(_rights)
@@ -21,7 +20,6 @@ namespace Core {
 
 	Property::Property( ObjectID _parent, uint32_t _rights, const std::string& _name, const std::string& _value, const ObjectList& _list ) :
 		m_name(_name),
-		m_isObjectList(true),
 		m_value(_value),
 		m_objects(_list),
 		m_parent(_parent),
@@ -44,21 +42,18 @@ namespace Core {
 
 	const ObjectList& Property::GetObjects()
 	{
-		if( !m_isObjectList ) throw Exception::NoObjectList();
 		return m_objects;
 	}
 
 	void Property::AddObject( ObjectID _id )
 	{
-		if( !m_isObjectList ) throw Exception::NoObjectList();
-
 		m_objects.Add(_id);
 		Network::MsgPropertyChanged( m_parent, this ).Send();
 	}
 
 	void Property::RemoveObject( ObjectID _id )
 	{
-		if( !m_isObjectList ) throw Exception::NoObjectList();
+		if( !IsObjectList() ) throw Exception::NoObjectList();
 
 		m_objects.Remove(_id);
 		Network::MsgPropertyChanged( m_parent, this ).Send();
@@ -107,14 +102,16 @@ namespace Core {
 	{
 		_node[m_name] = m_value;
 		_node[STR_RIGHTS] = m_rights;
-		if( m_isObjectList ) {
+		if( IsObjectList() ) {
 			m_objects.Serialize(_node[std::string(STR_OBJECTS)]);
 		}
 	}
 
 	void Property::PopFront()
 	{
-		{ if( !m_isObjectList ) throw Exception::NoObjectList(); m_objects.PopFront(); Network::MsgPropertyChanged( m_parent, this ).Send(); }
+		if( !IsObjectList() ) throw Exception::NoObjectList();
+		m_objects.PopFront();
+		Network::MsgPropertyChanged( m_parent, this ).Send();
 	}
 
 	bool Property::CanSee( PlayerID _player ) const

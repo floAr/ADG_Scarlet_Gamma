@@ -27,7 +27,7 @@ public:
 	/// \throws Exception::NoObjectList.
 	const ObjectList& GetObjects();
 
-	bool IsObjectList() const	{ return m_isObjectList; }
+	bool IsObjectList() const	{ return m_objects.Size() > 0; }
 
 	/// \brief Add a new object to the object list.
 	/// \details \see ObjectList::Add
@@ -101,8 +101,6 @@ public:
 private:
 	std::string m_name;
 	ObjectID m_parent;		///< The object to which this property belongs
-
-	bool m_isObjectList;	///< True if the object list is defined
 
 	// union {... is not allowed in this context because both are complex objects
 	std::string m_value;	///< The value string - might contain: text, number, formula, ...

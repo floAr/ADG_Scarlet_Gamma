@@ -7,6 +7,7 @@
 
 #include <algorithm>
 #include <unordered_map>
+#include "Constants.hpp"
 
 using namespace std;
 
@@ -47,7 +48,7 @@ namespace Core {
 		m_parentWorld(_world)
 	{
 		m_name = _node.GetName();
-		m_id = _node[string("ID")];
+		m_id = _node[STR_ID];
 		m_minX = _node[string("MinX")];
 		m_minY = _node[string("MinY")];
 		m_maxX = _node[string("MaxX")];
@@ -209,7 +210,7 @@ namespace Core {
 	void Map::Serialize( Jo::Files::MetaFileWrapper::Node& _node ) const
 	{
 		_node.SetName(m_name);
-		_node[string("ID")] = m_id;
+		_node[STR_ID] = m_id;
 		_node[string("MinX")] = m_minX;
 		_node[string("MinY")] = m_minY;
 		_node[string("MaxX")] = m_maxX;
@@ -325,7 +326,7 @@ namespace Core {
 		if(_object->HasProperty(Object::PROP_PATH))
 		{
 			Property& pathProperty = _object->GetProperty(Object::PROP_PATH);
-			bool loop = pathProperty.Value() == "true";
+			bool loop = pathProperty.Value() == STR_TRUE;
 			auto& path = pathProperty.GetObjects();
 			sf::Vector2i start, goal;
 			do {
@@ -364,7 +365,7 @@ namespace Core {
 	bool Map::HasReachedTarget( Object* _object, const sf::Vector2f& _position ) const
 	{
 		auto& targetProp = _object->GetProperty(Object::PROP_TARGET);
-		if( targetProp.Value() == "" ) return true;
+		if( targetProp.Value().empty() ) return true;
 		auto target = sfUtils::to_vector(targetProp.Value());
 		return sfUtils::LengthSq(target-_position) < 0.00000001;
 	}
@@ -391,13 +392,19 @@ namespace Core {
 		}
 		// Update cells
 		sf::Vector2i newCell(sfUtils::Round(_position));
-		if( oldCell != newCell )
-		{
-			GetObjectsAt(oldCell.x, oldCell.y).Remove(_object->ID());
-			GetObjectsAt(newCell.x, newCell.y).Add(_object->ID());
-		}
+		ResetGridPosition( _object->ID(), oldCell, newCell );
 		// Send a map-message
 		Network::MsgObjectPositionChanged(m_id, _object->ID(), _position).Send();
+	}
+
+
+	void Map::ResetGridPosition( ObjectID _object, const sf::Vector2i& _oldCell, const sf::Vector2i& _newCell )
+	{
+		if( _oldCell != _newCell )
+		{
+			GetObjectsAt(_oldCell.x, _oldCell.y).Remove(_object);
+			GetObjectsAt(_newCell.x, _newCell.y).Add(_object);
+		}
 	}
 
 } // namespace Core

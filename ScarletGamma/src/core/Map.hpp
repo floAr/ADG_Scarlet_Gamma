@@ -116,6 +116,9 @@ namespace Core {
 		///	\param [in] _position Floating position where the integer part
 		///		gives the tile position. The position must be within the grid.
 		void SetObjectPosition( Object* _object, const sf::Vector2f& _position );
+
+		/// \brief Make sure an object is in the cell where its position says it is.
+		void ResetGridPosition( ObjectID _object, const sf::Vector2i& _oldCell, const sf::Vector2i& _newCell );
 	private:
 		std::string m_name;
 

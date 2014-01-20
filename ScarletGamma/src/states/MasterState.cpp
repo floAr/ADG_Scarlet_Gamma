@@ -65,6 +65,11 @@ namespace States {
 		m_objectsPanel = Interfaces::ObjectPanel::Ptr(m_gui);
 		m_objectsPanel->Init( 240.0f, 0.0f, 240.0f, 384.0f, true, m_dbTemplates, Interfaces::DragContent::OBJECT_PANEL, &m_draggedContent, m_viewPanel );
 
+		// The temporary selection menu
+		m_selectionView = Interfaces::PropertyPanel::Ptr(m_gui);
+		m_selectionView->Init(624.0f, 0.0f, 400.0f, 528.0f, false, false, 0, &m_draggedContent);
+		m_selectionView->hide();
+
 		// Set chat color...
 		m_color = sf::Color(80,80,250);
 		m_name = "Master";
@@ -75,7 +80,16 @@ namespace States {
 		CommonState::Update(dt);
 		// Uses the test map 0 for testing purposes.
 		g_Game->GetWorld()->GetMap(0)->Update(dt);
-		//std::cout<<m_selection.Size();
+
+		if( m_selectionChanged )
+		{
+			if( m_selection.Size() > 0 )
+			{
+				m_selectionView->show();
+				m_selectionView->Show( g_Game->GetWorld(), m_selection );
+			} else m_selectionView->hide();
+			m_selectionChanged = false;
+		}
 	}
 
 	void MasterState::Draw(sf::RenderWindow& win)
@@ -120,12 +134,14 @@ namespace States {
 				// Delete current target(s) if not appending
 				if( !sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) )
 				{
-					m_player->GetProperty(Core::Object::PROP_TARGET).SetValue("");
-					Core::Property& path = m_player->GetProperty(Core::Object::PROP_PATH);
+					m_player->GetProperty(Object::PROP_TARGET).SetValue(STR_EMPTY);
+					if( !m_player->HasProperty(Object::PROP_PATH) )
+						m_player->Add( Property( m_player->ID(), Property::R_SYSTEMONLY, Object::PROP_PATH, STR_FALSE ) );
+					Property& path = m_player->GetProperty(Object::PROP_PATH);
 					path.ClearObjects();
-					path.SetValue("false");
+					path.SetValue(STR_FALSE);
 				}
-				if(m_selected->GetProperty(Core::Object::PROP_LAYER).Value()=="0"){
+				if(m_selected->GetProperty(Core::Object::PROP_LAYER).Value()==STR_0){
 					// Append to target list
 					m_player->AppendToPath( m_selected->ID() );
 				}
@@ -211,6 +227,10 @@ namespace States {
 		m_propertyPanel->setSize( m_propertyPanel->getSize().x, _size.y * 0.5f );
 		m_viewPanel->setSize( m_viewPanel->getSize().x, _size.y * 0.5f );
 		m_viewPanel->setPosition( m_modulePanel->getSize().x, _size.y * 0.5f );
+
+		tgui::ChatBox::Ptr localOut = m_gui.get( "Messages" );
+		m_selectionView->setSize( m_selectionView->getSize().x, localOut->getPosition().y );
+		m_selectionView->setPosition( _size.x - m_selectionView->getSize().x, 0.0f );
 	}
 
 
@@ -234,7 +254,7 @@ namespace States {
 		propertyO->SetColor( sf::Color::White );
 		propertyO->Add( Property(propertyOID, Property::R_VCEV0EV00, Object::PROP_NAME, STR_EMPTY ));
 		propertyO->Add( Property(propertyOID, Property::R_VC0000000, Object::PROP_OBSTACLE, STR_EMPTY ));
-		propertyO->Add( Property(propertyOID, Property::R_VCEV0EV00, STR_INVENTORY, STR_EMPTY, ObjectList() ));
+		propertyO->Add( Property(propertyOID, Property::R_VCEV0EV00, STR_INVENTORY, STR_EMPTY ));
 		propertyO->Add( Property(propertyOID, Property::R_VCEV0EV00, STR_STRENGTH, STR_0 ));
 		propertyO->Add( Property(propertyOID, Property::R_VCEV0EV00, STR_DEXTERITY, STR_0 ));
 		propertyO->Add( Property(propertyOID, Property::R_VCEV0EV00, STR_CONSTITUTION, STR_0 ));

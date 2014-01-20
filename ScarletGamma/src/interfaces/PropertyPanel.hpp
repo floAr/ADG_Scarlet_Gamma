@@ -27,6 +27,9 @@ namespace Interfaces {
 		/// \brief Extract all properties of an object recursively.
 		void Show( Core::Object* _object );
 
+		/// \brief Extract all common properties of many object without recursion.
+		void Show( Core::World* _world, const Core::ObjectList& _objects );
+
 		bool IsMinimized() const { return m_miniMaxi->getCurrentFrame() == 0; }
 
 		virtual void setSize(float _width, float _height) override;
@@ -74,7 +77,7 @@ namespace Interfaces {
 		int m_oldScrollValue;		///< The damned scrollbar-change does not send the previous value.
 		int m_numPixelLines;		///< Total number of pixels covered by elements inside the list.
 		Core::PlayerID m_player;	///< The accessing player to apply rights system
-		Core::Object* m_object;		///< Associated object which is visualized
+		std::vector<Core::Object*> m_objects;			///< Associated objects which are visualized
 		Interfaces::DragContent** m_dragNDropHandler;	///< A pointer to a pointer which must be filled if a mouse down event occures.
 
 		void RemoveBtn(const tgui::Callback& _call);

@@ -52,6 +52,7 @@ namespace States
 		/// \brief Clear the current selection
 		void ClearSelection() {
 			m_selection.Clear();
+			m_selectionChanged = true;
 		}
 
 		/// \brief Get the current selection
@@ -77,5 +78,6 @@ namespace States
 		void SubmitChat(const tgui::Callback& _call);
 
 		Core::ObjectList m_selection;	///< List of currently selected objects
+		bool m_selectionChanged;		///< Update gui only if something changed.
 	};
 }

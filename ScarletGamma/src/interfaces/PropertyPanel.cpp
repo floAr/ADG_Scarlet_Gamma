@@ -5,6 +5,7 @@
 #include "Constants.hpp"
 #include "core/Object.hpp"
 #include "DragNDrop.hpp"
+#include "core/World.hpp"
 
 namespace Interfaces {
 
@@ -25,7 +26,7 @@ PropertyPanel::PropertyPanel() :
 	m_oldScrollValue(0),
 	m_numPixelLines(0),
 	m_player(0),
-	m_object(nullptr)
+	m_objects()
 {
 	// Use the same basic components as the parent if possible.
 	PropertyPanel* parent = dynamic_cast<PropertyPanel*>(m_Parent);
@@ -237,9 +238,10 @@ void PropertyPanel::RemoveBtn(const tgui::Callback& _call)
 	int minY = posY, maxY = posY + (int)_call.widget->getSize().y;
 	unsigned delLine = _call.id;
 
-	// Remove from object
+	// Remove from object(s)
 	auto name = m_lines[delLine].left->getText();
-	m_object->Remove( name );
+	for( size_t i=0; i<m_objects.size(); ++i )
+		m_objects[i]->Remove( name );
 	
 	// First element is always the scrollbar
 	for( size_t i=1; i<m_Widgets.size(); ++i )
@@ -280,9 +282,10 @@ void PropertyPanel::AddBtn( const tgui::Callback& _call )
 {
 	if( !m_newName->getText().isEmpty() )
 	{
-		// Add to object
+		// Add to object(s)
 		auto name = m_newName->getText();
-		m_object->Add( Core::Property(m_object->ID(), Core::Property::R_VCEV0EV00, name, STR_EMPTY) );
+		for( size_t i=0; i<m_objects.size(); ++i )
+			m_objects[i]->Add( Core::Property(m_objects[i]->ID(), Core::Property::R_VCEV0EV00, name, STR_EMPTY) );
 		// Add to gui
 		Add( m_newName->getText(), true, m_newValue->getText(), true );
 		m_newName->setText("");
@@ -321,8 +324,10 @@ void PropertyPanel::MiniMaxi( const tgui::Callback& _call )
 			parent->Resize( -(m_numPixelLines+20), (int)Panel::getPosition().y-1 );
 
 		// If minimized show component name in the title bar
-		if( m_object )
-			m_titleBar->setText( m_object->GetName() );
+		if( m_objects.size()==1 )
+			m_titleBar->setText( m_objects[0]->GetName() );
+		else if( m_objects.size()>1 )
+			m_titleBar->setText( STR_MULTISELECTION );
 		m_titleBar->disable();
 	} else {
 		PropertyPanel* parent = dynamic_cast<PropertyPanel*>(m_Parent);
@@ -357,9 +362,13 @@ void PropertyPanel::ValueChanged(const tgui::Callback& _call)
 {
 	// Find the property in the object over its name.
 	auto name = m_lines[_call.id].left->getText();
-	Core::Property& prop = m_object->GetProperty( name );
+	// Convert the target value once
+	std::string value = m_lines[_call.id].right->getText();
 
-	prop.SetValue(m_lines[_call.id].right->getText());
+	for( size_t i=0; i<m_objects.size(); ++i )
+	{
+		m_objects[i]->SetPropertyValue( name, value );
+	}
 }
 
 
@@ -376,11 +385,13 @@ void PropertyPanel::StartDrag(const tgui::Callback& _call)
 			// Overwrite the last referenced content if it was not handled.
 			if( !*m_dragNDropHandler ) *m_dragNDropHandler = new Interfaces::DragContent();
 			(*m_dragNDropHandler)->from = DragContent::PROPERTY_PANEL;
-			(*m_dragNDropHandler)->object = m_object;
-			(*m_dragNDropHandler)->prop = &m_object->GetProperty( m_lines[i].left->getText() );
+			(*m_dragNDropHandler)->object = nullptr;
+			// Each object must have this property!
+			(*m_dragNDropHandler)->prop = &m_objects[0]->GetProperty( m_lines[i].left->getText() );
 			return;
 		}
 	}
+	// TODO: drag objects (nodes) away.
 }
 
 
@@ -487,20 +498,26 @@ void PropertyPanel::HandleDropEvent()
 		for( int i=0; i<obj->GetNumElements(); ++i )
 		{
 			const Core::Property* prop = obj->At(i);
-			// Check if the property is new and do not overwrite if it already exists.
-			if( !m_object->HasProperty( prop->Name() ) )
+			for( size_t i=0; i<m_objects.size(); ++i )
 			{
-				m_object->Add( *prop );		
-				addedSomething = true;
+				// Check if the property is new and do not overwrite if it already exists.
+				if( !m_objects[i]->HasProperty( prop->Name() ) )
+				{
+					m_objects[i]->Add( *prop );		
+					addedSomething = true;
+				}
 			}
 		}
 	} else if( (*m_dragNDropHandler)->from == DragContent::PROPERTY_PANEL )
 	{
-		// Check if the property is new and do not overwrite if it already exists.
-		if( !m_object->HasProperty( (*m_dragNDropHandler)->prop->Name() ) )
+		for( size_t i=0; i<m_objects.size(); ++i )
 		{
-			m_object->Add( *(*m_dragNDropHandler)->prop );		
-			addedSomething = true;
+			// Check if the property is new and do not overwrite if it already exists.
+			if( !m_objects[i]->HasProperty( (*m_dragNDropHandler)->prop->Name() ) )
+			{
+				m_objects[i]->Add( *(*m_dragNDropHandler)->prop );		
+				addedSomething = true;
+			}
 		}
 	}
 	// Update gui - there are new properties
@@ -511,11 +528,25 @@ void PropertyPanel::HandleDropEvent()
 
 void PropertyPanel::Show( Core::Object* _object )
 {
-	m_object = _object;
+	m_objects.clear();
+	m_objects.push_back(_object);
 
 	// Use the name property in title bar in minimized mode.
 	if( !IsMinimized() ) RefreshFilter();
 	else m_titleBar->setText( _object->GetName() );
+}
+
+
+void PropertyPanel::Show( Core::World* _world, const Core::ObjectList& _objects )
+{
+	// First copy the entries.
+	m_objects.clear();
+	for( int i=0; i<_objects.Size(); ++i )
+		m_objects.push_back( _world->GetObject(_objects[i]) );
+
+	// Use placeholder title for multiple objects.
+	if( !IsMinimized() ) RefreshFilter();
+	else m_titleBar->setText( STR_MULTISELECTION );
 }
 
 
@@ -533,12 +564,23 @@ void PropertyPanel::RefreshFilter()
 	
 	Clear();
 
-	auto allProperties = m_object->FilterByName( m_titleBar->getText() );
+	// Get all possible properties from the first object
+	auto allProperties = m_objects[0]->FilterByName( m_titleBar->getText() );
+
 	for( size_t i=0; i<allProperties.size(); ++i )
 	{
 		if( allProperties[i]->CanSee(m_player) )
-			Add( allProperties[i]->Name(), allProperties[i]->CanChange(m_player),
-				 allProperties[i]->Value(), allProperties[i]->CanEdit(m_player) );
+		{
+			// Find largest common set by removing the ones which does not exists in other objects.
+			bool commonProperty = true;
+			for( size_t j=1; j<m_objects.size(); ++j )
+				commonProperty &= m_objects[j]->HasProperty( allProperties[i]->Name() );
+
+			// Skip non-common properties
+			if( commonProperty )
+				Add( allProperties[i]->Name(), allProperties[i]->CanChange(m_player),
+					 allProperties[i]->Value(), allProperties[i]->CanEdit(m_player) );
+		}
 	}
 }
 

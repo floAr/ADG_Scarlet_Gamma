@@ -14,7 +14,8 @@ namespace States {
 
 CommonState::CommonState() :
 		m_zoom(Utils::Falloff::FT_QUADRATIC, 0.75f, 0.05f),
-		m_selected(nullptr)
+		m_selected(nullptr),
+		m_selectionChanged(false)
 {
 	m_gui.setWindow(g_Game->GetWindow());
 	m_gui.setGlobalFont(Content::Instance()->LoadFont("media/arial.ttf"));
@@ -209,11 +210,13 @@ void CommonState::AddToSelection( Core::ObjectID _id )
 	// which is the case due to toggeling
 	assert( !m_selection.Contains(_id) );
 	m_selection.Add(_id);
+	m_selectionChanged = true;
 }
 
 void CommonState::RemoveFromSelection( Core::ObjectID _id )
 {
 	m_selection.Remove(_id);
+	m_selectionChanged = true;
 }
 
 

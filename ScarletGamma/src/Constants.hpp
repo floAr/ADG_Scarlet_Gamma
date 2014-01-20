@@ -13,6 +13,7 @@ static const std::string STR_PARENT = std::string("parent");
 static const std::string STR_OBJECTS = std::string("objects");
 static const std::string STR_RIGHTS = std::string("rights");
 static const std::string STR_0 = std::string("0");
+static const std::string STR_MULTISELECTION = std::string("<Mehrfachauswahl>");
 
 
 

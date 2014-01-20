@@ -12,7 +12,7 @@ ActionPool::ActionPool()
 {
     // Adding actions
     m_Actions.push_back(new Attack());
-	m_Actions.push_back(new WalkTo());
+    m_Actions.push_back(new WalkTo());
     //------------------------------//
     // TODO: add more actions here! //
     //------------------------------//
@@ -63,7 +63,7 @@ const std::string& ActionPool::GetActionName(Core::ActionID id)
     return unknown->GetName();
 }
 
-Action* ActionPool::StartAction(Core::ActionID id)
+void ActionPool::StartAction(Core::ActionID id)
 {
     Action* toCopy = m_Actions.at(id);
 
@@ -73,15 +73,11 @@ Action* ActionPool::StartAction(Core::ActionID id)
         Action* newAction = toCopy->Clone();
         m_CurrentActions[0] = newAction;
         newAction->Execute();
-        return newAction;
     }
-    
-    // Action not found
-    return 0;
 }
 
 
-Action* ActionPool::StartClientAction(Core::ActionID id, uint8_t index)
+void ActionPool::StartClientAction(Core::ActionID id, uint8_t index)
 {
     Action* toCopy = m_Actions.at(id);
 
@@ -90,14 +86,16 @@ Action* ActionPool::StartClientAction(Core::ActionID id, uint8_t index)
     {
         Action* newAction = toCopy->Clone();
         m_CurrentActions[index] = newAction;
-        return newAction;
     }
-
-    // Action not found
-    return 0;
 }
 
-Action* ActionPool::GetCurrentAction(int index)
+Core::ActionID ActionPool::GetCurrentAction(int index)
 {
-    return m_CurrentActions[index];
+    return m_CurrentActions[index]->GetID();
+}
+
+void ActionPool::EndAction(int index)
+{
+    delete m_CurrentActions[index];
+    m_CurrentActions[index] = 0;
 }

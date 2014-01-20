@@ -31,18 +31,21 @@ namespace Actions
         /// \param [in] index  Optional: specify an index (i.e. player ID when you
         ///   are the server)
         /// \returns  Pointer to action, may be 0
-        Action* GetCurrentAction(int index = 0);
+        Core::ActionID GetCurrentAction(int index = 0);
 
         /// \brief Start an action on the local machine by ID.
         /// \param [in] id     ID of the action to start, \see GetAllowedActions
-        /// \returns  Pointer to action, may be 0
-        Action* StartAction(Core::ActionID id);
+        void StartAction(Core::ActionID id);
 
         /// \brief Start an action that a remote machine requested.
         /// \param [in] id     ID of the action to start, \see GetAllowedActions
         /// \param [in] index  Optional: specify an index (i.e. player ID)
-        /// \returns  Pointer to action, may be 0
-        Action* StartClientAction(Core::ActionID id, uint8_t index);
+        void StartClientAction(Core::ActionID id, uint8_t index);
+
+        /// \brief Ends a current action at the specified index
+        /// \param [in] index  Optional: specify an index (i.e. player ID when you
+        ///   are the server)
+        void EndAction(int index = 0);
 
     private:
         /// \brief Private constructor prohibits more than one instance

@@ -18,8 +18,10 @@ void Attack::Execute()
     // TODO: Enable DM-side attacking!!
 
     // Tell the server that we are starting an attack
-    Network::MsgActionBegin message(this->GetID());
-    message.Send();
+    Network::MsgActionBegin(this->GetID()).Send();
+
+    // Conclude the attack but with wrong ID!!!
+    Network::MsgActionEnd(this->GetID() + 1).Send();
 
     //////////////////////////////////////////////////////////////////////////
     // all TODO below!

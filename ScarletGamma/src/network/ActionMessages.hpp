@@ -50,7 +50,7 @@ namespace Network
         /// \see HandleActionMessage
         static size_t Receive(Core::ActionID _action, uint8_t _sender, const uint8_t* _data, size_t _size);
     protected:
-        virtual void WriteData(Jo::Files::MemFile& _output) const override;
+        virtual void WriteData(Jo::Files::MemFile& _output) const override {};
     };
 
     ////////////////////////////////////////////////////////////////////////////
@@ -60,6 +60,20 @@ namespace Network
     {
     public:
         MsgActionEnd(Core::ActionID id);
+
+        /// \see HandleActionMessage
+        static size_t Receive(Core::ActionID _action, uint8_t _sender, const uint8_t* _data, size_t _size);
+    protected:
+        virtual void WriteData(Jo::Files::MemFile& _output) const override {};
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+
+    /// \brief Send this message to end an action.
+    class MsgActionInfo: public ActionMsg
+    {
+    public:
+        MsgActionInfo(Core::ActionID id);
 
         /// \see HandleActionMessage
         static size_t Receive(Core::ActionID _action, uint8_t _sender, const uint8_t* _data, size_t _size);

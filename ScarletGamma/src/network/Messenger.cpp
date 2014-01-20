@@ -143,20 +143,21 @@ namespace Network {
 			break;
 		case Target::CHAT:
 			read += HandleChatMessage( buffer + sizeof(MessageHeader), size );
-            break;
-        case Target::ACTION:
-            if ( IsServer() )
-            {
-                // Get sender ID
-                uint8_t id = std::distance(std::find(m_sockets.begin(), m_sockets.end(), _from), m_sockets.begin());
-                read += HandleActionMessage( static_cast<Core::ActionID>(header->targetID), buffer + sizeof(MessageHeader), size, id );
-            }
-            else
-            {
-                // Server is always 0
-                read += HandleActionMessage( static_cast<Core::ActionID>(header->targetID), buffer + sizeof(MessageHeader), size, 0 );
-            }
-            break;
+			break;
+		case Target::ACTION:
+			if ( IsServer() )
+			{
+				// Get sender ID
+				// TODO: centralize player ID stuff?
+				uint8_t id = std::distance(std::find(m_sockets.begin(), m_sockets.end(), _from), m_sockets.begin());
+				read += HandleActionMessage( static_cast<Core::ActionID>(header->targetID), buffer + sizeof(MessageHeader), size, id );
+			}
+			else
+			{
+				// Server is always 0
+				read += HandleActionMessage( static_cast<Core::ActionID>(header->targetID), buffer + sizeof(MessageHeader), size, 0 );
+			}
+			break;
 		}
 
 		assert(_packet.getDataSize() == read);

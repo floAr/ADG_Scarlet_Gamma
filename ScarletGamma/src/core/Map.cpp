@@ -244,6 +244,7 @@ namespace Core {
 
 	std::vector<sf::Vector2i> Map::FindPath( sf::Vector2i _start, sf::Vector2i _goal ) const
 	{
+		if( _start == _goal ) return std::vector<sf::Vector2i>();
 		// Persistent memory of all visited nodes.
 		std::list<SearchNode> visited;
 		// A* requires a heap with a decrease-key operation. The STL variants
@@ -255,12 +256,15 @@ namespace Core {
 		std::unordered_map<int64_t, SearchNode*> visitedAccess;
 		visitedAccess.insert(make_pair((int64_t(_start.x) & 0xffffffff) | (int64_t(_start.y) << 32), &visited.front()));
 
+		float alltimemax = 0.0f;
 		while(openList.GetNumElements()>0)
 		{
 			// The object is in the list so it can be deleted from stack immediately
 			auto minEntry = openList.Min();
 			SearchNode* node = minEntry->Object;
 			openList.Delete(minEntry);
+			assert(alltimemax <= node->costs+0.01);
+			alltimemax = node->costs;
 			// Stop if node is the goal
 			if( node->cell == _goal )
 			{
@@ -290,6 +294,7 @@ namespace Core {
 							next->second->costs > costs )
 						{
 							next->second->costs = costs;
+							next->second->predecessor = node;
 							openList.ChangeKey(next->second->entry, next->second->costs);
 						}
 					} else {
@@ -349,10 +354,12 @@ namespace Core {
 					if( start == goal )
 					{
 						if( loop ) pathProperty.AddObject( path[0] );
-						if( path.Size() == 1 ) break;	// Do not delete the last point from list -> tracking of objects
+						if( path.Size() == 1 )
+							return position;	// Do not delete the last point from list -> tracking of objects
 						pathProperty.PopFront();
 					}
-				} else return position;
+				} else
+					return position;
 			} while( start == goal );
 
 			// Search a way

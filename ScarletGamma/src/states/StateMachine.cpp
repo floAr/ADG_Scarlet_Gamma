@@ -25,7 +25,8 @@ States::StateMachine::~StateMachine()
     }
 }
 
-States::GameState* States::StateMachine::PushGameState(States::GameState* newState){
+States::GameState* States::StateMachine::PushGameState(States::GameState* newState)
+{
     // If we have a new state, "push" it
     if (newState != 0)
     {
@@ -83,7 +84,7 @@ States::GameState* States::StateMachine::PushGameState(States::GameStateType sta
         newState = new States::PromptState();
     }
 
-    assert(newState && "StateMachine::PushGameState returned 0, didn't you add your enum");
+    assert(newState && "StateMachine::PushGameState returned 0, didn't you add your enum?");
 
     // If we have a new state, "push" it
     if (newState != 0)

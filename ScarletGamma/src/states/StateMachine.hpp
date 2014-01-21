@@ -45,6 +45,12 @@ namespace States
             return m_gameState != 0;
         }
 
+        /// \brief Return a pointer to the current GameState
+        inline GameState* GetGameState()
+        {
+            return m_gameState;
+        }
+
         /// \brief Updates the current GameState. May pop it if it's finished. 
         /// \param [in] dt  Delta time since last frame in seconds.
         void Update(float dt);

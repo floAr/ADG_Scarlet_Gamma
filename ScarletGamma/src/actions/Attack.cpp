@@ -17,25 +17,27 @@ Attack::Attack() : Action(STR_ACT_ATTACK)
 
 void Attack::Execute()
 {
-    // This functions is called when a player clicks "Attack" on an object
-    // TODO: Enable DM-side attacking!!
-
     // Tell the server that we are starting an attack
     Network::MsgActionBegin(this->GetID()).Send();
 
     // Open prompt for hit roll value
     States::PromptState* prompt = dynamic_cast<States::PromptState*>(g_Game->GetStateMachine()->PushGameState(States::GST_PROMPT));
-    //prompt->SetText("...");
+    prompt->SetText("Angriffswurf eingeben:");
     prompt->AddPopCallback(std::bind(&Attack::HitRollPromptFinished, this, std::placeholders::_1));
 }
 
-void Attack::HitRollPromptFinished(States::GameState* promptState)
+void Attack::HitRollPromptFinished(States::GameState* gs)
 {
-    promptState = dynamic_cast<States::PromptState*>(promptState);
-    assert(promptState);
+    States::PromptState* ps = dynamic_cast<States::PromptState*>(gs);
+    assert(ps);
 
-    // TODO: Notification for testing, remove
-    std::cout << "Hit roll prompt state finished! It is here: " << promptState << std::endl;
+    // Prompt is finished, what was the result?
+    const std::string& result = ps->GetResult();
+    if (result.empty())
+    {
+    }
+    std::cout << "Hit roll prompt state finished! Entered was " << (result.empty()? "nothing" : result)
+        << std::endl;
 
     // TODO: read hit roll value from promptState and process...
 }

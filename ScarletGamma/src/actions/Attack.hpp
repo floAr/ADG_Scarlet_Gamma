@@ -13,7 +13,7 @@ namespace Actions
         /// \brief Initialize an attack action.
         virtual void Execute();
 
-        void HitRollPromptFinished(States::GameState* promptState);
+        void HitRollPromptFinished(States::GameState* gs);
 
     private:
         /// \brief Clones an attack action.

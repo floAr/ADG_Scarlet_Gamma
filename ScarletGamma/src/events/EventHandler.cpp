@@ -19,6 +19,9 @@ void Events::EventHandler::Update(float dt)
 	// Update the InputHandler
 	m_inputHandler->Update(dt);
 
+	// Get GameState - we don't even wanna use it, just see if someone pushed a new one
+	void* gameState = g_Game->GetStateMachine()->GetGameState();
+
 	// Process events
 	sf::Event event;
 	while (m_window.pollEvent(event))
@@ -109,6 +112,13 @@ void Events::EventHandler::Update(float dt)
 
 		case sf::Event::JoystickDisconnected:
 			break;
+		}
+
+		// If anyone pushed a GameState, neglect the remaining events
+		if (gameState != g_Game->GetStateMachine()->GetGameState())
+		{
+			while (m_window.pollEvent(event));
+			return;
 		}
 	}
 }

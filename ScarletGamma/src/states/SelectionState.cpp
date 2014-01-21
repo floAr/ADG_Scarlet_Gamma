@@ -141,6 +141,20 @@ void States::SelectionState::MouseButtonPressed(sf::Event::MouseButtonEvent& but
 
 	if (button.button == sf::Mouse::Button::Right)
 	{
+		auto m_Widgets=m_gui.getWidgets();
+		// mouseOnWhichWidget does not work for disabled components to search manually
+	for( size_t i=0; i<m_Widgets.size(); ++i )
+	{
+		if( m_Widgets[i]->mouseOnWidget((float)tilePos.x*TILESIZE, (float)tilePos.y*TILESIZE) ) //rightclik on button
+		{
+			auto cid=(m_Widgets[i]->getCallbackId());
+			Core::ObjectID id = m_objects[(m_Widgets[i]->getCallbackId()-100)];
+		auto action=dynamic_cast<ActionState*>( g_Game->GetStateMachine()->PushGameState(States::GST_ACTION));
+		action->SetObject(id);
+		m_finished=true;
+			return;
+		}
+	}
 		// Reset menu position
 		SetTilePosition((int)floor(tilePos.x), (int)floor(tilePos.y));
 

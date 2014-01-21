@@ -184,6 +184,7 @@ void PropertyPanel::Add( const std::string& _left, bool _changable, const std::s
 	entry.right->setPosition(w+x, y);
 	entry.right->setCallbackId(m_lines.size());
 	entry.right->bindCallbackEx(&PropertyPanel::ValueChanged, this, tgui::EditBox::Unfocused);
+	entry.right->bindCallbackEx(&PropertyPanel::ValueEntered, this, tgui::EditBox::ReturnKeyPressed);
 	if(!_editable)
 		entry.right->disable();
 	entry.right->setText(_right);
@@ -358,6 +359,12 @@ void PropertyPanel::MiniMaxi( const tgui::Callback& _call )
 }
 
 
+void PropertyPanel::ValueEntered(const tgui::Callback& _call)
+{
+	Panel::unfocus();
+	_call.widget->unfocus();
+}
+
 void PropertyPanel::ValueChanged(const tgui::Callback& _call)
 {
 	// Find the property in the object over its name.
@@ -485,6 +492,12 @@ void PropertyPanel::setPosition(float _x, float _y)
 	}
 }
 
+void PropertyPanel::unfocus()
+{
+	Panel::unfocus();
+	m_Parent->unfocus();
+}
+
 
 void PropertyPanel::HandleDropEvent()
 {
@@ -539,14 +552,38 @@ void PropertyPanel::Show( Core::Object* _object )
 
 void PropertyPanel::Show( Core::World* _world, const Core::ObjectList& _objects )
 {
-	// First copy the entries.
-	m_objects.clear();
-	for( int i=0; i<_objects.Size(); ++i )
-		m_objects.push_back( _world->GetObject(_objects[i]) );
+	// Compare the two lists - if nothing changed do just an update
+	bool listChanged = m_objects.size() != _objects.Size();
+	if( !listChanged )
+	{
+		for( size_t i=0; i<m_objects.size(); ++i )
+			if( m_objects[i]->ID() != _objects[i] ) {
+				listChanged = false;
+				break;
+			}
+	}
 
-	// Use placeholder title for multiple objects.
-	if( !IsMinimized() ) RefreshFilter();
-	else m_titleBar->setText( STR_MULTISELECTION );
+	if( listChanged )
+	{
+		// First copy the entries.
+		m_objects.clear();
+		for( int i=0; i<_objects.Size(); ++i )
+			m_objects.push_back( _world->GetObject(_objects[i]) );
+
+		// Use placeholder title for multiple objects.
+		if( !IsMinimized() ) RefreshFilter();
+		else m_titleBar->setText( STR_MULTISELECTION );
+	} else {
+		// For each line refresh the value on the right side
+		for( size_t i=0; i<m_lines.size(); ++i )
+		{
+			// ... Except it is focused (than somebody is editing)
+			if( !m_lines[i].right->isFocused() )
+			m_lines[i].right->setText(
+				m_objects[0]->GetProperty( m_lines[i].left->getText() ).Value()
+				);
+		}
+	}
 }
 
 

@@ -12,8 +12,6 @@ size_t Network::HandleActionMessage(Core::ActionID _action, const uint8_t* _data
 {
     assert(_size >= sizeof(ActionMsgType));
 
-    // TODO: use _sender id
-
     const ActionMsgType* header = reinterpret_cast<const ActionMsgType*>(_data);
     size_t readSize = sizeof(ActionMsgType);
 
@@ -56,20 +54,31 @@ void ActionMsg::Send()
 ////////////////////////////////////////////////////////////////////////////////
 // MsgActionBegin
 
-MsgActionBegin::MsgActionBegin(Core::ActionID _action)
-    : ActionMsg(ActionMsgType::ACTION_BEGIN, _action)
+MsgActionBegin::MsgActionBegin(Core::ActionID _action, Core::ObjectID target)
+    : ActionMsg(ActionMsgType::ACTION_BEGIN, _action), m_target(target)
 {
+}
+
+void MsgActionBegin::WriteData(Jo::Files::MemFile& _output) const
+{
+    // Serialize
+    _output.Write( &m_target, sizeof(Core::ObjectID) );
 }
 
 size_t MsgActionBegin::Receive(Core::ActionID _action, uint8_t _sender,
                                const uint8_t* _data, size_t _size)
 {
-    Jo::Files::MemFile file(_data, _size);
+    assert(Messenger::IsServer() && "Client got MsgActionBegin");
 
-    assert(Messenger::IsServer());
-    Actions::ActionPool::Instance().StartClientAction(_action, _sender);
+    // Deserialize
+    Core::ObjectID target = *_data;
 
-    return (size_t)file.GetCursor();
+    std::cerr << "Player " <<  std::to_string(_sender) << " starting action '"
+        <<  Actions::ActionPool::Instance().GetActionName(_action) << "' on target "
+        << std::to_string(target) << '\n';
+    Actions::ActionPool::Instance().StartClientAction(_action, target, _sender);
+
+    return sizeof(Core::ObjectID);
 }
 
 
@@ -84,14 +93,14 @@ MsgActionEnd::MsgActionEnd(Core::ActionID _action)
 size_t MsgActionEnd::Receive(Core::ActionID _action, uint8_t _sender,
                              const uint8_t* _data, size_t _size)
 {
-    Jo::Files::MemFile file(_data, _size);
-
-    Core::ActionID currentAction = Actions::ActionPool::Instance().GetCurrentAction(_sender);
+    Core::ActionID currentAction = Actions::ActionPool::Instance().GetClientAction(_sender);
 
     if (currentAction == _action)
     {
         // End the current action
-        Actions::ActionPool::Instance().EndAction(_sender);
+        Actions::ActionPool::Instance().EndClientAction(_sender);
+        std::cerr << "Player " <<  std::to_string(_sender) << " ending action '"
+            <<  Actions::ActionPool::Instance().GetActionName(_action) << "'" << '\n';
     }
     else
     {
@@ -101,21 +110,23 @@ size_t MsgActionEnd::Receive(Core::ActionID _action, uint8_t _sender,
             << Actions::ActionPool::Instance().GetActionName(currentAction) << "!" << '\n';
     }
 
-    return (size_t)file.GetCursor();
+    return 0;
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
 // MsgActionInfo
 
-MsgActionInfo::MsgActionInfo(Core::ActionID _action)
-    : ActionMsg(ActionMsgType::ACTION_INFO, _action)
+MsgActionInfo::MsgActionInfo(Core::ActionID _action, uint8_t messageType, const std::string& message)
+    : ActionMsg(ActionMsgType::ACTION_INFO, _action), m_messageType(messageType), m_message(message)
 {
 }
 
 void MsgActionInfo::WriteData(Jo::Files::MemFile& _output) const
 {
-    // TODO: Write message data
+    // Serialize
+    _output.Write( &m_messageType, sizeof(uint8_t) );
+    _output.Write( m_message.c_str(), m_message.length());
 }
 
 size_t MsgActionInfo::Receive(Core::ActionID _action, uint8_t _sender,
@@ -123,7 +134,12 @@ size_t MsgActionInfo::Receive(Core::ActionID _action, uint8_t _sender,
 {
     Jo::Files::MemFile file(_data, _size);
 
-    // TODO: Send info to action!
+    // Deserialize
+    uint8_t messageType = *_data;
+    std::string message((const char*) _data + sizeof(uint8_t), _size - sizeof(uint8_t));
+    std::cout << "Received data " << message << " of type " << messageType << " from " << _sender << '\n';
+    
+    Actions::ActionPool::Instance().HandleActionInfo(_sender, messageType, message);
 
-    return (size_t)file.GetCursor();
+    return _size;
 }

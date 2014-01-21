@@ -61,7 +61,11 @@ void CommonState::Update( float dt )
 
 void CommonState::MouseMoved(int deltaX, int deltaY, bool guiHandled)
 {
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+	// Don't react to any key if gui handled it
+	if (guiHandled)
+		return;
+
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Middle))
 	{
 		// Get the render window
 		sf::RenderWindow& win = g_Game->GetWindow();
@@ -82,6 +86,10 @@ void CommonState::MouseMoved(int deltaX, int deltaY, bool guiHandled)
 
 void CommonState::MouseWheelMoved(sf::Event::MouseWheelEvent& wheel, bool guiHandled)
 {
+	// Don't react to any key if gui handled it
+	if (guiHandled)
+		return;
+
 	m_zoom = (float)wheel.delta;
 }
 
@@ -92,8 +100,9 @@ void CommonState::KeyPressed( sf::Event::KeyEvent& key, bool guiHandled )
 	if (guiHandled)
 		return;
 
-	if( key.code == sf::Keyboard::Return)
+	switch(key.code)
 	{
+	case sf::Keyboard::Return: {
 		// Show message input field if not visible or submit message.
 		tgui::EditBox::Ptr enterTextEdit = m_gui.get( "EnterText" );
 		if( !enterTextEdit->isVisible() )
@@ -102,13 +111,29 @@ void CommonState::KeyPressed( sf::Event::KeyEvent& key, bool guiHandled )
 			enterTextEdit->setText("");
 			enterTextEdit->focus();
 		}
+		break; }
+	case sf::Keyboard::Num0:
+	case sf::Keyboard::Numpad0: {
+		if( sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)
+			|| sf::Keyboard::isKeyPressed(sf::Keyboard::RControl) )
+		{
+			// Reset zoom
+			m_zoom = 0;
+			sf::RenderWindow& win = g_Game->GetWindow();
+			sf::View newView = win.getView();
+			newView.setSize((float)win.getSize().x, (float)win.getSize().y);
+			win.setView(newView);
+		}
+		break; }
 	}
+
 
 	// Testing attack action
 	// TODO: remove
-	if ( key.code == sf::Keyboard::Space)
+	if ( key.code == sf::Keyboard::Space )
 	{
-		Actions::ActionPool::Instance().StartAction(0);
+        if (m_selection.Size() > 0)
+            Actions::ActionPool::Instance().StartLocalAction(0, m_selection[0]);
 	}
 }
 

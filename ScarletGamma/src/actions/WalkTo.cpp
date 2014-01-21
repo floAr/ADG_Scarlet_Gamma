@@ -18,7 +18,7 @@ void WalkTo::Execute()
     // TODO: Enable DM-side attacking!!
 
     // Tell the server that we are starting an attack
-    Network::MsgActionBegin message(this->GetID());
+    Network::MsgActionBegin message(this->GetID(), 0);
     message.Send();
    
 
@@ -42,7 +42,7 @@ void WalkTo::Execute()
     // done!
 }
 
-Action* WalkTo::Clone()
+Action* WalkTo::Clone(Core::ObjectID target)
 {
     WalkTo* result = new WalkTo();
 

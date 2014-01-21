@@ -5,7 +5,7 @@ namespace sfUtils {
 
 	/// \brief Compute the length of a vector with two elements
 	template<typename T> float Length( sf::Vector2<T> _v )	{
-		return (float)sqrt(_v.x*_v.x + _v.y*_v.y);
+		return (float)sqrt(double(_v.x*_v.x + _v.y*_v.y));
 	}
 
 	/// \brief Compute the quadratic length of a vector with two elements

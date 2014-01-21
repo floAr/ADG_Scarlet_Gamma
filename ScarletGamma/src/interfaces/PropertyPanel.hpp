@@ -35,6 +35,7 @@ namespace Interfaces {
 		virtual void setSize(float _width, float _height) override;
 		virtual sf::Vector2f getSize() const override;
 		virtual void setPosition(float _x, float _y) override;
+		virtual void unfocus() override;
 
 		/// \brief If an object is dragged to this panel all properties which
 		///		are not existent are copied and the same holds for single properties.
@@ -84,6 +85,7 @@ namespace Interfaces {
 		void AddBtn(const tgui::Callback& _call);
 		void Scroll(const tgui::Callback& _call);
 		void MiniMaxi(const tgui::Callback& _call);
+		void ValueEntered(const tgui::Callback& _call);
 		void ValueChanged(const tgui::Callback& _call);
 		void StartDrag(const tgui::Callback& _call);
 

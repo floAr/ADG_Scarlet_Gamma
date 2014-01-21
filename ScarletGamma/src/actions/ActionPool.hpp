@@ -27,25 +27,34 @@ namespace Actions
         /// \returns  Name of the action specified by ID
         const std::string& GetActionName(Core::ActionID id);
 
-        /// \brief Get an action that is currently in progress.
+        /// \brief Get a local action that is currently in progress.
+        /// \returns  Pointer to action, may be 0
+        Core::ActionID GetLocalAction();
+
+        /// \brief Get a client action that is currently in progress.
         /// \param [in] index  Optional: specify an index (i.e. player ID when you
         ///   are the server)
         /// \returns  Pointer to action, may be 0
-        Core::ActionID GetCurrentAction(int index = 0);
+        Core::ActionID GetClientAction(int index = 0);
 
         /// \brief Start an action on the local machine by ID.
         /// \param [in] id     ID of the action to start, \see GetAllowedActions
-        void StartAction(Core::ActionID id);
+        void StartLocalAction(Core::ActionID id, Core::ObjectID target);
 
         /// \brief Start an action that a remote machine requested.
         /// \param [in] id     ID of the action to start, \see GetAllowedActions
-        /// \param [in] index  Optional: specify an index (i.e. player ID)
-        void StartClientAction(Core::ActionID id, uint8_t index);
+        /// \param [in] index  Specify an index (i.e. player ID)
+        void StartClientAction(Core::ActionID id, Core::ObjectID target, uint8_t index);
 
         /// \brief Ends a current action at the specified index
-        /// \param [in] index  Optional: specify an index (i.e. player ID when you
-        ///   are the server)
-        void EndAction(int index = 0);
+        void EndLocalAction();
+
+        /// \brief End an action that a remote machine requested.
+        /// \param [in] index  Specify an index (i.e. player ID)
+        void EndClientAction(uint8_t index);
+
+        /// \brief Pass action message to the current action to be handled.
+        void HandleActionInfo(uint8_t sender, uint8_t messageType, const std::string& message);
 
     private:
         /// \brief Private constructor prohibits more than one instance
@@ -68,9 +77,10 @@ namespace Actions
         /// \brief List of all actions in the game
         std::vector<Action*> m_Actions;
 
-        /// \brief Array of current action(s).
-        /// \detail Players really only needs the first element, while the GM needs
-        ///   at most one for each player.
-        Action* m_CurrentActions[24];
+        /// \brief Array of current client action(s).
+        Action* m_ClientActions[24];
+
+        /// \brief Current local action.
+        Action* m_LocalAction;
     };
 }

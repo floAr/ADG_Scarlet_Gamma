@@ -5,6 +5,7 @@
 #include "utils/ValueInterpreter.hpp"
 #include "utils/Random.hpp"
 #include "Constants.hpp"
+#include "Game.hpp"
 #include <iostream>
 
 using namespace std;
@@ -70,12 +71,9 @@ namespace Core {
 
 	int Property::Evaluate() const
 	{
-        // TODO: Where would we store the random generator?
-        static Utils::Random rand(6045800);
-
         try
         {
-            return Utils::EvaluateFormula(Value(), &rand);
+            return Utils::EvaluateFormula(Value(), Game::RANDOM);
         }
         catch (Exception::InvalidFormula& e)
         {

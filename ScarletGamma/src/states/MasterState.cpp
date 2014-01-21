@@ -86,10 +86,12 @@ namespace States {
 			if( m_selection.Size() > 0 )
 			{
 				m_selectionView->show();
-				m_selectionView->Show( g_Game->GetWorld(), m_selection );
 			} else m_selectionView->hide();
 			m_selectionChanged = false;
 		}
+
+		if( m_selectionView->isVisible() )
+			m_selectionView->Show( g_Game->GetWorld(), m_selection );
 	}
 
 	void MasterState::Draw(sf::RenderWindow& win)
@@ -151,13 +153,6 @@ namespace States {
 					m_player->AppendToPath( m_selected->ID() );
 				}
 			}
-			} break;
-		case sf::Mouse::Middle: {
-			m_zoom = 0;
-			sf::RenderWindow& win = g_Game->GetWindow();
-			sf::View newView = win.getView();
-			newView.setSize((float)win.getSize().x, (float)win.getSize().y);
-			win.setView(newView);
 			} break;
 		case sf::Mouse::Right: {
 			if( g_Game->GetWorld()->GetMap(0)->GetObjectsAt(tileX, tileY).Size() > 0 )

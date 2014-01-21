@@ -170,13 +170,13 @@
     <ClCompile Include="src\network\ActionMessages.cpp">
       <Filter>Quelldateien\network</Filter>
     </ClCompile>
-    <ClCompile Include="src\states\ActionState.cpp">
-      <Filter>Quelldateien</Filter>
+    <ClCompile Include="src\states\PromptState.cpp">
+      <Filter>Quelldateien\states</Filter>
     </ClCompile>
     <ClCompile Include="src\actions\WalkTo.cpp">
-      <Filter>Quelldateien</Filter>
+      <Filter>Quelldateien\actions</Filter>
     </ClCompile>
-    <ClCompile Include="src\states\PromptState.cpp">
+    <ClCompile Include="src\states\ActionState.cpp">
       <Filter>Quelldateien\states</Filter>
     </ClCompile>
   </ItemGroup>
@@ -319,9 +319,13 @@
     <ClInclude Include="src\interfaces\DragNDrop.hpp">
       <Filter>Quelldateien\interfaces</Filter>
     </ClInclude>
-    <ClInclude Include="src\states\ActionState.hpp" />
-    <ClInclude Include="src\actions\WalkTo.hpp" />
     <ClInclude Include="src\states\PromptState.hpp">
+      <Filter>Quelldateien\states</Filter>
+    </ClInclude>
+    <ClInclude Include="src\actions\WalkTo.hpp">
+      <Filter>Quelldateien\actions</Filter>
+    </ClInclude>
+    <ClInclude Include="src\states\ActionState.hpp">
       <Filter>Quelldateien\states</Filter>
     </ClInclude>
   </ItemGroup>

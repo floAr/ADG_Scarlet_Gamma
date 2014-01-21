@@ -22,12 +22,19 @@ States::PlayerState::PlayerState( const std::string& _playerName, const sf::Colo
 
 void States::PlayerState::Draw(sf::RenderWindow& win)
 {
+	// Focus on the player
+	sf::Vector2f playerPos = m_player->GetPosition();
+	playerPos *= float(TILESIZE);
+	playerPos.x += m_playerView->getSize().x * 0.5f;
+	sf::View newView = win.getView();
+	newView.setCenter( playerPos );
+	win.setView(newView);
+
 	// Draw some color to the background
 	static sf::Color c(20, 26, 36);
 	win.clear(c);
 
 	// Render
-	// Uses the test map 0 for testing purposes.
 	assert(m_player->IsLocatedOnAMap());
 	Graphics::TileRenderer::Render(win, *g_Game->GetWorld()->GetMap(m_player->GetParentMap()));
 
@@ -70,14 +77,7 @@ void States::PlayerState::MouseButtonPressed(sf::Event::MouseButtonEvent& button
 				m_player->AppendToPath( m_selected->ID() );
 			}
 		}
-	} break;
-	case sf::Mouse::Middle:
-		m_zoom = 0;
-		sf::RenderWindow& win = g_Game->GetWindow();
-		sf::View newView = win.getView();
-		newView.setSize((float)win.getSize().x, (float)win.getSize().y);
-		win.setView(newView);
-		break;
+		break; }
 	}
 }
 

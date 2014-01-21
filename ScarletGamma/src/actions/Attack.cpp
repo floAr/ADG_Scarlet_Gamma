@@ -100,25 +100,49 @@ void Attack::AttackRollInfoReceived(const std::string& message)
 
     // TODO: remove, I'm just testing ;)
     int result = Utils::EvaluateFormula(message, Game::RANDOM);
-    if (result >= 15)
+    bool hit = (result >= 15);
+
+    if (hit)
     {
-        // Tell the player that he hit
-        Network::MsgActionInfo(this->GetID(), static_cast<uint8_t>(ActionMsgType::DM_ATTACK_ROLL_HIT), std::to_string(result)).Send();
+        if (Network::Messenger::IsServer())
+        {
+            // Tell the player that he hit
+            Network::MsgActionInfo(this->GetID(), static_cast<uint8_t>(ActionMsgType::DM_ATTACK_ROLL_HIT), std::to_string(result)).Send();
+        }
+        else
+        {
+            // Tell myself that I hit
+            AttackRollHit();
+        }
+
+        // TODO: Broadcast chat message
     }
     else
     {
-        // Tell the player that he missed
-        Network::MsgActionInfo(this->GetID(), static_cast<uint8_t>(ActionMsgType::DM_ATTACK_ROLL_MISS), std::to_string(result)).Send();
+        if (Network::Messenger::IsServer())
+        {
+            // Tell the player that he missed
+            Network::MsgActionInfo(this->GetID(), static_cast<uint8_t>(ActionMsgType::DM_ATTACK_ROLL_MISS), std::to_string(result)).Send();
+        }
+        else
+        {
+            // Tell myself that I missed
+            AttackRollMissed();
+        }
+
+        // TODO: Broadcast chat message
     }
 }
 
 void Attack::AttackRollMissed()
 {
-    // TODO: Implement
+    // End local action
+    ActionPool::Instance().EndLocalAction();
 }
 
 void Attack::AttackRollHit()
 {
+    // Prompt for damage
     States::PromptState* prompt = dynamic_cast<States::PromptState*>(g_Game->GetStateMachine()->PushGameState(States::GST_PROMPT));
     prompt->SetText("Schadenswurf eingeben:");
     prompt->AddPopCallback(std::bind(&Attack::HitRollPromptFinished, this, std::placeholders::_1));

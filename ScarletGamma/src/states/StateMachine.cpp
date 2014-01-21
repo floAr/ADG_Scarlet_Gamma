@@ -132,46 +132,47 @@ void States::StateMachine::Draw(sf::RenderWindow& win)
     }
 }
 
-void States::StateMachine::TextEntered(char character)
+void States::StateMachine::TextEntered(char character, bool guiHandled)
 {
     if (m_gameState)
-        m_gameState->TextEntered(character);
+        m_gameState->TextEntered(character, guiHandled);
 }
 
-void States::StateMachine::KeyPressed(sf::Event::KeyEvent& key)
+void States::StateMachine::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 {
     if (m_gameState)
-        m_gameState->KeyPressed(key);
+        m_gameState->KeyPressed(key, guiHandled);
 }
 
-void States::StateMachine::KeyReleased(sf::Event::KeyEvent& key, float time)
+void States::StateMachine::KeyReleased(sf::Event::KeyEvent& key, float time, bool guiHandled)
 {
     if (m_gameState)
-        m_gameState->KeyReleased(key, time);
+        m_gameState->KeyReleased(key, time, guiHandled);
 }
 
-void States::StateMachine::MouseWheelMoved(sf::Event::MouseWheelEvent& wheel)
+void States::StateMachine::MouseWheelMoved(sf::Event::MouseWheelEvent& wheel, bool guiHandled)
 {
     if (m_gameState)
-        m_gameState->MouseWheelMoved(wheel);
+        m_gameState->MouseWheelMoved(wheel, guiHandled);
 }
 
-void States::StateMachine::MouseButtonPressed(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos)
+void States::StateMachine::MouseButtonPressed(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos, bool guiHandled)
 {
     if (m_gameState)
-        m_gameState->MouseButtonPressed(button, tilePos);
+        m_gameState->MouseButtonPressed(button, tilePos, guiHandled);
 }
 
-void States::StateMachine::MouseButtonReleased(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos, float time)
+void States::StateMachine::MouseButtonReleased(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos,
+                                               float time, bool guiHandled)
 {
     if (m_gameState)
-        m_gameState->MouseButtonReleased(button, tilePos, time);
+        m_gameState->MouseButtonReleased(button, tilePos, time, guiHandled);
 }
 
-void States::StateMachine::MouseMoved(int deltaX, int deltaY)
+void States::StateMachine::MouseMoved(int deltaX, int deltaY, bool guiHandled)
 {
     if (m_gameState)
-        m_gameState->MouseMoved(deltaX, deltaY);
+        m_gameState->MouseMoved(deltaX, deltaY, guiHandled);
 }
 
 bool States::StateMachine::GuiHandleEvent(sf::Event& event)

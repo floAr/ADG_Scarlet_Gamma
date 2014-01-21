@@ -60,8 +60,12 @@ void States::MainMenuState::Draw(sf::RenderWindow& win)
 	GameState::Draw(win);
 }
 
-void States::MainMenuState::KeyPressed(sf::Event::KeyEvent& key)
+void States::MainMenuState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 {
+	// Return if the GUI already handled it
+	if (guiHandled)
+		return;
+
     switch (key.code)
     {
     // Master state with m
@@ -75,13 +79,13 @@ void States::MainMenuState::KeyPressed(sf::Event::KeyEvent& key)
     }
 }
 
-void States::MainMenuState::MouseMoved(int deltaX, int deltaY)
+void States::MainMenuState::MouseMoved(int deltaX, int deltaY, bool guiHandled)
 {
     m_mousePos[0] = sf::Mouse::getPosition().x;
     m_mousePos[1] = sf::Mouse::getPosition().y;
 }
 
-void States::MainMenuState::MouseWheelMoved(sf::Event::MouseWheelEvent& wheel)
+void States::MainMenuState::MouseWheelMoved(sf::Event::MouseWheelEvent& wheel, bool guiHandled)
 {
     m_mousePos[2] += wheel.delta * 10;
 }

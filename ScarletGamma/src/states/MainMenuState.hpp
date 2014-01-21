@@ -9,16 +9,12 @@ namespace States
 	{
 	public:
 		MainMenuState();
-		virtual void OnBegin() {}
-		virtual void OnEnd() {}
-		virtual void OnPause() {}
-		virtual void OnResume() {}
-		virtual void Update(float dt);
-		virtual void Draw(sf::RenderWindow& win);
-		virtual void KeyPressed(sf::Event::KeyEvent& key);
-		virtual void MouseMoved(int deltaX, int deltaY);
-		virtual void MouseWheelMoved(sf::Event::MouseWheelEvent& wheel);
-		virtual void GuiCallback(tgui::Callback& callback);
+		virtual void Update(float dt) override;
+		virtual void Draw(sf::RenderWindow& win) override;
+		virtual void KeyPressed(sf::Event::KeyEvent& key, bool guiHandled) override;
+		virtual void MouseMoved(int deltaX, int deltaY, bool guiHandled) override;
+		virtual void MouseWheelMoved(sf::Event::MouseWheelEvent& wheel, bool guiHandled) override;
+		virtual void GuiCallback(tgui::Callback& callback) override;
 	private:
 		sf::Font	m_menuFont;
 		int			m_mousePos[3];

@@ -33,7 +33,7 @@ void States::LaunchPlayerState::Draw(sf::RenderWindow& win)
 	GameState::Draw(win);
 }
 
-void States::LaunchPlayerState::KeyPressed(sf::Event::KeyEvent& key)
+void States::LaunchPlayerState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 {
     switch (key.code)
     {

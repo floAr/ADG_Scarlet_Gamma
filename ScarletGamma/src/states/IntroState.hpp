@@ -8,12 +8,8 @@ namespace States
 	{
 	public:
 		IntroState(std::string& filename, float duration);
-		virtual void OnBegin() {}
-		virtual void OnEnd() {}
-		virtual void OnPause() {}
-		virtual void OnResume() {}
-		virtual void Update(float dt);
-		virtual void Draw(sf::RenderWindow& win);
+		virtual void Update(float dt) override;
+		virtual void Draw(sf::RenderWindow& win) override;
 	private:
 		sf::Texture	m_logoTexture;
 		sf::Sprite	m_logoSprite;

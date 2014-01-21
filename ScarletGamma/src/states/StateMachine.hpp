@@ -61,41 +61,48 @@ namespace States
         /// \details You shouldn't call this function manually, except for
         ///		cases where you really want to fake user input (e.g. buttons
         ///		that insert special characters or something).
-        /// \param [in] character  ASCII character that was entered.
-        void TextEntered(char character);
+        /// \param [in] character   ASCII character that was entered.
+        /// \param [in] guiHandled  Wether the GUI already used the event
+        void TextEntered(char character, bool guiHandled);
 
         /// \brief Gets called by the InputHandler when any key is pressed.
-        /// \param [in] key	SFML key event that contains all required information.
-        void KeyPressed(sf::Event::KeyEvent& key);
+        /// \param [in] key         SFML key event that contains all required information.
+        /// \param [in] guiHandled  Wether the GUI already used the event
+        void KeyPressed(sf::Event::KeyEvent& key, bool guiHandled);
 
         /// \brief Gets called by the InputHandler when any key is released.
-        /// \param [in] key   SFML key event that contains all required information.
-        /// \param [in] time  How long the key was pressed, in seconds.
-        void KeyReleased(sf::Event::KeyEvent& key, float time);
+        /// \param [in] key         SFML key event that contains all required information.
+        /// \param [in] time        How long the key was pressed, in seconds.
+        /// \param [in] guiHandled  Wether the GUI already used the event
+        void KeyReleased(sf::Event::KeyEvent& key, float time, bool guiHandled);
 
 
         //----------------------------------------------------------------------
         // MOUSE EVENTS
 
         /// \brief Gets called when the mouse wheel is moved.
-        /// \param [in] wheel  SFML wheel event that contains all required information.
-        void MouseWheelMoved(sf::Event::MouseWheelEvent& wheel);
+        /// \param [in] wheel       SFML wheel event that contains all required information.
+        /// \param [in] guiHandled  Wether the GUI already used the event
+        void MouseWheelMoved(sf::Event::MouseWheelEvent& wheel, bool guiHandled);
 
         /// \brief Gets called when a mouse button is pressed.
         /// \details Has the same internal logic as KeyPressed.
-        /// \param [in] button   SFML button event that contains all required information.
-        /// \param [in] tilePos  In-game tile that the user clicked on. Cast to float if required.
-        void MouseButtonPressed(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos);
+        /// \param [in] button      SFML button event that contains all required information.
+        /// \param [in] tilePos     In-game tile that the user clicked on. Cast to float if required.
+        /// \param [in] guiHandled  Wether the GUI already used the event
+        void MouseButtonPressed(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos, bool guiHandled);
 
         /// \brief Gets called when a mouse button is released.
-        /// \param [in] button   SFML button event that contains all required- information.
-        /// \param [in] tilePos  In-game tile that the user clicked on. Cast to float if required.
-        /// \param [in] time     How long the button was pressed, in seconds.
-        void MouseButtonReleased(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos, float time);
+        /// \param [in] button      SFML button event that contains all required- information.
+        /// \param [in] tilePos     In-game tile that the user clicked on. Cast to float if required.
+        /// \param [in] time        How long the button was pressed, in seconds.
+        /// \param [in] guiHandled  Wether the GUI already used the event
+        void MouseButtonReleased(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos, float time, bool guiHandled);
 
         /// \brief Gets called when the mouse is moved.
-        /// \param [in] wheel  SFML move event that contains all required information.
-        void MouseMoved(int deltaX, int deltaY);
+        /// \param [in] wheel       SFML move event that contains all required information
+        /// \param [in] guiHandled  Wether the GUI already used the event.
+        void MouseMoved(int deltaX, int deltaY, bool guiHandled);
 
 
         //----------------------------------------------------------------------

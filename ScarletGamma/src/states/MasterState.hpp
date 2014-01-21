@@ -12,14 +12,14 @@ namespace States
 	{
 	public:
 		MasterState( const std::string& _loadFile );
-		virtual void OnBegin();
-		virtual void OnEnd();
-		virtual void OnPause() {}
-		virtual void OnResume() {}
-		virtual void Update(float dt);
-		virtual void Draw(sf::RenderWindow& win);
-		virtual void MouseButtonPressed(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos);
-		virtual void MouseButtonReleased(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos, float time);
+		virtual void OnBegin() override;
+		virtual void OnEnd() override;
+		virtual void Update(float dt) override;
+		virtual void Draw(sf::RenderWindow& win) override;
+		virtual void MouseButtonPressed(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos,
+			bool guiHandled) override;
+		virtual void MouseButtonReleased(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos,
+			float time, bool guiHandled) override;
 		virtual void Resize(const sf::Vector2f& _size) override;
 
 	private:

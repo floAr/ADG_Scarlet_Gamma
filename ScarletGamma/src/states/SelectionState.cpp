@@ -10,6 +10,7 @@
 #include <math.h>
 #include "StateMachine.hpp"
 #include "ActionState.hpp"
+#include "Constants.hpp"
 
 States::SelectionState::SelectionState() :
 	m_defaultButton()
@@ -33,11 +34,12 @@ void States::SelectionState::OnBegin()
 	}
 }
 
-void States::SelectionState::SetTilePosition(int x, int y, float _screenX, float _screenY)
+void States::SelectionState::SetTilePosition(int x, int y)
 {
 	m_objects = g_Game->GetWorld()->GetMap(0)->GetObjectsAt(x,y);
-	m_screenX = _screenX;
-	m_screenY = _screenY;
+	sf::Vector2i pos = g_Game->GetWindow().mapCoordsToPixel(sf::Vector2f((x + 0.5f) * TILESIZE, (y + 0.5f) * TILESIZE));
+	m_screenX = pos.x;
+	m_screenY = pos.y;
 	m_dirty = true;
 }
 
@@ -131,20 +133,25 @@ void States::SelectionState::GuiCallback(tgui::Callback& args)
 
 
 
-void States::SelectionState::MouseButtonPressed(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos)
+void States::SelectionState::MouseButtonPressed(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos, bool guiHandled)
 {
-	if(button.button == sf::Mouse::Button::Right)
+	// Return if the GUI already handled it
+	if (guiHandled)
+		return;
+
+	if (button.button == sf::Mouse::Button::Right)
 	{
 		// Reset menu position
-		SetTilePosition((int)floor(tilePos.x), (int)floor(tilePos.y), (float)button.x, (float)button.y);
+		SetTilePosition((int)floor(tilePos.x), (int)floor(tilePos.y));
 
-	} else if(button.button == sf::Mouse::Left)
+	}
+	else if(button.button == sf::Mouse::Left)
 	{
 		// If clicked somewhere not on the gui finish in single selection mode
-		if( !sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) )
+		if ( !sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) )
 			m_finished = true;
 		else
-			SetTilePosition((int)floor(tilePos.x), (int)floor(tilePos.y), (float)button.x, (float)button.y);
+			SetTilePosition((int)floor(tilePos.x), (int)floor(tilePos.y));
 	}
 }
 

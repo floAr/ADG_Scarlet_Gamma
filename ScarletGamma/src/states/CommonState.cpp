@@ -20,7 +20,7 @@ CommonState::CommonState() :
 	m_gui.setWindow(g_Game->GetWindow());
 	m_gui.setGlobalFont(Content::Instance()->LoadFont("media/arial.ttf"));
 	if( !m_gui.loadWidgetsFromFile( "media/Chat.gui" ) )
-		std::cout << "[CommonState::CommonState] Could not load GUI for chat.\n";
+		std::cerr << "[CommonState::CommonState] Could not load GUI for chat.\n";
 	tgui::EditBox::Ptr enterTextEdit = m_gui.get( "EnterText" );
 	enterTextEdit->bindCallbackEx( &CommonState::SubmitChat, this, tgui::EditBox::ReturnKeyPressed );
 
@@ -59,7 +59,7 @@ void CommonState::Update( float dt )
 }
 
 
-void CommonState::MouseMoved(int deltaX, int deltaY)
+void CommonState::MouseMoved(int deltaX, int deltaY, bool guiHandled)
 {
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 	{
@@ -80,15 +80,19 @@ void CommonState::MouseMoved(int deltaX, int deltaY)
 }
 
 
-void CommonState::MouseWheelMoved(sf::Event::MouseWheelEvent& wheel)
+void CommonState::MouseWheelMoved(sf::Event::MouseWheelEvent& wheel, bool guiHandled)
 {
 	m_zoom = (float)wheel.delta;
 }
 
 
-void CommonState::KeyPressed( sf::Event::KeyEvent& key )
+void CommonState::KeyPressed( sf::Event::KeyEvent& key, bool guiHandled )
 {
-	if( key.code == sf::Keyboard::Return )
+	// Don't react to any key if gui handled it
+	if (guiHandled)
+		return;
+
+	if( key.code == sf::Keyboard::Return)
 	{
 		// Show message input field if not visible or submit message.
 		tgui::EditBox::Ptr enterTextEdit = m_gui.get( "EnterText" );
@@ -102,7 +106,7 @@ void CommonState::KeyPressed( sf::Event::KeyEvent& key )
 
 	// Testing attack action
 	// TODO: remove
-	if ( key.code == sf::Keyboard::Space )
+	if ( key.code == sf::Keyboard::Space)
 	{
 		Actions::ActionPool::Instance().StartAction(0);
 	}

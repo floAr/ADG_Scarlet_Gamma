@@ -24,8 +24,7 @@ void Events::EventHandler::Update(float dt)
 	while (m_window.pollEvent(event))
 	{
 		// Forward events to GUI
-		if (g_Game->GetStateMachine()->GuiHandleEvent(event))
-			continue;
+		bool guiHandled = g_Game->GetStateMachine()->GuiHandleEvent(event);
 
 		switch (event.type)
 		{
@@ -42,7 +41,7 @@ void Events::EventHandler::Update(float dt)
 			V.setSize( (float) event.size.width, (float) event.size.height );
 			dynamic_cast<sf::RenderWindow&>(m_window).setView(V);
 			g_Game->GetStateMachine()->Resize( sf::Vector2f((float) event.size.width,
-                (float)event.size.height) );
+				(float)event.size.height) );
 			} break;
 
 		case sf::Event::LostFocus:
@@ -56,35 +55,35 @@ void Events::EventHandler::Update(float dt)
 
 		case sf::Event::TextEntered:
 			// cast to ASCII
-			if (event.text.unicode < 128)
-				m_inputHandler->TextEntered(static_cast<char>(event.text.unicode));
+			if (event.text.unicode < 256)
+				m_inputHandler->TextEntered(static_cast<char>(event.text.unicode), guiHandled);
 			break;
 
 		case sf::Event::KeyPressed:
-			m_inputHandler->KeyPressed(event.key);
+			m_inputHandler->KeyPressed(event.key, guiHandled);
 			break;
 
 		case sf::Event::KeyReleased:
-			m_inputHandler->KeyReleased(event.key);
+			m_inputHandler->KeyReleased(event.key, guiHandled);
 			break;
 
 		//----------------------------------------------------------------
 		// MOUSE EVENTS
 
 		case sf::Event::MouseWheelMoved:
-			m_inputHandler->MouseWheelMoved(event.mouseWheel);
+			m_inputHandler->MouseWheelMoved(event.mouseWheel, guiHandled);
 			break;
 
 		case sf::Event::MouseButtonPressed:
-			m_inputHandler->MouseButtonPressed(event.mouseButton);
+			m_inputHandler->MouseButtonPressed(event.mouseButton, guiHandled);
 			break;
 
 		case sf::Event::MouseButtonReleased:
-			m_inputHandler->MouseButtonReleased(event.mouseButton);
+			m_inputHandler->MouseButtonReleased(event.mouseButton, guiHandled);
 			break;
 
 		case sf::Event::MouseMoved:
-			m_inputHandler->MouseMoved(event.mouseMove);
+			m_inputHandler->MouseMoved(event.mouseMove, guiHandled);
 			break;
 
 		case sf::Event::MouseEntered:

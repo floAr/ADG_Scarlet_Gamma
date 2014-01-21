@@ -57,7 +57,7 @@ namespace States
 		///		for the specific GameState, e.g. updating the objects, advancing
 		///		timers etc.
 		/// \param [in] dt	Delta time since last frame in seconds.
-        virtual void Update(float dt) {}
+		virtual void Update(float dt) {}
 
 		/// \brief Function that is called when the GameLoop wants to draw
 		///		everything. Derived classes must call this by GameState::Draw.
@@ -84,42 +84,51 @@ namespace States
 		/// \details You shouldn't call this function manually, except for
 		///		cases where you really want to fake user input (e.g. buttons
 		///		that insert special characters or something).
-		/// \param [in] character  ASCII character that was entered.
-		virtual void TextEntered(char character) { }
+		/// \param [in] character   ASCII character that was entered.
+		/// \param [in] guiHandled  Wether the GUI already used the event
+		virtual void TextEntered(char character, bool guiHandled) { }
 
 		/// \brief Gets called by the InputHandler when any key is pressed.
-		/// \param [in] key	SFML key event that contains all required information.
-		virtual void KeyPressed(sf::Event::KeyEvent& key) { }
+		/// \param [in] key         SFML key event that contains all required information.
+		/// \param [in] guiHandled  Wether the GUI already used the event
+		virtual void KeyPressed(sf::Event::KeyEvent& key, bool guiHandled) { }
 
 		/// \brief Gets called by the InputHandler when any key is released.
-		/// \param [in] key   SFML key event that contains all required information.
-		/// \param [in] time  How long the key was pressed, in seconds.
-		virtual void KeyReleased(sf::Event::KeyEvent& key, float time) { }
+		/// \param [in] key         SFML key event that contains all required information.
+		/// \param [in] time        How long the key was pressed, in seconds.
+		/// \param [in] guiHandled  Wether the GUI already used the event
+		virtual void KeyReleased(sf::Event::KeyEvent& key, float time, bool guiHandled) { }
 
 
 		//----------------------------------------------------------------------
 		// MOUSE EVENTS
 
 		/// \brief Gets called when the mouse wheel is moved.
-		/// param [in] wheel  SFML wheel event that contains all required information.
-		virtual void MouseWheelMoved(sf::Event::MouseWheelEvent& wheel) { }
+		/// \param [in] wheel       SFML wheel event that contains all required information.
+		/// \param [in] guiHandled  Wether the GUI already used the event
+		virtual void MouseWheelMoved(sf::Event::MouseWheelEvent& wheel, bool guiHandled) { }
 
 		/// \brief Gets called when a mouse button is pressed.
 		/// \details Has the same internal logic as KeyPressed.
-		/// \param [in] button   SFML button event that contains all required information.
-		/// \param [in] tilePos  In-game tile that the user clicked on. Cast to float if required.
-		virtual void MouseButtonPressed(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos) { }
+		/// \param [in] button      SFML button event that contains all required information.
+		/// \param [in] tilePos     In-game tile that the user clicked on. Cast to float if required.
+		/// \param [in] guiHandled  Wether the GUI already used the event
+		virtual void MouseButtonPressed(sf::Event::MouseButtonEvent& button,
+			sf::Vector2f& tilePos, bool guiHandled) { }
 
 		/// \brief Gets called when a mouse button is released.
-		/// \param [in] button  SFML button event that contains all required information.
-		/// \param [in] tilePos  In-game tile that the user clicked on. Cast to float if required.
-		/// \param [in] time    How long the button was pressed, in seconds.
-		virtual void MouseButtonReleased(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos, float time) { }
+		/// \param [in] button      SFML button event that contains all required information.
+		/// \param [in] tilePos     In-game tile that the user clicked on. Cast to float if required.
+		/// \param [in] time        How long the button was pressed, in seconds.
+		/// \param [in] guiHandled  Wether the GUI already used the event
+		virtual void MouseButtonReleased(sf::Event::MouseButtonEvent& button,
+			sf::Vector2f& tilePos, float time, bool guiHandled) { }
 
 		/// \brief Gets called when the mouse is moved.
-		/// param [in] deltaX  Relative horizontal mouse movement since last frame.
-		/// param [in] deltaY  Relative vertical mouse movement since last frame.
-		virtual void MouseMoved(int deltaX, int deltaY) { }
+		/// \param [in] deltaX      Relative horizontal mouse movement since last frame.
+		/// \param [in] deltaY      Relative vertical mouse movement since last frame.
+		/// \param [in] guiHandled  Wether the GUI already used the event
+		virtual void MouseMoved(int deltaX, int deltaY, bool guiHandled) { }
 
 		//----------------------------------------------------------------------
 		// GUI STUFF

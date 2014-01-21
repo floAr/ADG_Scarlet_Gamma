@@ -26,40 +26,46 @@ namespace Events
 		// KEYBOARD EVENTS
 
 		/// \brief Gets called when a valid ASCII character is typed.
-		/// \param [in] character    The typed character. May be something cool like à.
-		void TextEntered(char character);
+		/// \param [in] character   The typed character. May be something cool like à.
+		/// \param [in] guiHandled  Wether the GUI already used the event
+		void TextEntered(char character, bool guiHandled);
 
 		/// \brief Gets called when a key is pressed.
 		/// \details This starts a timer that is stopped when the key is released.
 		///		The information is then used in the KeyReleased function to tell the
 		///		StateMachine (i.e. the GameState) how long the key was pressed.
-		/// \param [in] key    SFML key event that contains all required information.
-		void KeyPressed(sf::Event::KeyEvent& key);
+		/// \param [in] key         SFML key event that contains all required information.
+		/// \param [in] guiHandled  Wether the GUI already used the event
+		void KeyPressed(sf::Event::KeyEvent& key, bool guiHandled);
 
 		/// \brief Gets called when a key is released.
 		/// \param [in] key    SFML key event that contains all required information.
-		void KeyReleased(sf::Event::KeyEvent& key);
+		void KeyReleased(sf::Event::KeyEvent& key, bool guiHandled);
 
 
 		//----------------------------------------------------------------------
 		// MOUSE EVENTS
 
 		/// \brief Gets called when the mouse wheel is moved.
-		/// param [in] wheel  SFML wheel event that contains all required information.
-		void MouseWheelMoved(sf::Event::MouseWheelEvent& wheel);
+		/// \param [in] wheel       SFML wheel event that contains all required information.
+		/// \param [in] guiHandled  Wether the GUI already used the event
+		void MouseWheelMoved(sf::Event::MouseWheelEvent& wheel, bool guiHandled);
 
 		/// \brief Gets called when a mouse button is pressed.
 		/// \details Has the same internal logic as KeyPressed.
-		/// param [in] wheel  SFML button event that contains all required information.
-		void MouseButtonPressed(sf::Event::MouseButtonEvent& button);
+		/// \param [in] wheel       SFML button event that contains all required information.
+		/// \param [in] guiHandled  Wether the GUI already used the event
+		void MouseButtonPressed(sf::Event::MouseButtonEvent& button, bool guiHandled);
 
 		/// \brief Gets called when a mouse button is released.
-		/// param [in] wheel  SFML button event that contains all required information.
-		void MouseButtonReleased(sf::Event::MouseButtonEvent& button);
+		/// \param [in] wheel       SFML button event that contains all required information.
+		/// \param [in] guiHandled  Wether the GUI already used the event
+		void MouseButtonReleased(sf::Event::MouseButtonEvent& button, bool guiHandled);
 
 		/// \brief Gets called when the mouse is moved.
-		/// param [in] wheel  SFML move event that contains all required information.
-		void MouseMoved(sf::Event::MouseMoveEvent& move);
+		/// \param [in] wheel       SFML move event that contains all required information.
+		/// \param [in] guiHandled  Wether the GUI already used the event
+		void MouseMoved(sf::Event::MouseMoveEvent& move, bool guiHandled);
 
 	private:
 		/// \brief Counts the total time the InputManager was updated with. Used for

@@ -1,0 +1,15 @@
+Window:
+{
+	EditBox: "EnterText"
+	{
+		ConfigFile = "media/Black.conf"
+		Left = 212
+		Top = 212
+		Width = 600
+		Height = 30
+		Enabled = true
+		CallbackId = 0
+		Text = ""
+		TextSize = 16
+	}
+}

@@ -10,11 +10,10 @@ namespace States
 	{
 	public:
 		PlayerState( const std::string& _playerName, const sf::Color& _chatColor);
-		virtual void OnBegin();
-		virtual void OnPause() {}
-		virtual void OnResume() {}
-		virtual void Draw(sf::RenderWindow& win);
-		virtual void MouseButtonPressed(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos);
+		virtual void OnBegin() override;
+		virtual void Draw(sf::RenderWindow& win) override;
+		virtual void MouseButtonPressed(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos,
+			bool guiHandled) override;
 		virtual void Resize(const sf::Vector2f& _size) override;
 
 		/// \brief CommonState Update + Player view refreshed.

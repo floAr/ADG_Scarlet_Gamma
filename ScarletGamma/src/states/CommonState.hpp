@@ -26,16 +26,16 @@ namespace States
 
 		/// \brief Move the visible position on left mouse button down
 		/// TODO: Restrict player - this is a master only action
-		virtual void MouseMoved(int deltaX, int deltaY) override;
+		virtual void MouseMoved(int deltaX, int deltaY, bool guiHandled) override;
 
 		/// \brief TODO: Selection stuff
-		virtual void MouseButtonPressed(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos) override {}
+		virtual void MouseButtonPressed(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePo, bool guiHandleds) override {}
 
 		/// \brief Change the zoom.
-		virtual void MouseWheelMoved(sf::Event::MouseWheelEvent& wheel) override;
+		virtual void MouseWheelMoved(sf::Event::MouseWheelEvent& wheel, bool guiHandled) override;
 
 		/// \brief Open a chat menu on Enter.
-		virtual void KeyPressed(sf::Event::KeyEvent& key) override;
+		virtual void KeyPressed(sf::Event::KeyEvent& key, bool guiHandled) override;
 
 		/// \brief Right-aligns the chat.
 		virtual void Resize(const sf::Vector2f& _size) override;

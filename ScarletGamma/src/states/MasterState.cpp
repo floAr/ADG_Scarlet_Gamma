@@ -116,8 +116,13 @@ namespace States {
 		GameState::Draw(win);
 	}
 
-	void MasterState::MouseButtonPressed(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos)
+	void MasterState::MouseButtonPressed(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos, bool guiHandled)
 	{
+
+		// Return if the GUI already handled it
+		if (guiHandled)
+			return; 
+
 		int tileX = (int)floor(tilePos.x);
 		int tileY = (int)floor(tilePos.y);
 		switch (button.button)
@@ -158,7 +163,7 @@ namespace States {
 			if( g_Game->GetWorld()->GetMap(0)->GetObjectsAt(tileX, tileY).Size() > 0 )
 			{
 				SelectionState* gs = dynamic_cast<SelectionState*>(g_Game->GetStateMachine()->PushGameState(GST_SELECTION));
-				gs->SetTilePosition(tileX, tileY, (float)button.x, (float)button.y);
+				gs->SetTilePosition(tileX, tileY);
 			}
 			
 			} break;
@@ -177,8 +182,12 @@ namespace States {
 		CommonState::OnEnd();
 	}
 
-	void MasterState::MouseButtonReleased( sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos, float time )
+	void MasterState::MouseButtonReleased( sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos, float time, bool guiHandled)
 	{
+		// Return if the GUI already handled it
+		if (guiHandled)
+			return;
+
 		// Handle drop-event of drag&drop action
 		if( m_draggedContent )
 		{

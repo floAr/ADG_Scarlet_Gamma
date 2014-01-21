@@ -39,8 +39,12 @@ void States::PlayerState::Draw(sf::RenderWindow& win)
 	GameState::Draw(win);
 }
 
-void States::PlayerState::MouseButtonPressed(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos)
+void States::PlayerState::MouseButtonPressed(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos, bool guiHandled)
 {
+	// Return if the GUI already handled it
+	if (guiHandled)
+		return;
+
 	switch (button.button)
 	{
 	case sf::Mouse::Left: {

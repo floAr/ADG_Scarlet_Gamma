@@ -10,16 +10,14 @@ namespace States
 	{
 	public:
 		SelectionState();
-		void SetTilePosition(int x, int y, float _screenX, float _screenY);
+		void SetTilePosition(int x, int y);
 		void RecalculateGUI();
-		virtual void OnBegin();
-		virtual void OnEnd() {}
-		virtual void OnPause() {}
-		virtual void OnResume() {}
-		virtual void Update(float dt);
-		virtual void GuiCallback(tgui::Callback&  args);
-		virtual void Draw(sf::RenderWindow& win);
-		virtual void MouseButtonPressed(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos);
+		virtual void OnBegin() override;
+		virtual void Update(float dt) override;
+		virtual void GuiCallback(tgui::Callback&  args) override;
+		virtual void Draw(sf::RenderWindow& win) override;
+		virtual void MouseButtonPressed(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos,
+			bool guiHandled) override;
 
 	private:
 		void positionButton(tgui::Button::Ptr b, float angle, float radius);
@@ -29,6 +27,6 @@ namespace States
 		Core::ObjectList m_objects;			///< A copy of the object list for the current tile.
 		bool m_dirty;						///< Flag to mark a change in the GUI
 		bool m_controlWasPressed;			///< Buffer for control key
-		float m_screenX, m_screenY;			///< Position on screen
+		unsigned int m_screenX, m_screenY;	///< Position on screen
 	};
 }

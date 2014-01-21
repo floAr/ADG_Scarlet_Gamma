@@ -40,14 +40,32 @@ void Attack::Execute()
     prompt->AddPopCallback(std::bind(&Attack::AttackRollPromptFinished, this, std::placeholders::_1));
 }
 
-void Attack::HandleActionInfo(uint8_t messageType, const std::string& message)
+void Attack::HandleActionInfo(uint8_t messageType, const std::string& message, uint8_t sender)
 {
+    // I am the DM. This function handles player's requests and information.
+    assert(Network::Messenger::IsServer());
+
     switch (static_cast<ActionMsgType>(messageType))
     {
     case ActionMsgType::PL_ATTACK_ROLL_INFO:
-        AttackRollInfoReceived(message);
+        AttackRollInfoReceived(message, sender);
         break;
-    case ActionMsgType::DM_ATTACK_ROLL_MISS:
+    case ActionMsgType::PL_HIT_ROLL_INFO:
+        HitRollInfoReceived(message, sender);
+        break;
+    default:
+        assert(false);
+    }
+}
+
+void Attack::HandleActionInfoResponse(uint8_t messageType, const std::string& message)
+{
+    // I am a player. This function handles DM's responses.
+    assert(Network::Messenger::IsServer() == false);
+
+    switch (static_cast<ActionMsgType>(messageType))
+    {
+     case ActionMsgType::DM_ATTACK_ROLL_MISS:
         AttackRollMissed();
         break;
     case ActionMsgType::DM_ATTACK_ROLL_HIT:
@@ -57,8 +75,6 @@ void Attack::HandleActionInfo(uint8_t messageType, const std::string& message)
         // TODO: implement
         assert(false && "DM_ATTACK_ROLL_CRIT not implemented yet!");
         break;
-    case ActionMsgType::PL_HIT_ROLL_INFO:
-        HitRollInfoReceived(message);
     }
 }
 
@@ -88,15 +104,19 @@ void Attack::AttackRollPromptFinished(States::GameState* gs)
         else
         {
             // Tell myself about the result
-            AttackRollInfoReceived(result);
+            AttackRollInfoLocal(result);
         }
     }
 }
 
-void Attack::AttackRollInfoReceived(const std::string& message)
+void Attack::AttackRollInfoReceived(const std::string& message, uint8_t sender)
 {
     // TODO: query the GameMaster if he wants the attack to pass and reply!
     // TODO: how to find out about natural 20?
+
+    //////////////////////////////////////////////////////////////////
+    // TODO: PUT INTO A FUNCTION: EvaluateAttackRoll() or something //
+    //////////////////////////////////////////////////////////////////
 
     // TODO: remove, I'm just testing ;)
     int result = Utils::EvaluateFormula(message, Game::RANDOM);
@@ -104,34 +124,35 @@ void Attack::AttackRollInfoReceived(const std::string& message)
 
     if (hit)
     {
-        if (Network::Messenger::IsServer())
-        {
-            // Tell the player that he hit
-            Network::MsgActionInfo(this->GetID(), static_cast<uint8_t>(ActionMsgType::DM_ATTACK_ROLL_HIT), std::to_string(result)).Send();
-        }
-        else
-        {
-            // Tell myself that I hit
-            AttackRollHit();
-        }
-
-        // TODO: Broadcast chat message
+        // Tell client that he hit
+        Network::MsgActionInfo(this->GetID(), static_cast<uint8_t>(ActionMsgType::DM_ATTACK_ROLL_HIT), std::to_string(result)).Send(sender);
     }
     else
     {
-        if (Network::Messenger::IsServer())
-        {
-            // Tell the player that he missed
-            Network::MsgActionInfo(this->GetID(), static_cast<uint8_t>(ActionMsgType::DM_ATTACK_ROLL_MISS), std::to_string(result)).Send();
-        }
-        else
-        {
-            // Tell myself that I missed
-            AttackRollMissed();
-        }
-
-        // TODO: Broadcast chat message
+        // Tell client that he missed and end client action
+        Network::MsgActionInfo(this->GetID(), static_cast<uint8_t>(ActionMsgType::DM_ATTACK_ROLL_MISS), std::to_string(result)).Send(sender);
+        Actions::ActionPool::Instance().EndClientAction(sender);
+        // ACTION IS DONE
     }
+}
+
+void Attack::AttackRollInfoLocal(const std::string& message)
+{
+    // TODO: query the GameMaster if he wants the attack to pass and reply!
+    // TODO: how to find out about natural 20?
+
+    //////////////////////////////////////////////////////////////////
+    // TODO: PUT INTO A FUNCTION: EvaluateAttackRoll() or something //
+    //////////////////////////////////////////////////////////////////
+
+    // TODO: remove, I'm just testing ;)
+    int result = Utils::EvaluateFormula(message, Game::RANDOM);
+    bool hit = (result >= 15);
+
+    if (hit)
+        AttackRollHit();
+    else
+        AttackRollMissed();
 }
 
 void Attack::AttackRollMissed()
@@ -174,12 +195,18 @@ void Attack::HitRollPromptFinished(States::GameState* gs)
         else
         {
             // Tell myself about the result
-            HitRollInfoReceived(result);
+            HitRollInfoLocal(result);
         }
     }
 }
 
-void Attack::HitRollInfoReceived(const std::string& message)
+void Attack::HitRollInfoReceived(const std::string& message, uint8_t sender)
+{
+    // TODO: Implement
+    // TODO: query the GameMaster if he is okay with the damage
+}
+
+void Attack::HitRollInfoLocal(const std::string& message)
 {
     // TODO: Implement
     // TODO: query the GameMaster if he is okay with the damage

@@ -178,4 +178,12 @@ namespace Network {
 		return g_msgInstance->m_listener != nullptr;
 	}
 
+	sf::TcpSocket* Messenger::GetSocket(uint8_t _index)
+    {
+        if (g_msgInstance)
+            return g_msgInstance->m_sockets.at(_index);
+        else
+            return 0;
+    }
+
 } // namespace Network

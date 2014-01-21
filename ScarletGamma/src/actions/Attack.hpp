@@ -26,16 +26,18 @@ namespace Actions
         /// \brief Initialize an attack action.
         virtual void Execute();
 
-        /// \brief Handles the various network messages.
-        virtual void HandleActionInfo(uint8_t messageType, const std::string& message) override;
+        virtual void HandleActionInfo(uint8_t messageType, const std::string& message, uint8_t sender) override;
+        virtual void HandleActionInfoResponse(uint8_t messageType, const std::string& message) override;
 
     private:
         void AttackRollPromptFinished(States::GameState* gs);
-        void AttackRollInfoReceived(const std::string& message);
+        void AttackRollInfoReceived(const std::string& message, uint8_t sender);
+        void AttackRollInfoLocal(const std::string& message);
         void AttackRollMissed();
         void AttackRollHit();
         void HitRollPromptFinished(States::GameState* gs);
-        void HitRollInfoReceived(const std::string& message);
+        void HitRollInfoReceived(const std::string& message, uint8_t sender);
+        void HitRollInfoLocal(const std::string& message);
 
         /// \brief Clones an attack action.
         virtual Action* Clone(Core::ObjectID target);

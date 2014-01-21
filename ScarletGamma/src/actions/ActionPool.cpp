@@ -122,12 +122,12 @@ void ActionPool::HandleActionInfo(uint8_t sender, uint8_t messageType, const std
     {
         // Handle Client's message
         assert(m_ClientActions[sender] && "Received MsgActionInfo while no client action was started.");
-        m_ClientActions[sender]->HandleActionInfo(messageType, message);
+        m_ClientActions[sender]->HandleActionInfo(messageType, message, sender);
     }
     else
     {
         // Handle server's response
         assert(m_LocalAction && "Received MsgActionInfo while no local action was started.");
-        m_LocalAction->HandleActionInfo(messageType, message);
+        m_LocalAction->HandleActionInfoResponse(messageType, message);
     }
 }

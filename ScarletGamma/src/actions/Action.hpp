@@ -2,7 +2,7 @@
 
 #include "Prerequisites.hpp"
 #include <vector>
-#include <stdint.h>
+#include <cstdint>
 
 namespace Actions
 {
@@ -26,10 +26,15 @@ namespace Actions
             return m_Name;
         }
 
-        /// \brief Handle an action message in whatever way is appropriate.
+        /// \brief Client-side: handle an action message in whatever way is appropriate.
         /// \detail You only need to overwrite this if the action to be implemented
         ///   requires some form of action-specific network communication.
-        virtual void HandleActionInfo(uint8_t messageType, const std::string& message) {}
+        virtual void HandleActionInfo(uint8_t messageType, const std::string& message, uint8_t sender) {}
+
+        /// \brief Client-side: handle an action message in whatever way is appropriate.
+        /// \detail You only need to overwrite this if the action to be implemented
+        ///   requires some form of action-specific network communication.
+        virtual void HandleActionInfoResponse(uint8_t messageType, const std::string& message) {}
 
     protected:
         /// \brief Do whatever the action does.

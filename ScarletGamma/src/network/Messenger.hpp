@@ -2,6 +2,7 @@
 
 #include "Prerequisites.hpp"
 #include <SFML/Network.hpp>
+#include <cstdint>
 
 namespace Network {
 
@@ -45,6 +46,9 @@ namespace Network {
 
 		/// \brief Returns if this application is the server.
 		static bool IsServer();
+
+		/// \brief Returns a socket by index.
+		static sf::TcpSocket* GetSocket(uint8_t _index);
 	private:
 		sf::TcpListener* m_listener;			///< Server side listener to find new clients.
 		std::vector<sf::TcpSocket*> m_sockets;	///< An array of connected servers/clients.

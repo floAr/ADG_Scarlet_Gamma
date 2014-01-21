@@ -98,11 +98,13 @@ void States::StateMachine::PopGameState()
     // Replace game state with predecessor - may be 0
     if (m_gameState)
     {
-        m_gameState->OnEnd();
-        m_gameState->NotifyPopCallback();
         GameState* oldState = m_gameState;
         m_gameState = m_gameState->GetPreviousState();
+
+        oldState->OnEnd();
+        oldState->NotifyPopCallback();
         delete oldState;
+
         if (m_gameState)
             m_gameState->OnResume();
     }

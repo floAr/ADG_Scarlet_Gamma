@@ -19,7 +19,7 @@ namespace Network
     public:
         /// \brief Writes the headers and the specific data to a packet and
         ///		sends it.
-        void Send();
+        void Send(uint8_t socket = 0);
 
     private:
         ActionMsgType m_purpose;

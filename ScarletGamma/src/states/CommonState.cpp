@@ -134,6 +134,8 @@ void CommonState::KeyPressed( sf::Event::KeyEvent& key, bool guiHandled )
 	{
         if (m_selection.Size() > 0)
             Actions::ActionPool::Instance().StartLocalAction(0, m_selection[0]);
+        else
+            Actions::ActionPool::Instance().StartLocalAction(0, 42);
 	}
 }
 

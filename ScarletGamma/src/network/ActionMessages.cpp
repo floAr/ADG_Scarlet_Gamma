@@ -38,7 +38,7 @@ size_t Network::HandleActionMessage(Core::ActionID _action, const uint8_t* _data
 ////////////////////////////////////////////////////////////////////////////////
 // ActionMsg
 
-void ActionMsg::Send()
+void ActionMsg::Send(uint8_t sender)
 {
     // Write headers
     Jo::Files::MemFile data;
@@ -47,7 +47,7 @@ void ActionMsg::Send()
 
     // Write data
     WriteData(data);
-    Messenger::Send(data.GetBuffer(), (size_t)data.GetSize());
+    Messenger::Send(data.GetBuffer(), (size_t)data.GetSize(), Network::Messenger::GetSocket(sender));
 }
 
 
@@ -68,7 +68,7 @@ void MsgActionBegin::WriteData(Jo::Files::MemFile& _output) const
 size_t MsgActionBegin::Receive(Core::ActionID _action, uint8_t _sender,
                                const uint8_t* _data, size_t _size)
 {
-    assert(Messenger::IsServer() && "Client got MsgActionBegin");
+    assert(Messenger::IsServer() && "Client got MsgActionBegin, that shouldn't happen");
 
     // Deserialize
     Core::ObjectID target = *_data;
@@ -93,6 +93,8 @@ MsgActionEnd::MsgActionEnd(Core::ActionID _action)
 size_t MsgActionEnd::Receive(Core::ActionID _action, uint8_t _sender,
                              const uint8_t* _data, size_t _size)
 {
+    assert(Messenger::IsServer() && "Client got MsgActionBegin, that shouldn't happen");
+
     Core::ActionID currentAction = Actions::ActionPool::Instance().GetClientAction(_sender);
 
     if (currentAction == _action)
@@ -137,7 +139,7 @@ size_t MsgActionInfo::Receive(Core::ActionID _action, uint8_t _sender,
     // Deserialize
     uint8_t messageType = *_data;
     std::string message((const char*) _data + sizeof(uint8_t), _size - sizeof(uint8_t));
-    std::cout << "Received data " << message << " of type " << messageType << " from " << _sender << '\n';
+    std::cout << "Received data " << message << " of type " << std::to_string(messageType) << " from " << _sender << '\n';
     
     Actions::ActionPool::Instance().HandleActionInfo(_sender, messageType, message);
 

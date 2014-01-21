@@ -184,6 +184,7 @@ void PropertyPanel::Add( const std::string& _left, bool _changable, const std::s
 	entry.right->setPosition(w+x, y);
 	entry.right->setCallbackId(m_lines.size());
 	entry.right->bindCallbackEx(&PropertyPanel::ValueChanged, this, tgui::EditBox::Unfocused);
+	entry.right->bindCallbackEx(&PropertyPanel::ValueEntered, this, tgui::EditBox::ReturnKeyPressed);
 	if(!_editable)
 		entry.right->disable();
 	entry.right->setText(_right);
@@ -358,6 +359,12 @@ void PropertyPanel::MiniMaxi( const tgui::Callback& _call )
 }
 
 
+void PropertyPanel::ValueEntered(const tgui::Callback& _call)
+{
+	Panel::unfocus();
+	_call.widget->unfocus();
+}
+
 void PropertyPanel::ValueChanged(const tgui::Callback& _call)
 {
 	// Find the property in the object over its name.
@@ -483,6 +490,12 @@ void PropertyPanel::setPosition(float _x, float _y)
 		m_newAdd->setPosition(_x + Panel::getSize().x - 40.0f,
 			_y + 20.0f + Panel::getSize().y);
 	}
+}
+
+void PropertyPanel::unfocus()
+{
+	Panel::unfocus();
+	m_Parent->unfocus();
 }
 
 

@@ -61,6 +61,9 @@ void CommonState::Update( float dt )
 
 void CommonState::MouseMoved(int deltaX, int deltaY, bool guiHandled)
 {
+    if (guiHandled)
+        return;
+
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 	{
 		// Get the render window
@@ -108,7 +111,8 @@ void CommonState::KeyPressed( sf::Event::KeyEvent& key, bool guiHandled )
 	// TODO: remove
 	if ( key.code == sf::Keyboard::Space)
 	{
-		Actions::ActionPool::Instance().StartAction(0);
+        if (m_selection.Size() > 0)
+            Actions::ActionPool::Instance().StartLocalAction(0, m_selection[0]);
 	}
 }
 

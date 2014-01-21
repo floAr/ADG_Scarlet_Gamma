@@ -45,12 +45,13 @@ namespace Network
     class MsgActionBegin: public ActionMsg
     {
     public:
-        MsgActionBegin(Core::ActionID id);
+        MsgActionBegin(Core::ActionID id, Core::ObjectID target);
 
         /// \see HandleActionMessage
         static size_t Receive(Core::ActionID _action, uint8_t _sender, const uint8_t* _data, size_t _size);
     protected:
-        virtual void WriteData(Jo::Files::MemFile& _output) const override {};
+        const Core::ObjectID m_target;
+        virtual void WriteData(Jo::Files::MemFile& _output) const override;
     };
 
     ////////////////////////////////////////////////////////////////////////////
@@ -73,11 +74,13 @@ namespace Network
     class MsgActionInfo: public ActionMsg
     {
     public:
-        MsgActionInfo(Core::ActionID id);
+        MsgActionInfo(Core::ActionID id, uint8_t messageType, const std::string& message);
 
         /// \see HandleActionMessage
         static size_t Receive(Core::ActionID _action, uint8_t _sender, const uint8_t* _data, size_t _size);
     protected:
+        const uint8_t m_messageType;
+        const std::string m_message;
         virtual void WriteData(Jo::Files::MemFile& _output) const override;
     };
 }

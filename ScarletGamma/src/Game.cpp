@@ -5,8 +5,11 @@
 #include "graphics/TileRenderer.hpp"
 #include "core/World.hpp"
 #include "core/Map.hpp"
-#include <math.h>
+#include "utils/Random.hpp"
 #include "sfutils/View.hpp"
+#include <math.h>
+
+Utils::Random* Game::RANDOM = new Utils::Random((uint32_t) time(0));
 
 void Game::Init()
 {

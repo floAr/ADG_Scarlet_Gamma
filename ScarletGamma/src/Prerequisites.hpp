@@ -63,6 +63,7 @@ namespace Events
 namespace Network
 {
     class Messenger;
+    class MsgActionInfo;
 }
 
 //------------------------------------------------------------------------------

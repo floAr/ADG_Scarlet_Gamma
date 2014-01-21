@@ -2,6 +2,8 @@
 #include "core/Object.hpp"
 #include "actions/Attack.hpp"
 #include "actions/WalkTo.hpp"
+#include "network/Messenger.hpp"
+#include <assert.h>
 
 using namespace Actions;
 
@@ -63,39 +65,69 @@ const std::string& ActionPool::GetActionName(Core::ActionID id)
     return unknown->GetName();
 }
 
-void ActionPool::StartAction(Core::ActionID id)
+Core::ActionID ActionPool::GetLocalAction()
+{
+    if (m_LocalAction != 0)
+        return m_LocalAction->GetID();
+    else
+        return -1;
+}
+
+void ActionPool::StartLocalAction(Core::ActionID id, Core::ObjectID target)
 {
     Action* toCopy = m_Actions.at(id);
 
     // Create a copy of the action and return it
     if (toCopy)
     {
-        Action* newAction = toCopy->Clone();
-        m_CurrentActions[0] = newAction;
+        Action* newAction = toCopy->Clone(target);
+        m_LocalAction = newAction;
         newAction->Execute();
     }
 }
 
 
-void ActionPool::StartClientAction(Core::ActionID id, uint8_t index)
+void ActionPool::StartClientAction(Core::ActionID id, Core::ObjectID target, uint8_t index)
 {
     Action* toCopy = m_Actions.at(id);
 
     // Create a copy of the action and return it
     if (toCopy)
     {
-        Action* newAction = toCopy->Clone();
-        m_CurrentActions[index] = newAction;
+        Action* newAction = toCopy->Clone(target);
+        m_ClientActions[index] = newAction;
     }
 }
 
-Core::ActionID ActionPool::GetCurrentAction(int index)
+void ActionPool::EndLocalAction()
 {
-    return m_CurrentActions[index]->GetID();
+    delete m_LocalAction;
+    m_LocalAction = 0;
 }
 
-void ActionPool::EndAction(int index)
+void ActionPool::EndClientAction(uint8_t index)
 {
-    delete m_CurrentActions[index];
-    m_CurrentActions[index] = 0;
+    delete m_ClientActions[index];
+    m_ClientActions[index] = 0;
+}
+
+Core::ActionID ActionPool::GetClientAction(int index)
+{
+    return m_ClientActions[index]->GetID();
+}
+
+void ActionPool::HandleActionInfo(uint8_t sender, uint8_t messageType, const std::string& message)
+{
+    if (Network::Messenger::IsServer())
+    {
+        // Handle Client's message
+        assert(m_ClientActions[sender] && "Received MsgActionInfo while no client action was started.");
+        m_ClientActions[sender]->HandleActionInfo(messageType, message);
+    }
+    else
+    {
+        // Handle server's response
+        assert(m_LocalAction && "Received MsgActionInfo while no local action was started.");
+        m_LocalAction->HandleActionInfo(messageType, message);
+    }
 }

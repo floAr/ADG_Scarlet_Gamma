@@ -8,6 +8,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 #include "network/ChatMessages.hpp"
+#include <ctime>
 
 /// \brief Master class containing the game loop and pointers to subsystems.
 ///
@@ -18,6 +19,8 @@ public:
 
 	/// \brief Default constructor that tames wild pointers
 	Game() : m_stateMachine(0), m_world(0), m_eventHandler(0), m_numNewChatMessages(0) {}
+
+    static Utils::Random* RANDOM;
 
 	/// TODO:: Document
 	void Init();

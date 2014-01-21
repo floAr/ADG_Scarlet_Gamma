@@ -15,7 +15,7 @@ namespace Actions
 
     private:
         /// \brief Clones an attack action.
-        virtual Action* Clone();
+        virtual Action* Clone(Core::ObjectID target);
 
         /// \brief Private constructor, fills requirements list.
         WalkTo();

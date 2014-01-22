@@ -72,6 +72,7 @@ namespace Core {
 		newObj.m_id = m_nextFreeObjectID++;
 		// Final insertion
 		m_objects.insert(std::make_pair<ObjectID,Object>( newObj.ID(), std::move(newObj) ) );
+		Network::MsgAddObject( newObj.ID() ).Send();
 		return newObj.ID();
 	}
 

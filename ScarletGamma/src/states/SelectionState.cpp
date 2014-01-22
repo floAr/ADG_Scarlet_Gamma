@@ -60,8 +60,8 @@ void States::SelectionState::RecalculateGUI()
 		m_gui.add(button);
 		button->setSize(50, 40);
 		positionButton(button, 360.0f / count * i, 45.0f + count * 3.0f);
-		if(o->HasProperty(Core::Object::PROP_NAME))
-			button->setText(o->GetProperty(Core::Object::PROP_NAME).Value());
+		if(o->HasProperty(STR_PROP_NAME))
+			button->setText(o->GetProperty(STR_PROP_NAME).Value());
 		else
 			button->setText(std::to_string(o->ID()));
 		if( alreadySelected->Contains(m_objects[i]) ) {

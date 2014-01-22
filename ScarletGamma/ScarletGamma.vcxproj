@@ -86,6 +86,7 @@
     <ClCompile Include="src\core\Map.cpp" />
     <ClCompile Include="src\core\Object.cpp" />
     <ClCompile Include="src\core\ObjectList.cpp" />
+    <ClCompile Include="src\core\PredefinedProperties.cpp" />
     <ClCompile Include="src\core\Property.cpp" />
     <ClCompile Include="src\core\World.cpp" />
     <ClCompile Include="src\events\EventHandler.cpp" />
@@ -135,6 +136,7 @@
     <ClInclude Include="src\core\Map.hpp" />
     <ClInclude Include="src\core\Object.hpp" />
     <ClInclude Include="src\core\ObjectList.hpp" />
+    <ClInclude Include="src\core\PredefinedProperties.hpp" />
     <ClInclude Include="src\core\Property.hpp" />
     <ClInclude Include="src\core\World.hpp" />
     <ClInclude Include="src\events\EventHandler.hpp" />

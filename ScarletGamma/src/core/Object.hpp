@@ -26,6 +26,11 @@ public:
 	/// \brief Checks if at least one property with that name exists.
 	bool HasProperty( const std::string& _name ) const;
 
+	/// \brief Adds a copy of a property to the end of this list.
+	/// \param [in] _property Some property object from another list or a new one.
+	/// \return An editable reference to the property inside the object
+	Property& Add( const Property& _property )	{ return Add(_property, m_id); }
+
 	/// \brief A saver variant to change object properties. If something depends
 	///		on the change it is modified too.
 	///	\throws Exception::NoSuchProperty
@@ -60,20 +65,6 @@ public:
 
 	ObjectID ID() const { return m_id; }
 
-	// The following constants are names of predefined properties.
-	// This allows faster accesses because string("keks") would cause an
-	// allocation and deallocation which the constants do not.
-	static const std::string PROP_LAYER;	///< Name of layer property: rendering order
-	static const std::string PROP_X;		///< Name of position.x: floating point position
-	static const std::string PROP_Y;		///< Name of position.y: floating point position
-	static const std::string PROP_SPRITE;	///< Name of sprite property: texture name
-	static const std::string PROP_COLOR;	///< Name of color property: hexadecimal string
-	static const std::string PROP_PATH;		///< Name of path property: object list + boolean value
-	static const std::string PROP_TARGET;	///< Name of target property: next point to be reached linearly
-	static const std::string PROP_OBSTACLE;	///< Name of obstacle property: this object collides with the player
-	static const std::string PROP_NAME;		///< Name of name property: object's name
-	static const std::string PROP_PLAYER;	///< Name of player: flags an object as player, the value is its ID
-
 	/// \brief Add a new way point to the path list.
 	/// \details If the new object is equal to the first in the list the loop
 	///		property is set to true. Otherwise it is false.
@@ -81,13 +72,14 @@ public:
 	void AppendToPath( ObjectID _wayPoint );
 
 	/// \brief Is this object directly located on some map?
-	bool IsLocatedOnAMap() const	{ return m_hasParent && HasProperty(PROP_X); }
+	bool IsLocatedOnAMap() const;
 	MapID GetParentMap() const		{ return m_parent.map; }
 	void SetParentMap(MapID _map)	{ m_parent.map = _map; m_hasParent = true; }
 private:
 	// Hide some of the methods
 	PropertyList::Clear;
 	PropertyList::Get;
+	PropertyList::Add;
 
 	ObjectID m_id;	///< Unique identification number for this object.
 

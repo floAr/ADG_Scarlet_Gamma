@@ -11,19 +11,19 @@
 using namespace std;
 
 namespace Core {
-	Property::Property( ObjectID _parent, uint32_t _rights, const std::string& _name, const std::string& _value ) :
+	Property::Property( uint32_t _rights, const std::string& _name, const std::string& _value ) :
 		m_name(_name),
 		m_value(_value),
-		m_parent(_parent),
+		m_parent(0),
 		m_rights(_rights)
 	{
 	}
 
-	Property::Property( ObjectID _parent, uint32_t _rights, const std::string& _name, const std::string& _value, const ObjectList& _list ) :
+	Property::Property( uint32_t _rights, const std::string& _name, const std::string& _value, const ObjectList& _list ) :
 		m_name(_name),
 		m_value(_value),
 		m_objects(_list),
-		m_parent(_parent),
+		m_parent(0),
 		m_rights(_rights)
 	{
 	}
@@ -161,6 +161,16 @@ namespace Core {
 			Network::MsgPropertyChanged( m_parent, this ).Send();
 	}
 
+	void Property::SetRights( Rights _newRights )
+	{
+		uint32_t oldRights = m_rights;
+		m_rights = (m_rights & 0xfffffe00) | _newRights;
+
+		// Everybody has to know the property change.
+		if(oldRights != m_rights)
+			Network::MsgPropertyChanged( m_parent, this ).Send();
+	}
+
 
 
 
@@ -171,17 +181,20 @@ namespace Core {
 	{
 		for( uint64_t i=0; i<_node.Size(); ++i )
 		{
-			Add( Property( _parent, _node[i] ) );
+			Add( Property( _parent, _node[i] ), _parent );
 		}
 	}
 
-	void PropertyList::Add( const Property& _property )
+	Property& PropertyList::Add( const Property& _property, ObjectID _parent )
 	{
 		// No duplicates!
 		Remove( _property.Name() );
 		// Append at the end
 		m_list.push_back(_property);
+		m_list.back().SetParent( _parent );
 		Network::MsgPropertyChanged( _property.ParentObject(), &_property ).Send();
+
+		return m_list.back();
 	}
 
 	void PropertyList::Remove( Property* _property )

@@ -9,6 +9,7 @@
 #include "network/Messenger.hpp"
 #include "interfaces/DragNDrop.hpp"
 #include <iostream>
+#include "core/PredefinedProperties.hpp"
 
 using namespace Core;
 
@@ -142,14 +143,14 @@ namespace States {
 				// Delete current target(s) if not appending
 				if( !sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) )
 				{
-					m_player->GetProperty(Object::PROP_TARGET).SetValue(STR_EMPTY);
-					if( !m_player->HasProperty(Object::PROP_PATH) )
-						m_player->Add( Property( m_player->ID(), Property::R_SYSTEMONLY, Object::PROP_PATH, STR_FALSE ) );
-					Property& path = m_player->GetProperty(Object::PROP_PATH);
+					m_player->GetProperty(STR_PROP_TARGET).SetValue(STR_EMPTY);
+					if( !m_player->HasProperty(STR_PROP_PATH) )
+						m_player->Add( PROPERTY::PATH );
+					Property& path = m_player->GetProperty(STR_PROP_PATH);
 					path.ClearObjects();
 					path.SetValue(STR_FALSE);
 				}
-				if(m_selected->GetProperty(Core::Object::PROP_LAYER).Value()==STR_0){
+				if(m_selected->GetProperty(STR_PROP_LAYER).Value()==STR_0){
 					// Append to target list
 					m_player->AppendToPath( m_selected->ID() );
 				}
@@ -257,45 +258,45 @@ namespace States {
 		Object* propertyO = m_dbProperties->GetObject( propertyOID );
 
 		propertyO->SetColor( sf::Color::White );
-		propertyO->Add( Property(propertyOID, Property::R_VCEV0EV00, Object::PROP_NAME, STR_EMPTY ));
-		propertyO->Add( Property(propertyOID, Property::R_VC0000000, Object::PROP_OBSTACLE, STR_EMPTY ));
-		propertyO->Add( Property(propertyOID, Property::R_VCEV0EV00, STR_INVENTORY, STR_EMPTY ));
-		propertyO->Add( Property(propertyOID, Property::R_VCEV0EV00, STR_STRENGTH, STR_0 ));
-		propertyO->Add( Property(propertyOID, Property::R_VCEV0EV00, STR_DEXTERITY, STR_0 ));
-		propertyO->Add( Property(propertyOID, Property::R_VCEV0EV00, STR_CONSTITUTION, STR_0 ));
-		propertyO->Add( Property(propertyOID, Property::R_VCEV0EV00, STR_INTELLIGENCE, STR_0 ));
-		propertyO->Add( Property(propertyOID, Property::R_VCEV0EV00, STR_WISDOM, STR_0 ));
-		propertyO->Add( Property(propertyOID, Property::R_VCEV0EV00, STR_CHARISMA, STR_0 ));
+		propertyO->Add( PROPERTY::NAME );
+		propertyO->Add( PROPERTY::OBSTACLE );
+		propertyO->Add( PROPERTY::INVENTORY );
+		propertyO->Add( PROPERTY::STRENGTH );
+		propertyO->Add( PROPERTY::DEXTERITY );
+		propertyO->Add( PROPERTY::CONSTITUTION );
+		propertyO->Add( PROPERTY::INTELLIGENCE );
+		propertyO->Add( PROPERTY::WISDOM );
+		propertyO->Add( PROPERTY::CHARISMA );
 	}
 
 	void MasterState::CreateDefaultModuleBase()
 	{
 		ObjectID OID = m_dbModules->NewObject( STR_EMPTY );
 		Object* object = m_dbModules->GetObject( OID );
-		object->Add( Property(OID, Property::R_SYSTEMONLY, Object::PROP_NAME, STR_ATTACKABLE ));
-		object->Add( Property(OID, Property::R_SYSTEMONLY, Object::PROP_SPRITE, STR_EMPTY ));	// Hide the sprite property
-		object->Add( Property(OID, Property::R_VCEV00000, STR_HEALTH, STR_0 ));
+		object->Add( PROPERTY::NAME ).SetValue( STR_ATTACKABLE );
+		object->GetProperty( STR_PROP_SPRITE ).SetRights( Property::R_SYSTEMONLY );	// Hide the sprite property
+		object->Add( PROPERTY::HEALTH );
 	}
 
 	void MasterState::CreateDefaultTemplateBase()
 	{
 		ObjectID OID = m_dbTemplates->NewObject( "media/gobbo.png" );
 		Object* object = m_dbTemplates->GetObject( OID );
-		object->Add( Property(OID, Property::R_V0E000000, Object::PROP_NAME, STR_GOBBO ));
+		object->Add( PROPERTY::NAME ).SetValue( STR_GOBBO );
 		// TODO: add modules
 
 		OID = m_dbTemplates->NewObject( "media/bar_hor.png" );
 		object = m_dbTemplates->GetObject( OID );
-		object->Add( Property(OID, Property::R_V0E000000, Object::PROP_NAME, STR_WALLH ));
-		object->Add( Property(OID, Property::R_VC0000000, Object::PROP_OBSTACLE, STR_EMPTY ));
+		object->Add( PROPERTY::NAME ).SetValue( STR_WALLH );
+		object->Add( PROPERTY::OBSTACLE );
 		OID = m_dbTemplates->NewObject( "media/bar_vert.png" );
 		object = m_dbTemplates->GetObject( OID );
-		object->Add( Property(OID, Property::R_V0E000000, Object::PROP_NAME, STR_WALLV ));
-		object->Add( Property(OID, Property::R_VC0000000, Object::PROP_OBSTACLE, STR_EMPTY ));
+		object->Add( PROPERTY::NAME ).SetValue( STR_WALLV );
+		object->Add( PROPERTY::OBSTACLE );
 		OID = m_dbTemplates->NewObject( "media/cross_big.png" );
 		object = m_dbTemplates->GetObject( OID );
-		object->Add( Property(OID, Property::R_V0E000000, Object::PROP_NAME, STR_WALLC ));
-		object->Add( Property(OID, Property::R_VC0000000, Object::PROP_OBSTACLE, STR_EMPTY ));
+		object->Add( PROPERTY::NAME ).SetValue( STR_WALLC );
+		object->Add( PROPERTY::OBSTACLE );
 	}
 
 }// namespace States

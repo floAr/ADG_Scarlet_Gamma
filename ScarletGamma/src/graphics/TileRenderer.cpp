@@ -44,16 +44,16 @@ void Graphics::TileRenderer::Render(sf::RenderWindow& window, Core::Map& map, st
 						assert(obj);
 
 						// Skip objects from the wrong layer
-						if( atoi(obj->GetProperty(Core::Object::PROP_LAYER).Value().c_str()) != layer )
+						if( atoi(obj->GetProperty(STR_PROP_LAYER).Value().c_str()) != layer )
 							continue;
 
 						// Render visible objects TODO visib-prop
-						if (obj->HasProperty(Core::Object::PROP_SPRITE))
+						if (obj->HasProperty(STR_PROP_SPRITE))
 						{
 							// Load texture
 
 							// Draw the tile
-							const sf::Texture& tex = Content::Instance()->LoadTexture(obj->GetProperty(Core::Object::PROP_SPRITE).Value());
+							const sf::Texture& tex = Content::Instance()->LoadTexture(obj->GetProperty(STR_PROP_SPRITE).Value());
 							sf::Sprite drawSprite(tex);
 							drawSprite.setScale(float(TILESIZE)/tex.getSize().x, float(TILESIZE)/tex.getSize().y);
 							drawSprite.setPosition(obj->GetPosition() * float(TILESIZE));

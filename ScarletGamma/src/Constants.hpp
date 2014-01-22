@@ -13,6 +13,7 @@ static const std::string STR_PARENT = std::string("parent");
 static const std::string STR_OBJECTS = std::string("objects");
 static const std::string STR_RIGHTS = std::string("rights");
 static const std::string STR_0 = std::string("0");
+static const std::string STR_FFFFFFFF = std::string("ffffffff");
 static const std::string STR_MULTISELECTION = std::string("<Mehrfachauswahl>");
 
 
@@ -35,16 +36,31 @@ static const std::string STR_MSG_HIT_ARMOR_CLASS_NOT_BEAT = std::string("Rüstung
 
 
 /************************************************************************/
+/* GENERAL PROPERTIES                                                   */
+/************************************************************************/
+static const std::string STR_PROP_LAYER		= std::string("Layer");		///< Name of layer property: rendering order
+static const std::string STR_PROP_X			= std::string("X");			///< Name of position.x: floating point position
+static const std::string STR_PROP_Y			= std::string("Y");			///< Name of position.y: floating point position
+static const std::string STR_PROP_SPRITE	= std::string("Bild");		///< Name of sprite property: texture name
+static const std::string STR_PROP_COLOR		= std::string("Farbe");		///< Name of color property: hexadecimal string
+static const std::string STR_PROP_PATH		= std::string("path");		///< Name of path property: object list + boolean value
+static const std::string STR_PROP_TARGET	= std::string("target");	///< Name of target property: next point to be reached linearly
+static const std::string STR_PROP_OBSTACLE	= std::string("Hindernis");	///< Name of obstacle property: this object collides with the player
+static const std::string STR_PROP_NAME		= std::string("Name");		///< Name of name property: object's name
+static const std::string STR_PROP_PLAYER	= std::string("player");	///< Name of player: flags an object as player, the value is its ID
+
+
+/************************************************************************/
 /* PLAYER ATTRIBUTES                                                    */
 /************************************************************************/
-static const std::string STR_INVENTORY = std::string("Inventar");
-static const std::string STR_STRENGTH = std::string("Stärke");
-static const std::string STR_DEXTERITY = std::string("Geschicklichkeit");
-static const std::string STR_CONSTITUTION = std::string("Konstitution");
-static const std::string STR_INTELLIGENCE = std::string("Intelligenz");
-static const std::string STR_WISDOM = std::string("Weisheit");
-static const std::string STR_CHARISMA = std::string("Charisma");
-static const std::string STR_HEALTH = std::string("Trefferpunkte");
+static const std::string STR_PROP_INVENTORY = std::string("Inventar");
+static const std::string STR_PROP_STRENGTH = std::string("Stärke");
+static const std::string STR_PROP_DEXTERITY = std::string("Geschicklichkeit");
+static const std::string STR_PROP_CONSTITUTION = std::string("Konstitution");
+static const std::string STR_PROP_INTELLIGENCE = std::string("Intelligenz");
+static const std::string STR_PROP_WISDOM = std::string("Weisheit");
+static const std::string STR_PROP_CHARISMA = std::string("Charisma");
+static const std::string STR_PROP_HEALTH = std::string("Trefferpunkte");
 
 
 /************************************************************************/

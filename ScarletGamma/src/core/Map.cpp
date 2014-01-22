@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <unordered_map>
 #include "Constants.hpp"
+#include "PredefinedProperties.hpp"
 
 using namespace std;
 
@@ -123,7 +124,7 @@ namespace Core {
 		auto list = GetObjectsAt(_position.x, _position.y);
 		if( list.Size() == 0 ) return false;
 		for( int i=0; i<list.Size(); ++i )
-			if(m_parentWorld->GetObject(list[i])->HasProperty(Object::PROP_OBSTACLE))
+			if(m_parentWorld->GetObject(list[i])->HasProperty(STR_PROP_OBSTACLE))
 				return false;
 		return true;
 	}
@@ -142,13 +143,13 @@ namespace Core {
 
 		// Set correct position for the object itself
 		Object* object = m_parentWorld->GetObject(_object);
-		object->Add( Property(_object, Property::R_V0EV00V00, Object::PROP_X, to_string((float)_x)) );
-		object->Add( Property(_object, Property::R_V0EV00V00, Object::PROP_Y, to_string((float)_y)) );
-		object->Add( Property(_object, Property::R_V0E000000, Object::PROP_LAYER, to_string(_layer)) );
+		object->Add( PROPERTY::X ).SetValue( to_string((float)_x) );
+		object->Add( PROPERTY::Y ).SetValue( to_string((float)_y) );
+		object->Add( PROPERTY::LAYER ).SetValue( to_string(_layer) );
 		object->SetParentMap( m_id );
 
 		// Does the object requires updates?
-		if( object->HasProperty(Object::PROP_TARGET) )
+		if( object->HasProperty(STR_PROP_TARGET) )
 		{
 			m_activeObjects->Add(_object);
 		}
@@ -168,9 +169,9 @@ namespace Core {
 		m_activeObjects->Remove(_object);
 
 		// Remove map-related properties from the object
-		obj->Remove(Object::PROP_X);
-		obj->Remove(Object::PROP_Y);
-		obj->Remove(Object::PROP_LAYER);
+		obj->Remove(STR_PROP_X);
+		obj->Remove(STR_PROP_Y);
+		obj->Remove(STR_PROP_LAYER);
 	}
 
 
@@ -185,9 +186,9 @@ namespace Core {
 			if( HasReachedTarget(object, position) )
 			{
 				// If it reached the target choose a new one.
-				object->GetProperty(Object::PROP_TARGET).SetValue( sfUtils::to_string(FindNextTarget(object)) );
+				object->GetProperty(STR_PROP_TARGET).SetValue( sfUtils::to_string(FindNextTarget(object)) );
 			}
-			auto targetDirection = sfUtils::to_vector(object->GetProperty(Object::PROP_TARGET).Value());
+			auto targetDirection = sfUtils::to_vector(object->GetProperty(STR_PROP_TARGET).Value());
 			targetDirection -= position;	// Scaled direction
 
 			// The actor can not move over blocked tiles. Since he is allowed
@@ -328,9 +329,9 @@ namespace Core {
 	sf::Vector2f Map::FindNextTarget(Object* _object) const
 	{
 		sf::Vector2f position = _object->GetPosition();
-		if(_object->HasProperty(Object::PROP_PATH))
+		if(_object->HasProperty(STR_PROP_PATH))
 		{
-			Property& pathProperty = _object->GetProperty(Object::PROP_PATH);
+			Property& pathProperty = _object->GetProperty(STR_PROP_PATH);
 			bool loop = pathProperty.Value() == STR_TRUE;
 			auto& path = pathProperty.GetObjects();
 			sf::Vector2i start, goal;
@@ -371,7 +372,7 @@ namespace Core {
 
 	bool Map::HasReachedTarget( Object* _object, const sf::Vector2f& _position ) const
 	{
-		auto& targetProp = _object->GetProperty(Object::PROP_TARGET);
+		auto& targetProp = _object->GetProperty(STR_PROP_TARGET);
 		if( targetProp.Value().empty() ) return true;
 		auto target = sfUtils::to_vector(targetProp.Value());
 		return sfUtils::LengthSq(target-_position) < 0.00000001;
@@ -388,14 +389,14 @@ namespace Core {
 		// Avoid recursive - redundant messages
 		Network::MaskObjectMessage objMessageLock;
 		try {
-			Property* X = &_object->GetProperty(Object::PROP_X);
-			Property* Y = &_object->GetProperty(Object::PROP_Y);
+			Property* X = &_object->GetProperty(STR_PROP_X);
+			Property* Y = &_object->GetProperty(STR_PROP_Y);
 			X->SetValue( to_string(_position.x) );
 			Y->SetValue( to_string(_position.y) );
 		} catch(...) {
 			// Should never happen - but stable is stable
-			_object->Add( Property( _object->ID(), Property::R_V0EV00V00, Object::PROP_X, to_string(_position.x) ) );
-			_object->Add( Property( _object->ID(), Property::R_V0EV00V00, Object::PROP_Y, to_string(_position.y) ) );
+			_object->Add( PROPERTY::X ).SetValue( to_string(_position.x) );
+			_object->Add( PROPERTY::X ).SetValue( to_string(_position.y) );
 		}
 		// Update cells
 		sf::Vector2i newCell(sfUtils::Round(_position));

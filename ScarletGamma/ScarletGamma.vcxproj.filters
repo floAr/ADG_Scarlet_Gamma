@@ -179,6 +179,9 @@
     <ClCompile Include="src\states\ActionState.cpp">
       <Filter>Quelldateien\states</Filter>
     </ClCompile>
+    <ClCompile Include="src\core\PredefinedProperties.cpp">
+      <Filter>Quelldateien\core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\core\Map.hpp">
@@ -327,6 +330,9 @@
     </ClInclude>
     <ClInclude Include="src\states\ActionState.hpp">
       <Filter>Quelldateien\states</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\PredefinedProperties.hpp">
+      <Filter>Quelldateien\core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

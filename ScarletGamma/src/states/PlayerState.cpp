@@ -91,12 +91,12 @@ void States::PlayerState::MouseButtonPressed(sf::Event::MouseButtonEvent& button
 			// Delete current target(s) if not appending
 			if( !sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) )
 			{
-				m_player->GetProperty(Core::Object::PROP_TARGET).SetValue(STR_EMPTY);
-				Core::Property& path = m_player->GetProperty(Core::Object::PROP_PATH);
+				m_player->GetProperty(STR_PROP_TARGET).SetValue(STR_EMPTY);
+				Core::Property& path = m_player->GetProperty(STR_PROP_PATH);
 				path.ClearObjects();
 				path.SetValue(STR_FALSE);
 			}
-			if(m_selected->GetProperty(Core::Object::PROP_LAYER).Value()=="0"){
+			if(m_selected->GetProperty(STR_PROP_LAYER).Value()=="0"){
 				// Append to target list
 				m_player->AppendToPath( m_selected->ID() );
 			}
@@ -133,10 +133,10 @@ void States::PlayerState::OnBegin()
 	// TODO: if player does not exists create one!
 	m_player = g_Game->GetWorld()->FindPlayer( m_name );
 	assert( m_player );
-	Core::PlayerID id = m_player->GetProperty(Core::Object::PROP_PLAYER).Evaluate();
+	Core::PlayerID id = m_player->GetProperty(STR_PROP_PLAYER).Evaluate();
 	// Use the players currently chosen color
 	m_player->SetColor( m_color );
-	m_player->GetProperty( Core::Object::PROP_COLOR ).ApplyRights( 
+	m_player->GetProperty( STR_PROP_COLOR ).ApplyRights( 
 		id, true );
 
 	m_focus = m_player;

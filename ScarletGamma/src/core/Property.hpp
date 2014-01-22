@@ -11,14 +11,6 @@ namespace Core {
 class Property
 {
 public:
-	/// \brief Create a name value pair property. This cannot be changed later.
-	Property( ObjectID _parent, uint32_t _rights, const std::string& _name, const std::string& _value );
-
-	/// \brief Create a named object list property.
-	/// \details It is possible to add a standard string property additional
-	///		to the object list with SetValue.
-	Property( ObjectID _parent, uint32_t _rights, const std::string& _name, const std::string& _value, const ObjectList& _list );
-
 	/// \brief Deserialize an object.
 	/// \param [in] _node A serialized object node.
 	Property( ObjectID _parent, const Jo::Files::MetaFileWrapper::Node& _node );
@@ -71,9 +63,10 @@ public:
 	void Serialize( Jo::Files::MetaFileWrapper::Node& _node ) const;
 
 	ObjectID ParentObject() const		{ return m_parent; }
+	void SetParent(ObjectID _id)		{ m_parent = _id; }
 
 	// A list of standard rights to be used in the constructor.
-	enum Rights: uint64_t {
+	enum Rights: uint32_t {
 		R_SYSTEMONLY = 0x000,
 		R_V00000000 = 0x001,	///< Master: See
 		R_VC0000000 = 0x003,	///< Master: See, Change
@@ -98,6 +91,9 @@ public:
 	/// \brief Sets if the player have no rights or player rights
 	void ApplyRights( PlayerID _player, bool _hasAdvancedPlayer );
 
+	/// \brief Resets the 9 rights flags but keep player levels.
+	void SetRights( Rights _newRights );
+
 private:
 	std::string m_name;
 	ObjectID m_parent;		///< The object to which this property belongs
@@ -112,6 +108,17 @@ private:
 	///		then 1 Bit per player if he has advanced player
 	///		rights or basic rights
 	uint32_t m_rights;
+
+
+	/// \brief Create a name value pair property. This cannot be changed later.
+	Property( uint32_t _rights, const std::string& _name, const std::string& _value );
+
+	/// \brief Create a named object list property.
+	/// \details It is possible to add a standard string property additional
+	///		to the object list with SetValue.
+	Property( uint32_t _rights, const std::string& _name, const std::string& _value, const ObjectList& _list );
+
+	friend struct PROPERTY;
 };
 
 
@@ -131,7 +138,9 @@ public:
 
 	/// \brief Adds a copy of a property to the end of this list.
 	/// \param [in] _property Some property object from another list or a new one.
-	void Add( const Property& _property );
+	/// \param [in] _parent Who gets this new property?
+	/// \return An editable reference to the property inside the object
+	Property& Add( const Property& _property, ObjectID _parent );
 
 	/// \brief Remove a property whose address comes from Get or Filter.
 	/// \param [in] _property Reference to one property in this list. If

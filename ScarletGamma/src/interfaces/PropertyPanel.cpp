@@ -6,6 +6,7 @@
 #include "core/Object.hpp"
 #include "DragNDrop.hpp"
 #include "core/World.hpp"
+#include "core/PredefinedProperties.hpp"
 
 namespace Interfaces {
 
@@ -286,7 +287,7 @@ void PropertyPanel::AddBtn( const tgui::Callback& _call )
 		// Add to object(s)
 		auto name = m_newName->getText();
 		for( size_t i=0; i<m_objects.size(); ++i )
-			m_objects[i]->Add( Core::Property(m_objects[i]->ID(), Core::Property::R_VCEV0EV00, name, STR_EMPTY) );
+			m_objects[i]->Add( Core::PROPERTY::Custom(name) );
 		// Add to gui
 		Add( m_newName->getText(), true, m_newValue->getText(), true );
 		m_newName->setText("");

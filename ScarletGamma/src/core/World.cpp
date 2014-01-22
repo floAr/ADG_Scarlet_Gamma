@@ -3,6 +3,7 @@
 #include "Map.hpp"
 #include "network/WorldMessages.hpp"
 #include "utils/StringUtil.hpp"
+#include "Constants.hpp"
 
 using namespace std;
 
@@ -101,9 +102,9 @@ namespace Core {
 				Object* object = GetObject(id);
 
 				// Test object if it is a player and add it.
-				if( object->HasProperty( Object::PROP_PLAYER ) )
+				if( object->HasProperty( STR_PROP_PLAYER ) )
 				{
-					Property& prop = object->GetProperty( Object::PROP_NAME );
+					Property& prop = object->GetProperty( STR_PROP_NAME );
 					m_players[prop.Value()] = id;
 				}
 			}

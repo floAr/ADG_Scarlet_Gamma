@@ -6,28 +6,18 @@
 #include "utils/StringUtil.hpp"
 #include "World.hpp"
 #include "Game.hpp"
+#include "PredefinedProperties.hpp"
 
 using namespace std;
 
 namespace Core {
-
-	const string Object::PROP_LAYER = string("Layer");
-	const string Object::PROP_X = string("X");
-	const string Object::PROP_Y = string("Y");
-	const string Object::PROP_SPRITE = string("Bild");
-	const string Object::PROP_COLOR = string("Farbe");
-	const string Object::PROP_PATH = string("path");
-	const string Object::PROP_TARGET = string("target");
-	const string Object::PROP_OBSTACLE = string("Hindernis");
-	const string Object::PROP_NAME = string("Name");
-	const string Object::PROP_PLAYER = string("player");
 
 	Object::Object( ObjectID _id, const string& _sprite ) :
 		m_id(_id),
 		m_hasParent(false)
 	{
 		// Everything has an representation
-		Add( Property(_id, Property::R_V0E000000, PROP_SPRITE, _sprite) );
+		Add( PROPERTY::SPRITE ).SetValue(_sprite);
 	}
 
 	Object::Object( const Jo::Files::MetaFileWrapper::Node& _node ) :
@@ -75,7 +65,7 @@ namespace Core {
 		if( !prop ) throw Exception::NoSuchProperty();
 
 		// Check if the map must be updated
-		if( Utils::IStringEqual( _name, PROP_X ) || Utils::IStringEqual( _name, PROP_Y ) )
+		if( Utils::IStringEqual( _name, STR_PROP_X ) || Utils::IStringEqual( _name, STR_PROP_Y ) )
 		{
 			// Do a lot of things to make sure the map is valid.
 			assert( IsLocatedOnAMap() );
@@ -87,11 +77,11 @@ namespace Core {
 			map->ResetGridPosition( ID(), oldCell, newCell );
 
 			// Setting positions of active objects confuses them
-			if( HasProperty(PROP_TARGET) )
+			if( HasProperty(STR_PROP_TARGET) )
 			{
-				prop = Get(PROP_TARGET);
+				prop = Get(STR_PROP_TARGET);
 				prop->SetValue( sfUtils::to_string(newPosition) );
-				Remove(PROP_PATH);
+				Remove(STR_PROP_PATH);
 				//prop = Get(PROP_PATH);
 				//prop->ClearObjects();
 				//prop->SetValue(STR_FALSE);
@@ -105,8 +95,8 @@ namespace Core {
 
 	sf::Vector2f Object::GetPosition() const
 	{
-		const Property* X = Get(PROP_X);
-		const Property* Y = Get(PROP_Y);
+		const Property* X = Get(STR_PROP_X);
+		const Property* Y = Get(STR_PROP_Y);
 		if( !X || !Y ) throw Exception::NoSuchProperty();
 		sf::Vector2f pos;
 		pos.x = (float)atof(X->Value().c_str());
@@ -117,7 +107,7 @@ namespace Core {
 
 	std::string Object::GetName() const
 	{
-		const Property* name = Get(PROP_NAME);
+		const Property* name = Get(STR_PROP_NAME);
 		if( !name ) return std::to_string(m_id);	// Will use move semantic
 		return name->Value();						// Uses copy - bad but safe
 	}
@@ -126,7 +116,7 @@ namespace Core {
 	sf::Color Object::GetColor() const
 	{
 		// The property does not always exists
-		auto colorProp = Get(PROP_COLOR);
+		auto colorProp = Get(STR_PROP_COLOR);
 		if( colorProp ) {
 			// Evaluate the hexadecimal number
 			uint32_t color = strtoul(colorProp->Value().c_str(), nullptr, 16);
@@ -143,8 +133,8 @@ namespace Core {
 //		std::stringstream value;
 		//value << std::hex << (int)_color.r << (int)_color.g << (int)_color.b << (int)_color.a;
 		// Create or set property?
-		auto colorProp = Get(PROP_COLOR);
-		if( !colorProp ) Add(Property(m_id, Property::R_VCEV0EV00, PROP_COLOR, string(value)));
+		auto colorProp = Get(STR_PROP_COLOR);
+		if( !colorProp ) Add(PROPERTY::COLOR, m_id).SetValue(string(value));
 		else colorProp->SetValue( value );
 	}
 
@@ -164,13 +154,18 @@ namespace Core {
 
 	void Object::AppendToPath( ObjectID _wayPoint )
 	{
-		Property& path = GetProperty( PROP_PATH );
+		Property& path = GetProperty( STR_PROP_PATH );
 		path.AddObject( _wayPoint );
 		// Check for a loop: a single node cannot be a loop, first and last
 		// node must be the same.
 		bool hasLoop = path.GetObjects().Size() > 1;
 		hasLoop &= path.GetObjects()[0] == path.GetObjects()[path.GetObjects().Size()-1];
 		path.SetValue( hasLoop ? STR_TRUE : STR_FALSE );
+	}
+
+	bool Object::IsLocatedOnAMap() const
+	{
+		return m_hasParent && HasProperty(STR_PROP_X);
 	}
 
 } // namespace Core

@@ -3,6 +3,7 @@
 #include "unittest/UnitTests.hpp"
 #include "network/WorldMessages.hpp"
 #include <iostream>
+#include "core/PredefinedProperties.hpp"
 
 using namespace std;
 
@@ -14,10 +15,9 @@ namespace UnitTest {
 
 		// Create an object and add some stuff
 		Core::Object obj(1, "floor.png");
-		obj.Add( Core::Property(obj.ID(), Core::Property::R_V0EV0EV0E, string("Invisible"), string("true")) );
-		obj.Add( Core::Property(obj.ID(), Core::Property::R_V0EV0EV0E, string("Inventory"), STR_EMPTY) );
-		obj.Add( Core::Property(obj.ID(), Core::Property::R_V0EV0EV0E, string("Dmg"), string("1W8+10")) );
-		auto& inventory = obj.GetProperty(string("Inventory"));
+		obj.Add( Core::PROPERTY::OBSTACLE );
+		obj.Add( Core::PROPERTY::STRENGTH ).SetValue("1W8+10");
+		auto& inventory =  obj.Add( Core::PROPERTY::INVENTORY );
 		inventory.AddObject( 2 );	// Add a probably wrong id
 
 		// Serialize and deserialize the object
@@ -26,11 +26,11 @@ namespace UnitTest {
 
 		// Take samples to test the restored object
 		Core::Object deserialized( Wrapper.RootNode );
-		if( deserialized.GetProperty(string("Dmg")).Value() != "1W8+10" )
+		if( deserialized.GetProperty(STR_PROP_STRENGTH).Value() != "1W8+10" )
 			TEST_FAILED("Property not restored properly.");
-		if( !deserialized.GetProperty(string("Inventory")).IsObjectList() )
+		if( !deserialized.GetProperty(STR_PROP_INVENTORY).IsObjectList() )
 			TEST_FAILED("Object list not restored.");
-		if( deserialized.GetProperty(string("Inventory")).GetObjects()[0] != 2 )
+		if( deserialized.GetProperty(STR_PROP_INVENTORY).GetObjects()[0] != 2 )
 			TEST_FAILED("Object list corrupted.");
 	}
 } // namespace UnitTest

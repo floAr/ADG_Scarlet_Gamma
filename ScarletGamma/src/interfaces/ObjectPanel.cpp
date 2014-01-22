@@ -6,6 +6,7 @@
 #include "core/Object.hpp"
 #include "core/World.hpp"
 #include "DragNDrop.hpp"
+#include "core/PredefinedProperties.hpp"
 
 using namespace Core;
 
@@ -98,7 +99,7 @@ void ObjectPanel::Add( ObjectID _object )
 	// Get the name of the object
 	Object* obj = m_world->GetObject(_object);
 	const std::string& name = obj->GetName();
-	const std::string& sprite = obj->GetProperty(Object::PROP_SPRITE).Value();
+	const std::string& sprite = obj->GetProperty(STR_PROP_SPRITE).Value();
 
 	// y coordinate where to insert inside panel
 	float y = (float)m_numPixelLines;
@@ -142,7 +143,7 @@ void ObjectPanel::Add( ObjectID _object )
 	if( !sprite.empty() )
 	{
 		tgui::Picture::Ptr preview( *this );
-		preview->load(sprite); // Would be nice if Resourcen-manager could be used - flaw of gui lib.
+		preview->load(sprite); // Would be nice if Resource-manager could be used - flaw of gui lib.
 		preview->setSize(16.0f, 16.0f);
 		preview->setPosition(x+2.0f, y+2.0f);
 		preview->setCallbackId(_object);
@@ -226,9 +227,7 @@ void ObjectPanel::AddBtn( const tgui::Callback& _call )
 	if( !m_newName->getText().isEmpty() )
 	{
 		ObjectID objectID = m_world->NewObject( STR_EMPTY );
-		m_world->GetObject( objectID )->Add( Property(
-			objectID, Property::R_VCEV0EV00, Object::PROP_NAME, m_newName->getText()
-			) );
+		m_world->GetObject( objectID )->Add( PROPERTY::NAME ) .SetValue( m_newName->getText() );
 		Add( objectID );
 		m_newName->setText("");
 	}

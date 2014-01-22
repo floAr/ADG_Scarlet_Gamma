@@ -181,7 +181,8 @@ namespace Core {
 	{
 		for( uint64_t i=0; i<_node.Size(); ++i )
 		{
-			Add( Property( _parent, _node[i] ), _parent );
+			m_list.push_back( Property( _parent, _node[i] ) );
+			m_list.back().SetParent( _parent );
 		}
 	}
 

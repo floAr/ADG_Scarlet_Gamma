@@ -11,7 +11,8 @@
 
 States::PlayerState::PlayerState( const std::string& _playerName, const sf::Color& _chatColor ) :
 	m_player(nullptr),
-	m_playerView(nullptr)
+	m_playerView(nullptr),
+	m_focus(nullptr)
 {
 	m_color = _chatColor;
 	m_name = _playerName;
@@ -23,12 +24,15 @@ States::PlayerState::PlayerState( const std::string& _playerName, const sf::Colo
 void States::PlayerState::Draw(sf::RenderWindow& win)
 {
 	// Focus on the player
-	sf::Vector2f playerPos = m_player->GetPosition();
-	sf::Vector2f playerViewPos = playerPos * float(TILESIZE);
-	playerViewPos.x += m_playerView->getSize().x * 0.5f;
-	sf::View newView = win.getView();
-	newView.setCenter( playerViewPos );
-	win.setView(newView);
+	if( m_focus )
+	{
+		sf::Vector2f pos = m_focus->GetPosition();
+		sf::Vector2f viewPos = pos * float(TILESIZE);
+		viewPos.x += m_playerView->getSize().x * 0.5f;
+		sf::View newView = win.getView();
+		newView.setCenter(viewPos);
+		win.setView(newView);
+	}
 
 	// Draw some color to the background
 	static sf::Color c(20, 26, 36);
@@ -38,7 +42,7 @@ void States::PlayerState::Draw(sf::RenderWindow& win)
 	assert(m_player->IsLocatedOnAMap());
 	using namespace std::placeholders;
 	std::function<float(Core::Map&,sf::Vector2i&)> visibilityFunc =
-		std::bind(&PlayerState::CheckTileVisibility, this, _1, _2, playerPos);
+		std::bind(&PlayerState::CheckTileVisibility, this, _1, _2, m_player->GetPosition());
 	Graphics::TileRenderer::Render(win, *g_Game->GetWorld()->GetMap(m_player->GetParentMap()),
 		visibilityFunc);
 
@@ -49,6 +53,22 @@ void States::PlayerState::Draw(sf::RenderWindow& win)
 
 	GameState::Draw(win);
 }
+
+
+void States::PlayerState::MouseMoved(int deltaX, int deltaY, bool guiHandled)
+{
+	// Don't react to any key if gui handled it
+	if (guiHandled)
+		return;
+
+	// Let the common state do the most things
+	CommonState::MouseMoved(deltaX, deltaY, guiHandled);
+
+	// In the case of mbm down the view was moved - disable focusing
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Middle))
+		m_focus = nullptr;
+}
+
 
 void States::PlayerState::MouseButtonPressed(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos, bool guiHandled)
 {
@@ -86,6 +106,23 @@ void States::PlayerState::MouseButtonPressed(sf::Event::MouseButtonEvent& button
 }
 
 
+void States::PlayerState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
+{
+	// Don't react to any key if gui handled it
+	if (guiHandled)
+		return;
+
+	switch(key.code)
+	{
+	case sf::Keyboard::Num0:
+	case sf::Keyboard::Numpad0:
+		// Refocus on player
+		m_focus = m_player;
+		break;
+	}
+}
+
+
 
 void States::PlayerState::OnBegin()
 {
@@ -101,6 +138,8 @@ void States::PlayerState::OnBegin()
 	m_player->SetColor( m_color );
 	m_player->GetProperty( Core::Object::PROP_COLOR ).ApplyRights( 
 		id, true );
+
+	m_focus = m_player;
 
 	tgui::ChatBox::Ptr localOut = m_gui.get( "Messages" );
 	m_playerView->Init( 624.0f, 0.0f, 400.0f, localOut->getPosition().y, false, false,
@@ -129,6 +168,7 @@ void States::PlayerState::Resize(const sf::Vector2f& _size)
 	m_playerView->setSize( m_playerView->getSize().x, localOut->getPosition().y );
 	m_playerView->setPosition( _size.x - m_playerView->getSize().x, 0.0f );
 }
+
 
 float States::PlayerState::CheckTileVisibility( Core::Map& _map, sf::Vector2i& _tilePos, sf::Vector2f& _playerPos ) const
 {

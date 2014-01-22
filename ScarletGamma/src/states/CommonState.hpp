@@ -24,8 +24,7 @@ namespace States
 		/// \brief Poll network messages, updates zoom, pulls chat messages.
 		virtual void Update(float dt) override;
 
-		/// \brief Move the visible position on left mouse button down
-		/// TODO: Restrict player - this is a master only action
+		/// \brief Move the visible position on middle mouse button down
 		virtual void MouseMoved(int deltaX, int deltaY, bool guiHandled) override;
 
 		/// \brief TODO: Selection stuff

@@ -10,7 +10,7 @@
 #include <iostream>
 #include <unordered_map>
 
-void Graphics::TileRenderer::Render(sf::RenderWindow& window, Core::Map& map)
+void Graphics::TileRenderer::Render(sf::RenderWindow& window, Core::Map& map, std::function<float(Core::Map&,sf::Vector2i&)> _tileVisible)
 {
 	// Get map-coordinate float rect from the current camera for visibility tests
 	sf::FloatRect viewRect = sfUtils::View::GetViewRect(window.getView());
@@ -28,34 +28,40 @@ void Graphics::TileRenderer::Render(sf::RenderWindow& window, Core::Map& map)
 		{
 			for (int x = left; x <= right; x++)
 			{
-				Core::ObjectList& objList = map.GetObjectsAt(x, y);
-			
-				// Draw objects bottom to top
-				for (int i = 0; i < objList.Size(); i++)
+				float visibility = _tileVisible( map, sf::Vector2i(x, y) );
+				if( visibility > 0.01f )
 				{
-					// Get the object ID
-					Core::ObjectID objID = objList[i];
-				
-					// try to get the object instance from the world
-					Core::Object* obj = g_Game->GetWorld()->GetObject(objID);
-					assert(obj);
-
-					// Skip objects from the wrong layer
-					if( atoi(obj->GetProperty(Core::Object::PROP_LAYER).Value().c_str()) != layer )
-						continue;
-
-					// Render visible objects TODO visib-prop
-					if (obj->HasProperty(Core::Object::PROP_SPRITE))
+					Core::ObjectList& objList = map.GetObjectsAt(x, y);
+			
+					// Draw objects bottom to top
+					for (int i = 0; i < objList.Size(); i++)
 					{
-						// Load texture
+						// Get the object ID
+						Core::ObjectID objID = objList[i];
+				
+						// try to get the object instance from the world
+						Core::Object* obj = g_Game->GetWorld()->GetObject(objID);
+						assert(obj);
 
-						// Draw the tile
-						const sf::Texture& tex = Content::Instance()->LoadTexture(obj->GetProperty(Core::Object::PROP_SPRITE).Value());
-						sf::Sprite drawSprite(tex);
-						drawSprite.setPosition(obj->GetPosition() * float(TILESIZE));
-						drawSprite.setScale(float(TILESIZE)/tex.getSize().x, float(TILESIZE)/tex.getSize().y);
-						drawSprite.setColor(obj->GetColor());
-						window.draw(drawSprite);
+						// Skip objects from the wrong layer
+						if( atoi(obj->GetProperty(Core::Object::PROP_LAYER).Value().c_str()) != layer )
+							continue;
+
+						// Render visible objects TODO visib-prop
+						if (obj->HasProperty(Core::Object::PROP_SPRITE))
+						{
+							// Load texture
+
+							// Draw the tile
+							const sf::Texture& tex = Content::Instance()->LoadTexture(obj->GetProperty(Core::Object::PROP_SPRITE).Value());
+							sf::Sprite drawSprite(tex);
+							drawSprite.setScale(float(TILESIZE)/tex.getSize().x, float(TILESIZE)/tex.getSize().y);
+							drawSprite.setPosition(obj->GetPosition() * float(TILESIZE));
+							sf::Color color = obj->GetColor();
+							color.a = uint8_t(color.a * visibility);
+							drawSprite.setColor(color);
+							window.draw(drawSprite);
+						}
 					}
 				}
 			}

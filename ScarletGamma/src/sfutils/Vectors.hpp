@@ -22,4 +22,8 @@ namespace sfUtils {
 	inline sf::Vector2i Round(const sf::Vector2f& _v)	{
 		return sf::Vector2i(static_cast<int>(floor(_v.x+0.5f)), static_cast<int>(floor(_v.y+0.5f)));
 	}
+
+	inline float Dot(const sf::Vector2f& _v1, const sf::Vector2f& _v2)	{
+		return _v1.x * _v2.x + _v1.y * _v2.y;
+	}
 } // namespace sfUtils

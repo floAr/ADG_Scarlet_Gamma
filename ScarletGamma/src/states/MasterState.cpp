@@ -108,7 +108,8 @@ namespace States {
 
 		// Render
 		// Uses the test map 0 for testing purposes.
-		Graphics::TileRenderer::Render(win, *g_Game->GetWorld()->GetMap(0));
+		Graphics::TileRenderer::Render(win, *g_Game->GetWorld()->GetMap(0),
+			[](Core::Map&,sf::Vector2i&){ return 1.0f; });
 
 		// If the selected object has a path draw it
 		DrawPathOverlay(win, m_player);

@@ -23,5 +23,9 @@ namespace States
 		Core::Object* m_player;		///< The one and only player object
 
 		Interfaces::PropertyPanel::Ptr m_playerView;	///< Showing the player properties
+
+		/// \brief This method is given to the renderer to check the
+		///		visibility of a tile for the player
+		float CheckTileVisibility(Core::Map& _map, sf::Vector2i& _tilePos, sf::Vector2f& _playerPos) const;
 	};
 }

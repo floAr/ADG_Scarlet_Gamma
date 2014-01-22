@@ -98,6 +98,7 @@ void ObjectPanel::Add( ObjectID _object )
 	// Get the name of the object
 	Object* obj = m_world->GetObject(_object);
 	const std::string& name = obj->GetName();
+	const std::string& sprite = obj->GetProperty(Object::PROP_SPRITE).Value();
 
 	// y coordinate where to insert inside panel
 	float y = (float)m_numPixelLines;
@@ -133,7 +134,19 @@ void ObjectPanel::Add( ObjectID _object )
 	nameEdit->setPosition(x, y);
 	nameEdit->setCallbackId(_object);
 	nameEdit->disable();
-	nameEdit->setText(name);
+	if( sprite.empty() )
+		nameEdit->setText(name);
+	else nameEdit->setText("     " + name);
+
+	// A preview of this sprite
+	if( !sprite.empty() )
+	{
+		tgui::Picture::Ptr preview( *this );
+		preview->load(sprite); // Would be nice if Resourcen-manager could be used - flaw of gui lib.
+		preview->setSize(16.0f, 16.0f);
+		preview->setPosition(x+2.0f, y+2.0f);
+		preview->setCallbackId(_object);
+	}
 
 	// Create a remove line button
 	if( m_addAble )

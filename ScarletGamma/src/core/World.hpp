@@ -78,6 +78,10 @@ namespace Core {
 
 		/// \brief Get all existing map IDs.
 		std::vector<MapID> GetAllMaps() const;
+
+		/// \brief Call the update of all maps (Simulate Game).
+		/// \param [in] _dt Time since last update.
+		void Update( float _dt );
 	private:
 		/// \brief All real existing objects.
 		std::unordered_map<ObjectID, Object> m_objects;

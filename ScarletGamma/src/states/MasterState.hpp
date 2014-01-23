@@ -23,8 +23,9 @@ namespace States
 			float time, bool guiHandled) override;
 		virtual void Resize(const sf::Vector2f& _size) override;
 
+		virtual Core::Map* GetCurrentMap() override;
+
 	private:
-		Core::Object* m_player;			///< The one and only player object
 
 		Core::World* m_dbProperties;	///< A container with one object containing property templates.
 		Core::World* m_dbModules;		///< A container with objects interpreted as modules.

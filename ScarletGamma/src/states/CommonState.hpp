@@ -59,9 +59,12 @@ namespace States
 			return &m_selection;
 		}
 
+		/// \brief Return the current drawn map. The implementation depends
+		///		on the mode.
+		virtual Core::Map* GetCurrentMap() = 0;
+
 	protected:
 		Utils::Falloff m_zoom;		///< Zoom for the current map
-		Core::Object* m_selected;	///< A reference to the selected object or nullptr
 		tgui::Gui m_gui;			///< A gui to show chat messages and everything else.
 		std::string m_name;			///< Name of the player used in the chat
 		sf::Color m_color;			///< Color of the player in the chat

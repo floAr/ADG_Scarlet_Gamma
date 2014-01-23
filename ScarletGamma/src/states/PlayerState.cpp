@@ -43,7 +43,7 @@ void States::PlayerState::Draw(sf::RenderWindow& win)
 	using namespace std::placeholders;
 	std::function<float(Core::Map&,sf::Vector2i&)> visibilityFunc =
 		std::bind(&PlayerState::CheckTileVisibility, this, _1, _2, m_player->GetPosition());
-	Graphics::TileRenderer::Render(win, *g_Game->GetWorld()->GetMap(m_player->GetParentMap()),
+	Graphics::TileRenderer::Render(win, *GetCurrentMap(),
 		visibilityFunc);
 
 	// Draw the players path
@@ -83,11 +83,11 @@ void States::PlayerState::MouseButtonPressed(sf::Event::MouseButtonEvent& button
 		// move player to tile position		  //
 		//------------------------------------//
 		assert(m_player->IsLocatedOnAMap());
-		auto& tiles = g_Game->GetWorld()->GetMap(m_player->GetParentMap())->GetObjectsAt((int)tilePos.x,(int)tilePos.y);
+		auto& tiles = GetCurrentMap()->GetObjectsAt((int)tilePos.x,(int)tilePos.y);
 		if( tiles.Size() > 0 )
 		{
 			// TODO: intelligent select?
-			m_selected = g_Game->GetWorld()->GetObject(tiles[tiles.Size()-1]);
+			Core::Object* obj = g_Game->GetWorld()->GetObject(tiles[tiles.Size()-1]);
 			// Delete current target(s) if not appending
 			if( !sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) )
 			{
@@ -96,9 +96,9 @@ void States::PlayerState::MouseButtonPressed(sf::Event::MouseButtonEvent& button
 				path.ClearObjects();
 				path.SetValue(STR_FALSE);
 			}
-			if(m_selected->GetProperty(STR_PROP_LAYER).Value()=="0"){
+			if(obj->GetProperty(STR_PROP_LAYER).Value()=="0"){
 				// Append to target list
-				m_player->AppendToPath( m_selected->ID() );
+				m_player->AppendToPath( obj->ID() );
 			}
 		}
 		break; }
@@ -167,6 +167,12 @@ void States::PlayerState::Resize(const sf::Vector2f& _size)
 	// Scale player view
 	m_playerView->setSize( m_playerView->getSize().x, localOut->getPosition().y );
 	m_playerView->setPosition( _size.x - m_playerView->getSize().x, 0.0f );
+}
+
+
+Core::Map* States::PlayerState::GetCurrentMap()
+{
+	return g_Game->GetWorld()->GetMap(m_player->GetParentMap());
 }
 
 

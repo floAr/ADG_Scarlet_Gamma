@@ -16,7 +16,6 @@ using namespace Core;
 namespace States {
 
 	MasterState::MasterState( const std::string& _loadFile ) :
-		m_player(nullptr),
 		m_propertyPanel(nullptr),
 		m_dbProperties(nullptr),
 		m_dbModules(nullptr),
@@ -91,7 +90,7 @@ namespace States {
 	{
 		CommonState::Update(dt);
 
-		g_Game->GetWorld()->GetMap(m_mapTool->GetSelectedMap())->Update(dt);
+		g_Game->GetWorld()->Update(dt);
 
 		m_toolbar->Update( dt );
 
@@ -110,23 +109,18 @@ namespace States {
 
 	void MasterState::Draw(sf::RenderWindow& win)
 	{
-		// Hard coded test selection:
-		if( !m_selected ) {
-			m_selected = g_Game->GetWorld()->GetObject(g_Game->GetWorld()->GetMap(0)->GetObjectsAt(0,2)[1]);
-			m_player = m_selected;
-		}
-
 		// Draw some color to the background
 		static sf::Color c(20, 26, 36);
 		win.clear(c);
 
 		// Render
 		// Uses the test map 0 for testing purposes.
-		Graphics::TileRenderer::Render(win, *g_Game->GetWorld()->GetMap(m_mapTool->GetSelectedMap()),
+		Graphics::TileRenderer::Render(win, *GetCurrentMap(),
 			[](Core::Map&,sf::Vector2i&){ return 1.0f; });
 
 		// If the selected object has a path draw it
-		DrawPathOverlay(win, m_player);
+		for( int i=0; i<m_selection.Size(); ++i )
+			DrawPathOverlay(win, g_Game->GetWorld()->GetObject(m_selection[i]));
 
 		Graphics::TileRenderer::RenderSelection( win, m_selection );
 
@@ -145,32 +139,10 @@ namespace States {
 		switch (button.button)
 		{
 		case sf::Mouse::Left: {
-			//------------------------------------//
-			// move player to tile position		  //
-			//------------------------------------//
-			auto& tiles = g_Game->GetWorld()->GetMap(0)->GetObjectsAt(tileX, tileY);
-			if( tiles.Size() > 0 )
-			{
-				// TODO: intelligent select?
-				m_selected = g_Game->GetWorld()->GetObject(tiles[tiles.Size()-1]);
-				// Delete current target(s) if not appending
-				if( !sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) )
-				{
-					m_player->GetProperty(STR_PROP_TARGET).SetValue(STR_EMPTY);
-					if( !m_player->HasProperty(STR_PROP_PATH) )
-						m_player->Add( PROPERTY::PATH );
-					Property& path = m_player->GetProperty(STR_PROP_PATH);
-					path.ClearObjects();
-					path.SetValue(STR_FALSE);
-				}
-				if(m_selected->GetProperty(STR_PROP_LAYER).Value()==STR_0){
-					// Append to target list
-					m_player->AppendToPath( m_selected->ID() );
-				}
-			}
+			// TODO: Paint new objects with the brush
 			} break;
 		case sf::Mouse::Right: {
-			if( g_Game->GetWorld()->GetMap(0)->GetObjectsAt(tileX, tileY).Size() > 0 )
+			if( GetCurrentMap()->GetObjectsAt(tileX, tileY).Size() > 0 )
 			{
 				SelectionState* gs = dynamic_cast<SelectionState*>(g_Game->GetStateMachine()->PushGameState(GST_SELECTION));
 				gs->SetTilePosition(tileX, tileY);
@@ -223,8 +195,8 @@ namespace States {
 					int x = (int)floor(tilePos.x);
 					int y = (int)floor(tilePos.y);
 					// Meaningful layer: on top
-					int l = g_Game->GetWorld()->GetMap(0)->GetObjectsAt(x,y).Size();
-					g_Game->GetWorld()->GetMap(0)->Add( id, x, y, l );
+					int l = GetCurrentMap()->GetObjectsAt(x,y).Size();
+					GetCurrentMap()->Add( id, x, y, l );
 				}
 			}
 
@@ -251,6 +223,12 @@ namespace States {
 		m_selectionView->setSize( m_selectionView->getSize().x, localOut->getPosition().y );
 		m_selectionView->setPosition( _size.x - m_selectionView->getSize().x, 0.0f );
 	}
+
+	Core::Map* MasterState::GetCurrentMap()
+	{
+		return g_Game->GetWorld()->GetMap(m_mapTool->GetSelectedMap());
+	}
+
 
 
 
@@ -311,5 +289,6 @@ namespace States {
 		object->Add( PROPERTY::NAME ).SetValue( STR_WALLC );
 		object->Add( PROPERTY::OBSTACLE );
 	}
+
 
 }// namespace States

@@ -36,7 +36,8 @@ void States::SelectionState::OnBegin()
 
 void States::SelectionState::SetTilePosition(int x, int y)
 {
-	m_objects = g_Game->GetWorld()->GetMap(0)->GetObjectsAt(x,y);
+	CommonState* previousState = dynamic_cast<CommonState*>(m_previousState);
+	m_objects = previousState->GetCurrentMap()->GetObjectsAt(x,y);
 	sf::Vector2i pos = g_Game->GetWindow().mapCoordsToPixel(sf::Vector2f((x + 0.5f) * TILESIZE, (y + 0.5f) * TILESIZE));
 	m_screenX = pos.x;
 	m_screenY = pos.y;

@@ -14,7 +14,6 @@ namespace States {
 
 CommonState::CommonState() :
 		m_zoom(Utils::Falloff::FT_QUADRATIC, 0.75f, 0.05f),
-		m_selected(nullptr),
 		m_selectionChanged(false)
 {
 	m_gui.setWindow(g_Game->GetWindow());
@@ -196,7 +195,7 @@ void CommonState::DrawPathOverlay(sf::RenderWindow& _window, Core::Object* _whos
 			for( int i=0; i<wayPoints.Size(); ++i )
 			{
 				sf::Vector2i goal = sfUtils::Round(g_Game->GetWorld()->GetObject(wayPoints[i])->GetPosition());
-				auto part = g_Game->GetWorld()->GetMap(0)->FindPath(start, goal);
+				auto part = g_Game->GetWorld()->GetMap(_whosePath->GetParentMap())->FindPath(start, goal);
 				start = goal;
 				path.insert( path.end(), part.begin(), part.end() );
 			}
@@ -204,13 +203,13 @@ void CommonState::DrawPathOverlay(sf::RenderWindow& _window, Core::Object* _whos
 			if( pathProperty.Value() == "true" )
 			{
 				sf::Vector2i goal = sfUtils::Round(g_Game->GetWorld()->GetObject(wayPoints[0])->GetPosition());
-				auto part = g_Game->GetWorld()->GetMap(0)->FindPath(start, goal);
+				auto part = g_Game->GetWorld()->GetMap(_whosePath->GetParentMap())->FindPath(start, goal);
 				path.insert( path.end(), part.begin(), part.end() );
 			}
 		} else if( _whosePath->HasProperty(STR_PROP_TARGET) ) {
 			// There are no paths but a short time target.
 			sf::Vector2i goal = sfUtils::Round(sfUtils::to_vector(_whosePath->GetProperty(STR_PROP_TARGET).Value()));
-			path = g_Game->GetWorld()->GetMap(0)->FindPath(start, goal);
+			path = g_Game->GetWorld()->GetMap(_whosePath->GetParentMap())->FindPath(start, goal);
 		}
 
 		if( path.size() > 0 )

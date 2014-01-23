@@ -209,4 +209,11 @@ namespace Core {
 		return results;
 	}
 
+
+	void World::Update( float _dt )
+	{
+		for( auto it=m_maps.begin(); it!=m_maps.end(); ++it )
+			it->second.Update( _dt );
+	}
+
 } // namespace Core

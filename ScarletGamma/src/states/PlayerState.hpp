@@ -17,6 +17,7 @@ namespace States
 			bool guiHandled) override;
 		virtual void KeyPressed(sf::Event::KeyEvent& key, bool guiHandled) override;
 		virtual void Resize(const sf::Vector2f& _size) override;
+		virtual Core::Map* GetCurrentMap() override;
 
 		/// \brief CommonState Update + Player view refreshed.
 		virtual void Update( float _dt ) override;

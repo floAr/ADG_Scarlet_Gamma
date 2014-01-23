@@ -13,6 +13,10 @@ static const std::string STR_PARENT = std::string("parent");
 static const std::string STR_OBJECTS = std::string("objects");
 static const std::string STR_RIGHTS = std::string("rights");
 static const std::string STR_0 = std::string("0");
+static const std::string STR_1 = std::string("1");
+static const std::string STR_2 = std::string("2");
+static const std::string STR_3 = std::string("3");
+static const std::string STR_4 = std::string("4");
 static const std::string STR_FFFFFFFF = std::string("ffffffff");
 static const std::string STR_MULTISELECTION = std::string("<Mehrfachauswahl>");
 
@@ -90,3 +94,4 @@ static const std::string STR_DIAMETER = std::string("Größe");
 static const std::string STR_ADD = std::string("Hinzufügen");
 static const std::string STR_REPLACE = std::string("Ersetzten");
 static const std::string STR_REMOVE = std::string("Löschen");
+static const std::string STR_ONTOP = std::string("Obenauf");

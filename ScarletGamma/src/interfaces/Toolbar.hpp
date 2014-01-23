@@ -29,6 +29,7 @@ namespace Interfaces {
 		/// \scroll while mouse is down on one of the two buttons.
 		void Update( float _dt );
 
+		virtual void unfocus() override;
 	private:
 		tgui::Panel::Ptr m_scrollPanel;
 		tgui::Picture::Ptr m_scrollLeft;
@@ -52,6 +53,8 @@ namespace Interfaces {
 		///		until this element has a true parent. That why Init
 		///		is required and elements can not be constructed in Ctor.
 		virtual void Init() = 0;
+
+		virtual void unfocus() override;
 	};
 
 	/// \brief Toolbox for map selection and creation.
@@ -64,6 +67,18 @@ namespace Interfaces {
 		MapToolbox();
 
 		virtual void Init() override;
+
+		/// \brief Which map is selected?
+		Core::MapID GetSelectedMap() const		{ return m_selected; }
+	private:
+		/// \brief A mapping from list indices to map ids.
+		std::vector<Core::MapID> m_maps;
+		int m_selected;
+
+		tgui::ListBox::Ptr m_mapList;
+		tgui::EditBox::Ptr m_newNameEdit;
+
+		void AddMap();
 	};
 
 	/// \brief Toolbox for map selection and creation.

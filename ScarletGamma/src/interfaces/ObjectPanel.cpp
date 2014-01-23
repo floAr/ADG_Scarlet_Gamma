@@ -78,7 +78,7 @@ void ObjectPanel::Init( float _x, float _y, float _w, float _h,
 		m_newName->load("media/Black.conf");
 		m_newName->setSize(w, 20.0f);
 		m_newName->setPosition(_x, _y+Panel::getSize().y+20.0f);
-		m_newName->setText("");
+		m_newName->setText(STR_EMPTY);
 		m_newAdd = tgui::Button::Ptr( *m_Parent );
 		m_newAdd->load("media/Black.conf");
 		m_newAdd->setPosition(_x+Panel::getSize().x - 40.0f, _y+Panel::getSize().y+20.0f);
@@ -302,12 +302,26 @@ void ObjectPanel::StartDrag(const tgui::Callback& _call)
 
 void ObjectPanel::SelectObject(const tgui::Callback& _call)
 {
+	// A global state to have at most one selected item all over the GUI
+	static tgui::EditBox::Ptr s_lastSelected(nullptr);
+
 	// Find the clicked object
 	for( size_t i=1; i<m_Widgets.size(); ++i )
 	{
-		if( m_Widgets[i]->mouseOnWidget((float)_call.mouse.x, (float)_call.mouse.y) )
+		tgui::EditBox::Ptr ptr = m_Widgets[i];
+		if( ptr!=nullptr && ptr->mouseOnWidget((float)_call.mouse.x, (float)_call.mouse.y) )
 		{
-			m_viewer->Show( m_world->GetObject(m_Widgets[i]->getCallbackId()) );
+			// Remove old selection highlight
+			if( s_lastSelected != nullptr )
+			{
+				s_lastSelected->setTextColor( sf::Color(200,200,200) );
+				s_lastSelected->setTextSize( 13 );
+			}
+			m_viewer->Show( m_world->GetObject(ptr->getCallbackId()) );
+			// Highlight new component
+			ptr->setTextColor( sf::Color(255,255,255) );
+			ptr->setTextSize( 15 );
+			s_lastSelected = ptr;
 			return;
 		}
 	}

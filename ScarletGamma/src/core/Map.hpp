@@ -119,6 +119,8 @@ namespace Core {
 
 		/// \brief Make sure an object is in the cell where its position says it is.
 		void ResetGridPosition( ObjectID _object, const sf::Vector2i& _oldCell, const sf::Vector2i& _newCell );
+
+		const std::string& GetName() const		{ return m_name; }
 	private:
 		std::string m_name;
 

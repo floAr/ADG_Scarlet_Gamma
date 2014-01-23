@@ -186,7 +186,7 @@ namespace Core {
 
 	std::vector<ObjectID> World::FilterObjectsByName( const std::string& _text ) const
 	{
-		std::vector<ObjectID> _results;
+		std::vector<ObjectID> results;
 
 		// For each object
 		for( auto it=m_objects.begin(); it!=m_objects.end(); ++it )
@@ -194,9 +194,19 @@ namespace Core {
 			// Test if the name contains the correct part
 			if( Utils::IStringContains(it->second.GetName(), _text) )
 				// Add reference to output
-				_results.push_back( it->second.ID() );
+				results.push_back( it->second.ID() );
 		}
-		return _results;
+		return results;
+	}
+
+
+	std::vector<MapID> World::GetAllMaps() const
+	{
+		// Enumerate all and store the ids.
+		std::vector<MapID> results;
+		for( auto it=m_maps.begin(); it!=m_maps.end(); ++it )
+			results.push_back( it->second.ID() );
+		return results;
 	}
 
 } // namespace Core

@@ -42,6 +42,7 @@ namespace States
 		Interfaces::PropertyPanel::Ptr m_selectionView;
 		/// \brief Editor toolbar on top
 		Interfaces::Toolbar::Ptr m_toolbar;
+		Interfaces::MapToolbox::Ptr m_mapTool;
 
 		/// \brief Some components fill this with content if mouse is pushed.
 		///		On release an according action should be done.

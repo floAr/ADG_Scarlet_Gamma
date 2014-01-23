@@ -77,7 +77,7 @@ namespace States {
 
 		m_toolbar = Interfaces::Toolbar::Ptr(m_gui);
 		m_toolbar->Init( 480.0f, 0.0f, 544.0f, 100.0f );
-		m_toolbar->AddToolbox( Interfaces::MapToolbox::Ptr() );
+		m_toolbar->AddToolbox( m_mapTool );
 		m_toolbar->AddToolbox( Interfaces::BrushToolbox::Ptr() );
 		m_toolbar->AddToolbox( Interfaces::PlayersToolbox::Ptr() );
 		m_toolbar->AddToolbox( Interfaces::NPCToolbox::Ptr() );
@@ -90,8 +90,8 @@ namespace States {
 	void MasterState::Update(float dt)
 	{
 		CommonState::Update(dt);
-		// Uses the test map 0 for testing purposes.
-		g_Game->GetWorld()->GetMap(0)->Update(dt);
+
+		g_Game->GetWorld()->GetMap(m_mapTool->GetSelectedMap())->Update(dt);
 
 		m_toolbar->Update( dt );
 
@@ -122,7 +122,7 @@ namespace States {
 
 		// Render
 		// Uses the test map 0 for testing purposes.
-		Graphics::TileRenderer::Render(win, *g_Game->GetWorld()->GetMap(0),
+		Graphics::TileRenderer::Render(win, *g_Game->GetWorld()->GetMap(m_mapTool->GetSelectedMap()),
 			[](Core::Map&,sf::Vector2i&){ return 1.0f; });
 
 		// If the selected object has a path draw it

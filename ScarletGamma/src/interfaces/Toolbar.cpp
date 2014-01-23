@@ -1,6 +1,8 @@
 #include "Toolbar.hpp"
 #include "SFML/System/Vector2.hpp"
 #include "Constants.hpp"
+#include "Game.hpp"
+#include "core/World.hpp"
 
 namespace Interfaces {
 
@@ -20,6 +22,7 @@ namespace Interfaces {
 		Panel::setPosition( _x, _y );
 		Panel::setSize( _w, _h );
 		Panel::setBackgroundColor( sf::Color(50,50,50,150) );
+	//	Panel::bindCallback( &Toolbar::unfocus, this, tgui::Panel::ke
 
 		// Sub area for toolboxes
 		m_scrollPanel->setPosition( 22.0f, 0.0f );
@@ -69,8 +72,8 @@ namespace Interfaces {
 				auto& boxes = m_scrollPanel->getWidgets();
 				// A more or less constant speed, stop at the border.
 				float value = m_scroll * _dt * 200.0f;
-				if( boxes[0]->getPosition().x+value > 0.0f) {
-					value = -boxes[0]->getPosition().x;
+				if( boxes[0]->getPosition().x+value > 2.0f) {
+					value = -boxes[0]->getPosition().x + 2.0f;
 					value = std::min(0.0f, value);
 					m_scroll = 0.0f;
 				} else
@@ -101,11 +104,32 @@ namespace Interfaces {
 	}
 
 
+	void Toolbar::unfocus()
+	{
+		Panel::unfocus();
+		m_Parent->unfocus();
+	}
 
 
 
 
-	MapToolbox::MapToolbox()
+
+	
+	void Toolbox::unfocus()
+	{
+		Panel::unfocus();
+		m_Parent->unfocus();
+	}
+
+
+
+
+
+
+	MapToolbox::MapToolbox() :
+		m_selected(0),
+		m_mapList(nullptr),
+		m_newNameEdit(nullptr)
 	{
 		Panel::setSize( 150.0f, 100.0f );
 		Panel::setBackgroundColor( sf::Color(50,50,50,150) );
@@ -119,7 +143,45 @@ namespace Interfaces {
 		heading->setText( STR_MAP );
 		heading->setSize( 150.0f, 20.0f );
 		heading->disable();
+		
+		m_mapList = tgui::ListBox::Ptr( *this );
+		m_mapList->load( "media/Black.conf" );
+		m_mapList->setSize( 150.0f, 60.0f );
+		m_mapList->setPosition( 0.0f, 20.0f );
+		m_mapList->setItemHeight( 19 );
+		m_mapList->getScrollbar()->setSize( 12.0f, m_mapList->getScrollbar()->getSize().y );
+		m_mapList->bindCallbackEx( [this](const tgui::Callback& _caller){ m_selected = _caller.value; }, tgui::ListBox::ItemSelected );
+		// Bad global reference (g_Game) but best solution if no parameters can be given.
+		m_maps = g_Game->GetWorld()->GetAllMaps();
+		for( size_t i=0; i<m_maps.size(); ++i )
+			m_mapList->addItem( g_Game->GetWorld()->GetMap(m_maps[i])->GetName() );
+		m_mapList->setSelectedItem( 0 );
+
+		m_newNameEdit = tgui::EditBox::Ptr( *this );
+		m_newNameEdit->load( "media/Black.conf" );
+		m_newNameEdit->setPosition( 0.0f, 80.0f );
+		m_newNameEdit->setSize( 110.0f, 20.0f );
+		tgui::Button::Ptr addbtn( *this );
+		addbtn->load( "media/Black.conf" );
+		addbtn->setPosition( 110.0f, 80.0f );
+		addbtn->setSize( 20.0f, 20.0f );
+		addbtn->bindCallback(&MapToolbox::AddMap, this, tgui::Button::LeftMouseClicked);
+		addbtn->setText( "+" );
 	}
+
+	void MapToolbox::AddMap()
+	{
+		if( !m_newNameEdit->getText().isEmpty() )
+		{
+			Core::MapID id = g_Game->GetWorld()->NewMap( m_newNameEdit->getText(), 1, 1 );
+			m_mapList->addItem( m_newNameEdit->getText() );
+			m_selected = m_maps.size();
+			m_mapList->setSelectedItem( m_selected );
+			m_maps.push_back( id );
+			m_newNameEdit->setText( STR_EMPTY );
+		}
+	}
+
 
 
 
@@ -165,6 +227,13 @@ namespace Interfaces {
 		layer->load( "media/Black.conf" );
 		layer->setPosition( 60.0f, 40.0f );
 		layer->setSize( 90.0f, 20.0f );
+		layer->addItem( STR_0 );
+		layer->addItem( STR_1 );
+		layer->addItem( STR_2 );
+		layer->addItem( STR_3 );
+		layer->addItem( STR_4 );
+		layer->addItem( STR_ONTOP );
+		layer->setSelectedItem( 0 );
 
 		tgui::Label::Ptr lName( *this );
 		lName->setTextColor( sf::Color(200, 200, 200) );

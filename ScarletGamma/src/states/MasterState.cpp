@@ -77,8 +77,10 @@ namespace States {
 
 		m_toolbar = Interfaces::Toolbar::Ptr(m_gui);
 		m_toolbar->Init( 480.0f, 0.0f, 544.0f, 100.0f );
-		for( int i=0; i<5; ++i )
 		m_toolbar->AddToolbox( Interfaces::MapToolbox::Ptr() );
+		m_toolbar->AddToolbox( Interfaces::BrushToolbox::Ptr() );
+		m_toolbar->AddToolbox( Interfaces::PlayersToolbox::Ptr() );
+		m_toolbar->AddToolbox( Interfaces::NPCToolbox::Ptr() );
 
 		// Set chat color...
 		m_color = sf::Color(80,80,250);

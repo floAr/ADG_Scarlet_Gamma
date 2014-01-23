@@ -76,3 +76,17 @@ static const std::string STR_GOBBO = std::string("Gobbo");
 static const std::string STR_WALLH = std::string("Wand_H");
 static const std::string STR_WALLV = std::string("Wand_V");
 static const std::string STR_WALLC = std::string("Wand_K");
+
+
+/************************************************************************/
+/* GUI				                                                    */
+/************************************************************************/
+static const std::string STR_MAP = std::string("Map");
+static const std::string STR_BRUSH = std::string("Pinsel");
+static const std::string STR_PLAYER = std::string("Spieler");
+static const std::string STR_NPC = std::string("Mobs");
+static const std::string STR_ACTION = std::string("Aktion");
+static const std::string STR_DIAMETER = std::string("Größe");
+static const std::string STR_ADD = std::string("Hinzufügen");
+static const std::string STR_REPLACE = std::string("Ersetzten");
+static const std::string STR_REMOVE = std::string("Löschen");

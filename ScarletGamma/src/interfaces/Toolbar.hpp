@@ -41,14 +41,65 @@ namespace Interfaces {
 		void EndScroll(const tgui::Callback& _call);
 	};
 
+	/// \brief Toolbox base class.
+	class Toolbox: public tgui::Panel
+	{
+	public:
+		typedef tgui::SharedWidgetPtr<Toolbox> Ptr;
+
+		/// \brief Create all subcomponents here.
+		/// \details The creation of subcomponents must be postponed
+		///		until this element has a true parent. That why Init
+		///		is required and elements can not be constructed in Ctor.
+		virtual void Init() = 0;
+	};
+
 	/// \brief Toolbox for map selection and creation.
-	class MapToolbox: public tgui::Panel
+	class MapToolbox: public Toolbox
 	{
 	public:
 		typedef tgui::SharedWidgetPtr<MapToolbox> Ptr;
 
 		// Create all elements in the map toolbox.
 		MapToolbox();
+
+		virtual void Init() override;
+	};
+
+	/// \brief Toolbox for map selection and creation.
+	class BrushToolbox: public Toolbox
+	{
+	public:
+		typedef tgui::SharedWidgetPtr<BrushToolbox> Ptr;
+
+		// Create all elements in the map toolbox.
+		BrushToolbox();
+
+		virtual void Init() override;
+	};
+
+	/// \brief Toolbox for map selection and creation.
+	class PlayersToolbox: public Toolbox
+	{
+	public:
+		typedef tgui::SharedWidgetPtr<PlayersToolbox> Ptr;
+
+		// Create all elements in the map toolbox.
+		PlayersToolbox();
+
+		virtual void Init() override;
+	};
+
+	/// \brief Toolbox for map selection and creation.
+	class NPCToolbox: public Toolbox
+	{
+	public:
+		typedef tgui::SharedWidgetPtr<NPCToolbox> Ptr;
+
+		// Create all elements in the map toolbox.
+		NPCToolbox();
+
+		virtual void Init() override;
 	};
 
 } // namespace Interfaces

@@ -1,6 +1,5 @@
 #include "ObjectPanel.hpp"
 #include "SFML/System/Vector2.hpp"
-#include "TGUI/EditBox.hpp"
 #include "utils/StringUtil.hpp"
 #include "Constants.hpp"
 #include "core/Object.hpp"

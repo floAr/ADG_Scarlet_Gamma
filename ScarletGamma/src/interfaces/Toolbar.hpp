@@ -1,0 +1,54 @@
+#pragma once
+
+#include <TGUI/TGUI.hpp>
+#include "Prerequisites.hpp"
+
+namespace Interfaces {
+
+	/// \brief A class to create arbitrary tool bars containing a list of toolboxes.
+	class Toolbar: public tgui::Panel
+	{
+	public:
+		typedef tgui::SharedWidgetPtr<Toolbar> Ptr;
+
+		Toolbar();
+
+		/// \brief Create all components of a standard toolbar
+		/// \param [in] _x Top left position (x) in pixels.
+		/// \param [in] _y Top left position (y) in pixels.
+		/// \param [in] _w Width in pixels.
+		/// \param [in] _h Height in pixels.
+		void Init(float _x, float _y, float _w, float _h);
+
+		/// \brief Add a box which is assumed to fit into this toolbar.
+		/// \details \see Container::add
+		/// 
+		///		The box is appended at the right end of the other boxes.
+		void AddToolbox( tgui::Widget::Ptr _box );
+
+		/// \scroll while mouse is down on one of the two buttons.
+		void Update( float _dt );
+
+	private:
+		tgui::Panel::Ptr m_scrollPanel;
+		tgui::Picture::Ptr m_scrollLeft;
+		tgui::Picture::Ptr m_scrollRight;
+
+		float m_widthSum;		///< The width of all toolboxes together
+		float m_scroll;			///< Direction if one of the buttons is pressed, otherwise 0.
+
+		void BeginScroll(const tgui::Callback& _call);
+		void EndScroll(const tgui::Callback& _call);
+	};
+
+	/// \brief Toolbox for map selection and creation.
+	class MapToolbox: public tgui::Panel
+	{
+	public:
+		typedef tgui::SharedWidgetPtr<MapToolbox> Ptr;
+
+		// Create all elements in the map toolbox.
+		MapToolbox();
+	};
+
+} // namespace Interfaces

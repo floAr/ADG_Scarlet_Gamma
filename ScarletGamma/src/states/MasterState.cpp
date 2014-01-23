@@ -20,7 +20,11 @@ namespace States {
 		m_propertyPanel(nullptr),
 		m_dbProperties(nullptr),
 		m_dbModules(nullptr),
-		m_dbTemplates(nullptr)
+		m_dbTemplates(nullptr),
+		m_modulePanel(nullptr),
+		m_objectsPanel(nullptr),
+		m_selectionView(nullptr),
+		m_toolbar(nullptr)
 	{
 		// Load the map
 		Jo::Files::HDDFile file(_loadFile);
@@ -68,8 +72,13 @@ namespace States {
 
 		// The temporary selection menu
 		m_selectionView = Interfaces::PropertyPanel::Ptr(m_gui);
-		m_selectionView->Init(624.0f, 0.0f, 400.0f, 528.0f, false, false, 0, &m_draggedContent);
+		m_selectionView->Init(624.0f, 100.0f, 400.0f, 428.0f, false, false, 0, &m_draggedContent);
 		m_selectionView->hide();
+
+		m_toolbar = Interfaces::Toolbar::Ptr(m_gui);
+		m_toolbar->Init( 480.0f, 0.0f, 544.0f, 100.0f );
+		for( int i=0; i<5; ++i )
+		m_toolbar->AddToolbox( Interfaces::MapToolbox::Ptr() );
 
 		// Set chat color...
 		m_color = sf::Color(80,80,250);
@@ -81,6 +90,8 @@ namespace States {
 		CommonState::Update(dt);
 		// Uses the test map 0 for testing purposes.
 		g_Game->GetWorld()->GetMap(0)->Update(dt);
+
+		m_toolbar->Update( dt );
 
 		if( m_selectionChanged )
 		{

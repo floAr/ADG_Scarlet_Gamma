@@ -182,6 +182,9 @@
     <ClCompile Include="src\core\PredefinedProperties.cpp">
       <Filter>Quelldateien\core</Filter>
     </ClCompile>
+    <ClCompile Include="src\interfaces\Toolbar.cpp">
+      <Filter>Quelldateien\interfaces</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\core\Map.hpp">
@@ -333,6 +336,9 @@
     </ClInclude>
     <ClInclude Include="src\core\PredefinedProperties.hpp">
       <Filter>Quelldateien\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\interfaces\Toolbar.hpp">
+      <Filter>Quelldateien\interfaces</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

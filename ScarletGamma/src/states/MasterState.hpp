@@ -5,6 +5,7 @@
 #include "core/ObjectList.hpp"
 #include "interfaces/PropertyPanel.hpp"
 #include "interfaces/ObjectPanel.hpp"
+#include "interfaces/Toolbar.hpp"
 
 namespace States
 {
@@ -39,6 +40,8 @@ namespace States
 		Interfaces::PropertyPanel::Ptr m_viewPanel;
 		/// \brief Showing all (common) properties of a selection.
 		Interfaces::PropertyPanel::Ptr m_selectionView;
+		/// \brief Editor toolbar on top
+		Interfaces::Toolbar::Ptr m_toolbar;
 
 		/// \brief Some components fill this with content if mouse is pushed.
 		///		On release an according action should be done.

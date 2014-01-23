@@ -2724,7 +2724,7 @@
           <y:Geometry height="30.0" width="21.0" x="1364.7414516363635" y="-155.63061818181825"/>
           <y:Fill color="#FFFFFF" color2="#FF0000" transparent="false"/>
           <y:BorderStyle color="#FFFFFF" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" borderDistance="0.0" fontFamily="Trebuchet MS" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="36.51171875" modelName="sides" modelPosition="n" textColor="#000000" visible="true" width="149.8173828125" x="-64.40869140625" y="-36.51171875">Prejekt Ende
+          <y:NodeLabel alignment="center" autoSizePolicy="content" borderDistance="0.0" fontFamily="Trebuchet MS" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="36.51171875" modelName="sides" modelPosition="n" textColor="#000000" visible="true" width="149.8173828125" x="-64.40869140625" y="-36.51171875">Projekt Ende
 Abschlusspräsentation</y:NodeLabel>
           <y:StyleProperties>
             <y:Property class="java.lang.Boolean" name="y.view.ShadowNodePainter.SHADOW_PAINTING" value="true"/>

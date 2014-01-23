@@ -16,6 +16,10 @@ namespace Interfaces {
 
 		ObjectPanel();
 
+		/// \param [in] _x Top left position (x) in pixels.
+		/// \param [in] _y Top left position (y) in pixels.
+		/// \param [in] _w Width in pixels.
+		/// \param [in] _h Height in pixels.
 		/// \param [in] _addAble Add and delete buttons for lines are shown.
 		/// \param [in] _source As what should this GUI fill the DragNDrop handler.
 		void Init( float _x, float _y, float _w, float _h,

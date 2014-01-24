@@ -11,6 +11,7 @@ namespace States
 	public:
 		ActionState();
 		void SetObject(Core::ObjectID);
+		void SetPosition(int x,int y);
 		void RecalculateGUI();
 		virtual void OnBegin();
 		virtual void OnEnd() {}

@@ -26,6 +26,11 @@ void States::ActionState::SetObject(Core::ObjectID id){
 	m_object=id;
 	m_dirty=true;
 }
+
+void States::ActionState::SetPosition(int x,int y){
+	m_screenX=x;
+	m_screenY=y;
+}
 void States::ActionState::OnBegin()
 {
 }
@@ -37,8 +42,8 @@ void States::ActionState::RecalculateGUI()
 	//get the current object
 	Core::Object* o=g_Game->GetWorld()->GetObject(m_object);
 	auto pos=o->GetPosition();
-	m_screenX=pos.x*TILESIZE;
-	m_screenY=pos.y*TILESIZE;
+	//m_screenX=pos.x*TILESIZE;
+	//m_screenY=pos.y*TILESIZE;
 	//get action list
 	std::vector<Core::ActionID> actions=Actions::ActionPool::Instance().GetAllowedActions(*o);
 

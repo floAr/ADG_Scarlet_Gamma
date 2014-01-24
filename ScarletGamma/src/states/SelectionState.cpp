@@ -146,12 +146,15 @@ void States::SelectionState::MouseButtonPressed(sf::Event::MouseButtonEvent& but
 		// mouseOnWhichWidget does not work for disabled components to search manually
 	    for( size_t i=0; i<m_Widgets.size(); ++i )
 	    {
-		    if( m_Widgets[i]->mouseOnWidget((float)tilePos.x*TILESIZE, (float)tilePos.y*TILESIZE) ) //rightclik on button
-		    {
+		  //  if( m_Widgets[i]->mouseOnWidget((float)tilePos.x*TILESIZE, (float)tilePos.y*TILESIZE) ) //rightclik on button
+			if( m_Widgets[i]->mouseOnWidget((float)button.x, (float)button.y) ) //rightclik on button
+		  
+			{
 			    auto cid=(m_Widgets[i]->getCallbackId());
 			    Core::ObjectID id = m_objects[(m_Widgets[i]->getCallbackId()-100)];
 		        auto action=dynamic_cast<ActionState*>( g_Game->GetStateMachine()->PushGameState(States::GST_ACTION));
 		        action->SetObject(id);
+				action->SetPosition(button.x,button.y);
 		        m_finished=true;
 			    return;
 		    }

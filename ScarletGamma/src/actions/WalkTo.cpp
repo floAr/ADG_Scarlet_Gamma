@@ -14,32 +14,7 @@ WalkTo::WalkTo() : Action(STR_ACT_WALKTO)
 
 void WalkTo::Execute()
 {
-    // This functions is called when a player clicks "Attack" on an object
-    // TODO: Enable DM-side attacking!!
-
-    // Tell the server that we are starting an attack
-    Network::MsgActionBegin message(this->GetID(), 0);
-    message.Send();
-   
-
-    //////////////////////////////////////////////////////////////////////////
-    // all TODO below!
-    //////////////////////////////////////////////////////////////////////////
-
-    // 2)  Show a dialog to the player, asking for the Hit Roll values
-    // TODO Show a dialog to the player
-    // Assuming some given string for now
-
-    // 3)  Send the entered values to the Game Master
-    //     Server side is handled elsewhere I hope?!
-    //
-    //     Server replies:
-    // 4a) MISSED, were done. Kill the action!
-    // 4b) CRIT CHANCE, roll again and send it to the server
-    // 4c) HIT, enter damage (remember wether we did critical damage to show
-    //     message "damage is auto-doubled") and send it to the server
-    //
-    // done!
+    //TODO: Actual do something
 }
 
 Action* WalkTo::Clone(Core::ObjectID target)

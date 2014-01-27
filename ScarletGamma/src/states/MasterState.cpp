@@ -225,39 +225,40 @@ namespace States {
 		}
 
 		if(m_rectSelection){
-			int sX,sY,minX,minY,maxX,maxY;
+			int sX,sY;
+			float minX,minY,maxX,maxY;
 			if(tilePos.x<m_rectSelectionStart.x)
 			{
-				minX=tilePos.x;
-				maxX=m_rectSelectionStart.x;
+				minX = tilePos.x;
+				maxX = m_rectSelectionStart.x;
 			}
 			else
-				{
-				maxX=tilePos.x;
-				minX=m_rectSelectionStart.x;
+			{
+				maxX = tilePos.x;
+				minX = m_rectSelectionStart.x;
 			}
 			if(tilePos.y<m_rectSelectionStart.y)
 			{
-				minY=tilePos.y;
-				maxY=m_rectSelectionStart.y;
+				minY = tilePos.y;
+				maxY = m_rectSelectionStart.y;
 			}
 			else
-				{
-				maxY=tilePos.y;
-				minY=m_rectSelectionStart.y;
+			{
+				maxY = tilePos.y;
+				minY = m_rectSelectionStart.y;
 			}
-				SelectionState* gs = dynamic_cast<SelectionState*>(g_Game->GetStateMachine()->PushGameState(GST_SELECTION));
-				for(sX=minX;sX<maxX;sX++)
+			SelectionState* gs = dynamic_cast<SelectionState*>(g_Game->GetStateMachine()->PushGameState(GST_SELECTION));
+			for(sX = minX; sX < maxX; sX++)
+			{
+				for(sY = minY; sY < maxY; sY++)
 				{
-					for(sY=minY;sY<maxY;sY++)
-					{
-						//TODO: Do selection stuff here
-					}
-
+					//TODO: Do selection stuff here
 				}
 
+			}
 
-				m_rectSelection=false;
+
+			m_rectSelection=false;
 		}
 	}
 
@@ -281,55 +282,55 @@ namespace States {
 			}
 			m_firstLayerSelection=true;
 			break;
-		//for each key add the mask, as long as alt is pressed (maybe cache this in local field)
+			//for each key add the mask, as long as alt is pressed (maybe cache this in local field)
 		case sf::Keyboard::Num1:
 			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
-			BlendLayer(0);
+				BlendLayer(0);
 			break;
 
 		case sf::Keyboard::Num2:
 			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
-			BlendLayer(1);
+				BlendLayer(1);
 			break;
 
 		case sf::Keyboard::Num3:
 			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
-			BlendLayer(2);
+				BlendLayer(2);
 			break;
 
 		case sf::Keyboard::Num4:
 			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
-			BlendLayer(3);
+				BlendLayer(3);
 			break;
 
 		case sf::Keyboard::Num5:
 			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
-			BlendLayer(4);
+				BlendLayer(4);
 			break;
 
 		case sf::Keyboard::Num6:
 			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
-			BlendLayer(5);
+				BlendLayer(5);
 			break;
 
 		case sf::Keyboard::Num7:
 			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
-			BlendLayer(6);
+				BlendLayer(6);
 			break;
 
 		case sf::Keyboard::Num8:
 			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
-			BlendLayer(7);
+				BlendLayer(7);
 			break;
 
 		case sf::Keyboard::Num9:
 			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
-			BlendLayer(8);
+				BlendLayer(8);
 			break;
 
 		case sf::Keyboard::Num0:
 			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
-			BlendLayer(9);
+				BlendLayer(9);
 			break;
 		}
 	}

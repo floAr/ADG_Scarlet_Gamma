@@ -72,7 +72,7 @@ namespace States
 		///		loading failure.
 		void CreateDefaultTemplateBase();
 
-
+		/// \brief Helper to blend the different layers on and off
 		void BlendLayer(int layerId);
 
 		sf::Vector2f m_rectSelectionStart; ///< Starting point where the DM began selection

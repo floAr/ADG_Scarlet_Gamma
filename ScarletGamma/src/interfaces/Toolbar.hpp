@@ -24,10 +24,15 @@ namespace Interfaces {
 		/// \details \see Container::add
 		/// 
 		///		The box is appended at the right end of the other boxes.
-		void AddToolbox( tgui::Widget::Ptr _box );
+		///	\return The index where the element was added.
+		int AddToolbox( tgui::Widget::Ptr _box );
 
-		/// \scroll while mouse is down on one of the two buttons.
+		/// \brief Scroll while mouse is down on one of the two buttons.
 		void Update( float _dt );
+
+		/// \brief Hide/Show a box and reset the positions of the following ones.
+		/// \details Newly added boxes are visible per default.
+		void SetBoxVisiblity( int _index, bool _visible );
 
 		virtual void unfocus() override;
 		virtual void setSize(float _width, float _height) override;
@@ -88,10 +93,28 @@ namespace Interfaces {
 	public:
 		typedef tgui::SharedWidgetPtr<BrushToolbox> Ptr;
 
-		// Create all elements in the map toolbox.
 		BrushToolbox();
 
+		// Create all elements in the brush toolbox.
 		virtual void Init() override;
+	};
+
+	/// \brief Toolbox to switch between Selecting and Editing mode in the master tool.
+	class ModeToolbox: public Toolbox
+	{
+	public:
+		typedef tgui::SharedWidgetPtr<ModeToolbox> Ptr;
+
+		ModeToolbox();
+
+		// Create all elements in the mode toolbox.
+		virtual void Init() override;
+	private:
+		// Other toolboxes shown depending on the mode
+		Interfaces::BrushToolbox::Ptr m_brushBox;
+		int m_brushIndex;	// index to reference the toolbox in hide/show
+
+		void SelectMode(const tgui::Callback& _call);
 	};
 
 	/// \brief Toolbox for map selection and creation.

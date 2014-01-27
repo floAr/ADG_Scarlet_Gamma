@@ -77,7 +77,8 @@ namespace States {
 		m_toolbar = Interfaces::Toolbar::Ptr(m_gui);
 		m_toolbar->Init( 480.0f, 0.0f, 544.0f, 100.0f );
 		m_toolbar->AddToolbox( m_mapTool );
-		m_toolbar->AddToolbox( Interfaces::BrushToolbox::Ptr() );
+		m_toolbar->AddToolbox( Interfaces::ModeToolbox::Ptr() );
+		//m_toolbar->AddToolbox( Interfaces::BrushToolbox::Ptr() );
 		m_toolbar->AddToolbox( Interfaces::PlayersToolbox::Ptr() );
 		m_toolbar->AddToolbox( Interfaces::NPCToolbox::Ptr() );
 
@@ -129,10 +130,16 @@ namespace States {
 
 	void MasterState::MouseButtonPressed(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos, bool guiHandled)
 	{
-
 		// Return if the GUI already handled it
 		if (guiHandled)
-			return; 
+			return;
+
+		// The element was dropped unregistered (e.g. outside window)
+		if( m_draggedContent )
+		{
+			delete m_draggedContent;
+			m_draggedContent = nullptr;
+		}
 
 		int tileX = (int)floor(tilePos.x);
 		int tileY = (int)floor(tilePos.y);

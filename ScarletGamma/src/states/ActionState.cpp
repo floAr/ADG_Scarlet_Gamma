@@ -27,9 +27,9 @@ void States::ActionState::SetObject(Core::ObjectID id){
 	m_dirty=true;
 }
 
-void States::ActionState::SetPosition(int x,int y){
-	m_screenX=x;
-	m_screenY=y;
+void States::ActionState::SetPosition(int x, int y) {
+	m_screenX = (float)x;
+	m_screenY = (float)y;
 }
 void States::ActionState::OnBegin()
 {

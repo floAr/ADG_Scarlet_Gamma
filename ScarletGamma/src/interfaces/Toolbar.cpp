@@ -41,21 +41,23 @@ namespace Interfaces {
 	}
 
 
-	void Toolbar::AddToolbox( tgui::Widget::Ptr _box )
+	int Toolbar::AddToolbox( tgui::Widget::Ptr _box )
 	{
 		// Add the real component and "recompute" global scrolling
 		m_scrollPanel->add( _box );
 		tgui::Panel::Ptr box = _box;
 		box->setGlobalFont( getGlobalFont() );
-		m_widthSum += _box->getSize().x + 2.0f;
 
 		// Change the new components position that it is located at the right end.
 		float x = 0.0f;
-		auto& boxes = m_scrollPanel->getWidgets();
-		if(boxes.size() > 1 )
-			x = boxes[boxes.size()-2]->getPosition().x + boxes[boxes.size()-2]->getSize().x + 2.0f;
-		_box->setPosition( x, 0.0f );
+//		auto& boxes = m_scrollPanel->getWidgets();
+//		if(boxes.size() > 1 )
+//			x = boxes[boxes.size()-2]->getPosition().x + boxes[boxes.size()-2]->getSize().x + 2.0f;
+		_box->setPosition( m_widthSum + 2.0f, 0.0f );
+		m_widthSum += _box->getSize().x + 2.0f;
 		Toolbox::Ptr(_box)->Init();
+
+		return m_scrollPanel->getWidgets().size()-1;
 	}
 
 
@@ -87,6 +89,31 @@ namespace Interfaces {
 					boxes[i]->move( value, 0.0f );
 				}
 			}
+		}
+	}
+
+
+	void Toolbar::SetBoxVisiblity( int _index, bool _visible )
+	{
+		auto& boxes = m_scrollPanel->getWidgets();
+		float offset = 0.0f;
+		// Hide or show the box. Its width is the amount of space the other
+		// elements must be moved
+		if( _visible && !boxes[_index]->isVisible())
+		{
+			boxes[_index]->show();
+			offset = boxes[_index]->getSize().x + 2.0f;
+			m_widthSum += offset;
+		} else if( !_visible && boxes[_index]->isVisible())
+		{
+			boxes[_index]->hide();
+			offset = -boxes[_index]->getSize().x - 2.0f;
+			m_widthSum += offset;
+		}
+		// Move succeeding elements
+		for( size_t i=_index+1; i<boxes.size(); ++i )
+		{
+			boxes[i]->move(offset, 0.0f);
 		}
 	}
 
@@ -187,6 +214,58 @@ namespace Interfaces {
 			m_mapList->setSelectedItem( m_selected );
 			m_maps.push_back( id );
 			m_newNameEdit->setText( STR_EMPTY );
+		}
+	}
+
+
+
+
+
+
+	ModeToolbox::ModeToolbox()
+	{
+		Panel::setSize( 74.0f, 100.0f );
+		Panel::setBackgroundColor( sf::Color(50,50,50,150) );
+	}
+
+	void ModeToolbox::Init()
+	{
+		tgui::Button::Ptr heading( *this );
+		heading->load( "media/Black.conf" );
+		heading->setPosition( 0.0f, 0.0f );
+		heading->setText( STR_MODE );
+		heading->setSize( 74.0f, 20.0f );
+		heading->disable();
+
+		tgui::ListBox::Ptr actionList( *this );
+		actionList->load( "media/Black.conf" );
+		actionList->setSize( 74.0f, 80.0f );
+		actionList->setPosition( 0.0f, 20.0f );
+		actionList->setItemHeight( 19 );
+		actionList->removeScrollbar();// getScrollbar()->setSize( 12.0f, m_mapList->getScrollbar()->getSize().y );
+		actionList->bindCallbackEx( &ModeToolbox::SelectMode, this, tgui::ListBox::ItemSelected );
+		actionList->addItem( STR_SELECTION );
+		actionList->addItem( STR_BRUSH );
+		actionList->addItem( STR_ACTION );
+		actionList->setSelectedItem( 0 );
+
+		// Add dependent boxes
+		Toolbar* bar = dynamic_cast<Toolbar*>(m_Parent->getParent());
+		m_brushIndex = bar->AddToolbox( m_brushBox );
+		bar->SetBoxVisiblity( m_brushIndex, false );	// This one is not visible initially
+	}
+
+	void ModeToolbox::SelectMode(const tgui::Callback& _call)
+	{
+		Toolbar* bar = dynamic_cast<Toolbar*>(m_Parent->getParent());
+		// First hide all toolboxes (so nothing gets forgotten)
+		bar->SetBoxVisiblity( m_brushIndex, false );
+		// Hide/show depending toolboxes
+		switch( _call.value )
+		{
+		case 1:
+			bar->SetBoxVisiblity( m_brushIndex, true );
+			break;
 		}
 	}
 

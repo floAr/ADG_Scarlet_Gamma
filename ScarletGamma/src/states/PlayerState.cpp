@@ -112,6 +112,9 @@ void States::PlayerState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 	if (guiHandled)
 		return;
 
+    // Let common state handle input
+    CommonState::KeyPressed(key, guiHandled);
+
 	switch(key.code)
 	{
 	case sf::Keyboard::Num0:

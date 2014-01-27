@@ -24,6 +24,8 @@ void Graphics::TileRenderer::Render(sf::RenderWindow& window, Core::Map& map, st
 	// Search layer-wise
 	for (int layer = 0; layer <= map.GetMaxLayer(); layer++ )
 	{
+        // TODO: skip hidden layers, passed by parameter: const bool* hiddenLayers
+
 		for (int y = top; y <= bottom; y++)
 		{
 			for (int x = left; x <= right; x++)

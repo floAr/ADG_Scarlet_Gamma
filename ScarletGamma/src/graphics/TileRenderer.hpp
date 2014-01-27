@@ -11,22 +11,15 @@ namespace Graphics
 	class TileRenderer
 	{
 	public:
+
 		/// \brief Renders the currently visible section of a given map to the specified window.
 		/// \param [in] window	SFML Window to be rendered to
 		/// \param [in] map		Map to be rendered
 		/// \param [in] _tileVisible A black-box test to check if a player can
 		///		see a certain tile. The function must take a tile position on
 		///		a map and return its visibility as a percentage value in [0,1].
-		static void Render(sf::RenderWindow& window, Core::Map& map, std::function<float(Core::Map&,sf::Vector2i&)> _tileVisible);
-
-				/// \brief Renders the currently visible section of a given map to the specified window.
-		/// \param [in] window	SFML Window to be rendered to
-		/// \param [in] map		Map to be rendered
-		/// \param [in] _tileVisible A black-box test to check if a player can
-		///		see a certain tile. The function must take a tile position on
-		///		a map and return its visibility as a percentage value in [0,1].
-		/// \param [in] hiddenLayers Vector of bools to indicate which layers shoudl be hidden
-		static void Render(sf::RenderWindow& window, Core::Map& map, std::function<float(Core::Map&,sf::Vector2i&)> _tileVisible,const bool* hiddenLayers);
+		/// \param [in] hiddenLayers Vector of bools to indicate which layers should be hidden. default is nullptr
+		static void Render(sf::RenderWindow& window, Core::Map& map, std::function<float(Core::Map&,sf::Vector2i&)> _tileVisible,const bool* hiddenLayers=nullptr);
 
 
 		/// \brief Draw a path overlay for the current objects path.

@@ -10,11 +10,6 @@
 #include <iostream>
 #include <unordered_map>
 
-void Graphics::TileRenderer::Render(sf::RenderWindow& window, Core::Map& map, std::function<float(Core::Map&,sf::Vector2i&)> _tileVisible)
-{
-	Render(window,map,_tileVisible,nullptr);
-}
-
 
 void Graphics::TileRenderer::Render(sf::RenderWindow& window, Core::Map& map, std::function<float(Core::Map&,sf::Vector2i&)> _tileVisible,const bool* hiddenLayers)
 {

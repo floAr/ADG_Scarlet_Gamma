@@ -170,6 +170,7 @@ namespace States {
 			{
 				//TODO Start rect-selection
 				m_rectSelectionStart=tilePos;
+				m_rectSelection=true;
 			}
 							  } break;
 		case sf::Mouse::Right: {
@@ -245,8 +246,18 @@ namespace States {
 				maxY=tilePos.y;
 				minY=m_rectSelectionStart.y;
 			}
+				SelectionState* gs = dynamic_cast<SelectionState*>(g_Game->GetStateMachine()->PushGameState(GST_SELECTION));
+				for(sX=minX;sX<maxX;sX++)
+				{
+					for(sY=minY;sY<maxY;sY++)
+					{
+						//TODO: Do selection stuff here
+					}
 
-			
+				}
+
+
+				m_rectSelection=false;
 		}
 	}
 
@@ -268,58 +279,73 @@ namespace States {
 			{
 				m_hiddenLayers[l]=0;
 			}
+			m_firstLayerSelection=true;
 			break;
 		//for each key add the mask, as long as alt is pressed (maybe cache this in local field)
 		case sf::Keyboard::Num1:
 			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
-			m_hiddenLayers[0]=1;
+			BlendLayer(0);
 			break;
 
 		case sf::Keyboard::Num2:
 			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
-			m_hiddenLayers[1]=1;
+			BlendLayer(1);
 			break;
 
 		case sf::Keyboard::Num3:
 			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
-			m_hiddenLayers[2]=1;
+			BlendLayer(2);
 			break;
 
 		case sf::Keyboard::Num4:
 			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
-			m_hiddenLayers[3]=1;
+			BlendLayer(3);
 			break;
 
 		case sf::Keyboard::Num5:
 			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
-			m_hiddenLayers[4]=1;
+			BlendLayer(4);
 			break;
 
 		case sf::Keyboard::Num6:
 			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
-			m_hiddenLayers[5]=1;
+			BlendLayer(5);
 			break;
 
 		case sf::Keyboard::Num7:
 			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
-			m_hiddenLayers[6]=1;
+			BlendLayer(6);
 			break;
 
 		case sf::Keyboard::Num8:
 			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
-			m_hiddenLayers[7]=1;
+			BlendLayer(7);
 			break;
 
 		case sf::Keyboard::Num9:
 			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
-			m_hiddenLayers[8]=1;
+			BlendLayer(8);
 			break;
 
 		case sf::Keyboard::Num0:
 			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
-			m_hiddenLayers[9]=1;
+			BlendLayer(9);
 			break;
 		}
+	}
+
+	void MasterState::BlendLayer(int layerID)
+	{
+		if(m_firstLayerSelection)
+		{
+			int l;
+			for(l=0;l<10;l++)
+			{
+				m_hiddenLayers[l]=1;
+			}
+			m_firstLayerSelection=false;
+		}
+		m_hiddenLayers[layerID]=0;
 	}
 
 	void MasterState::OnBegin()

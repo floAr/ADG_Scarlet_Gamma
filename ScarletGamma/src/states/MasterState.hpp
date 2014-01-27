@@ -72,7 +72,12 @@ namespace States
 		///		loading failure.
 		void CreateDefaultTemplateBase();
 
+
+		void BlendLayer(int layerId);
+
 		sf::Vector2f m_rectSelectionStart; ///< Starting point where the DM began selection
 		bool m_rectSelection;
+
+		bool m_firstLayerSelection;  ///< bool to indicate if this is the first layer selected with alt (to hide the rest)
 	};
 }

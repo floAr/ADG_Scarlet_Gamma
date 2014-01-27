@@ -15,7 +15,12 @@
 # directories
 Debug/
 Release/
-lib/
+/ScarletGamma/lib/JoFile
+/ScarletGamma/lib/SFML-2.1
+/ScarletGamma/lib/Thor-VS11x32
+/ScarletGamma/lib/TGUI-0.6-RC/*
+!/ScarletGamma/lib/TGUI-0.6-RC/include/
+
 
 # VC
 *.sdf

@@ -288,7 +288,10 @@ namespace Interfaces {
 
 
 
-	BrushToolbox::BrushToolbox()
+	BrushToolbox::BrushToolbox() :
+		m_actionChoice(nullptr),
+		m_layer(nullptr),
+		m_diameter(nullptr)
 	{
 		Panel::setSize( 150.0f, 100.0f );
 		Panel::setBackgroundColor( sf::Color(50,50,50,150) );
@@ -309,14 +312,14 @@ namespace Interfaces {
 		lAction->setText( STR_ACTION );
 		lAction->setTextSize( 13 );
 		lAction->setSize( 60.0f, 20.0f );
-		tgui::ComboBox::Ptr action( *this );
-		action->load( "media/Black.conf" );
-		action->setPosition( 60.0f, 20.0f );
-		action->setSize( 90.0f, 20.0f );
-		action->addItem( STR_ADD );
-		action->addItem( STR_REPLACE );
-		action->addItem( STR_REMOVE );
-		action->setSelectedItem( 0 );
+		m_actionChoice = tgui::ComboBox::Ptr( *this );
+		m_actionChoice->load( "media/Black.conf" );
+		m_actionChoice->setPosition( 60.0f, 20.0f );
+		m_actionChoice->setSize( 90.0f, 20.0f );
+		m_actionChoice->addItem( STR_ADD );
+		m_actionChoice->addItem( STR_REPLACE );
+		m_actionChoice->addItem( STR_REMOVE );
+		m_actionChoice->setSelectedItem( 0 );
 
 		tgui::Label::Ptr lLayer( *this );
 		lLayer->setTextColor( sf::Color(200, 200, 200) );
@@ -324,40 +327,45 @@ namespace Interfaces {
 		lLayer->setText( STR_PROP_LAYER );
 		lLayer->setTextSize( 13 );
 		lLayer->setSize( 60.0f, 20.0f );
-		tgui::ComboBox::Ptr layer( *this );
-		layer->load( "media/Black.conf" );
-		layer->setPosition( 60.0f, 40.0f );
-		layer->setSize( 90.0f, 20.0f );
-		layer->addItem( STR_0 );
-		layer->addItem( STR_1 );
-		layer->addItem( STR_2 );
-		layer->addItem( STR_3 );
-		layer->addItem( STR_4 );
-		layer->addItem( STR_ONTOP );
-		layer->setSelectedItem( 0 );
-
-		tgui::Label::Ptr lName( *this );
-		lName->setTextColor( sf::Color(200, 200, 200) );
-		lName->setPosition( 0.0f, 63.0f );
-		lName->setText( STR_PROP_NAME );
-		lName->setTextSize( 13 );
-		lName->setSize( 60.0f, 20.0f );
-		tgui::EditBox::Ptr name( *this );
-		name->load( "media/Black.conf" );
-		name->setPosition( 60.0f, 60.0f );
-		name->setSize( 90.0f, 20.0f );
+		m_layer = tgui::ComboBox::Ptr( *this );
+		m_layer->load( "media/Black.conf" );
+		m_layer->setPosition( 60.0f, 40.0f );
+		m_layer->setSize( 90.0f, 20.0f );
+		m_layer->addItem( STR_0 );
+		m_layer->addItem( STR_1 );
+		m_layer->addItem( STR_2 );
+		m_layer->addItem( STR_3 );
+		m_layer->addItem( STR_4 );
+		m_layer->addItem( STR_ONTOP );
+		m_layer->setSelectedItem( 0 );
 
 		tgui::Label::Ptr lDiameter( *this );
 		lDiameter->setTextColor( sf::Color(200, 200, 200) );
-		lDiameter->setPosition( 0.0f, 83.0f );
+		lDiameter->setPosition( 0.0f, 63.0f );
 		lDiameter->setText( STR_DIAMETER );
 		lDiameter->setTextSize( 13 );
 		lDiameter->setSize( 60.0f, 20.0f );
-		tgui::Slider::Ptr diameter( *this );
-		diameter->load( "media/Black.conf" );
-		diameter->setVerticalScroll( false );
-		diameter->setPosition( 69.0f, 84.0f );
-		diameter->setSize( 72.0f, 12.0f );
+		m_diameter = tgui::Slider::Ptr( *this );
+		m_diameter->load( "media/Black.conf" );
+		m_diameter->setVerticalScroll( false );
+		m_diameter->setPosition( 69.0f, 64.0f );
+		m_diameter->setSize( 72.0f, 12.0f );
+		m_diameter->setMinimum( 1 );
+	}
+
+	int BrushToolbox::GetDiameter() const
+	{
+		return m_diameter->getValue();
+	}
+	
+	int BrushToolbox::GetLayer() const
+	{
+		return m_layer->getSelectedItemIndex();
+	}
+	
+	Tools::Brush::Mode BrushToolbox::GetMode() const
+	{
+		return Tools::Brush::Mode(m_actionChoice->getSelectedItemIndex());
 	}
 
 

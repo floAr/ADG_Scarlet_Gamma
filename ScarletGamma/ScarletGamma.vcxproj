@@ -118,6 +118,7 @@
     <ClCompile Include="src\states\PromptState.cpp" />
     <ClCompile Include="src\states\SelectionState.cpp" />
     <ClCompile Include="src\states\StateMachine.cpp" />
+    <ClCompile Include="src\tools\Brush.cpp" />
     <ClCompile Include="src\unittest\UTFormulaParser.cpp" />
     <ClCompile Include="src\unittest\UTMap.cpp" />
     <ClCompile Include="src\unittest\UTObject.cpp" />
@@ -171,6 +172,7 @@
     <ClInclude Include="src\states\PromptState.hpp" />
     <ClInclude Include="src\states\SelectionState.hpp" />
     <ClInclude Include="src\states\StateMachine.hpp" />
+    <ClInclude Include="src\tools\Brush.hpp" />
     <ClInclude Include="src\unittest\UnitTests.hpp" />
     <ClInclude Include="src\utils\Content.hpp" />
     <ClInclude Include="src\utils\Exception.hpp" />

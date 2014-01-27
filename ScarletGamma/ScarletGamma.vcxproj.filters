@@ -42,6 +42,9 @@
     <Filter Include="Quelldateien\interfaces">
       <UniqueIdentifier>{7b9a4b6a-8e09-4efa-8ede-490a572e28e1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Quelldateien\tools">
+      <UniqueIdentifier>{269d39f4-ca9b-49ae-b477-72dd73dc2d6a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -184,6 +187,9 @@
     </ClCompile>
     <ClCompile Include="src\interfaces\Toolbar.cpp">
       <Filter>Quelldateien\interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="src\tools\Brush.cpp">
+      <Filter>Quelldateien\tools</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -339,6 +345,9 @@
     </ClInclude>
     <ClInclude Include="src\interfaces\Toolbar.hpp">
       <Filter>Quelldateien\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tools\Brush.hpp">
+      <Filter>Quelldateien\tools</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

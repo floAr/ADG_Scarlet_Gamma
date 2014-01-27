@@ -77,8 +77,7 @@ namespace States {
 		m_toolbar = Interfaces::Toolbar::Ptr(m_gui);
 		m_toolbar->Init( 480.0f, 0.0f, 544.0f, 100.0f );
 		m_toolbar->AddToolbox( m_mapTool );
-		m_toolbar->AddToolbox( Interfaces::ModeToolbox::Ptr() );
-		//m_toolbar->AddToolbox( Interfaces::BrushToolbox::Ptr() );
+		m_toolbar->AddToolbox( m_modeTool );
 		m_toolbar->AddToolbox( Interfaces::PlayersToolbox::Ptr() );
 		m_toolbar->AddToolbox( Interfaces::NPCToolbox::Ptr() );
 
@@ -146,7 +145,17 @@ namespace States {
 		switch (button.button)
 		{
 		case sf::Mouse::Left: {
-			// TODO: Paint new objects with the brush
+			if( m_modeTool->GetMode() == Interfaces::ModeToolbox::BRUSH )
+			{
+				if( !m_objectsPanel->GetSelected() ) return;// TODO: Warnung in chat
+				// Paint new objects with the brush.
+				m_brush.BeginPaint( *GetCurrentMap(),
+					m_objectsPanel->GetSelected(),
+					m_modeTool->Brush()->GetDiameter(),
+					tileX, tileY,
+					m_modeTool->Brush()->GetLayer(),
+					m_modeTool->Brush()->GetMode() );
+			}
 			} break;
 		case sf::Mouse::Right: {
 			if( GetCurrentMap()->GetObjectsAt(tileX, tileY).Size() > 0 )

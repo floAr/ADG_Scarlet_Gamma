@@ -21,7 +21,8 @@ ObjectPanel::ObjectPanel() :
 	m_oldScrollValue(0),
 	m_numPixelLines(0),
 	m_viewer(nullptr),
-	m_dragNDropSource(DragContent::OBJECT_PANEL)
+	m_dragNDropSource(DragContent::OBJECT_PANEL),
+	m_selected(nullptr)
 {
 }
 
@@ -204,6 +205,7 @@ void ObjectPanel::RemoveBtn(const tgui::Callback& _call)
 	int posY = (int)_call.widget->getPosition().y;
 	unsigned delLine = _call.id;
 	// Remove object from world
+	if( m_selected->ID() == delLine ) m_selected = nullptr;
 	m_world->RemoveObject( delLine );
 	
 	// First element is always the scrollbar
@@ -317,7 +319,8 @@ void ObjectPanel::SelectObject(const tgui::Callback& _call)
 				s_lastSelected->setTextColor( sf::Color(200,200,200) );
 				s_lastSelected->setTextSize( 13 );
 			}
-			m_viewer->Show( m_world->GetObject(ptr->getCallbackId()) );
+			m_selected = m_world->GetObject(ptr->getCallbackId());
+			m_viewer->Show( m_selected );
 			// Highlight new component
 			ptr->setTextColor( sf::Color(255,255,255) );
 			ptr->setTextSize( 15 );

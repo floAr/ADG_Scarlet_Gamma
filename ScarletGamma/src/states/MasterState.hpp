@@ -6,6 +6,7 @@
 #include "interfaces/PropertyPanel.hpp"
 #include "interfaces/ObjectPanel.hpp"
 #include "interfaces/Toolbar.hpp"
+#include "tools/brush.hpp"
 
 namespace States
 {
@@ -44,6 +45,14 @@ namespace States
 		/// \brief Editor toolbar on top
 		Interfaces::Toolbar::Ptr m_toolbar;
 		Interfaces::MapToolbox::Ptr m_mapTool;
+		Interfaces::ModeToolbox::Ptr m_modeTool;
+
+		/// \brief A permanent brush object.
+		/// \details Brushes contain an array for flags. So over the whole
+		///		process of one mouse move it must exist permanent. Further
+		///		creating objects on mouse down and deleting them on mouse
+		///		up would be unsafe.
+		Tools::Brush m_brush;
 
 		/// \brief Some components fill this with content if mouse is pushed.
 		///		On release an according action should be done.

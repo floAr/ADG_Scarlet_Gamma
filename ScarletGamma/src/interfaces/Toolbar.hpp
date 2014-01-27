@@ -2,6 +2,7 @@
 
 #include <TGUI/TGUI.hpp>
 #include "Prerequisites.hpp"
+#include "tools/brush.hpp"
 
 namespace Interfaces {
 
@@ -95,8 +96,20 @@ namespace Interfaces {
 
 		BrushToolbox();
 
-		// Create all elements in the brush toolbox.
+		/// \brief Create all elements in the brush toolbox.
 		virtual void Init() override;
+
+		/// \brief Poll the selected brush diameter
+		int GetDiameter() const;
+		/// \brief Poll the selected target layer
+		int GetLayer() const;
+		/// \brief Poll the selected brush mode
+		Tools::Brush::Mode GetMode() const;
+
+	private:
+		tgui::ComboBox::Ptr m_actionChoice;
+		tgui::ComboBox::Ptr m_layer;
+		tgui::Slider::Ptr m_diameter;
 	};
 
 	/// \brief Toolbox to switch between Selecting and Editing mode in the master tool.
@@ -107,14 +120,23 @@ namespace Interfaces {
 
 		ModeToolbox();
 
+		enum Mode {
+			SELECTION = 0,
+			BRUSH = 1,
+			ACTION = 2
+		};
+
 		// Create all elements in the mode toolbox.
 		virtual void Init() override;
+
+		Mode GetMode() const			{ return Mode(m_selected); }
+		BrushToolbox::Ptr Brush() const { return m_brushBox; }
 	private:
 		tgui::ListBox::Ptr m_actionList;	///< List of possible modes
 		int m_selected;	///< Store last selected modus
 
 		// Other toolboxes shown depending on the mode
-		Interfaces::BrushToolbox::Ptr m_brushBox;
+		BrushToolbox::Ptr m_brushBox;
 		int m_brushIndex;	// index to reference the toolbox in hide/show
 
 		void SelectMode(const tgui::Callback& _call);

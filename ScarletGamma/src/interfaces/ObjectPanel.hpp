@@ -36,6 +36,8 @@ namespace Interfaces {
 		/// \brief Just ignore things dragged to the object list
 		void HandleDropEvent()	{}
 
+		/// \brief Get the object which was clicked last.
+		const Core::Object* GetSelected() const	{ return m_selected; }
 	protected:
 		tgui::EditBox::Ptr m_newName;
 		tgui::Button::Ptr m_newAdd;
@@ -51,6 +53,7 @@ namespace Interfaces {
 		Interfaces::DragContent** m_dragNDropHandler;	///< A pointer to a pointer which must be filled if a mouse down event occures.
 		Interfaces::DragContent::Sources m_dragNDropSource;		///< As what should this GUI fill the DragNDrop handler.
 		Interfaces::PropertyPanel::Ptr m_viewer;		///< A panel to view a selected object.
+		Core::Object* m_selected;
 
 		void RemoveBtn(const tgui::Callback& _call);
 		void AddBtn(const tgui::Callback& _call);

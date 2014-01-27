@@ -31,9 +31,11 @@ void Graphics::TileRenderer::Render(sf::RenderWindow& window, Core::Map& map, st
 	for (int layer = 0; layer <= map.GetMaxLayer(); layer++ )
 	{
         // TODO: skip hidden layers, passed by parameter: const bool* hiddenLayers
-		if(hiddenLayers!=nullptr)
+		if(hiddenLayers!=nullptr){
+			std::cout<<"layer "<<layer<<hiddenLayers[layer]<<std::endl;
 			if(hiddenLayers[layer])
 				continue;
+		}
 
 		for (int y = top; y <= bottom; y++)
 		{

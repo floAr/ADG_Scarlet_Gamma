@@ -89,7 +89,7 @@ namespace States {
 		int l;
 		for(l=0;l<10;l++)
 		{
-			m_hiddenLayers.push_back(false);
+			m_hiddenLayers.push_back(0);
 		}
 	}
 
@@ -113,10 +113,6 @@ namespace States {
 		if( m_selectionView->isVisible() )
 			m_selectionView->Show( g_Game->GetWorld(), m_selection );
 
-		int i;
-		for(i=0;i<10;i++){
-			std::cout<<m_hiddenLayers[i]<<std::endl;
-		}
 	}
 
 	void MasterState::Draw(sf::RenderWindow& win)
@@ -127,10 +123,10 @@ namespace States {
 
 		// Render
 		// Uses the test map 0 for testing purposes.
-		Graphics::TileRenderer::Render(win, *GetCurrentMap(),
-			[](Core::Map&,sf::Vector2i&){ return 1.0f; });
 		//Graphics::TileRenderer::Render(win, *GetCurrentMap(),
-		//	[](Core::Map&,sf::Vector2i&){ return 1.0f; },);
+		//	[](Core::Map&,sf::Vector2i&){ return 1.0f;});
+		Graphics::TileRenderer::Render(win, *GetCurrentMap(),
+			[](Core::Map&,sf::Vector2i&){ return 1.0f; },(const bool*)(&m_hiddenLayers[0]));
 		// If the selected object has a path draw it
 		for( int i=0; i<m_selection.Size(); ++i )
 			DrawPathOverlay(win, g_Game->GetWorld()->GetObject(m_selection[i]));
@@ -169,6 +165,11 @@ namespace States {
 					tileX, tileY,
 					m_modeTool->Brush()->GetLayer(),
 					m_modeTool->Brush()->GetMode() );
+			}
+			if( m_modeTool->GetMode() == Interfaces::ModeToolbox::SELECTION )
+			{
+				//TODO Start rect-selection
+				m_rectSelectionStart=tilePos;
 			}
 							  } break;
 		case sf::Mouse::Right: {
@@ -221,6 +222,32 @@ namespace States {
 			delete m_draggedContent;
 			m_draggedContent = nullptr;
 		}
+
+		if(m_rectSelection){
+			int sX,sY,minX,minY,maxX,maxY;
+			if(tilePos.x<m_rectSelectionStart.x)
+			{
+				minX=tilePos.x;
+				maxX=m_rectSelectionStart.x;
+			}
+			else
+				{
+				maxX=tilePos.x;
+				minX=m_rectSelectionStart.x;
+			}
+			if(tilePos.y<m_rectSelectionStart.y)
+			{
+				minY=tilePos.y;
+				maxY=m_rectSelectionStart.y;
+			}
+			else
+				{
+				maxY=tilePos.y;
+				minY=m_rectSelectionStart.y;
+			}
+
+			
+		}
 	}
 
 
@@ -239,58 +266,58 @@ namespace States {
 			int l;
 			for(l=0;l<10;l++)
 			{
-				m_hiddenLayers[l]=false;
+				m_hiddenLayers[l]=0;
 			}
 			break;
 		//for each key add the mask, as long as alt is pressed (maybe cache this in local field)
-		case sf::Keyboard::Num0:
-			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
-			m_hiddenLayers[0]=true;
-			break;
-
 		case sf::Keyboard::Num1:
 			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
-			m_hiddenLayers[1]=true;
+			m_hiddenLayers[0]=1;
 			break;
 
 		case sf::Keyboard::Num2:
 			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
-			m_hiddenLayers[2]=true;
+			m_hiddenLayers[1]=1;
 			break;
 
 		case sf::Keyboard::Num3:
 			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
-			m_hiddenLayers[3]=true;
+			m_hiddenLayers[2]=1;
 			break;
 
 		case sf::Keyboard::Num4:
 			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
-			m_hiddenLayers[4]=true;
+			m_hiddenLayers[3]=1;
 			break;
 
 		case sf::Keyboard::Num5:
 			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
-			m_hiddenLayers[5]=true;
+			m_hiddenLayers[4]=1;
 			break;
 
 		case sf::Keyboard::Num6:
 			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
-			m_hiddenLayers[6]=true;
+			m_hiddenLayers[5]=1;
 			break;
 
 		case sf::Keyboard::Num7:
 			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
-			m_hiddenLayers[7]=true;
+			m_hiddenLayers[6]=1;
 			break;
 
 		case sf::Keyboard::Num8:
 			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
-			m_hiddenLayers[8]=true;
+			m_hiddenLayers[7]=1;
 			break;
 
 		case sf::Keyboard::Num9:
 			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
-			m_hiddenLayers[9]=true;
+			m_hiddenLayers[8]=1;
+			break;
+
+		case sf::Keyboard::Num0:
+			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
+			m_hiddenLayers[9]=1;
 			break;
 		}
 	}

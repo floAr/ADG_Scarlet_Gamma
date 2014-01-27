@@ -82,6 +82,6 @@ namespace States
 		Core::ObjectList m_selection;	///< List of currently selected objects
 		bool m_selectionChanged;		///< Update gui only if something changed.
 
-		std::vector<bool> m_hiddenLayers;///< List of currently hidden layers
+		std::vector<char> m_hiddenLayers;///< List of currently hidden layers
 	};
 }

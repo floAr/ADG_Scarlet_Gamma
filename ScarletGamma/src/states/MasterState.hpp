@@ -68,5 +68,8 @@ namespace States
 		/// \brief Creates the initial template database in case of a
 		///		loading failure.
 		void CreateDefaultTemplateBase();
+
+		sf::Vector2f m_rectSelectionStart; ///< Starting point where the DM began selection
+		bool m_rectSelection;
 	};
 }

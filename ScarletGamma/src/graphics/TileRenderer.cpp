@@ -12,6 +12,12 @@
 
 void Graphics::TileRenderer::Render(sf::RenderWindow& window, Core::Map& map, std::function<float(Core::Map&,sf::Vector2i&)> _tileVisible)
 {
+	Render(window,map,_tileVisible,NULL);
+}
+
+
+void Graphics::TileRenderer::Render(sf::RenderWindow& window, Core::Map& map, std::function<float(Core::Map&,sf::Vector2i&)> _tileVisible,const bool* hiddenLayers)
+{
 	// Get map-coordinate float rect from the current camera for visibility tests
 	sf::FloatRect viewRect = sfUtils::View::GetViewRect(window.getView());
 	
@@ -25,6 +31,9 @@ void Graphics::TileRenderer::Render(sf::RenderWindow& window, Core::Map& map, st
 	for (int layer = 0; layer <= map.GetMaxLayer(); layer++ )
 	{
         // TODO: skip hidden layers, passed by parameter: const bool* hiddenLayers
+		if(hiddenLayers!=NULL)
+			if(hiddenLayers[layer])
+				continue;
 
 		for (int y = top; y <= bottom; y++)
 		{

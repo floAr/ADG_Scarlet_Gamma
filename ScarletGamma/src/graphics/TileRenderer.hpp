@@ -19,6 +19,16 @@ namespace Graphics
 		///		a map and return its visibility as a percentage value in [0,1].
 		static void Render(sf::RenderWindow& window, Core::Map& map, std::function<float(Core::Map&,sf::Vector2i&)> _tileVisible);
 
+				/// \brief Renders the currently visible section of a given map to the specified window.
+		/// \param [in] window	SFML Window to be rendered to
+		/// \param [in] map		Map to be rendered
+		/// \param [in] _tileVisible A black-box test to check if a player can
+		///		see a certain tile. The function must take a tile position on
+		///		a map and return its visibility as a percentage value in [0,1].
+		/// \param [in] hiddenLayers Vector of bools to indicate which layers shoudl be hidden
+		static void Render(sf::RenderWindow& window, Core::Map& map, std::function<float(Core::Map&,sf::Vector2i&)> _tileVisible,const bool* hiddenLayers);
+
+
 		/// \brief Draw a path overlay for the current objects path.
 		///	\param [in] An array of tile-positions where the overlay should appear.
 		static void RenderPath(sf::RenderWindow& window, const std::vector<sf::Vector2i>& _path);

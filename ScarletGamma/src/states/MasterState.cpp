@@ -242,6 +242,32 @@ namespace States {
 		m_toolbar->setSize( _size.x - m_objectsPanel->getSize().x*2, 100.0f );
 	}
 
+	void MasterState::MouseMoved(int deltaX, int deltaY, bool guiHandled)
+	{
+		CommonState::MouseMoved(deltaX, deltaY, guiHandled);
+
+		// Don't react to any key if gui handled it
+		if (guiHandled)
+			return;
+
+		if( sf::Mouse::isButtonPressed(sf::Mouse::Left) )
+		{
+			// Most actions here require the tile position -> compute it
+			auto mousePos = sf::Mouse::getPosition( g_Game->GetWindow() );
+			sf::Vector2f tilePos = g_Game->GetWindow().mapPixelToCoords(mousePos);
+			tilePos.x /= TILESIZE;
+			tilePos.y /= TILESIZE;
+			int x = (int)floor(tilePos.x);
+			int y = (int)floor(tilePos.y);
+
+			// In brush mode paint to the current position
+			if( m_modeTool->GetMode() == Interfaces::ModeToolbox::BRUSH )
+			{
+				m_brush.Paint(x, y);
+			}
+		}
+	}
+
 	Core::Map* MasterState::GetCurrentMap()
 	{
 		MapID id = m_mapTool->GetSelectedMap();

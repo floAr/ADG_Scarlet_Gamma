@@ -110,6 +110,9 @@ namespace Interfaces {
 		// Create all elements in the mode toolbox.
 		virtual void Init() override;
 	private:
+		tgui::ListBox::Ptr m_actionList;	///< List of possible modes
+		int m_selected;	///< Store last selected modus
+
 		// Other toolboxes shown depending on the mode
 		Interfaces::BrushToolbox::Ptr m_brushBox;
 		int m_brushIndex;	// index to reference the toolbox in hide/show

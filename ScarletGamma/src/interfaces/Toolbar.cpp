@@ -185,7 +185,10 @@ namespace Interfaces {
 		m_mapList->setPosition( 0.0f, 20.0f );
 		m_mapList->setItemHeight( 19 );
 		m_mapList->getScrollbar()->setSize( 12.0f, m_mapList->getScrollbar()->getSize().y );
-		m_mapList->bindCallbackEx( [this](const tgui::Callback& _caller){ if(_caller.value != -1) m_selected = _caller.value; }, tgui::ListBox::ItemSelected );
+		m_mapList->bindCallbackEx( [this](const tgui::Callback& _caller){
+			if(_caller.value != -1) m_selected = _caller.value;
+			else m_mapList->setSelectedItem( m_selected );
+		}, tgui::ListBox::ItemSelected );
 		// Bad global reference (g_Game) but best solution if no parameters can be given.
 		m_maps = g_Game->GetWorld()->GetAllMaps();
 		for( size_t i=0; i<m_maps.size(); ++i )
@@ -222,7 +225,8 @@ namespace Interfaces {
 
 
 
-	ModeToolbox::ModeToolbox()
+	ModeToolbox::ModeToolbox() :
+		m_selected(0)
 	{
 		Panel::setSize( 74.0f, 100.0f );
 		Panel::setBackgroundColor( sf::Color(50,50,50,150) );
@@ -237,17 +241,17 @@ namespace Interfaces {
 		heading->setSize( 74.0f, 20.0f );
 		heading->disable();
 
-		tgui::ListBox::Ptr actionList( *this );
-		actionList->load( "media/Black.conf" );
-		actionList->setSize( 74.0f, 80.0f );
-		actionList->setPosition( 0.0f, 20.0f );
-		actionList->setItemHeight( 19 );
-		actionList->removeScrollbar();// getScrollbar()->setSize( 12.0f, m_mapList->getScrollbar()->getSize().y );
-		actionList->bindCallbackEx( &ModeToolbox::SelectMode, this, tgui::ListBox::ItemSelected );
-		actionList->addItem( STR_SELECTION );
-		actionList->addItem( STR_BRUSH );
-		actionList->addItem( STR_ACTION );
-		actionList->setSelectedItem( 0 );
+		m_actionList = tgui::ListBox::Ptr( *this );
+		m_actionList->load( "media/Black.conf" );
+		m_actionList->setSize( 74.0f, 80.0f );
+		m_actionList->setPosition( 0.0f, 20.0f );
+		m_actionList->setItemHeight( 19 );
+		m_actionList->removeScrollbar();// getScrollbar()->setSize( 12.0f, m_mapList->getScrollbar()->getSize().y );
+		m_actionList->bindCallbackEx( &ModeToolbox::SelectMode, this, tgui::ListBox::ItemSelected );
+		m_actionList->addItem( STR_SELECTION );
+		m_actionList->addItem( STR_BRUSH );
+		m_actionList->addItem( STR_ACTION );
+		m_actionList->setSelectedItem( 0 );
 
 		// Add dependent boxes
 		Toolbar* bar = dynamic_cast<Toolbar*>(m_Parent->getParent());
@@ -257,6 +261,13 @@ namespace Interfaces {
 
 	void ModeToolbox::SelectMode(const tgui::Callback& _call)
 	{
+		// No deselection possible
+		if( _call.value == -1 )
+		{
+			m_actionList->setSelectedItem( m_selected );
+			return;
+		}
+
 		Toolbar* bar = dynamic_cast<Toolbar*>(m_Parent->getParent());
 		// First hide all toolboxes (so nothing gets forgotten)
 		bar->SetBoxVisiblity( m_brushIndex, false );
@@ -267,6 +278,9 @@ namespace Interfaces {
 			bar->SetBoxVisiblity( m_brushIndex, true );
 			break;
 		}
+
+		// Standard action: store which one is selected.
+		m_selected = _call.value;
 	}
 
 

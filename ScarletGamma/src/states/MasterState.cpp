@@ -225,27 +225,26 @@ namespace States {
 		}
 
 		if(m_rectSelection){
-			int sX,sY;
-			float minX,minY,maxX,maxY;
+			int sX,sY,minX,minY,maxX,maxY;
 			if(tilePos.x<m_rectSelectionStart.x)
 			{
-				minX = tilePos.x;
-				maxX = m_rectSelectionStart.x;
+				minX = (int)tilePos.x;
+				maxX = (int)m_rectSelectionStart.x;
 			}
 			else
 			{
-				maxX = tilePos.x;
-				minX = m_rectSelectionStart.x;
+				maxX = (int)tilePos.x;
+				minX = (int)m_rectSelectionStart.x;
 			}
 			if(tilePos.y<m_rectSelectionStart.y)
 			{
-				minY = tilePos.y;
-				maxY = m_rectSelectionStart.y;
+				minY = (int)tilePos.y;
+				maxY = (int)m_rectSelectionStart.y;
 			}
 			else
 			{
-				maxY = tilePos.y;
-				minY = m_rectSelectionStart.y;
+				maxY = (int)tilePos.y;
+				minY = (int)m_rectSelectionStart.y;
 			}
 			SelectionState* gs = dynamic_cast<SelectionState*>(g_Game->GetStateMachine()->PushGameState(GST_SELECTION));
 			for(sX = minX; sX < maxX; sX++)
@@ -276,9 +275,9 @@ namespace States {
 			//on alt clear the current mask
 		case sf::Keyboard::LAlt:
 			int l;
-			for(l=0;l<10;l++)
+			for(l = 0; l < 10; l++)
 			{
-				m_hiddenLayers[l]=0;
+				m_hiddenLayers[l] = 0;
 			}
 			m_firstLayerSelection=true;
 			break;
@@ -340,13 +339,13 @@ namespace States {
 		if(m_firstLayerSelection)
 		{
 			int l;
-			for(l=0;l<10;l++)
+			for(l = 0; l < 10; l++)
 			{
-				m_hiddenLayers[l]=1;
+				m_hiddenLayers[l] = 1;
 			}
-			m_firstLayerSelection=false;
+			m_firstLayerSelection = false;
 		}
-		m_hiddenLayers[layerID]=0;
+		m_hiddenLayers[layerID] = 0;
 	}
 
 	void MasterState::OnBegin()

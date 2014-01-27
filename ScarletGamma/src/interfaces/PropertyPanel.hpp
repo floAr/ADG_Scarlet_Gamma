@@ -36,6 +36,8 @@ namespace Interfaces {
 		virtual sf::Vector2f getSize() const override;
 		virtual void setPosition(float _x, float _y) override;
 		virtual void unfocus() override;
+		virtual void hide() override;
+		virtual void show() override;
 
 		/// \brief If an object is dragged to this panel all properties which
 		///		are not existent are copied and the same holds for single properties.

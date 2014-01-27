@@ -221,12 +221,15 @@ namespace States {
 
 		tgui::ChatBox::Ptr localOut = m_gui.get( "Messages" );
 		m_selectionView->setSize( m_selectionView->getSize().x, localOut->getPosition().y );
-		m_selectionView->setPosition( _size.x - m_selectionView->getSize().x, 0.0f );
+		m_selectionView->setPosition( _size.x - m_selectionView->getSize().x, 100.0f );
+
+		m_toolbar->setSize( _size.x - m_objectsPanel->getSize().x*2, 100.0f );
 	}
 
 	Core::Map* MasterState::GetCurrentMap()
 	{
-		return g_Game->GetWorld()->GetMap(m_mapTool->GetSelectedMap());
+		MapID id = m_mapTool->GetSelectedMap();
+		return g_Game->GetWorld()->GetMap(id);
 	}
 
 

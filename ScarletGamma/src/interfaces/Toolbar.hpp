@@ -30,6 +30,7 @@ namespace Interfaces {
 		void Update( float _dt );
 
 		virtual void unfocus() override;
+		virtual void setSize(float _width, float _height) override;
 	private:
 		tgui::Panel::Ptr m_scrollPanel;
 		tgui::Picture::Ptr m_scrollLeft;

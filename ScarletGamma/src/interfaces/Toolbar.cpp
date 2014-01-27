@@ -20,27 +20,24 @@ namespace Interfaces {
 	{
 		// Cover the space of the whole toolbar
 		Panel::setPosition( _x, _y );
-		Panel::setSize( _w, _h );
 		Panel::setBackgroundColor( sf::Color(50,50,50,150) );
 	//	Panel::bindCallback( &Toolbar::unfocus, this, tgui::Panel::ke
 
 		// Sub area for toolboxes
 		m_scrollPanel->setPosition( 22.0f, 0.0f );
-		m_scrollPanel->setSize( _w - 44.0f, _h );
 
 		m_scrollLeft->load( "media/Black_ArrowLeft.png" );
 		m_scrollLeft->setPosition( 0.0f, 0.0f );
-		m_scrollLeft->setSize( 20.0f, _h );
 		m_scrollLeft->setCallbackId( 1 );
 		m_scrollLeft->bindCallbackEx( &Toolbar::BeginScroll, this, tgui::Picture::LeftMousePressed );
 		m_scrollLeft->bindCallbackEx( &Toolbar::EndScroll, this, tgui::Picture::LeftMouseReleased );
 
 		m_scrollRight->load( "media/Black_ArrowRight.png" );
-		m_scrollRight->setPosition( _w - 20.0f, 0.0f );
-		m_scrollRight->setSize( 20.0f, _h );
 		m_scrollRight->setCallbackId( 2 );
 		m_scrollRight->bindCallbackEx( &Toolbar::BeginScroll, this, tgui::Picture::LeftMousePressed );
 		m_scrollRight->bindCallbackEx( &Toolbar::EndScroll, this, tgui::Picture::LeftMouseReleased );
+
+		setSize( _w, _h );
 	}
 
 
@@ -72,14 +69,16 @@ namespace Interfaces {
 				auto& boxes = m_scrollPanel->getWidgets();
 				// A more or less constant speed, stop at the border.
 				float value = m_scroll * _dt * 200.0f;
-				if( boxes[0]->getPosition().x+value > 2.0f) {
+				if( (value > 0) && boxes[0]->getPosition().x+value >= 2.0f ) {
+					// If leftmost box would be moved too far -> stop.
 					value = -boxes[0]->getPosition().x + 2.0f;
-					value = std::min(0.0f, value);
+					value = std::max(0.0f, value);
 					m_scroll = 0.0f;
 				} else
-				if( boxes[boxes.size()-1]->getPosition().x+boxes[boxes.size()-1]->getSize().x+value < m_scrollPanel->getSize().x ) {
+				if( (value < 0) && boxes[boxes.size()-1]->getPosition().x+boxes[boxes.size()-1]->getSize().x+value < m_scrollPanel->getSize().x ) {
+					// Rightmost box would be moved too far -> stop.
 					value = m_scrollPanel->getSize().x - (boxes[boxes.size()-1]->getPosition().x+boxes[boxes.size()-1]->getSize().x);
-					value = std::max(0.0f, value);
+					value = std::min(0.0f, value);
 					m_scroll = 0.0f;
 				}
 				
@@ -108,6 +107,15 @@ namespace Interfaces {
 	{
 		Panel::unfocus();
 		m_Parent->unfocus();
+	}
+
+	void Toolbar::setSize(float _width, float _height)
+	{
+		Panel::setSize( _width, _height );
+		m_scrollPanel->setSize( _width - 44.0f, _height );
+		m_scrollLeft->setSize( 20.0f, _height );
+		m_scrollRight->setPosition( _width - 20.0f, 0.0f );
+		m_scrollRight->setSize( 20.0f, _height );
 	}
 
 
@@ -150,7 +158,7 @@ namespace Interfaces {
 		m_mapList->setPosition( 0.0f, 20.0f );
 		m_mapList->setItemHeight( 19 );
 		m_mapList->getScrollbar()->setSize( 12.0f, m_mapList->getScrollbar()->getSize().y );
-		m_mapList->bindCallbackEx( [this](const tgui::Callback& _caller){ m_selected = _caller.value; }, tgui::ListBox::ItemSelected );
+		m_mapList->bindCallbackEx( [this](const tgui::Callback& _caller){ if(_caller.value != -1) m_selected = _caller.value; }, tgui::ListBox::ItemSelected );
 		// Bad global reference (g_Game) but best solution if no parameters can be given.
 		m_maps = g_Game->GetWorld()->GetAllMaps();
 		for( size_t i=0; i<m_maps.size(); ++i )

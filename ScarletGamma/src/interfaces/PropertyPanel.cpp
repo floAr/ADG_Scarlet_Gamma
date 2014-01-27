@@ -500,6 +500,22 @@ void PropertyPanel::unfocus()
 }
 
 
+void PropertyPanel::hide()
+{
+	Panel::hide();
+	m_miniMaxi->hide();
+	m_titleBar->hide();
+}
+
+
+void PropertyPanel::show()
+{
+	Panel::show();
+	m_miniMaxi->show();
+	m_titleBar->show();
+}
+
+
 void PropertyPanel::HandleDropEvent()
 {
 	if( !(*m_dragNDropHandler) ) return;

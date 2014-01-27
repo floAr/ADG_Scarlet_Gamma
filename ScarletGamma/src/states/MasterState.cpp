@@ -84,6 +84,13 @@ namespace States {
 		// Set chat color...
 		m_color = sf::Color(80,80,250);
 		m_name = "Master";
+
+		//set up m_hiddenLayers for 10 layers
+		int l;
+		for(l=0;l<10;l++)
+		{
+			m_hiddenLayers.push_back(false);
+		}
 	}
 
 	void MasterState::Update(float dt)
@@ -105,6 +112,11 @@ namespace States {
 
 		if( m_selectionView->isVisible() )
 			m_selectionView->Show( g_Game->GetWorld(), m_selection );
+
+		int i;
+		for(i=0;i<10;i++){
+			std::cout<<m_hiddenLayers[i]<<std::endl;
+		}
 	}
 
 	void MasterState::Draw(sf::RenderWindow& win)
@@ -117,7 +129,8 @@ namespace States {
 		// Uses the test map 0 for testing purposes.
 		Graphics::TileRenderer::Render(win, *GetCurrentMap(),
 			[](Core::Map&,sf::Vector2i&){ return 1.0f; });
-
+		//Graphics::TileRenderer::Render(win, *GetCurrentMap(),
+		//	[](Core::Map&,sf::Vector2i&){ return 1.0f; },);
 		// If the selected object has a path draw it
 		for( int i=0; i<m_selection.Size(); ++i )
 			DrawPathOverlay(win, g_Game->GetWorld()->GetObject(m_selection[i]));
@@ -126,6 +139,7 @@ namespace States {
 
 		GameState::Draw(win);
 	}
+
 
 	void MasterState::MouseButtonPressed(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos, bool guiHandled)
 	{
@@ -156,28 +170,16 @@ namespace States {
 					m_modeTool->Brush()->GetLayer(),
 					m_modeTool->Brush()->GetMode() );
 			}
-			} break;
+							  } break;
 		case sf::Mouse::Right: {
 			if( GetCurrentMap()->GetObjectsAt(tileX, tileY).Size() > 0 )
 			{
 				SelectionState* gs = dynamic_cast<SelectionState*>(g_Game->GetStateMachine()->PushGameState(GST_SELECTION));
 				gs->SetTilePosition(tileX, tileY);
 			}
-			
-			} break;
+
+							   } break;
 		}
-	}
-
-
-	void MasterState::OnBegin()
-	{
-		// Init server
-		Network::Messenger::Initialize(nullptr);
-	}
-
-	void MasterState::OnEnd()
-	{
-		CommonState::OnEnd();
 	}
 
 	void MasterState::MouseButtonReleased( sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos, float time, bool guiHandled)
@@ -201,7 +203,7 @@ namespace States {
 				m_viewPanel->HandleDropEvent();
 			} else if( m_propertyPanel->mouseOnWidget( (float)button.x, (float)button.y ) )
 			{
-						// Just ignore things dragged to the property list
+				// Just ignore things dragged to the property list
 			} else {	// Things where dragged to the map.
 				if( m_draggedContent->from == Interfaces::DragContent::OBJECT_PANEL )
 				{
@@ -220,6 +222,90 @@ namespace States {
 			m_draggedContent = nullptr;
 		}
 	}
+
+
+	void MasterState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
+	{
+		// Return if the GUI already handled it
+		if (guiHandled)
+			return;
+		// Let common state handle input
+		CommonState::KeyPressed(key, guiHandled);
+
+		switch(key.code)
+		{
+			//on alt clear the current mask
+		case sf::Keyboard::LAlt:
+			int l;
+			for(l=0;l<10;l++)
+			{
+				m_hiddenLayers[l]=false;
+			}
+			break;
+		//for each key add the mask, as long as alt is pressed (maybe cache this in local field)
+		case sf::Keyboard::Num0:
+			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
+			m_hiddenLayers[0]=true;
+			break;
+
+		case sf::Keyboard::Num1:
+			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
+			m_hiddenLayers[1]=true;
+			break;
+
+		case sf::Keyboard::Num2:
+			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
+			m_hiddenLayers[2]=true;
+			break;
+
+		case sf::Keyboard::Num3:
+			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
+			m_hiddenLayers[3]=true;
+			break;
+
+		case sf::Keyboard::Num4:
+			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
+			m_hiddenLayers[4]=true;
+			break;
+
+		case sf::Keyboard::Num5:
+			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
+			m_hiddenLayers[5]=true;
+			break;
+
+		case sf::Keyboard::Num6:
+			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
+			m_hiddenLayers[6]=true;
+			break;
+
+		case sf::Keyboard::Num7:
+			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
+			m_hiddenLayers[7]=true;
+			break;
+
+		case sf::Keyboard::Num8:
+			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
+			m_hiddenLayers[8]=true;
+			break;
+
+		case sf::Keyboard::Num9:
+			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
+			m_hiddenLayers[9]=true;
+			break;
+		}
+	}
+
+	void MasterState::OnBegin()
+	{
+		// Init server
+		Network::Messenger::Initialize(nullptr);
+	}
+
+	void MasterState::OnEnd()
+	{
+		CommonState::OnEnd();
+	}
+
 
 
 	void MasterState::Resize(const sf::Vector2f& _size)
@@ -247,15 +333,6 @@ namespace States {
 		MapID id = m_mapTool->GetSelectedMap();
 		return g_Game->GetWorld()->GetMap(id);
 	}
-
-
-
-
-
-
-
-
-
 
 
 

@@ -22,6 +22,7 @@ namespace States
 			bool guiHandled) override;
 		virtual void MouseButtonReleased(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos,
 			float time, bool guiHandled) override;
+		virtual void KeyPressed(sf::Event::KeyEvent& key, bool guiHandled) override;
 		virtual void Resize(const sf::Vector2f& _size) override;
 
 		virtual Core::Map* GetCurrentMap() override;

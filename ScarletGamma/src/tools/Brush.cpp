@@ -55,7 +55,7 @@ namespace Tools {
 		// direction larger.
 		int r0 = m_diameter / 2, r1 = m_diameter - r0;
 		// Resize the area where we are going to edit if required.
-		CheckBoundaries(_x-r0, _x+r1, _y-r0, _y-r1);
+		CheckBoundaries(_x-r0, _x+r1, _y-r0, _y+r1);
 
 		float rsq = m_diameter * m_diameter / 4.0f;				// Real radius squared to compute circle distances
 		float cx = ((m_diameter & 1) == 1) ? _x : (_x+0.5f);	// Translated center for even coordinates
@@ -82,6 +82,36 @@ namespace Tools {
 
 	void Brush::CheckBoundaries( int _Xmin, int _Xmax, int _Ymin, int _Ymax )
 	{
+		// Compute if the required range goes out of current area.
+		assert( _Xmin < _Xmax );
+		assert( _Ymin < _Ymax );
+		int _nx = std::max(0, m_Xmin - _Xmin);
+		int _px = std::max(0, _Xmax - m_Xmax);
+		int _ny = std::max(0, m_Ymin - _Ymin);
+		int _py = std::max(0, _Ymax - m_Ymax);
+
+		if( _nx+_px+_ny+_py == 0 ) return;	// Nothing would happen
+
+		// Allocate a new larger memory
+		int width = (m_Xmax-m_Xmin+1);
+		int height = (m_Ymax-m_Ymin+1);
+		bool* mask = new bool[(width+_nx+_px) * (height+_ny+_py)];
+		int newWidth = width + _nx + _px;
+		// Copy old part
+		for( int y=0; y<height; ++y ) {
+			for( int x=0; x<width; ++x ) {
+				mask[x+_nx+(y+_ny)*newWidth] = m_mask[x+y*width];
+			}
+		}
+		// The delete should delete not more than the memory block of the array
+		// itself. The rest is moved to the new one.
+		delete[] m_mask;
+
+		m_mask = mask;
+		m_Xmin -= _nx;
+		m_Ymin -= _ny;
+		m_Xmax += _px;
+		m_Ymax += _py;
 	}
 
 

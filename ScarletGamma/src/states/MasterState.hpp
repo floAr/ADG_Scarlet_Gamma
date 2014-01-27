@@ -25,6 +25,9 @@ namespace States
 		virtual void KeyPressed(sf::Event::KeyEvent& key, bool guiHandled) override;
 		virtual void Resize(const sf::Vector2f& _size) override;
 
+		/// \brief CommonState::MouseMoved + action depending on the mode (select / paint)
+		virtual void MouseMoved(int deltaX, int deltaY, bool guiHandled) override;
+
 		virtual Core::Map* GetCurrentMap() override;
 
 	private:

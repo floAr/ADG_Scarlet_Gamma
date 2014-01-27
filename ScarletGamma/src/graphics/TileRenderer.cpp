@@ -12,7 +12,7 @@
 
 void Graphics::TileRenderer::Render(sf::RenderWindow& window, Core::Map& map, std::function<float(Core::Map&,sf::Vector2i&)> _tileVisible)
 {
-	Render(window,map,_tileVisible,NULL);
+	Render(window,map,_tileVisible,nullptr);
 }
 
 
@@ -31,7 +31,7 @@ void Graphics::TileRenderer::Render(sf::RenderWindow& window, Core::Map& map, st
 	for (int layer = 0; layer <= map.GetMaxLayer(); layer++ )
 	{
         // TODO: skip hidden layers, passed by parameter: const bool* hiddenLayers
-		if(hiddenLayers!=NULL)
+		if(hiddenLayers!=nullptr)
 			if(hiddenLayers[layer])
 				continue;
 

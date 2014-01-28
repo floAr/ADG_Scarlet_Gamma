@@ -23,7 +23,8 @@ namespace States {
 		m_modulePanel(nullptr),
 		m_objectsPanel(nullptr),
 		m_selectionView(nullptr),
-		m_toolbar(nullptr)
+		m_toolbar(nullptr),
+		m_hiddenLayers(10, 0)
 	{
 		// Load the map
 		Jo::Files::HDDFile file(_loadFile);
@@ -86,11 +87,11 @@ namespace States {
 		m_name = "Master";
 
 		//set up m_hiddenLayers for 10 layers
-		int l;
+		/*int l;
 		for(l=0;l<10;l++)
 		{
 			m_hiddenLayers.push_back(0);
-		}
+		}*/
 	}
 
 	void MasterState::Update(float dt)
@@ -283,48 +284,16 @@ namespace States {
 			break;
 			//for each key add the mask, as long as alt is pressed (maybe cache this in local field)
 		case sf::Keyboard::Num1:
-			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
-				BlendLayer(0);
-			break;
-
 		case sf::Keyboard::Num2:
-			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
-				BlendLayer(1);
-			break;
-
 		case sf::Keyboard::Num3:
-			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
-				BlendLayer(2);
-			break;
-
 		case sf::Keyboard::Num4:
-			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
-				BlendLayer(3);
-			break;
-
 		case sf::Keyboard::Num5:
-			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
-				BlendLayer(4);
-			break;
-
 		case sf::Keyboard::Num6:
-			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
-				BlendLayer(5);
-			break;
-
 		case sf::Keyboard::Num7:
-			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
-				BlendLayer(6);
-			break;
-
 		case sf::Keyboard::Num8:
-			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
-				BlendLayer(7);
-			break;
-
 		case sf::Keyboard::Num9:
 			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
-				BlendLayer(8);
+				BlendLayer(key.code - sf::Keyboard::Num1);
 			break;
 
 		case sf::Keyboard::Num0:
@@ -345,7 +314,8 @@ namespace States {
 			}
 			m_firstLayerSelection = false;
 		}
-		m_hiddenLayers[layerID] = 0;
+		// Toggle state: if number is pressed again hide layer
+		m_hiddenLayers[layerID] = 1 - m_hiddenLayers[layerID];
 	}
 
 	void MasterState::OnBegin()
@@ -358,7 +328,6 @@ namespace States {
 	{
 		CommonState::OnEnd();
 	}
-
 
 
 	void MasterState::Resize(const sf::Vector2f& _size)
@@ -375,11 +344,12 @@ namespace States {
 		m_viewPanel->setPosition( m_modulePanel->getSize().x, _size.y * 0.5f );
 
 		tgui::ChatBox::Ptr localOut = m_gui.get( "Messages" );
-		m_selectionView->setSize( m_selectionView->getSize().x, localOut->getPosition().y );
+		m_selectionView->setSize( m_selectionView->getSize().x, localOut->getPosition().y - 100.0f );
 		m_selectionView->setPosition( _size.x - m_selectionView->getSize().x, 100.0f );
 
 		m_toolbar->setSize( _size.x - m_objectsPanel->getSize().x*2, 100.0f );
 	}
+
 
 	void MasterState::MouseMoved(int deltaX, int deltaY, bool guiHandled)
 	{
@@ -412,6 +382,9 @@ namespace States {
 		MapID id = m_mapTool->GetSelectedMap();
 		return g_Game->GetWorld()->GetMap(id);
 	}
+
+
+
 
 
 

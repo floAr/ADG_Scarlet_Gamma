@@ -7,6 +7,7 @@
 #include "DragNDrop.hpp"
 #include "core/World.hpp"
 #include "core/PredefinedProperties.hpp"
+#include "Game.hpp"
 
 namespace Interfaces {
 
@@ -88,7 +89,7 @@ void PropertyPanel::Init( float _x, float _y, float _w, float _h,
 	if(m_dragNDropHandler)
 	{
 		Panel::bindCallbackEx(&PropertyPanel::StartDrag, this, tgui::Panel::LeftMousePressed);
-		Panel::bindCallback(&PropertyPanel::HandleDropEvent, this, tgui::Panel::LeftMouseReleased);
+		Panel::bindCallbackEx(&PropertyPanel::HandleDropEvent, this, tgui::Panel::LeftMouseReleased);
 	}
 
 	// Create a scrollbar for long lists.
@@ -516,7 +517,7 @@ void PropertyPanel::show()
 }
 
 
-void PropertyPanel::HandleDropEvent()
+void PropertyPanel::HandleDropEvent(const tgui::Callback& _call)
 {
 	if( !(*m_dragNDropHandler) ) return;
 
@@ -549,6 +550,27 @@ void PropertyPanel::HandleDropEvent()
 				addedSomething = true;
 			}
 		}
+	} else if( (*m_dragNDropHandler)->from == DragContent::OBJECT_PANEL )
+	{
+		// Find out on which property the element was dropped
+		auto mousePos = sf::Mouse::getPosition( g_Game->GetWindow() );
+		for( size_t i=0; i<m_lines.size(); ++i )
+		{
+			if( m_lines[i].left->mouseOnWidget( (float)_call.mouse.x, (float)_call.mouse.y )
+				|| m_lines[i].right->mouseOnWidget( (float)_call.mouse.x, (float)_call.mouse.y ) )
+			{
+				// Found the property
+				std::string propName = m_lines[i].left->getText();
+				// Add a clone into all objects
+				for( size_t i=0; i<m_objects.size(); ++i )
+				{
+					// One clone for everybody
+					Core::ObjectID id = m_world->NewObject( (*m_dragNDropHandler)->object );
+					m_objects[i]->GetProperty( propName ).AddObject( id );
+					addedSomething = true;
+				}
+			}
+		}
 	}
 	// Update gui - there are new properties
 	if( addedSomething )
@@ -556,8 +578,11 @@ void PropertyPanel::HandleDropEvent()
 }
 
 
-void PropertyPanel::Show( Core::Object* _object )
+void PropertyPanel::Show( Core::World* _world, Core::Object* _object )
 {
+	assert( _object );
+	m_world = _world;
+
 	m_objects.clear();
 	m_objects.push_back(_object);
 
@@ -569,6 +594,8 @@ void PropertyPanel::Show( Core::Object* _object )
 
 void PropertyPanel::Show( Core::World* _world, const Core::ObjectList& _objects )
 {
+	m_world = _world;
+
 	// Compare the two lists - if nothing changed do just an update
 	bool listChanged = m_objects.size() != _objects.Size();
 	if( !listChanged )
@@ -636,8 +663,20 @@ void PropertyPanel::RefreshFilter()
 
 			// Skip non-common properties
 			if( commonProperty )
+			{
 				Add( allProperties[i]->Name(), allProperties[i]->CanChange(m_player),
 					 allProperties[i]->Value(), allProperties[i]->CanEdit(m_player) );
+
+				// Add inventory recursively
+				if( allProperties[i]->IsObjectList() && m_objects.size() == 1 )
+				{
+					for( int j=0; j<allProperties[i]->GetObjects().Size(); ++j )
+					{
+						AddNode( allProperties[i]->Name() )->Show( m_world,
+							m_world->GetObject( allProperties[i]->GetObjects()[j] ) );
+					}
+				}
+			}
 		}
 	}
 }

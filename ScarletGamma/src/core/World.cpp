@@ -4,12 +4,14 @@
 #include "network/WorldMessages.hpp"
 #include "utils/StringUtil.hpp"
 #include "Constants.hpp"
+#include "PredefinedProperties.hpp"
 
 using namespace std;
 
 namespace Core {
 
-	World::World()
+	World::World() :
+		m_propertyTemplates(-1)
 	{
 		// In an empty world the first possible ids are, well, the first available ids
 		m_nextFreeMapID = 0;
@@ -43,7 +45,7 @@ namespace Core {
 	ObjectID World::NewObject( const std::string& _sprite )
 	{
 		m_objects.insert(std::make_pair<ObjectID,Object>(ObjectID(m_nextFreeObjectID+0), Object(m_nextFreeObjectID, _sprite)));
-		Network::MsgAddObject( this, m_nextFreeObjectID ).Send();
+		Network::MsgAddObject( m_nextFreeObjectID ).Send();
 		++m_nextFreeObjectID;
 		return m_nextFreeObjectID-1;
 	}
@@ -76,9 +78,22 @@ namespace Core {
 		Object newObj( wrapper.RootNode );
 		// The copy has a wrong id - give it a new one
 		newObj.m_id = m_nextFreeObjectID++;
+
+		// Deep clone
+		for( int i=0; i<newObj.GetNumElements(); ++i )
+		{
+			if( newObj.At(i)->IsObjectList() )
+			{
+				// Replace each entry in the list with a clone
+				ObjectList& list = const_cast<ObjectList&>(newObj.At(i)->GetObjects());
+				for( int j=0; j<list.Size(); ++j )
+					list[j] = NewObject( GetObject(list[j]) );
+			}
+		}
+
 		// Final insertion
 		m_objects.insert(std::make_pair<ObjectID,Object>( newObj.ID(), std::move(newObj) ) );
-		Network::MsgAddObject( this, newObj.ID() ).Send();
+		Network::MsgAddObject( newObj.ID() ).Send();
 		return newObj.ID();
 	}
 
@@ -113,9 +128,7 @@ namespace Core {
 					m_players[prop.Value()] = id;
 				}
 			}
-		} //else {
-		//	throw std::exception("World file corrupted: cannot find the objects");
-		//}
+		}
 
 		// Do the same for the maps
 		if( saveGame.RootNode.HasChild(string("Maps"), &child) )
@@ -125,14 +138,28 @@ namespace Core {
 			{
 				NewMap( (*child)[i] );
 			}
-		} //else {
-		//	throw std::exception("World file corrupted: cannot find the maps");
-		//}
+		}
 
 		// The nextFree...ID is now the maximum used id. The increment yields
 		// the first really unused id.
 		++m_nextFreeObjectID;
 		++m_nextFreeMapID;
+
+		// Load Property template object
+		if( saveGame.RootNode.HasChild(string("PropertyObject"), &child) )
+		{
+			m_propertyTemplates = (ObjectID)*child;
+		} else CreateDefaultPropertyBase();
+
+		if( saveGame.RootNode.HasChild(string("Modules"), &child) )
+		{
+			m_moduleTemplates = ObjectList( *child );
+		} else CreateDefaultModuleBase();
+
+		if( saveGame.RootNode.HasChild(string("Templates"), &child) )
+		{
+			m_objectTemplates = ObjectList( *child );
+		} else CreateDefaultTemplateBase();
 	}
 
 	void World::Save( Jo::Files::IFile& _file ) const
@@ -149,6 +176,14 @@ namespace Core {
 		i=0;
 		for( auto it=m_maps.begin(); it!=m_maps.end(); ++it, ++i )
 			it->second.Serialize(maps[i]);
+
+		// Serialize the template objects
+		if( m_propertyTemplates != ObjectID(-1) )
+			saveGame.RootNode[string("PropertyObject")] = m_propertyTemplates;
+		if( m_moduleTemplates.Size() > 0 )
+			m_moduleTemplates.Serialize( saveGame.RootNode[string("Modules")] );
+		if( m_objectTemplates.Size() > 0 )
+			m_objectTemplates.Serialize( saveGame.RootNode[string("Templates")] );
 
 		// Write a new file
 		saveGame.Write(_file, Jo::Files::Format::JSON);
@@ -231,6 +266,98 @@ namespace Core {
 	{
 		for( auto it=m_maps.begin(); it!=m_maps.end(); ++it )
 			it->second.Update( _dt );
+	}
+
+
+	ObjectID World::NewModuleTemplate( const std::string& _sprite )
+	{
+		ObjectID id = NewObject( _sprite );
+		m_moduleTemplates.Add(id);
+		return id;
+	}
+
+
+	ObjectID World::NewObjectTemplate( const std::string& _sprite )
+	{
+		ObjectID id = NewObject( _sprite );
+		m_objectTemplates.Add(id);
+		return id;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	void World::CreateDefaultPropertyBase()
+	{
+		Network::MaskWorldMessage lock;
+		// Create and fill an object with all known properties
+		m_propertyTemplates = NewObject( STR_EMPTY );
+		Object* propertyO = GetObject( m_propertyTemplates );
+
+		propertyO->SetColor( sf::Color::White );
+		propertyO->Add( PROPERTY::NAME );
+		propertyO->Add( PROPERTY::OBSTACLE );
+		propertyO->Add( PROPERTY::INVENTORY );
+		propertyO->Add( PROPERTY::STRENGTH );
+		propertyO->Add( PROPERTY::DEXTERITY );
+		propertyO->Add( PROPERTY::CONSTITUTION );
+		propertyO->Add( PROPERTY::INTELLIGENCE );
+		propertyO->Add( PROPERTY::WISDOM );
+		propertyO->Add( PROPERTY::CHARISMA );
+	}
+
+	void World::CreateDefaultModuleBase()
+	{
+		Network::MaskWorldMessage lock;
+		ObjectID OID = NewObject( STR_EMPTY );
+		m_moduleTemplates.Add( OID );
+		Object* object = GetObject( OID );
+		object->Add( PROPERTY::NAME ).SetValue( STR_ATTACKABLE );
+		object->GetProperty( STR_PROP_SPRITE ).SetRights( Property::R_SYSTEMONLY );	// Hide the sprite property
+		object->Add( PROPERTY::HEALTH );
+		object->Add( PROPERTY::ARMORCLASS );
+	}
+
+	void World::CreateDefaultTemplateBase()
+	{
+		Network::MaskWorldMessage lock;
+		Object* object = GetObject( NewObjectTemplate( "media/gobbo.png" ) );
+		object->Add( PROPERTY::NAME ).SetValue( STR_GOBBO );
+
+		object = GetObject( NewObjectTemplate( "media/bar_hor.png" ) );
+		object->Add( PROPERTY::NAME ).SetValue( STR_WALLH );
+		object->Add( PROPERTY::OBSTACLE );
+		object = GetObject( NewObjectTemplate( "media/bar_vert.png" ) );
+		object->Add( PROPERTY::NAME ).SetValue( STR_WALLV );
+		object->Add( PROPERTY::OBSTACLE );
+		object = GetObject( NewObjectTemplate( "media/cross_big.png" ) );
+		object->Add( PROPERTY::NAME ).SetValue( STR_WALLC );
+		object->Add( PROPERTY::OBSTACLE );
+
+		object = GetObject( NewObjectTemplate( "media/noise_2.png" ) );
+		object->Add( PROPERTY::NAME ).SetValue( STR_EARTH );
+		object->Add( PROPERTY::COLOR ).SetValue( "556622ff" );
+		object = GetObject( NewObjectTemplate( "media/noise_2.png" ) );
+		object->Add( PROPERTY::NAME ).SetValue( STR_GRASS );
+		object->Add( PROPERTY::COLOR ).SetValue( "44bb44ff" );
+		object = GetObject( NewObjectTemplate( "media/noise_1.png" ) );
+		object->Add( PROPERTY::NAME ).SetValue( STR_WATER );
+		object->Add( PROPERTY::OBSTACLE );
+		object->Add( PROPERTY::COLOR ).SetValue( "aaaaeeff" );
+
 	}
 
 } // namespace Core

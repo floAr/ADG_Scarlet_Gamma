@@ -94,7 +94,7 @@ namespace Network {
 	{
 	public:
 		/// \param [in] _object The new object.
-		MsgAddObject( const Core::World* _world, const Core::ObjectID _object );
+		MsgAddObject( const Core::ObjectID _object );
 
 		/// \see HandleWorldMessage
 		static void Receive( Core::World* _world, Jo::Files::MemFile& _input );

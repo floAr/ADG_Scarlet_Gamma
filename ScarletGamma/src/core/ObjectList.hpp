@@ -42,6 +42,7 @@ public:
 	/// \brief Index access to all elements in the list.
 	/// \details Index out of bounds is checked by an assertion in debug mode.
 	ObjectID operator[](int _index) const;
+	ObjectID& operator[](int _index);
 
 	/// \brief Write the content of this object to a meta-file.
 	/// \param [inout] _node A node with ElementType::UNKNOWN which can

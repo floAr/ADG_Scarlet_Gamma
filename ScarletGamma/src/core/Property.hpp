@@ -17,7 +17,7 @@ public:
 
 	/// \brief Access the internal object list.
 	/// \throws Exception::NoObjectList.
-	const ObjectList& GetObjects();
+	const ObjectList& GetObjects() const;
 
 	bool IsObjectList() const	{ return m_objects.Size() > 0; }
 

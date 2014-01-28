@@ -6,7 +6,7 @@
 #include "core/World.hpp"
 #include "DragNDrop.hpp"
 #include "core/PredefinedProperties.hpp"
-#include "network/WorldMessages.hpp"
+#include "Game.hpp"
 
 using namespace Core;
 
@@ -29,15 +29,13 @@ ObjectPanel::ObjectPanel() :
 
 
 void ObjectPanel::Init( float _x, float _y, float _w, float _h,
-		bool _addAble, Core::World* _world, Interfaces::DragContent::Sources _source,
+		bool _addAble, Interfaces::DragContent::Sources _source,
 		Interfaces::DragContent** _dragNDropHandler,
 		Interfaces::PropertyPanel::Ptr _viewer )
 {
 	m_addAble = _addAble;
-	m_world = _world;
 	m_dragNDropHandler = _dragNDropHandler;
 	m_dragNDropSource = _source;
-	assert(_world);
 	m_viewer = _viewer;
 
 	Panel::setPosition(_x, _y + 20.0f);
@@ -98,7 +96,7 @@ void ObjectPanel::Add( ObjectID _object )
 	float x = 12.0f;
 
 	// Get the name of the object
-	Object* obj = m_world->GetObject(_object);
+	Object* obj = g_Game->GetWorld()->GetObject(_object);
 	const std::string& name = obj->GetName();
 	const std::string& sprite = obj->GetProperty(STR_PROP_SPRITE).Value();
 
@@ -207,7 +205,7 @@ void ObjectPanel::RemoveBtn(const tgui::Callback& _call)
 	unsigned delLine = _call.id;
 	// Remove object from world
 	if( m_selected->ID() == delLine ) m_selected = nullptr;
-	m_world->RemoveObject( delLine );
+	g_Game->GetWorld()->RemoveObject( delLine );
 	
 	// First element is always the scrollbar
 	for( size_t i=1; i<m_Widgets.size(); ++i )
@@ -228,9 +226,11 @@ void ObjectPanel::AddBtn( const tgui::Callback& _call )
 {
 	if( !m_newName->getText().isEmpty() )
 	{
-		Network::MaskWorldMessage lock;
-		ObjectID objectID = m_world->NewObject( STR_EMPTY );
-		m_world->GetObject( objectID )->Add( PROPERTY::NAME ) .SetValue( m_newName->getText() );
+		ObjectID objectID;
+		if( m_dragNDropSource == DragContent::MODULES_PANEL )
+			objectID = g_Game->GetWorld()->NewModuleTemplate( STR_EMPTY );
+		else objectID = g_Game->GetWorld()->NewObjectTemplate( STR_EMPTY );
+		g_Game->GetWorld()->GetObject( objectID )->Add( PROPERTY::NAME ).SetValue( m_newName->getText() );
 		Add( objectID );
 		m_newName->setText("");
 	}
@@ -296,7 +296,7 @@ void ObjectPanel::StartDrag(const tgui::Callback& _call)
 			// Overwrite the last referenced content if it was not handled.
 			if( !*m_dragNDropHandler ) *m_dragNDropHandler = new Interfaces::DragContent();
 			(*m_dragNDropHandler)->from = m_dragNDropSource;
-			(*m_dragNDropHandler)->object = m_world->GetObject( m_Widgets[i]->getCallbackId() );
+			(*m_dragNDropHandler)->object = g_Game->GetWorld()->GetObject( m_Widgets[i]->getCallbackId() );
 			(*m_dragNDropHandler)->prop = nullptr;
 			return;
 		}
@@ -321,8 +321,8 @@ void ObjectPanel::SelectObject(const tgui::Callback& _call)
 				s_lastSelected->setTextColor( sf::Color(200,200,200) );
 				s_lastSelected->setTextSize( 13 );
 			}
-			m_selected = m_world->GetObject(ptr->getCallbackId());
-			m_viewer->Show( m_selected );
+			m_selected = g_Game->GetWorld()->GetObject(ptr->getCallbackId());
+			m_viewer->Show( g_Game->GetWorld(), m_selected );
 			// Highlight new component
 			ptr->setTextColor( sf::Color(255,255,255) );
 			ptr->setTextSize( 15 );
@@ -364,10 +364,16 @@ void ObjectPanel::RefreshFilter()
 	
 	Clear();
 
-	auto allObjects = m_world->FilterObjectsByName( m_titleBar->getText() );
-	for( size_t i=0; i<allObjects.size(); ++i )
+	const Core::ObjectList* allObjects = nullptr;
+	if( m_dragNDropSource == DragContent::MODULES_PANEL )
+		allObjects = &g_Game->GetWorld()->GetModuleBase();
+	else allObjects = &g_Game->GetWorld()->GetTemplateBase();
+
+	for( int i=0; i<allObjects->Size(); ++i )
 	{
-		Add( allObjects[i] );
+		// Test if the name contains the correct part
+		if( Utils::IStringContains(g_Game->GetWorld()->GetObject((*allObjects)[i])->GetName(), m_titleBar->getText()) )
+			Add( (*allObjects)[i] );
 	}
 }
 

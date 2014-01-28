@@ -25,7 +25,7 @@ namespace Interfaces {
 			unsigned _pid=0xffffffff);
 
 		/// \brief Extract all properties of an object recursively.
-		void Show( Core::Object* _object );
+		void Show( Core::World* _world, Core::Object* _object );
 
 		/// \brief Extract all common properties of many object without recursion.
 		void Show( Core::World* _world, const Core::ObjectList& _objects );
@@ -41,7 +41,7 @@ namespace Interfaces {
 
 		/// \brief If an object is dragged to this panel all properties which
 		///		are not existent are copied and the same holds for single properties.
-		void HandleDropEvent();
+		void HandleDropEvent(const tgui::Callback& _call);
 	protected:
 		// A list of preloaded objects to increase creation time by a very large
 		// factor.
@@ -81,6 +81,7 @@ namespace Interfaces {
 		int m_numPixelLines;		///< Total number of pixels covered by elements inside the list.
 		Core::PlayerID m_player;	///< The accessing player to apply rights system
 		std::vector<Core::Object*> m_objects;			///< Associated objects which are visualized
+		Core::World* m_world;							///< World where all the objects come from
 		Interfaces::DragContent** m_dragNDropHandler;	///< A pointer to a pointer which must be filled if a mouse down event occures.
 
 		void RemoveBtn(const tgui::Callback& _call);

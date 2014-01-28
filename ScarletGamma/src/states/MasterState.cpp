@@ -18,9 +18,6 @@ namespace States {
 
 	MasterState::MasterState( const std::string& _loadFile ) :
 		m_propertyPanel(nullptr),
-		m_dbProperties(nullptr),
-		m_dbModules(nullptr),
-		m_dbTemplates(nullptr),
 		m_modulePanel(nullptr),
 		m_objectsPanel(nullptr),
 		m_selectionView(nullptr),
@@ -32,29 +29,6 @@ namespace States {
 		Jo::Files::HDDFile file(_loadFile);
 		g_Game->GetWorld()->Load( file );
 
-		// Load the template databases
-		m_dbProperties = new Core::World();
-		if( !Jo::Files::Utils::Exists( "data/properties.dat" ) )
-			CreateDefaultPropertyBase();
-		else {
-			Jo::Files::HDDFile database( "data/properties.dat" );
-			m_dbProperties->Load( database );
-		}
-		m_dbModules = new Core::World();
-		if( !Jo::Files::Utils::Exists( "data/modules.dat" ) )
-			CreateDefaultModuleBase();
-		else {
-			Jo::Files::HDDFile database( "data/modules.dat" );
-			m_dbModules->Load( database );
-		}
-		m_dbTemplates = new Core::World();
-		if( !Jo::Files::Utils::Exists( "data/objects.dat" ) )
-			CreateDefaultTemplateBase();
-		else {
-			Jo::Files::HDDFile database( "data/objects.dat" );
-			m_dbTemplates->Load( database );
-		}
-
 		m_viewPanel = Interfaces::PropertyPanel::Ptr(m_gui);
 		m_viewPanel->Init( 240.0f, 384.0f, 240.0f, 384.0f, false, false, 0, &m_draggedContent );
 
@@ -62,15 +36,15 @@ namespace States {
 		m_propertyPanel = Interfaces::PropertyPanel::Ptr(m_gui);
 		m_propertyPanel->Init( 0.0f, 0.0f, 240.0f, 384.0f, true, false, 0, &m_draggedContent );
 		// The all-properties object has ID 0
-		m_propertyPanel->Show( m_dbProperties->GetObject( 0 ) );
+		m_propertyPanel->Show( g_Game->GetWorld(), g_Game->GetWorld()->GetPropertyBaseObject() );
 
 		// Load Modules from database into gui
 		m_modulePanel = Interfaces::ObjectPanel::Ptr(m_gui);
-		m_modulePanel->Init( 0.0f, 384.0f, 240.0f, 384.0f, true, m_dbModules, Interfaces::DragContent::MODULES_PANEL, &m_draggedContent, m_viewPanel );
+		m_modulePanel->Init( 0.0f, 384.0f, 240.0f, 384.0f, true, Interfaces::DragContent::MODULES_PANEL, &m_draggedContent, m_viewPanel );
 
 		// Load Objects from database into gui
 		m_objectsPanel = Interfaces::ObjectPanel::Ptr(m_gui);
-		m_objectsPanel->Init( 240.0f, 0.0f, 240.0f, 384.0f, true, m_dbTemplates, Interfaces::DragContent::OBJECT_PANEL, &m_draggedContent, m_viewPanel );
+		m_objectsPanel->Init( 240.0f, 0.0f, 240.0f, 384.0f, true, Interfaces::DragContent::OBJECT_PANEL, &m_draggedContent, m_viewPanel );
 
 		// The temporary selection menu
 		m_selectionView = Interfaces::PropertyPanel::Ptr(m_gui);
@@ -224,7 +198,7 @@ namespace States {
 				m_modulePanel->HandleDropEvent();
 			} else if( m_viewPanel->mouseOnWidget( (float)button.x, (float)button.y ) )
 			{
-				m_viewPanel->HandleDropEvent();
+			//	m_viewPanel->HandleDropEvent();
 			} else if( m_propertyPanel->mouseOnWidget( (float)button.x, (float)button.y ) )
 			{
 				// Just ignore things dragged to the property list
@@ -355,15 +329,6 @@ namespace States {
 	{
 		CommonState::OnEnd();
 
-		// Save databases
-		Jo::Files::HDDFile database( "data/properties.dat", Jo::Files::HDDFile::ModeFlags( Jo::Files::HDDFile::CREATE_FILE | Jo::Files::HDDFile::OVERWRITE ) );
-		m_dbProperties->Save( database );
-		database = Jo::Files::HDDFile( "data/modules.dat", Jo::Files::HDDFile::ModeFlags( Jo::Files::HDDFile::CREATE_FILE | Jo::Files::HDDFile::OVERWRITE ) );
-		m_dbModules->Save( database );
-		database = Jo::Files::HDDFile( "data/objects.dat", Jo::Files::HDDFile::ModeFlags( Jo::Files::HDDFile::CREATE_FILE | Jo::Files::HDDFile::OVERWRITE ) );
-		m_dbTemplates->Save( database );
-
-
 		// Save the world
 		Jo::Files::HDDFile file(m_worldFileName, Jo::Files::HDDFile::OVERWRITE);
 		g_Game->GetWorld()->Save( file );
@@ -421,79 +386,6 @@ namespace States {
 	{
 		MapID id = m_mapTool->GetSelectedMap();
 		return g_Game->GetWorld()->GetMap(id);
-	}
-
-
-
-
-
-
-
-	void MasterState::CreateDefaultPropertyBase()
-	{
-		Network::MaskWorldMessage lock;
-		// Create and fill an object with all known properties
-		ObjectID propertyOID = m_dbProperties->NewObject( STR_EMPTY );
-		assert( propertyOID == 0 );
-		Object* propertyO = m_dbProperties->GetObject( propertyOID );
-
-		propertyO->SetColor( sf::Color::White );
-		propertyO->Add( PROPERTY::NAME );
-		propertyO->Add( PROPERTY::OBSTACLE );
-		propertyO->Add( PROPERTY::INVENTORY );
-		propertyO->Add( PROPERTY::STRENGTH );
-		propertyO->Add( PROPERTY::DEXTERITY );
-		propertyO->Add( PROPERTY::CONSTITUTION );
-		propertyO->Add( PROPERTY::INTELLIGENCE );
-		propertyO->Add( PROPERTY::WISDOM );
-		propertyO->Add( PROPERTY::CHARISMA );
-	}
-
-	void MasterState::CreateDefaultModuleBase()
-	{
-		Network::MaskWorldMessage lock;
-		ObjectID OID = m_dbModules->NewObject( STR_EMPTY );
-		Object* object = m_dbModules->GetObject( OID );
-		object->Add( PROPERTY::NAME ).SetValue( STR_ATTACKABLE );
-		object->GetProperty( STR_PROP_SPRITE ).SetRights( Property::R_SYSTEMONLY );	// Hide the sprite property
-		object->Add( PROPERTY::HEALTH );
-        object->Add( PROPERTY::ARMORCLASS );
-	}
-
-	void MasterState::CreateDefaultTemplateBase()
-	{
-		Network::MaskWorldMessage lock;
-		ObjectID OID = m_dbTemplates->NewObject( "media/gobbo.png" );
-		Object* object = m_dbTemplates->GetObject( OID );
-		object->Add( PROPERTY::NAME ).SetValue( STR_GOBBO );
-		// TODO: add modules
-
-		OID = m_dbTemplates->NewObject( "media/bar_hor.png" );
-		object = m_dbTemplates->GetObject( OID );
-		object->Add( PROPERTY::NAME ).SetValue( STR_WALLH );
-		object->Add( PROPERTY::OBSTACLE );
-		OID = m_dbTemplates->NewObject( "media/bar_vert.png" );
-		object = m_dbTemplates->GetObject( OID );
-		object->Add( PROPERTY::NAME ).SetValue( STR_WALLV );
-		object->Add( PROPERTY::OBSTACLE );
-		OID = m_dbTemplates->NewObject( "media/cross_big.png" );
-		object = m_dbTemplates->GetObject( OID );
-		object->Add( PROPERTY::NAME ).SetValue( STR_WALLC );
-		object->Add( PROPERTY::OBSTACLE );
-		OID = m_dbTemplates->NewObject( "media/noise_2.png" );
-		object = m_dbTemplates->GetObject( OID );
-		object->Add( PROPERTY::NAME ).SetValue( STR_EARTH );
-		object->Add( PROPERTY::COLOR ).SetValue( "556622ff" );
-		OID = m_dbTemplates->NewObject( "media/noise_2.png" );
-		object = m_dbTemplates->GetObject( OID );
-		object->Add( PROPERTY::NAME ).SetValue( STR_GRASS );
-		object->Add( PROPERTY::COLOR ).SetValue( "44bb44ff" );
-		OID = m_dbTemplates->NewObject( "media/noise_1.png" );
-		object = m_dbTemplates->GetObject( OID );
-		object->Add( PROPERTY::NAME ).SetValue( STR_WATER );
-		object->Add( PROPERTY::OBSTACLE );
-		object->Add( PROPERTY::COLOR ).SetValue( "aaaaeeff" );
-
 	}
 
 

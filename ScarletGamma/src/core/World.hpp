@@ -86,6 +86,14 @@ namespace Core {
         /// \brief Call the update of all maps (Simulate Game).
         /// \param [in] _dt Time since last update.
         void Update( float _dt );
+
+		/// \brief Get the id of the object which contains all (template) properties.
+		Object* GetPropertyBaseObject()	{ return GetObject(m_propertyTemplates); }
+
+		const ObjectList& GetModuleBase()	{ return m_moduleTemplates; }
+		const ObjectList& GetTemplateBase()	{ return m_objectTemplates; }
+		ObjectID NewModuleTemplate( const std::string& _sprite );
+		ObjectID NewObjectTemplate( const std::string& _sprite );
     private:
         /// \brief All real existing objects.
         std::unordered_map<ObjectID, Object> m_objects;
@@ -94,6 +102,22 @@ namespace Core {
         /// \brief A subset of the objects which is flagged with a player property.
         /// \details The objects are mapped to there names to search player by name.
         std::unordered_map<std::string, Core::ObjectID> m_players;
+
+		/// \brief A subset of objects which define templates
+		ObjectList m_objectTemplates;
+		/// \brief Creates the initial template database in case of a
+		///		loading failure.
+		void CreateDefaultTemplateBase();
+		/// \brief A subset of objects which define modules
+		ObjectList m_moduleTemplates;
+		/// \brief Creates the initial module database in case of a
+		///		loading failure.
+		void CreateDefaultModuleBase();
+		/// \brief One object with all properties
+		Core::ObjectID m_propertyTemplates;
+		/// \brief Creates the initial property database in case of a
+		///		loading failure.
+		void CreateDefaultPropertyBase();
 
         /// \brief All loaded maps.
         std::unordered_map<MapID, Map> m_maps;

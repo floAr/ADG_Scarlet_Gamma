@@ -50,6 +50,12 @@ namespace Core {
 		return m_objects[_index];
 	}
 
+	ObjectID& ObjectList::operator[](int _index)
+	{
+		assert(0<=_index && _index<(int)m_objects.size());
+		return m_objects[_index];
+	}
+
 	void ObjectList::Serialize( Jo::Files::MetaFileWrapper::Node& _node ) const
 	{
 		// Would also run without preallocation but so its faster.

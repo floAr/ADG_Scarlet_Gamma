@@ -165,7 +165,7 @@ void States::PlayerState::OnBegin()
 	tgui::ChatBox::Ptr localOut = m_gui.get( "Messages" );
 	m_playerView->Init( 624.0f, 0.0f, 400.0f, localOut->getPosition().y, false, false,
 		id, nullptr );
-	m_playerView->Show( m_player );
+	m_playerView->Show( g_Game->GetWorld(), m_player );
 }
 
 
@@ -174,7 +174,7 @@ void States::PlayerState::Update( float _dt )
 	CommonState::Update( _dt );
 
 	// Go through player object and update all viewed properties
-	m_playerView->Show(m_player);
+	m_playerView->Show( g_Game->GetWorld(), m_player );
 }
 
 

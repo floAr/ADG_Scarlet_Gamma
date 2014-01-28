@@ -33,10 +33,6 @@ namespace States
 	private:
 		const std::string m_worldFileName;	///< This is the name of the world which was loaded in constructor
 
-		Core::World* m_dbProperties;	///< A container with one object containing property templates.
-		Core::World* m_dbModules;		///< A container with objects interpreted as modules.
-		Core::World* m_dbTemplates;		///< A container with object templates
-
 		/// \brief Object builder attribute template panel
 		Interfaces::PropertyPanel::Ptr m_propertyPanel;
 		/// \brief Object builder modules panel
@@ -62,16 +58,6 @@ namespace States
 		/// \brief Some components fill this with content if mouse is pushed.
 		///		On release an according action should be done.
 		Interfaces::DragContent* m_draggedContent;
-
-		/// \brief Creates the initial property database in case of a
-		///		loading failure.
-		void CreateDefaultPropertyBase();
-		/// \brief Creates the initial module database in case of a
-		///		loading failure.
-		void CreateDefaultModuleBase();
-		/// \brief Creates the initial template database in case of a
-		///		loading failure.
-		void CreateDefaultTemplateBase();
 
 		/// \brief Helper to blend the different layers on and off
 		void BlendLayer(int layerId);

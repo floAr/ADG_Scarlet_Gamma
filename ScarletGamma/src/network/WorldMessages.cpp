@@ -120,13 +120,10 @@ namespace Network {
 	}*/
 
 	// ********************************************************************* //
-	MsgAddObject::MsgAddObject( const Core::World* _world, const Core::ObjectID _object ) :
+	MsgAddObject::MsgAddObject( const Core::ObjectID _object ) :
 		WorldMsg(WorldMsgType::ADD_OBJECT, nullptr),
 		m_object(_object)
 	{
-		// Currently synchronizing other worlds is not supported.
-		if( g_MaskNewWorldMessages == 0 )
-			assert( _world == g_Game->GetWorld() );
 	}
 
 	void MsgAddObject::WriteData( Jo::Files::MemFile& _output ) const

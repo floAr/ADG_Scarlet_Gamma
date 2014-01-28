@@ -23,7 +23,7 @@ namespace Interfaces {
 		/// \param [in] _addAble Add and delete buttons for lines are shown.
 		/// \param [in] _source As what should this GUI fill the DragNDrop handler.
 		void Init( float _x, float _y, float _w, float _h,
-			bool _addAble, Core::World* _world, Interfaces::DragContent::Sources _source,
+			bool _addAble, Interfaces::DragContent::Sources _source,
 			Interfaces::DragContent** _dragNDropHandler,
 			Interfaces::PropertyPanel::Ptr _viewer );
 
@@ -49,7 +49,6 @@ namespace Interfaces {
 		int m_oldScrollValue;		///< The damned scrollbar-change does not send the previous value.
 		int m_numPixelLines;		///< Total number of pixels covered by elements inside the list.
 	//	clock_t m_lastClick;		///< Timestamp when was the last mouse click? Required to detect double click.
-		Core::World* m_world;
 		Interfaces::DragContent** m_dragNDropHandler;	///< A pointer to a pointer which must be filled if a mouse down event occures.
 		Interfaces::DragContent::Sources m_dragNDropSource;		///< As what should this GUI fill the DragNDrop handler.
 		Interfaces::PropertyPanel::Ptr m_viewer;		///< A panel to view a selected object.

@@ -41,7 +41,7 @@ namespace Core {
 		}
 	}
 
-	const ObjectList& Property::GetObjects()
+	const ObjectList& Property::GetObjects() const
 	{
 		return m_objects;
 	}

@@ -89,7 +89,7 @@ void States::ActionState::GuiCallback(tgui::Callback& args)
 {
 	if(args.id>=100)//item clicked
 	{
-		Actions::ActionPool::Instance().StartLocalAction(args.id-100, 0, 0);
+		Actions::ActionPool::Instance().StartLocalAction(args.id-100, 0, m_object);
 		m_finished=true;
 	}
 }

@@ -14,7 +14,8 @@
 States::ActionState::ActionState() :
 	m_defaultButton()
 {
-	m_object=-1;
+	m_targetObject=-1;
+	m_sourceObject=-1;
 	m_gui.setWindow(g_Game->GetWindow());
 	m_gui.setGlobalFont( Content::Instance()->LoadFont("media/arial.ttf") );
 	m_dirty = false;
@@ -22,8 +23,13 @@ States::ActionState::ActionState() :
 	m_defaultButton->load("lib/TGUI-0.6-RC/widgets/Black.conf");
 }
 
-void States::ActionState::SetObject(Core::ObjectID id){
-	m_object=id;
+void States::ActionState::SetTargetObject(Core::ObjectID id){
+	m_targetObject=id;
+	m_dirty=true;
+}
+
+void States::ActionState::SetSourceObject(Core::ObjectID id){
+	m_sourceObject=id;
 	m_dirty=true;
 }
 
@@ -40,7 +46,7 @@ void States::ActionState::RecalculateGUI()
 {
 	m_gui.removeAllWidgets(); //clear gui
 	//get the current object
-	Core::Object* o=g_Game->GetWorld()->GetObject(m_object);
+	Core::Object* o=g_Game->GetWorld()->GetObject(m_targetObject);
 	auto pos=o->GetPosition();
 	//m_screenX=pos.x*TILESIZE;
 	//m_screenY=pos.y*TILESIZE;
@@ -89,7 +95,7 @@ void States::ActionState::GuiCallback(tgui::Callback& args)
 {
 	if(args.id>=100)//item clicked
 	{
-		Actions::ActionPool::Instance().StartLocalAction(args.id-100, 0, m_object);
+		Actions::ActionPool::Instance().StartLocalAction(args.id-100, m_sourceObject, m_targetObject);
 		m_finished=true;
 	}
 }

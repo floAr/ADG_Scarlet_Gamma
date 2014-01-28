@@ -108,7 +108,7 @@ void States::SelectionState::GuiCallback(tgui::Callback& args)
 		/* ACTION SELECTION BEHAVIOUR
 		Core::ObjectID id = (*m_objects)[args.id-100];
 		auto action=dynamic_cast<ActionState*>( g_Game->GetStateMachine()->PushGameState(States::GST_ACTION));
-		action->SetObject(id);
+		action->SetTargetObject(id);
 		m_finished=true;
 		// */
 		//* NORMAL SELECTION BEHAVIOR
@@ -159,8 +159,18 @@ void States::SelectionState::MouseButtonPressed(sf::Event::MouseButtonEvent& but
 			{
 			    auto cid=(m_Widgets[i]->getCallbackId());
 			    Core::ObjectID id = m_objects[(m_Widgets[i]->getCallbackId()-100)];
+
+				//get source object
+				CommonState* previousState = dynamic_cast<CommonState*>(m_previousState);
+				// The parent is not set or not of type CommonState, but it should be!
+				assert(previousState);
+				
+				
+
 		        auto action=dynamic_cast<ActionState*>( g_Game->GetStateMachine()->PushGameState(States::GST_ACTION));
-		        action->SetObject(id);
+		        action->SetTargetObject(id);
+				const Core::ObjectList* selection=previousState->GetSelection();
+				action->SetSourceObject((*selection)[0]);
 				action->SetPosition(button.x,button.y);
 		        m_finished=true;
 			    return;

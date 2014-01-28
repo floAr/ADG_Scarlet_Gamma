@@ -166,6 +166,8 @@ void States::PlayerState::OnBegin()
 	m_playerView->Init( 624.0f, 0.0f, 400.0f, localOut->getPosition().y, false, false,
 		id, nullptr );
 	m_playerView->Show( g_Game->GetWorld(), m_player );
+
+	this->AddToSelection(m_player->ID()); //autoselect the player
 }
 
 

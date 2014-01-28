@@ -10,7 +10,8 @@ namespace States
 	{
 	public:
 		ActionState();
-		void SetObject(Core::ObjectID);
+		void SetTargetObject(Core::ObjectID);
+		void SetSourceObject(Core::ObjectID);
 		void SetPosition(int x,int y);
 		void RecalculateGUI();
 		virtual void OnBegin();
@@ -27,8 +28,9 @@ namespace States
 		void positionButton(tgui::Button::Ptr b, float angle, float radius);
 
 		tgui::Gui m_gui;
-		tgui::Button::Ptr m_defaultButton;	///< This is a preloaded button to increase RecalculateGUI performance by a height factor
-		Core::ObjectID m_object;		///< The object to be used
+		tgui::Button::Ptr m_defaultButton;	///< This is a preloaded button to increase RecalculateGUI performance by a high factor
+		Core::ObjectID m_targetObject;		///< The object to be used
+		Core::ObjectID m_sourceObject;		///< The object starting the action
 		bool m_dirty;						///< Flag to mark a change in the GUI
 		bool m_controlWasPressed;			///< Buffer for control key
 		float m_screenX, m_screenY;			///< Position on screen

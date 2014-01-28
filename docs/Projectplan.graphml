@@ -3113,7 +3113,7 @@ Abschlusspräsentation</y:NodeLabel>
       <data key="d6">
         <y:GenericNode configuration="com.yworks.flowchart.process">
           <y:Geometry height="12.0" width="104.01901614545454" x="-503.277564509091" y="-349.3153090909091"/>
-          <y:Fill color="#FFFFFF" color2="#B7C9E3" transparent="false"/>
+          <y:Fill color="#00FF00" color2="#B7C9E3" transparent="false"/>
           <y:BorderStyle color="#FFFFFF" type="line" width="1.0"/>
           <y:NodeLabel alignment="left" autoSizePolicy="content" borderDistance="0.0" fontFamily="Trebuchet MS" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.93359375" modelName="sides" modelPosition="n" textColor="#000000" visible="true" width="138.671875" x="-17.32642942727273" y="-17.93359375">Objektdatenbank + Menü</y:NodeLabel>
           <y:StyleProperties>

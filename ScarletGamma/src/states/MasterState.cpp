@@ -52,7 +52,7 @@ namespace States {
 			CreateDefaultTemplateBase();
 		else {
 			Jo::Files::HDDFile database( "data/objects.dat" );
-			m_dbModules->Load( database );
+			m_dbTemplates->Load( database );
 		}
 
 		m_viewPanel = Interfaces::PropertyPanel::Ptr(m_gui);
@@ -355,7 +355,14 @@ namespace States {
 	{
 		CommonState::OnEnd();
 
-		// Save database
+		// Save databases
+		Jo::Files::HDDFile database( "data/properties.dat", Jo::Files::HDDFile::ModeFlags( Jo::Files::HDDFile::CREATE_FILE | Jo::Files::HDDFile::OVERWRITE ) );
+		m_dbProperties->Save( database );
+		database = Jo::Files::HDDFile( "data/modules.dat", Jo::Files::HDDFile::ModeFlags( Jo::Files::HDDFile::CREATE_FILE | Jo::Files::HDDFile::OVERWRITE ) );
+		m_dbModules->Save( database );
+		database = Jo::Files::HDDFile( "data/objects.dat", Jo::Files::HDDFile::ModeFlags( Jo::Files::HDDFile::CREATE_FILE | Jo::Files::HDDFile::OVERWRITE ) );
+		m_dbTemplates->Save( database );
+
 
 		// Save the world
 		Jo::Files::HDDFile file(m_worldFileName, Jo::Files::HDDFile::OVERWRITE);
@@ -473,6 +480,20 @@ namespace States {
 		object = m_dbTemplates->GetObject( OID );
 		object->Add( PROPERTY::NAME ).SetValue( STR_WALLC );
 		object->Add( PROPERTY::OBSTACLE );
+		OID = m_dbTemplates->NewObject( "media/noise_2.png" );
+		object = m_dbTemplates->GetObject( OID );
+		object->Add( PROPERTY::NAME ).SetValue( STR_EARTH );
+		object->Add( PROPERTY::COLOR ).SetValue( "556622ff" );
+		OID = m_dbTemplates->NewObject( "media/noise_2.png" );
+		object = m_dbTemplates->GetObject( OID );
+		object->Add( PROPERTY::NAME ).SetValue( STR_GRASS );
+		object->Add( PROPERTY::COLOR ).SetValue( "44bb44ff" );
+		OID = m_dbTemplates->NewObject( "media/noise_1.png" );
+		object = m_dbTemplates->GetObject( OID );
+		object->Add( PROPERTY::NAME ).SetValue( STR_WATER );
+		object->Add( PROPERTY::OBSTACLE );
+		object->Add( PROPERTY::COLOR ).SetValue( "aaaaeeff" );
+
 	}
 
 

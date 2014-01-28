@@ -82,6 +82,9 @@ static const std::string STR_GOBBO = std::string("Gobbo");
 static const std::string STR_WALLH = std::string("Wand_H");
 static const std::string STR_WALLV = std::string("Wand_V");
 static const std::string STR_WALLC = std::string("Wand_K");
+static const std::string STR_EARTH = std::string("Erde");
+static const std::string STR_GRASS = std::string("Gras");
+static const std::string STR_WATER = std::string("Wasser");
 
 
 /************************************************************************/

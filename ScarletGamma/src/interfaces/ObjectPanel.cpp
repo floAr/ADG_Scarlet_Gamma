@@ -6,6 +6,7 @@
 #include "core/World.hpp"
 #include "DragNDrop.hpp"
 #include "core/PredefinedProperties.hpp"
+#include "network/WorldMessages.hpp"
 
 using namespace Core;
 
@@ -227,6 +228,7 @@ void ObjectPanel::AddBtn( const tgui::Callback& _call )
 {
 	if( !m_newName->getText().isEmpty() )
 	{
+		Network::MaskWorldMessage lock;
 		ObjectID objectID = m_world->NewObject( STR_EMPTY );
 		m_world->GetObject( objectID )->Add( PROPERTY::NAME ) .SetValue( m_newName->getText() );
 		Add( objectID );

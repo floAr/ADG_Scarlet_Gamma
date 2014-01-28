@@ -50,7 +50,7 @@ namespace UnitTest {
 
 		// Save
 		try {
-			Jo::Files::HDDFile file("saves/unittest.json", Jo::Files::HDDFile::CREATE_FILE);
+			Jo::Files::HDDFile file("saves/unittest.json", Jo::Files::HDDFile::ModeFlags( Jo::Files::HDDFile::CREATE_FILE | Jo::Files::HDDFile::OVERWRITE ));
 			world->Save( file );
 		} catch(std::string _e) {TEST_FAILED(_e);}
 		catch(...) {TEST_FAILED("Saving a world.");}

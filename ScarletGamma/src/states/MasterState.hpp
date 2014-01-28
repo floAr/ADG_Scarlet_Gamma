@@ -31,6 +31,7 @@ namespace States
 		virtual Core::Map* GetCurrentMap() override;
 
 	private:
+		const std::string m_worldFileName;	///< This is the name of the world which was loaded in constructor
 
 		Core::World* m_dbProperties;	///< A container with one object containing property templates.
 		Core::World* m_dbModules;		///< A container with objects interpreted as modules.

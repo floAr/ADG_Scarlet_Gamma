@@ -10,6 +10,7 @@
 #include "interfaces/DragNDrop.hpp"
 #include <iostream>
 #include "core/PredefinedProperties.hpp"
+#include "network/WorldMessages.hpp"
 
 using namespace Core;
 
@@ -24,7 +25,8 @@ namespace States {
 		m_objectsPanel(nullptr),
 		m_selectionView(nullptr),
 		m_toolbar(nullptr),
-		m_hiddenLayers(10, 0)
+		m_hiddenLayers(10, 0),
+		m_worldFileName(_loadFile)
 	{
 		// Load the map
 		Jo::Files::HDDFile file(_loadFile);
@@ -137,11 +139,13 @@ namespace States {
 		win.clear(c);
 
 		// Render
-		// Uses the test map 0 for testing purposes.
-		//Graphics::TileRenderer::Render(win, *GetCurrentMap(),
-		//	[](Core::Map&,sf::Vector2i&){ return 1.0f;});
-		Graphics::TileRenderer::Render(win, *GetCurrentMap(),
-			[](Core::Map&,sf::Vector2i&){ return 1.0f; },(const bool*)(&m_hiddenLayers[0]));
+		if( GetCurrentMap() )
+		{
+			Graphics::TileRenderer::Render(win, *GetCurrentMap(),
+				[](Core::Map&,sf::Vector2i&){ return 1.0f; },
+				(const bool*)(&m_hiddenLayers[0]));
+		}
+
 		// If the selected object has a path draw it
 		for( int i=0; i<m_selection.Size(); ++i )
 			DrawPathOverlay(win, g_Game->GetWorld()->GetObject(m_selection[i]));
@@ -224,17 +228,22 @@ namespace States {
 			} else if( m_propertyPanel->mouseOnWidget( (float)button.x, (float)button.y ) )
 			{
 				// Just ignore things dragged to the property list
-			} else {	// Things where dragged to the map.
+			} else {	// Things were dragged to the map.
 				if( m_draggedContent->from == Interfaces::DragContent::OBJECT_PANEL )
 				{
-					// Insert object copy to the map
-					ObjectID id = g_Game->GetWorld()->NewObject( m_draggedContent->object );
+					if( !GetCurrentMap() )
+					{
+						Network::ChatMsg(STR_MSG_CREATE_MAP_FIRST, sf::Color::Red).Send();
+					} else {
+						// Insert object copy to the map
+						ObjectID id = g_Game->GetWorld()->NewObject( m_draggedContent->object );
 
-					int x = (int)floor(tilePos.x);
-					int y = (int)floor(tilePos.y);
-					// Meaningful layer: on top
-					int l = GetCurrentMap()->GetObjectsAt(x,y).Size();
-					GetCurrentMap()->Add( id, x, y, l );
+						int x = (int)floor(tilePos.x);
+						int y = (int)floor(tilePos.y);
+						// Meaningful layer: on top
+						int l = GetCurrentMap()->GetObjectsAt(x,y).Size();
+						GetCurrentMap()->Add( id, x, y, l );
+					}
 				}
 			}
 
@@ -344,6 +353,12 @@ namespace States {
 	void MasterState::OnEnd()
 	{
 		CommonState::OnEnd();
+
+		// Save database
+
+		// Save the world
+		Jo::Files::HDDFile file(m_worldFileName, Jo::Files::HDDFile::OVERWRITE);
+		g_Game->GetWorld()->Save( file );
 	}
 
 
@@ -408,6 +423,7 @@ namespace States {
 
 	void MasterState::CreateDefaultPropertyBase()
 	{
+		Network::MaskWorldMessage lock;
 		// Create and fill an object with all known properties
 		ObjectID propertyOID = m_dbProperties->NewObject( STR_EMPTY );
 		assert( propertyOID == 0 );
@@ -427,6 +443,7 @@ namespace States {
 
 	void MasterState::CreateDefaultModuleBase()
 	{
+		Network::MaskWorldMessage lock;
 		ObjectID OID = m_dbModules->NewObject( STR_EMPTY );
 		Object* object = m_dbModules->GetObject( OID );
 		object->Add( PROPERTY::NAME ).SetValue( STR_ATTACKABLE );
@@ -436,6 +453,7 @@ namespace States {
 
 	void MasterState::CreateDefaultTemplateBase()
 	{
+		Network::MaskWorldMessage lock;
 		ObjectID OID = m_dbTemplates->NewObject( "media/gobbo.png" );
 		Object* object = m_dbTemplates->GetObject( OID );
 		object->Add( PROPERTY::NAME ).SetValue( STR_GOBBO );

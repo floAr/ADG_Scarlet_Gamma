@@ -37,6 +37,7 @@ static const std::string STR_MSG_HIT_NO_ARMOR_CLASS = std::string("Das Ziel hat 
 static const std::string STR_MSG_HIT_NATURAL_TWENTY = std::string("Natürliche 20 gewürfelt.");
 static const std::string STR_MSG_HIT_ARMOR_CLASS_BEAT = std::string("Rüstungsklasse wurde geschlagen.");
 static const std::string STR_MSG_HIT_ARMOR_CLASS_NOT_BEAT = std::string("Rüstungsklasse wurde nicht geschlagen.");
+static const std::string STR_MSG_CREATE_MAP_FIRST = std::string("Erstelle zunächst eine Map!");
 
 
 /************************************************************************/

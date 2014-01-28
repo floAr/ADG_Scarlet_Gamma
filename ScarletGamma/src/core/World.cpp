@@ -18,7 +18,10 @@ namespace Core {
 
 	Map* World::GetMap(MapID _id)
 	{
-		return &m_maps.at(_id);
+		auto it = m_maps.find(_id);
+		if( it == m_maps.end() ) return nullptr;
+		else return &it->second;
+		//return &m_maps.at(_id);
 	}
 
 	Object* World::GetObject(ObjectID _id)
@@ -40,7 +43,7 @@ namespace Core {
 	ObjectID World::NewObject( const std::string& _sprite )
 	{
 		m_objects.insert(std::make_pair<ObjectID,Object>(ObjectID(m_nextFreeObjectID+0), Object(m_nextFreeObjectID, _sprite)));
-		Network::MsgAddObject( m_nextFreeObjectID ).Send();
+		Network::MsgAddObject( this, m_nextFreeObjectID ).Send();
 		++m_nextFreeObjectID;
 		return m_nextFreeObjectID-1;
 	}
@@ -75,7 +78,7 @@ namespace Core {
 		newObj.m_id = m_nextFreeObjectID++;
 		// Final insertion
 		m_objects.insert(std::make_pair<ObjectID,Object>( newObj.ID(), std::move(newObj) ) );
-		Network::MsgAddObject( newObj.ID() ).Send();
+		Network::MsgAddObject( this, newObj.ID() ).Send();
 		return newObj.ID();
 	}
 
@@ -110,9 +113,9 @@ namespace Core {
 					m_players[prop.Value()] = id;
 				}
 			}
-		} else {
-			throw std::exception("World file corrupted: cannot find the objects");
-		}
+		} //else {
+		//	throw std::exception("World file corrupted: cannot find the objects");
+		//}
 
 		// Do the same for the maps
 		if( saveGame.RootNode.HasChild(string("Maps"), &child) )
@@ -122,9 +125,9 @@ namespace Core {
 			{
 				NewMap( (*child)[i] );
 			}
-		} else {
-			throw std::exception("World file corrupted: cannot find the maps");
-		}
+		} //else {
+		//	throw std::exception("World file corrupted: cannot find the maps");
+		//}
 
 		// The nextFree...ID is now the maximum used id. The increment yields
 		// the first really unused id.

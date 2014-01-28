@@ -76,7 +76,7 @@ namespace Interfaces {
 		virtual void Init() override;
 
 		/// \brief Which map is selected?
-		Core::MapID GetSelectedMap() const		{ return m_selected; }
+		Core::MapID GetSelectedMap() const		{ return m_maps.size()>0 ? m_maps[m_selected] : 0; }
 	private:
 		/// \brief A mapping from list indices to map ids.
 		std::vector<Core::MapID> m_maps;

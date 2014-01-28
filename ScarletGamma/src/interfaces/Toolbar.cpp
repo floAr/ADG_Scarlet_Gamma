@@ -193,7 +193,8 @@ namespace Interfaces {
 		m_maps = g_Game->GetWorld()->GetAllMaps();
 		for( size_t i=0; i<m_maps.size(); ++i )
 			m_mapList->addItem( g_Game->GetWorld()->GetMap(m_maps[i])->GetName() );
-		m_mapList->setSelectedItem( 0 );
+		if( m_maps.size() > 0 )
+			m_mapList->setSelectedItem( 0 );
 
 		m_newNameEdit = tgui::EditBox::Ptr( *this );
 		m_newNameEdit->load( "media/Black.conf" );

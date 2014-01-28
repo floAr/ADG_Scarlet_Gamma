@@ -82,7 +82,7 @@ void Game::Run()
 void Game::CleanUp()
 {
 	// Delete in reverse order of construction
-	delete m_world;
 	delete m_eventHandler;
 	delete m_stateMachine;
+	delete m_world;
 }

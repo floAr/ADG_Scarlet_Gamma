@@ -10,14 +10,17 @@
 #include "ActionPool.hpp"
 #include "network/ChatMessages.hpp"
 #include "core/World.hpp"
+#include "gamerules/CombatRules.hpp"
+#include "utils/Exception.hpp"
 
 using namespace Actions;
+using namespace GameRules;
 
 Attack::Attack() : Action(STR_ACT_ATTACK)
 {
     // Set requirements
-    m_requirements.push_back(GameRules::CombatRules::PROP_HITPOINTS);
-    m_requirements.push_back(GameRules::CombatRules::PROP_ARMORCLASS);
+    m_requirements.push_back(STR_PROP_HEALTH);
+    m_requirements.push_back(STR_PROP_ARMORCLASS);
 }
 
 Action* Attack::Clone(Core::ObjectID _executor, Core::ObjectID _target)
@@ -48,14 +51,15 @@ void Attack::HandleActionInfo(uint8_t _messageType, const std::string& _message,
 {
     // I am the DM. This function handles player's requests and information.
     assert(Network::Messenger::IsServer());
+    m_sender = _sender;
 
     switch (static_cast<ActionMsgType>(_messageType))
     {
     case ActionMsgType::PL_ATTACK_ROLL_INFO:
-        AttackRollInfoReceived(_message, _sender);
+        AttackRollInfoReceived(_message);
         break;
     case ActionMsgType::PL_HIT_ROLL_INFO:
-        HitRollInfoReceived(_message, _sender);
+        HitRollInfoReceived(_message);
         break;
     default:
         assert(false);
@@ -115,64 +119,128 @@ void Attack::AttackRollPromptFinished(States::GameState* gs)
 
 bool Attack::EvaluateAttackRoll(int _roll)
 {
-    return (_roll >= 15);
+    // TODO implement properly :)
+
+    try
+    {
+        return (_roll >= CombatRules::GetArmorClass(m_target));
+    }
+    catch (Exception::NoSuchProperty)
+    {
+        std::cerr << "Tried to attack an object without AC: " << std::to_string(m_executor)
+            << " -> " << std::to_string(m_target) << '\n';
+    }
+
+    return false;
 }
 
-void Attack::AttackRollInfoReceived(const std::string& _message, uint8_t _sender)
+void Attack::AttackRollInfoReceived(const std::string& _message)
 {
     assert(Network::Messenger::IsServer());
 
-    // TODO: query the GameMaster if he wants the attack to pass and reply!
     // TODO: how to find out about natural 20?
 
+    // Save attack roll for later
+    m_attackRoll = _message;
+
+    // Evaluate it
     int result = Utils::EvaluateFormula(_message, Game::RANDOM);
 
-    if (EvaluateAttackRoll(result))
-    {
-        BroadcastHitMessage(_message, result);
-        SendAttackRollHit(_sender);
-    }
-    else
-    {
-        BroadcastMissMessage(_message, result);
-        SendAttackRollMissed(_sender);
-    }
+    // Push prompt
+    PushAttackRollDMPrompt(result, &Attack::AttackRollDMPromptFinished);
 }
 
 void Attack::AttackRollInfoLocal(const std::string& _message)
 {
     assert(Network::Messenger::IsServer());
 
-    // TODO: query the GameMaster if he wants the attack to pass and reply!
     // TODO: how to find out about natural 20?
 
-    int result = Utils::EvaluateFormula(_message, Game::RANDOM);
+    // Save attack roll for later
+    m_attackRoll = _message;
+
+    // Evaluate it
+    int result = Utils::EvaluateFormula(m_attackRoll, Game::RANDOM);
+
+    // Push prompt
+    PushAttackRollDMPrompt(result, &Attack::AttackRollDMPromptFinishedLocal);
+}
+
+void Attack::PushAttackRollDMPrompt(int _result, void (Attack::* _callback)(States::GameState*))
+{
+    // Open prompt for hit roll value
+    States::PromptState* prompt = dynamic_cast<States::PromptState*>(
+        g_Game->GetStateMachine()->PushGameState(States::GST_PROMPT));
+
+    std::string resultStr = std::to_string(_result);
+    std::stringstream message;
+    message << "Angriffswurf von " << g_Game->GetWorld()->GetObject(m_executor)->GetName()
+            << " auf " << g_Game->GetWorld()->GetObject(m_target)->GetName() << '\n';
+    message << m_attackRoll << " = " << resultStr << ", ";
+    if (EvaluateAttackRoll(_result))
+        message << "getroffen.\n";
+    else
+        message << "nicht getroffen.\n";
+    message << "Der Wert kann angepasst werden. Das Ziel hat RK "
+        << CombatRules::GetArmorClass(m_target) << " und "
+        << CombatRules::GetHitPoints(m_target) << "TP.\n";
+
+    prompt->SetText(message.str());
+    prompt->SetDefaultValue(resultStr);
+    prompt->AddPopCallback(std::bind(_callback, this, std::placeholders::_1));
+}
+
+void Attack::AttackRollDMPromptFinished(States::GameState* _gs)
+{
+    States::PromptState* ps = dynamic_cast<States::PromptState*>(_gs);
+    assert(ps && "Expected a PromptState on the top of the stack, wtf?");
+
+    int result = atoi( ps->GetResult().c_str() );
 
     if (EvaluateAttackRoll(result))
     {
-        BroadcastHitMessage(_message, result);
+        BroadcastHitMessage(m_attackRoll, result);
+        SendAttackRollHit();
+    }
+    else
+    {
+        BroadcastMissMessage(m_attackRoll, result);
+        SendAttackRollMissed();
+    }
+}
+
+void Attack::AttackRollDMPromptFinishedLocal(States::GameState* _gs)
+{
+    States::PromptState* ps = dynamic_cast<States::PromptState*>(_gs);
+    assert(ps && "Expected a PromptState on the top of the stack, wtf?");
+
+    int result = atoi( ps->GetResult().c_str() );
+
+    if (EvaluateAttackRoll(result))
+    {
+        BroadcastHitMessage(m_attackRoll, result);
         AttackRollHit();
     }
     else
     {
-        BroadcastMissMessage(_message, result);
+        BroadcastMissMessage(m_attackRoll, result);
         AttackRollMissed();
     }
 }
 
-void Attack::SendAttackRollHit(uint8_t _sender)
+void Attack::SendAttackRollHit()
 {
     // Tell client that he hit
     Network::MsgActionInfo(this->GetID(), static_cast<uint8_t>(ActionMsgType::DM_ATTACK_ROLL_HIT),
-        STR_EMPTY).Send(_sender);
+        STR_EMPTY).Send(m_sender);
 }
 
-void Attack::SendAttackRollMissed(uint8_t _sender)
+void Attack::SendAttackRollMissed()
 {
     // Tell client that he missed and end client action
     Network::MsgActionInfo(this->GetID(), static_cast<uint8_t>(ActionMsgType::DM_ATTACK_ROLL_MISS),
-        STR_EMPTY).Send(_sender);
-    Actions::ActionPool::Instance().EndClientAction(_sender);
+        STR_EMPTY).Send(m_sender);
+    Actions::ActionPool::Instance().EndClientAction(m_sender);
     // ACTION IS DONE
 }
 
@@ -221,27 +289,85 @@ void Attack::HitRollPromptFinished(States::GameState* gs)
     }
 }
 
-void Attack::HitRollInfoReceived(const std::string& _message, uint8_t _sender)
+void Attack::HitRollInfoReceived(const std::string& _message)
 {
-    // TODO: Implement
-    // TODO: query the GameMaster if he is okay with the damage
+    assert(Network::Messenger::IsServer());
 
-    int result = Utils::EvaluateFormula(_message, Game::RANDOM);
-    BroadcastDamageMessage(_message, result);
+    // Save hit roll for later
+    m_hitRoll = _message;
 
-    // TODO: end client action and tell client about it
-    Actions::ActionPool::Instance().EndClientAction(_sender);
+    // Evaluate it
+    int result = Utils::EvaluateFormula(m_hitRoll, Game::RANDOM);
+
+    // Push prompt
+    PushHitRollDMPrompt(result, &Attack::HitRollDMPromptFinished);
 }
 
 void Attack::HitRollInfoLocal(const std::string& _message)
 {
-    // TODO: Implement
-    // TODO: query the GameMaster if he is okay with the damage
+    assert(Network::Messenger::IsServer());
 
-    int result = Utils::EvaluateFormula(_message, Game::RANDOM);
-    BroadcastDamageMessage(_message, result);
-    Actions::ActionPool::Instance().EndLocalAction();
+    // Save hit roll for later
+    m_hitRoll = _message;
+
+    // Evaluate it
+    int result = Utils::EvaluateFormula(m_hitRoll, Game::RANDOM);
+
+    // Push prompt
+    PushHitRollDMPrompt(result, &Attack::HitRollDMPromptFinishedLocal);
 }
+
+void Attack::PushHitRollDMPrompt(int _result, void (Attack::* _callback)(States::GameState*))
+{
+    // Open prompt for hit roll value
+    States::PromptState* prompt = dynamic_cast<States::PromptState*>(
+        g_Game->GetStateMachine()->PushGameState(States::GST_PROMPT));
+
+    std::string resultStr = std::to_string(_result);
+    std::stringstream message;
+    message << "Trefferwurf von " << g_Game->GetWorld()->GetObject(m_executor)->GetName()
+            << " auf " << g_Game->GetWorld()->GetObject(m_target)->GetName() << '\n';
+    message << m_hitRoll << " = " << resultStr << ", ";
+    message << "Der Wert kann angepasst werden. Das Ziel hat "
+        << CombatRules::GetHitPoints(m_target) << "TP.\n";
+
+    prompt->SetText(message.str());
+    prompt->SetDefaultValue(resultStr);
+    prompt->AddPopCallback(std::bind(_callback, this, std::placeholders::_1));
+}
+
+void Attack::HitRollDMPromptFinished(States::GameState* _gs)
+{
+    States::PromptState* ps = dynamic_cast<States::PromptState*>(_gs);
+    assert(ps && "Expected a PromptState on the top of the stack, wtf?");
+
+    // Apply damage
+    int result = atoi( ps->GetResult().c_str() );
+    CombatRules::ApplyHitDamage(m_target, result);
+    BroadcastDamageMessage(m_hitRoll, result);
+
+    // End client action
+    ActionPool::Instance().EndClientAction(m_sender);
+    // TODO: tell client about it!!!
+}
+
+void Attack::HitRollDMPromptFinishedLocal(States::GameState* _gs)
+{
+    States::PromptState* ps = dynamic_cast<States::PromptState*>(_gs);
+    assert(ps && "Expected a PromptState on the top of the stack, wtf?");
+
+    // Apply damage
+    int result = atoi( ps->GetResult().c_str() );
+    CombatRules::ApplyHitDamage(m_target, result);
+    BroadcastDamageMessage(m_hitRoll, result);
+
+    // End local action and we're done
+    ActionPool::Instance().EndLocalAction();
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// BROADCAST MESSAGES
 
 void Attack::BroadcastMissMessage(const std::string& _dice, int _result)
 {

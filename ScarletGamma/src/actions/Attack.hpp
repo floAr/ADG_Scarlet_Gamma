@@ -32,16 +32,21 @@ namespace Actions
     private:
         void AttackRollPromptFinished(States::GameState* _gs);
         bool EvaluateAttackRoll(int _roll);
-        void AttackRollInfoReceived(const std::string& _message, uint8_t _sender);
+        void AttackRollInfoReceived(const std::string& _message);
         void AttackRollInfoLocal(const std::string& _message);
-        void SendAttackRollHit(uint8_t _sender);
-        void SendAttackRollMissed(uint8_t _sender);
+        void PushAttackRollDMPrompt(int _result, void (Attack::* _callback)(States::GameState*));
+        void AttackRollDMPromptFinished(States::GameState* _gs);
+        void AttackRollDMPromptFinishedLocal(States::GameState* _gs);
+        void SendAttackRollHit();
+        void SendAttackRollMissed();
         void AttackRollHit();
         void AttackRollMissed();
         void HitRollPromptFinished(States::GameState* _gs);
-        void HitRollInfoReceived(const std::string& _message, uint8_t _sender);
+        void HitRollInfoReceived(const std::string& _message);
         void HitRollInfoLocal(const std::string& _message);
-        void ApplyDamage();
+        void PushHitRollDMPrompt(int _result, void (Attack::* _callback)(States::GameState*));
+        void HitRollDMPromptFinished(States::GameState* _gs);
+        void HitRollDMPromptFinishedLocal(States::GameState* _gs);
         void BroadcastMissMessage(const std::string& _dice, int _result);
         void BroadcastHitMessage(const std::string& _dice, int _result);
         void BroadcastDamageMessage(const std::string& _dice, int _result);
@@ -51,5 +56,14 @@ namespace Actions
 
         /// \brief Private constructor, fills requirements list.
         Attack();
+
+        /// \brief Saves the attack roll entered by the player
+        std::string m_attackRoll;
+
+        /// \brief Saves the hit roll entered by the player
+        std::string m_hitRoll;
+
+        /// \brief Saves the sender's socket ID
+        uint8_t m_sender;
     };
 }

@@ -25,6 +25,7 @@ namespace Core {
 		static const Property WISDOM;
 		static const Property CHARISMA;
 		static const Property HEALTH;
+		static const Property ARMORCLASS;
 
 		// A custom property with R_VCEV0EV00 access rights and an empty default.
 		static Property Custom( const std::string& _name )

@@ -3,26 +3,25 @@
 #include "core/Object.hpp"
 #include "core/Property.hpp"
 #include "utils/Exception.hpp"
+#include "Game.hpp"
+#include "core/World.hpp"
 #include <string>
 #include <assert.h>
 
 using namespace GameRules;
 using namespace std;
 
-const string CombatRules::PROP_ARMORCLASS = string("armorclass");
-const string CombatRules::PROP_HITPOINTS = string("hitpoints");
-
-CombatRules::HitRollInfo CombatRules::TargetHit(Core::Object* target, int diceRoll, int modifier)
+CombatRules::HitRollInfo CombatRules::TargetHit(Core::ObjectID target, int diceRoll, int modifier)
 {
-    // We really need a target object
+    Core::Object* targetObj = g_Game->GetWorld()->GetObject(target);
     assert(target);
 
     // Target needs an AC to be hittable
-    if (target->HasProperty(PROP_ARMORCLASS) == false)
+    if (targetObj->HasProperty(STR_PROP_ARMORCLASS) == false)
         return HitRollInfo(false, STR_MSG_HIT_NO_ARMOR_CLASS);
 
     // Evaluate AC, may throw an NotEvaluatable exception
-    int AC = target->GetProperty(PROP_ARMORCLASS).Evaluate();
+    int AC = targetObj->GetProperty(STR_PROP_ARMORCLASS).Evaluate();
 
     // Always hit on natural 20
     if (diceRoll == 20)
@@ -36,22 +35,35 @@ CombatRules::HitRollInfo CombatRules::TargetHit(Core::Object* target, int diceRo
     return HitRollInfo(false, STR_MSG_HIT_ARMOR_CLASS_NOT_BEAT);
 }
 
-int CombatRules::GetHitPoints(Core::Object* target)
+int CombatRules::GetHitPoints(Core::ObjectID target)
 {
-    // We really need a target object
+    Core::Object* targetObj = g_Game->GetWorld()->GetObject(target);
     assert(target);
 
     // Target needs HP, otherwise throw exception
-    if (target->HasProperty(PROP_HITPOINTS) == false)
+    if (targetObj->HasProperty(STR_PROP_HEALTH) == false)
         throw Exception::NoSuchProperty();
 
     // Evaluate HP, may throw an NotEvaluatable exception
-    return target->GetProperty(PROP_HITPOINTS).Evaluate();
+    return targetObj->GetProperty(STR_PROP_HEALTH).Evaluate();
 }
 
-int CombatRules::GetHitDamage(Core::Object* target, int amount)
+int CombatRules::GetArmorClass(Core::ObjectID target)
 {
-    // We really need a target object
+    Core::Object* targetObj = g_Game->GetWorld()->GetObject(target);
+    assert(target);
+
+    // Target needs HP, otherwise throw exception
+    if (targetObj->HasProperty(STR_PROP_ARMORCLASS) == false)
+        throw Exception::NoSuchProperty();
+
+    // Evaluate HP, may throw an NotEvaluatable exception
+    return targetObj->GetProperty(STR_PROP_ARMORCLASS).Evaluate();
+}
+
+int CombatRules::GetHitDamage(Core::ObjectID target, int amount)
+{
+    Core::Object* targetObj = g_Game->GetWorld()->GetObject(target);
     assert(target);
 
     // For now, just return the amount
@@ -59,17 +71,17 @@ int CombatRules::GetHitDamage(Core::Object* target, int amount)
     return amount;
 }
 
-int CombatRules::ApplyHitDamage(Core::Object* target, int amount)
+int CombatRules::ApplyHitDamage(Core::ObjectID target, int amount)
 {
-    // We really need a target object
+    Core::Object* targetObj = g_Game->GetWorld()->GetObject(target);
     assert(target);
 
     // Target needs HP, otherwise throw exception
-    if (target->HasProperty(PROP_HITPOINTS) == false)
+    if (targetObj->HasProperty(STR_PROP_HEALTH) == false)
         throw Exception::NoSuchProperty();
 
     // Try to set the new HP value
-    Core::Property& HPprop = target->GetProperty(PROP_HITPOINTS);
+    Core::Property& HPprop = targetObj->GetProperty(STR_PROP_HEALTH);
     int newHP = HPprop.Evaluate() - GetHitDamage(target, amount);
     HPprop.SetValue(to_string(newHP));
 

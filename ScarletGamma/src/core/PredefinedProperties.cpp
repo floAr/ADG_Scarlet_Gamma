@@ -24,5 +24,6 @@ namespace Core {
 	const Property PROPERTY::WISDOM = Property(Property::R_VCEV0EV00, STR_PROP_WISDOM, STR_0 );
 	const Property PROPERTY::CHARISMA = Property(Property::R_VCEV0EV00, STR_PROP_CHARISMA, STR_0);
 	const Property PROPERTY::HEALTH = Property(Property::R_VCEV00000, STR_PROP_HEALTH, STR_0);
+    const Property PROPERTY::ARMORCLASS = Property(Property::R_VCEV00000, STR_PROP_ARMORCLASS, STR_0);
 
 } // namespace Core

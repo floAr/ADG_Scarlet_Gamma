@@ -8,7 +8,6 @@
 #include "utils/Falloff.hpp"
 #include "network/Messenger.hpp"
 #include "interfaces/DragNDrop.hpp"
-#include "actions/ActionPool.hpp"
 #include <iostream>
 #include "core/PredefinedProperties.hpp"
 #include "network/WorldMessages.hpp"
@@ -328,12 +327,6 @@ namespace States {
 			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
 				BlendLayer(9);
 			break;
-
-		case sf::Keyboard::Space:
-			// TODO: use proper target
-            for (int i = 0; i < m_selection.Size(); ++i)
-			    Actions::ActionPool::Instance().StartLocalAction(0, m_selection[i], 42);
-			break;
 		}
 	}
 
@@ -457,6 +450,7 @@ namespace States {
 		object->Add( PROPERTY::NAME ).SetValue( STR_ATTACKABLE );
 		object->GetProperty( STR_PROP_SPRITE ).SetRights( Property::R_SYSTEMONLY );	// Hide the sprite property
 		object->Add( PROPERTY::HEALTH );
+        object->Add( PROPERTY::ARMORCLASS );
 	}
 
 	void MasterState::CreateDefaultTemplateBase()

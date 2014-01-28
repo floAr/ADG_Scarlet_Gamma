@@ -3,6 +3,7 @@
 #include "Game.hpp"
 #include "core/Map.hpp"
 #include "core/World.hpp"
+#include "Constants.hpp"
 
 namespace Tools {
 
@@ -12,7 +13,8 @@ namespace Tools {
 		m_Xmin(0),
 		m_Xmax(19),
 		m_Ymin(0),
-		m_Ymax(19)
+		m_Ymax(19),
+		m_diameter(0)
 	{
 		// Allocate space for a 20x20 painting
 		m_mask = new bool[400];
@@ -51,6 +53,9 @@ namespace Tools {
 
 	void Brush::Paint( int _x, int _y )
 	{
+		// Begin was not called
+		if( !m_map ) return;
+
 		// Split the diameter (for odd numbers make radius in positive
 		// direction larger.
 		int r0 = m_diameter / 2, r1 = m_diameter - r0;
@@ -73,10 +78,47 @@ namespace Tools {
 
 					SetFlag( x, y );
 					// Now edit the map
-					m_map->Add( g_Game->GetWorld()->NewObject( m_obj ), x, y, m_layer );
-				}
-			}
-		}
+					switch( m_mode )
+					{
+					case Brush::ADD:
+						m_map->Add( g_Game->GetWorld()->NewObject( m_obj ), x, y, m_layer );
+						break;
+
+					case Brush::REPLACE:
+						// Search objects which are in the target layer and remove them.
+						for( int i=0; i<m_map->GetObjectsAt(x,y).Size(); ++i )
+						{
+							Core::ObjectID id =  m_map->GetObjectsAt(x,y)[i];
+							if( m_layer == g_Game->GetWorld()->GetObject( id )->GetProperty( STR_PROP_LAYER ).Evaluate() )
+							{
+								m_map->Remove( m_map->GetObjectsAt(x,y)[i] );
+								g_Game->GetWorld()->RemoveObject( id );	// Assumes real deletion
+								// The currently iterated array should be shorter now.
+								--i;
+							}
+						}
+						m_map->Add( g_Game->GetWorld()->NewObject( m_obj ), x, y, m_layer );
+						break;
+					case Brush::DELETE:
+						// Search objects which are in the target layer AND
+						// have the same name as the reference object.
+						for( int i=0; i<m_map->GetObjectsAt(x,y).Size(); ++i )
+						{
+							Core::ObjectID id =  m_map->GetObjectsAt(x,y)[i];
+							Core::Object* obj = g_Game->GetWorld()->GetObject( id );
+							if( m_layer == obj->GetProperty( STR_PROP_LAYER ).Evaluate() &&
+								obj->GetName() == m_obj->GetName() )
+							{
+								m_map->Remove( m_map->GetObjectsAt(x,y)[i] );
+								g_Game->GetWorld()->RemoveObject( id );	// Assumes real deletion
+								// The currently iterated array should be shorter now.
+								--i;
+							}
+						}
+					} // switch
+				} // if !WasEdited
+			} // for x
+		} // for y
 	}
 
 

@@ -102,6 +102,19 @@ namespace States {
 
 		m_toolbar->Update( dt );
 
+		// Repair selection
+		for( int i=0; i<m_selection.Size(); ++i )
+		{
+			Core::Object* obj = g_Game->GetWorld()->GetObject( m_selection[i] );
+			// If removed from map or from game delete!
+			if( !obj || !obj->IsLocatedOnAMap() )
+			{
+				m_selection.Remove( m_selection[i--] );
+				m_selectionChanged = true;
+			}
+		}
+
+		// For empty selections hide the selection view
 		if( m_selectionChanged )
 		{
 			if( m_selection.Size() > 0 )
@@ -111,6 +124,7 @@ namespace States {
 			m_selectionChanged = false;
 		}
 
+		// Update the viewed properties
 		if( m_selectionView->isVisible() )
 			m_selectionView->Show( g_Game->GetWorld(), m_selection );
 
@@ -187,6 +201,9 @@ namespace States {
 
 	void MasterState::MouseButtonReleased( sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos, float time, bool guiHandled)
 	{
+		// Always a good idea to stop painting
+		m_brush.EndPaint();
+
 		// Return if the GUI already handled it
 		if (guiHandled)
 			return;

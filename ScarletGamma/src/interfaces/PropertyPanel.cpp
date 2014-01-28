@@ -574,8 +574,11 @@ void PropertyPanel::Show( Core::World* _world, const Core::ObjectList& _objects 
 	if( !listChanged )
 	{
 		for( size_t i=0; i<m_objects.size(); ++i )
-			if( m_objects[i]->ID() != _objects[i] ) {
-				listChanged = false;
+			if( m_objects[i] != _world->GetObject(_objects[i]) ) {
+				listChanged = true;
+				break;
+			} else if( m_objects[i]->ID() != _objects[i] ) {
+				listChanged = true;
 				break;
 			}
 	}
@@ -617,6 +620,7 @@ void PropertyPanel::RefreshFilter()
 	if(IsMinimized()) return;
 	
 	Clear();
+	if( m_objects.size() < 0 ) return;
 
 	// Get all possible properties from the first object
 	auto allProperties = m_objects[0]->FilterByName( m_titleBar->getText() );

@@ -36,6 +36,10 @@ namespace Tools {
 		/// \brief Paint into a circle centered at the given tile.
 		void Paint( int _x, int _y );
 
+		/// \brief Call after mouse button release to make sure nothing is
+		///		drawn in the wrong moment
+		void EndPaint()	{ m_map = nullptr; }
+
 	private:
 		Core::Map* m_map;	///< The induced map on which operations take place
 		int m_diameter;		///< Diameter of the circle

@@ -23,7 +23,9 @@ namespace Core {
 
 	Object* World::GetObject(ObjectID _id)
 	{
-		return &m_objects.at(_id);
+		auto it = m_objects.find(_id);
+		if( it == m_objects.end() ) return nullptr;
+		else return &it->second;
 	}
 
 	MapID World::NewMap( const std::string& _name, unsigned _sizeX, unsigned _sizeY )

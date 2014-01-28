@@ -8,6 +8,8 @@
 #include "network/Messenger.hpp"
 #include "actions/ActionPool.hpp"
 #include <iostream>
+#include "Game.hpp"
+#include "states/StateMachine.hpp"
 
 
 States::PlayerState::PlayerState( const std::string& _playerName, const sf::Color& _chatColor ) :
@@ -76,6 +78,8 @@ void States::PlayerState::MouseButtonPressed(sf::Event::MouseButtonEvent& button
 	// Return if the GUI already handled it
 	if (guiHandled)
 		return;
+	int tileX = (int)tilePos.x;
+	int tileY = (int)tilePos.y;
 
 	switch (button.button)
 	{
@@ -84,7 +88,7 @@ void States::PlayerState::MouseButtonPressed(sf::Event::MouseButtonEvent& button
 		// move player to tile position		  //
 		//------------------------------------//
 		assert(m_player->IsLocatedOnAMap());
-		auto& tiles = GetCurrentMap()->GetObjectsAt((int)tilePos.x,(int)tilePos.y);
+		auto& tiles = GetCurrentMap()->GetObjectsAt(tileX,tileY);
 		if( tiles.Size() > 0 )
 		{
 			// TODO: intelligent select?
@@ -103,7 +107,16 @@ void States::PlayerState::MouseButtonPressed(sf::Event::MouseButtonEvent& button
 			}
 		}
 		break; }
+
+	case sf::Mouse::Right: {
+		if( GetCurrentMap()->GetObjectsAt(tileX,tileY).Size() > 0 )
+		{
+			SelectionState* gs = dynamic_cast<SelectionState*>(g_Game->GetStateMachine()->PushGameState(GST_SELECTION));
+			gs->SetTilePosition(tileX,tileY);
+		}
+		break; }
 	}
+
 }
 
 
@@ -113,8 +126,8 @@ void States::PlayerState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 	if (guiHandled)
 		return;
 
-    // Let common state handle input
-    CommonState::KeyPressed(key, guiHandled);
+	// Let common state handle input
+	CommonState::KeyPressed(key, guiHandled);
 
 	switch(key.code)
 	{
@@ -123,10 +136,10 @@ void States::PlayerState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 		// Refocus on player
 		m_focus = m_player;
 		break;
-    case sf::Keyboard::Space:
-        // TODO: use selection as target
-        Actions::ActionPool::Instance().StartLocalAction(0, m_player->ID(), 42);
-        break;
+	case sf::Keyboard::Space:
+		// TODO: use selection as target
+		Actions::ActionPool::Instance().StartLocalAction(0, m_player->ID(), 42);
+		break;
 	}
 }
 
@@ -218,17 +231,17 @@ float States::PlayerState::CheckTileVisibility( Core::Map& _map, sf::Vector2i& _
 	/*float t = 1.0f;
 	while( t < distance && v > 0.01f )
 	{
-		sf::Vector2f rayPos = _playerPos + direction * t;
-		sf::Vector2i tile = sfUtils::Round(rayPos);
-		if( tile == _tilePos ) return v;
-		if( !_map.IsFree(tile) )
-		{
-			// Use ray - tile distance to weight the occlusion.
-			sf::Vector2f closest = _playerPos + sfUtils::Dot(sf::Vector2f(tile) - _playerPos, direction) * direction;
-			v *= std::min(1.0f, sfUtils::Length(closest - sf::Vector2f(tile)));
-		}
-			//v *= std::min(1.0f, sfUtils::Length(sf::Vector2f(tile) - rayPos));
-		t += 0.5f;
+	sf::Vector2f rayPos = _playerPos + direction * t;
+	sf::Vector2i tile = sfUtils::Round(rayPos);
+	if( tile == _tilePos ) return v;
+	if( !_map.IsFree(tile) )
+	{
+	// Use ray - tile distance to weight the occlusion.
+	sf::Vector2f closest = _playerPos + sfUtils::Dot(sf::Vector2f(tile) - _playerPos, direction) * direction;
+	v *= std::min(1.0f, sfUtils::Length(closest - sf::Vector2f(tile)));
+	}
+	//v *= std::min(1.0f, sfUtils::Length(sf::Vector2f(tile) - rayPos));
+	t += 0.5f;
 	}*/
 
 	return v;

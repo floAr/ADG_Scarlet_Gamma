@@ -94,7 +94,16 @@ void States::ActionState::GuiCallback(tgui::Callback& args)
 	}
 }
 
+void States::ActionState::MouseButtonPressed(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos,
+											 bool guiHandled)
+{
+	// Return if the GUI already handled it
+	if (guiHandled)
+		return;
 
+	//if not close the state
+	m_finished = true;
+}
 
 
 

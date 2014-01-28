@@ -26,12 +26,12 @@ void States::SelectionState::OnBegin()
 {
 	m_controlWasPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::LControl);
 
-	// If control is not hold clear old selection
-	if( !sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) )
-	{
-		CommonState* previousState = dynamic_cast<CommonState*>(m_previousState);
-		previousState->ClearSelection();
-	}
+	// If control is not hold clear old selection //No longer clear the selection on startup
+	//if( !sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) )
+	//{
+	//	CommonState* previousState = dynamic_cast<CommonState*>(m_previousState);
+	//	previousState->ClearSelection();
+	//}
 }
 
 void States::SelectionState::SetTilePosition(int x, int y)
@@ -115,8 +115,15 @@ void States::SelectionState::GuiCallback(tgui::Callback& args)
 		CommonState* previousState = dynamic_cast<CommonState*>(m_previousState);
 		// The parent is not set or not of type CommonState, but it should be!
 		assert(previousState);
-		const Core::ObjectList* alreadySelected = previousState->GetSelection();
 
+		//if shift is not pressed clear selection
+		if( !sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) )
+		{
+			previousState->ClearSelection();
+		}
+
+		const Core::ObjectList* alreadySelected = previousState->GetSelection();
+	
 		Core::ObjectID id = m_objects[args.id-100];
 		if( alreadySelected->Contains(id) )
 		{

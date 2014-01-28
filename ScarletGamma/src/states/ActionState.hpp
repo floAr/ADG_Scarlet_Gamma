@@ -20,6 +20,8 @@ namespace States
 		virtual void Update(float dt);
 		virtual void GuiCallback(tgui::Callback&  args);
 		virtual void Draw(sf::RenderWindow& win);
+		virtual void MouseButtonPressed(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos,
+			bool guiHandled) override;
 	
 	private:
 		void positionButton(tgui::Button::Ptr b, float angle, float radius);

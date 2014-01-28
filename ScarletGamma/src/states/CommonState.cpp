@@ -60,10 +60,6 @@ void CommonState::Update( float dt )
 
 void CommonState::MouseMoved(int deltaX, int deltaY, bool guiHandled)
 {
-	// Don't react to any key if gui handled it
-	if (guiHandled)
-		return;
-
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Middle))
 	{
 		// Get the render window
@@ -124,17 +120,6 @@ void CommonState::KeyPressed( sf::Event::KeyEvent& key, bool guiHandled )
 			win.setView(newView);
 		}
 		break; }
-	}
-
-
-	// Testing attack action
-	// TODO: remove
-	if ( key.code == sf::Keyboard::Space )
-	{
-        if (m_selection.Size() > 0)
-            Actions::ActionPool::Instance().StartLocalAction(0, m_selection[0]);
-        else
-            Actions::ActionPool::Instance().StartLocalAction(0, 42);
 	}
 }
 

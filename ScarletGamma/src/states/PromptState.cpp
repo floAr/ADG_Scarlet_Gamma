@@ -32,6 +32,7 @@ void PromptState::setMessage(std::string& message)
 void PromptState::Draw(sf::RenderWindow& win)
 {
     // Draw previous state and apply blur shader
+    // TODO: separate shader if the FPS get low here
     m_previousState->Draw(win);
     sf::View& backup = sfUtils::View::SetDefault(&win);
     sf::Texture screenBuffer;
@@ -87,6 +88,11 @@ void PromptState::SetText(const std::string& text)
 {
     tgui::Label::Ptr message = m_gui.get("Message");
     message->setText(text);
+}
+
+void PromptState::SetDefaultValue(const std::string& value)
+{
+    m_editBox->setText(value);
 }
 
 const std::string& PromptState::GetResult()

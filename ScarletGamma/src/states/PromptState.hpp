@@ -4,12 +4,18 @@
 
 namespace States
 {
+    /// \brief Universal state for displaying a message and an editbox to the
+    ///   user, prompting for a value.
     class PromptState : public GameState
     {
     public:
+        /// \brief Creates an empty, unconfigured prompt state
         PromptState();
+
+
         void setMessage(std::string& message);
         void SetText(const std::string& text);
+        void SetDefaultValue(const std::string& value);
         const std::string& GetResult();
 
         void OnBegin() override;

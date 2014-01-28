@@ -6,6 +6,7 @@
 #include "Constants.hpp"
 #include "utils/Falloff.hpp"
 #include "network/Messenger.hpp"
+#include "actions/ActionPool.hpp"
 #include <iostream>
 
 
@@ -122,6 +123,10 @@ void States::PlayerState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 		// Refocus on player
 		m_focus = m_player;
 		break;
+    case sf::Keyboard::Space:
+        // TODO: use selection as target
+        Actions::ActionPool::Instance().StartLocalAction(0, m_player->ID(), 42);
+        break;
 	}
 }
 

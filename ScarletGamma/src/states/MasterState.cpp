@@ -8,6 +8,7 @@
 #include "utils/Falloff.hpp"
 #include "network/Messenger.hpp"
 #include "interfaces/DragNDrop.hpp"
+#include "actions/ActionPool.hpp"
 #include <iostream>
 #include "core/PredefinedProperties.hpp"
 #include "network/WorldMessages.hpp"
@@ -294,6 +295,7 @@ namespace States {
 		// Return if the GUI already handled it
 		if (guiHandled)
 			return;
+
 		// Let common state handle input
 		CommonState::KeyPressed(key, guiHandled);
 
@@ -325,6 +327,12 @@ namespace States {
 		case sf::Keyboard::Num0:
 			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
 				BlendLayer(9);
+			break;
+
+		case sf::Keyboard::Space:
+			// TODO: use proper target
+            for (int i = 0; i < m_selection.Size(); ++i)
+			    Actions::ActionPool::Instance().StartLocalAction(0, m_selection[i], 42);
 			break;
 		}
 	}

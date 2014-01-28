@@ -189,6 +189,18 @@ namespace Core {
 		return nullptr;
 	}
 
+	Object* World::FindPlayer( uint8_t _id )
+	{
+		for ( auto& it = m_players.begin(); it != m_players.end(); ++it)
+		{
+			Object* result = GetObject( it->second );
+            // STR_PROP_PLAYER starts at 1, socket-style ids at 0
+			if (result->Get(STR_PROP_PLAYER)->Evaluate() == _id + 1)
+				return result;
+		}
+		return nullptr;
+	}
+
 	std::vector<ObjectID> World::FilterObjectsByName( const std::string& _text ) const
 	{
 		std::vector<ObjectID> results;

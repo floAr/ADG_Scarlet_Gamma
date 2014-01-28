@@ -30,17 +30,24 @@ namespace Actions
         virtual void HandleActionInfoResponse(uint8_t messageType, const std::string& message) override;
 
     private:
-        void AttackRollPromptFinished(States::GameState* gs);
-        void AttackRollInfoReceived(const std::string& message, uint8_t sender);
-        void AttackRollInfoLocal(const std::string& message);
-        void AttackRollMissed();
+        void AttackRollPromptFinished(States::GameState* _gs);
+        bool EvaluateAttackRoll(int _roll);
+        void AttackRollInfoReceived(const std::string& _message, uint8_t _sender);
+        void AttackRollInfoLocal(const std::string& _message);
+        void SendAttackRollHit(uint8_t _sender);
+        void SendAttackRollMissed(uint8_t _sender);
         void AttackRollHit();
-        void HitRollPromptFinished(States::GameState* gs);
-        void HitRollInfoReceived(const std::string& message, uint8_t sender);
-        void HitRollInfoLocal(const std::string& message);
+        void AttackRollMissed();
+        void HitRollPromptFinished(States::GameState* _gs);
+        void HitRollInfoReceived(const std::string& _message, uint8_t _sender);
+        void HitRollInfoLocal(const std::string& _message);
+        void ApplyDamage();
+        void BroadcastMissMessage(const std::string& _dice, int _result);
+        void BroadcastHitMessage(const std::string& _dice, int _result);
+        void BroadcastDamageMessage(const std::string& _dice, int _result);
 
         /// \brief Clones an attack action.
-        virtual Action* Clone(Core::ObjectID target);
+        virtual Action* Clone(Core::ObjectID _executor, Core::ObjectID target);
 
         /// \brief Private constructor, fills requirements list.
         Attack();

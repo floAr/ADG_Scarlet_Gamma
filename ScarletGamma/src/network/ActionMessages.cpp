@@ -2,6 +2,8 @@
 #include "Message.hpp"
 #include "Messenger.hpp"
 #include "Actions/ActionPool.hpp"
+#include "Game.hpp"
+#include "core/World.hpp"
 #include <assert.h>
 #include <iostream>
 
@@ -73,10 +75,11 @@ size_t MsgActionBegin::Receive(Core::ActionID _action, uint8_t _sender,
     // Deserialize
     Core::ObjectID target = *_data;
 
-    std::cerr << "Player " <<  std::to_string(_sender) << " starting action '"
-        <<  Actions::ActionPool::Instance().GetActionName(_action) << "' on target "
-        << std::to_string(target) << '\n';
-    Actions::ActionPool::Instance().StartClientAction(_action, target, _sender);
+    std::cerr << "Player " <<  g_Game->GetWorld()->FindPlayer(_sender)->GetName()
+        << " starting action '" << Actions::ActionPool::Instance().GetActionName(_action)
+        << "' on target " << g_Game->GetWorld()->GetObject(target)->GetName() << '\n';
+    Actions::ActionPool::Instance().StartClientAction(_action, g_Game->GetWorld()->
+        FindPlayer(_sender)->ID(), target, _sender);
 
     return sizeof(Core::ObjectID);
 }

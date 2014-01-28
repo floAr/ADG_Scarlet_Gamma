@@ -39,12 +39,14 @@ namespace Actions
 
         /// \brief Start an action on the local machine by ID.
         /// \param [in] id     ID of the action to start, \see GetAllowedActions
-        void StartLocalAction(Core::ActionID id, Core::ObjectID target);
+        void StartLocalAction(Core::ActionID _id, Core::ObjectID _executor,
+            Core::ObjectID _target);
 
         /// \brief Start an action that a remote machine requested.
         /// \param [in] id     ID of the action to start, \see GetAllowedActions
         /// \param [in] index  Specify an index (i.e. player ID)
-        void StartClientAction(Core::ActionID id, Core::ObjectID target, uint8_t index);
+        void StartClientAction(Core::ActionID _id, Core::ObjectID _executor,
+            Core::ObjectID _target, uint8_t _index);
 
         /// \brief Ends a current action at the specified index
         void EndLocalAction();

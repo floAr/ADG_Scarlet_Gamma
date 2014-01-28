@@ -73,28 +73,30 @@ Core::ActionID ActionPool::GetLocalAction()
         return -1;
 }
 
-void ActionPool::StartLocalAction(Core::ActionID id, Core::ObjectID target)
+void ActionPool::StartLocalAction(Core::ActionID _id, Core::ObjectID _executor,
+                                  Core::ObjectID _target)
 {
-    Action* toCopy = m_Actions.at(id);
+    Action* toCopy = m_Actions.at(_id);
 
     // Create a copy of the action and return it
     if (toCopy)
     {
-        Action* newAction = toCopy->Clone(target);
+        Action* newAction = toCopy->Clone(_executor, _target);
         m_LocalAction = newAction;
         newAction->Execute();
     }
 }
 
 
-void ActionPool::StartClientAction(Core::ActionID id, Core::ObjectID target, uint8_t index)
+void ActionPool::StartClientAction(Core::ActionID id, Core::ObjectID _executor,
+                                   Core::ObjectID target, uint8_t index)
 {
     Action* toCopy = m_Actions.at(id);
 
     // Create a copy of the action and return it
     if (toCopy)
     {
-        Action* newAction = toCopy->Clone(target);
+        Action* newAction = toCopy->Clone(_executor, target);
         m_ClientActions[index] = newAction;
     }
 }

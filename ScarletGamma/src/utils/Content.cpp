@@ -5,7 +5,7 @@ Content::Content(){
 	this->LoadImage(DEFAULT_IMAGE);
 	this->LoadFont(DEFAULT_FONT);
 	this->LoadTexture(DEFAULT_TEXTURE);
-	this->LoadSoundBuffer(DEFAULT_SOUNDBUFFER);
+	//this->LoadSoundBuffer(DEFAULT_SOUNDBUFFER);
 	//TODO: shader
 	//this->LoadShader(DEFAULT_SHADER,sf::Shader::Type::Fragment);
 }

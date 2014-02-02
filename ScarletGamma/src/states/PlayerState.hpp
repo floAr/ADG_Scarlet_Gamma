@@ -31,5 +31,10 @@ namespace States
 		/// \brief This method is given to the renderer to check the
 		///		visibility of a tile for the player
 		float CheckTileVisibility(Core::Map& _map, sf::Vector2i& _tilePos, sf::Vector2f& _playerPos) const;
+
+		/// \brief Set the current view to another players position
+		/// \details Try to append the current view onto another player, if player does not exist nothing happens
+		/// \param [in] id	id of the target player
+		void SetViewToPlayer(const uint8_t id);
 	};
 }

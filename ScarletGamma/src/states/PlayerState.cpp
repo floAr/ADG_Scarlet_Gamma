@@ -125,7 +125,6 @@ void States::PlayerState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 	// Don't react to any key if gui handled it
 	if (guiHandled)
 		return;
-
 	// Let common state handle input
 	CommonState::KeyPressed(key, guiHandled);
 
@@ -139,6 +138,22 @@ void States::PlayerState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 	case sf::Keyboard::Space:
 		// TODO: use selection as target
 		Actions::ActionPool::Instance().StartLocalAction(0, m_player->ID(), 42);
+		break;
+	case sf::Keyboard::LAlt:
+		m_focus=m_player;
+		break;
+	case sf::Keyboard::Num1:
+	case sf::Keyboard::Num2:
+	case sf::Keyboard::Num3:
+	case sf::Keyboard::Num4:
+	case sf::Keyboard::Num5:
+	case sf::Keyboard::Num6:
+	case sf::Keyboard::Num7:
+	case sf::Keyboard::Num8:
+	case sf::Keyboard::Num9:
+		if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
+				SetViewToPlayer(key.code - sf::Keyboard::Num1);
+		break;
 		break;
 	}
 }
@@ -247,4 +262,10 @@ float States::PlayerState::CheckTileVisibility( Core::Map& _map, sf::Vector2i& _
 	}*/
 
 	return v;
+}
+
+void States::PlayerState::SetViewToPlayer(const uint8_t id){
+	Core::Object* target_player=g_Game->GetWorld()->FindPlayer(id);
+	if(target_player)
+		m_focus=target_player;
 }

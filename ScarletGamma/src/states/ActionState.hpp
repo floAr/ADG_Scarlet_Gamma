@@ -12,11 +12,15 @@ namespace States
 		ActionState();
 		/// \brief Set object to target with action
 		/// \details Sets the object to interact with, this will define the possible actions
+		/// \param [in] target	The ObjectID of the target object
 		void SetTargetObject(Core::ObjectID);
 		/// \brief Set object which is calling the action
-		/// \details Sets the object which starts the action 
+		/// \details Sets the object which starts the action
+		/// \param [in] source	The ObjectID of the source object
 		void SetSourceObject(Core::ObjectID);
 		/// \brief Set the GUI position
+		/// \param [in] x	x-position in pixels-coords
+		/// \param [in] y	y-position in pixels-coords
 		void SetPosition(int x,int y);
 		/// \brief Triggers a recalculation of the GUI
 		/// \details Let the GUI recalculate all the buttons and position

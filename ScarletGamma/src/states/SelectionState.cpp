@@ -11,6 +11,7 @@
 #include "StateMachine.hpp"
 #include "ActionState.hpp"
 #include "Constants.hpp"
+#include "core/PredefinedProperties.hpp"
 
 States::SelectionState::SelectionState() :
 	m_defaultButton()
@@ -18,6 +19,7 @@ States::SelectionState::SelectionState() :
 	m_gui.setWindow(g_Game->GetWindow());
 	m_gui.setGlobalFont( Content::Instance()->LoadFont("media/arial.ttf") );
 	m_dirty = false;
+	m_hiddenLayers=nullptr;
 
 	m_defaultButton->load("lib/TGUI-0.6-RC/widgets/Black.conf");
 }
@@ -34,14 +36,17 @@ void States::SelectionState::OnBegin()
 	//}
 }
 
-void States::SelectionState::SetTilePosition(int x, int y)
+void States::SelectionState::SetTilePosition(int x, int y,const bool* hiddenLayers)
 {
 	CommonState* previousState = dynamic_cast<CommonState*>(m_previousState);
 	m_objects = previousState->GetCurrentMap()->GetObjectsAt(x,y);
 	sf::Vector2i pos = g_Game->GetWindow().mapCoordsToPixel(sf::Vector2f((x + 0.5f) * TILESIZE, (y + 0.5f) * TILESIZE));
 	m_screenX = pos.x;
 	m_screenY = pos.y;
+	m_hiddenLayers = hiddenLayers;
+
 	m_dirty = true;
+	
 }
 
 void States::SelectionState::RecalculateGUI()
@@ -57,6 +62,11 @@ void States::SelectionState::RecalculateGUI()
 	int i;
 	for(i=0;i<count;i++){
 		Core::Object* o=g_Game->GetWorld()->GetObject(m_objects[i]);
+
+		if(m_hiddenLayers)//if hidden layers have been set
+			if(m_hiddenLayers[atoi(o->GetProperty(Core::PROPERTY::LAYER.Name()).Value().c_str())])//if object is on hidden layer
+				continue;
+			
 		tgui::Button::Ptr button = m_defaultButton.clone();
 		m_gui.add(button);
 		button->setSize(50, 40);

@@ -10,7 +10,14 @@ namespace States
 	{
 	public:
 		SelectionState();
-		void SetTilePosition(int x, int y);
+		/// \brief Set the tile to select from
+		/// \details This sets the tile to select from and adds all visible objects to the selection
+		/// \param [in] x	x-position in tile-coords
+		/// \param [in] y	y-position in tile-coords
+		/// \param [in] hiddenLayers	optional, layers which should be disregarded when selecting
+		void SetTilePosition(int x, int y,const bool* hiddenLayers=nullptr);
+				/// \brief Triggers a recalculation of the GUI
+		/// \details Let the GUI recalculate all the buttons and position
 		void RecalculateGUI();
 		virtual void OnBegin() override;
 		virtual void Update(float dt) override;
@@ -28,5 +35,6 @@ namespace States
 		bool m_dirty;						///< Flag to mark a change in the GUI
 		bool m_controlWasPressed;			///< Buffer for control key
 		unsigned int m_screenX, m_screenY;	///< Position on screen
+		const bool* m_hiddenLayers;			///< indicator if layer is visible
 	};
 }

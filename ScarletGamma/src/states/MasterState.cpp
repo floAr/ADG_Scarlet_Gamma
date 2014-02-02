@@ -170,7 +170,8 @@ namespace States {
 			if( GetCurrentMap()->GetObjectsAt(tileX, tileY).Size() > 0 )
 			{
 				SelectionState* gs = dynamic_cast<SelectionState*>(g_Game->GetStateMachine()->PushGameState(GST_SELECTION));
-				gs->SetTilePosition(tileX, tileY);
+				gs->SetTilePosition(tileX, tileY,(const bool*)(&m_hiddenLayers[0]));
+				
 			}
 
 							   } break;

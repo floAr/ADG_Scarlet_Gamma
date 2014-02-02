@@ -130,11 +130,11 @@ void States::PlayerState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 
 	switch(key.code)
 	{
-	case sf::Keyboard::Num0:
-	case sf::Keyboard::Numpad0:
+		//case sf::Keyboard::Num0:
+		//case sf::Keyboard::Numpad0:
 		// Refocus on player
-		m_focus = m_player;
-		break;
+		//	m_focus = m_player;
+		//	break;
 	case sf::Keyboard::Space:
 		// TODO: use selection as target
 		Actions::ActionPool::Instance().StartLocalAction(0, m_player->ID(), 42);
@@ -152,8 +152,11 @@ void States::PlayerState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 	case sf::Keyboard::Num8:
 	case sf::Keyboard::Num9:
 		if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
-				SetViewToPlayer(key.code - sf::Keyboard::Num1);
+			SetViewToPlayer(key.code - sf::Keyboard::Num1);
 		break;
+	case sf::Keyboard::Num0:
+		if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
+			SetViewToPlayer(9);
 		break;
 	}
 }

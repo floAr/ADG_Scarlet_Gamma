@@ -11,6 +11,18 @@
 
 #include <unordered_map>
 
+/// \brief default image to use as fallback
+static const std::string DEFAULT_IMAGE="media/dummy.png";
+/// \brief default texture to use as fallback
+static const std::string DEFAULT_TEXTURE="media/dummy.png";
+/// \brief default font to use as fallback
+static const std::string DEFAULT_FONT="media/arial.ttf";
+/// \brief default shader to use as fallback
+//TODO build empty shader
+static const std::string DEFAULT_SHADER="";
+/// \brief default sound to use as fallback
+static const std::string DEFAULT_SOUNDBUFFER="media/dummy.wav";
+
 class Content
 {
 
@@ -31,6 +43,7 @@ private:
 	std::unordered_map<std::string,std::shared_ptr<sf::Shader>> m_sha_cache;
 	std::unordered_map<std::string,std::shared_ptr<sf::SoundBuffer>> m_sou_cache;
 
+	
 
 public:
 	/// \brief Loads a new image from file
@@ -44,7 +57,7 @@ public:
 	const sf::Font&  LoadFont(const std::string& filename);
     /// \brief Loads a new shader from file [currently not working due restrictions on shader]
 	/// \param [in] filename	The filename of the object relative to root folder
-	const sf::Shader& LoadShader(const std::string& filename);
+	const sf::Shader& LoadShader(const std::string& filename,const sf::Shader::Type type);
     /// \brief Loads a new sound buffer from file
 	/// \param [in] filename	The filename of the object relative to root folder
 	const sf::SoundBuffer& LoadSoundBuffer(const std::string& filename);

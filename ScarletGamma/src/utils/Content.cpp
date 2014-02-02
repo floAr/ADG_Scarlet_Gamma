@@ -2,7 +2,12 @@
 
 
 Content::Content(){
-
+	this->LoadImage(DEFAULT_IMAGE);
+	this->LoadFont(DEFAULT_FONT);
+	this->LoadTexture(DEFAULT_TEXTURE);
+	//this->LoadSoundBuffer(DEFAULT_SOUNDBUFFER);
+	//TODO: shader
+	//this->LoadShader(DEFAULT_SHADER,sf::Shader::Type::Fragment);
 }
 
 
@@ -43,8 +48,14 @@ const sf::Texture& Content::LoadTexture(const std::string& filename){
 	else
 	{
 		std::shared_ptr<sf::Texture> res_handle=m_res_cache.acquire(thor::Resources::fromFile<sf::Texture>(filename));
-		m_tex_cache.insert(std::make_pair(filename,res_handle));
-		return *res_handle;
+		if(res_handle){
+			m_tex_cache.insert(std::make_pair(filename,res_handle));
+			return *res_handle;
+		}
+		else
+		{
+			return *(m_tex_cache.find(DEFAULT_TEXTURE))->second;
+		}
 	}	
 }
 
@@ -62,18 +73,18 @@ const sf::Font& Content::LoadFont(const std::string& filename){
 	}	
 }
 
-//sf::Shader Content::LoadShader(std::string filename){
-//	if(m_sha_cache.find(filename)!=m_sha_cache.end())
-//	{
-//		return *m_sha_cache[filename];		
-//	}
-//	else
-//	{
-//		std::shared_ptr<sf::Shader> res_handle=m_res_cache.acquire(thor::Resources::fromFile<sf::Shader>(filename));
-//		m_sha_cache.insert(std::make_pair(filename,res_handle));
-//		return *res_handle;
-//	}	
-//}
+const sf::Shader& Content::LoadShader(const std::string& filename,const sf::Shader::Type type){
+	if(m_sha_cache.find(filename)!=m_sha_cache.end())
+	{
+		return *m_sha_cache[filename];		
+	}
+	else
+	{
+		std::shared_ptr<sf::Shader> res_handle=m_res_cache.acquire(thor::Resources::fromFile<sf::Shader>(filename,type));
+		m_sha_cache.insert(std::make_pair(filename,res_handle));
+		return *res_handle;
+	}	
+}
 
 const sf::SoundBuffer& Content::LoadSoundBuffer(const std::string& filename){
 	auto it = m_sou_cache.find(filename);

@@ -1,11 +1,11 @@
 #include "Content.hpp"
 
-
+/// \brief loads all the dummy items
 Content::Content(){
 	this->LoadImage(DEFAULT_IMAGE);
 	this->LoadFont(DEFAULT_FONT);
 	this->LoadTexture(DEFAULT_TEXTURE);
-	//this->LoadSoundBuffer(DEFAULT_SOUNDBUFFER);
+	this->LoadSoundBuffer(DEFAULT_SOUNDBUFFER);
 	//TODO: shader
 	//this->LoadShader(DEFAULT_SHADER,sf::Shader::Type::Fragment);
 }
@@ -34,8 +34,14 @@ const sf::Image& Content::LoadImage(const std::string& filename){
 	else
 	{
 		std::shared_ptr<sf::Image> res_handle=m_res_cache.acquire(thor::Resources::fromFile<sf::Image>(filename));
-		m_img_cache.insert(std::make_pair(filename,res_handle));
-		return *res_handle;
+		if(res_handle){
+			m_img_cache.insert(std::make_pair(filename,res_handle));
+			return *res_handle;
+		}
+		else
+		{
+			return *(m_img_cache.find(DEFAULT_IMAGE))->second;
+		}
 	}	
 }
 
@@ -68,8 +74,14 @@ const sf::Font& Content::LoadFont(const std::string& filename){
 	else
 	{
 		std::shared_ptr<sf::Font> res_handle=m_res_cache.acquire(thor::Resources::fromFile<sf::Font>(filename));
-		m_fon_cache.insert(std::make_pair(filename,res_handle));
-		return *res_handle;
+		if(res_handle){
+			m_fon_cache.insert(std::make_pair(filename,res_handle));
+			return *res_handle;
+		}
+		else
+		{
+			return *(m_fon_cache.find(DEFAULT_FONT))->second;
+		}
 	}	
 }
 
@@ -81,8 +93,14 @@ const sf::Shader& Content::LoadShader(const std::string& filename,const sf::Shad
 	else
 	{
 		std::shared_ptr<sf::Shader> res_handle=m_res_cache.acquire(thor::Resources::fromFile<sf::Shader>(filename,type));
-		m_sha_cache.insert(std::make_pair(filename,res_handle));
-		return *res_handle;
+		if(res_handle){
+			m_sha_cache.insert(std::make_pair(filename,res_handle));
+			return *res_handle;
+		}
+		else
+		{
+			return *(m_sha_cache.find(DEFAULT_SHADER))->second;
+		}
 	}	
 }
 
@@ -95,8 +113,14 @@ const sf::SoundBuffer& Content::LoadSoundBuffer(const std::string& filename){
 	else
 	{
 		std::shared_ptr<sf::SoundBuffer> res_handle=m_res_cache.acquire(thor::Resources::fromFile<sf::SoundBuffer>(filename));
-		m_sou_cache.insert(std::make_pair(filename,res_handle));
-		return *res_handle;
+		if(res_handle){
+			m_sou_cache.insert(std::make_pair(filename,res_handle));
+			return *res_handle;
+		}
+		else
+		{
+			return *(m_sou_cache.find(DEFAULT_SOUNDBUFFER))->second;
+		}
 	}	
 }
 

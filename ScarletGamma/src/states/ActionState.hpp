@@ -10,9 +10,16 @@ namespace States
 	{
 	public:
 		ActionState();
+		/// \brief Set object to target with action
+		/// \details Sets the object to interact with, this will define the possible actions
 		void SetTargetObject(Core::ObjectID);
+		/// \brief Set object which is calling the action
+		/// \details Sets the object which starts the action 
 		void SetSourceObject(Core::ObjectID);
+		/// \brief Set the GUI position
 		void SetPosition(int x,int y);
+		/// \brief Triggers a recalculation of the GUI
+		/// \details Let the GUI recalculate all the buttons and position
 		void RecalculateGUI();
 		virtual void OnBegin();
 		virtual void OnEnd() {}

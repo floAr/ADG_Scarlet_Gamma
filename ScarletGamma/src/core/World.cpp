@@ -317,6 +317,7 @@ namespace Core {
 		propertyO->Add( PROPERTY::INTELLIGENCE );
 		propertyO->Add( PROPERTY::WISDOM );
 		propertyO->Add( PROPERTY::CHARISMA );
+		propertyO->Add( PROPERTY::JUMPPOINT );
 	}
 
 	void World::CreateDefaultModuleBase()

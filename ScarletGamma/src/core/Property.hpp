@@ -70,6 +70,7 @@ public:
 		R_SYSTEMONLY = 0x000,
 		R_V00000000 = 0x001,	///< Master: See
 		R_VC0000000 = 0x003,	///< Master: See, Change
+		R_VCE000000 = 0x007,	///< Master: See, Change, Edit
 		R_V00V00000 = 0x009,	///< Master: See; APlayer: See
 		R_V00V00V00 = 0x049,	///< Everybody: See
 		R_V0E000000 = 0x005,	///< Master: See, Edit

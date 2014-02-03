@@ -4,6 +4,7 @@
 #include "actions/WalkTo.hpp"
 #include "network/Messenger.hpp"
 #include <assert.h>
+#include "SetJumpPoint.hpp"
 
 using namespace Actions;
 
@@ -15,6 +16,7 @@ ActionPool::ActionPool()
     // Adding actions
     m_Actions.push_back(new Attack());
     m_Actions.push_back(new WalkTo());
+	m_Actions.push_back(new SetJumpPoint());
     //------------------------------//
     // TODO: add more actions here! //
     //------------------------------//
@@ -22,24 +24,24 @@ ActionPool::ActionPool()
     // Set action IDs
     for (unsigned int id = 0; id < m_Actions.size(); ++id)
     {
-        m_Actions.at(id)->SetID(id);
+        m_Actions.at(id)->m_id = id;
     }
 }
 
-std::vector<Core::ActionID> ActionPool::GetAllowedActions(Core::Object& object)
+std::vector<Core::ActionID> ActionPool::GetAllowedActions(std::vector<Core::Object*> _executors, Core::Object& object)
 {
     // Create empty result vector
     std::vector<Core::ActionID> result;
 
-    // Check all avaibale actions
+    // Check all available actions
     for (std::vector<Action*>::iterator action = m_Actions.begin(); action != m_Actions.end(); ++action)
     {
-        // Remember wethere all properties were found, initially true
+        // Remember whether all properties were found, initially true
         bool allowed = true;
 
-        // Get all requirements for the action and loop through them
-        std::vector<std::string> requirements = (*action)->GetRequirements();
-        for (std::vector<std::string>::iterator req = requirements.begin(); req != requirements.end(); ++req)
+        // Get all requirements for target and loop through them
+        const std::vector<std::string>& requirements = (*action)->GetTargetRequirements();
+        for (auto req = requirements.begin(); req != requirements.end(); ++req)
         {
             if (object.HasProperty(*req) == false)
             {
@@ -49,10 +51,24 @@ std::vector<Core::ActionID> ActionPool::GetAllowedActions(Core::Object& object)
             }
         }
 
+		// Get all requirements for executor and loop through them
+		const std::vector<std::string>& sourceRequirements = (*action)->GetSourceRequirements();
+		for (auto req = sourceRequirements.begin(); req != sourceRequirements.end() && allowed; ++req)
+		{
+			// Test all possible executors
+			for( size_t i=0; i<_executors.size(); ++i )
+			if( !_executors[i]->HasProperty(*req) )
+			{
+				// Missing a property, remember that and get out of the requirements loop
+				allowed = false;
+				break;
+			}
+		}
+
         // Did the object have all properties?
         if (allowed)
         {
-            result.push_back((*action)->GetID());
+            result.push_back((*action)->m_id);
         }
     }
 
@@ -68,7 +84,7 @@ const std::string& ActionPool::GetActionName(Core::ActionID id)
 Core::ActionID ActionPool::GetLocalAction()
 {
     if (m_LocalAction != 0)
-        return m_LocalAction->GetID();
+        return m_LocalAction->m_id;
     else
         return -1;
 }
@@ -115,7 +131,7 @@ void ActionPool::EndClientAction(uint8_t index)
 
 Core::ActionID ActionPool::GetClientAction(int index)
 {
-    return m_ClientActions[index]->GetID();
+    return m_ClientActions[index]->m_id;
 }
 
 void ActionPool::HandleActionInfo(uint8_t sender, uint8_t messageType, const std::string& message)

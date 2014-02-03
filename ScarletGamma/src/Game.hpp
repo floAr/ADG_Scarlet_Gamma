@@ -20,7 +20,7 @@ public:
 	/// \brief Default constructor that tames wild pointers
 	Game() : m_stateMachine(0), m_world(0), m_eventHandler(0), m_numNewChatMessages(0) {}
 
-    static Utils::Random* RANDOM;
+	static Utils::Random* RANDOM;
 
 	/// TODO:: Document
 	void Init();
@@ -48,9 +48,25 @@ public:
 		return m_world;
 	}
 
+	/// \brief Get the game's render window.
+	/// \return Reference to the render window.
 	sf::RenderWindow& GetWindow()
 	{
 		return m_window;
+	}
+
+	/// \brief Tell the game about the PlayerState / MasterState
+	/// Is called from the respective state's constructor.
+	void SetCommonState(States::CommonState* state)
+	{
+		m_commonState = state;
+	}
+
+	/// \brief Get the game's PlayerState / MasterState.
+	/// Consult Messenger::IsServer() to find out which one it is.
+	States::CommonState* GetCommonState()
+	{
+		return m_commonState;
 	}
 
 	void AppendToChatLog( const Network::ChatMsg& _message )	{ m_chatMessages.push_back(_message); ++m_numNewChatMessages; }
@@ -62,6 +78,7 @@ private:
 	States::StateMachine* m_stateMachine;
 	Core::World* m_world;
 	sf::RenderWindow m_window;
+	States::CommonState* m_commonState;
 
 	/// \brief Collect messages independent from game state.
 	/// \details This allows to commit the message history to a new player

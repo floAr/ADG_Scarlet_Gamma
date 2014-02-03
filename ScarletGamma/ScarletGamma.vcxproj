@@ -92,6 +92,7 @@
     <ClCompile Include="src\events\EventHandler.cpp" />
     <ClCompile Include="src\events\InputHandler.cpp" />
     <ClCompile Include="src\Game.cpp" />
+    <ClCompile Include="src\gamerules\Combat.cpp" />
     <ClCompile Include="src\gamerules\CombatRules.cpp" />
     <ClCompile Include="src\graphics\TileRenderer.cpp" />
     <ClCompile Include="src\interfaces\ObjectPanel.cpp" />
@@ -100,6 +101,7 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\network\ActionMessages.cpp" />
     <ClCompile Include="src\network\ChatMessages.cpp" />
+    <ClCompile Include="src\network\CombatMessages.cpp" />
     <ClCompile Include="src\network\MapMessages.cpp" />
     <ClCompile Include="src\network\Messenger.cpp" />
     <ClCompile Include="src\network\ObjectMessages.cpp" />
@@ -144,6 +146,7 @@
     <ClInclude Include="src\events\EventHandler.hpp" />
     <ClInclude Include="src\events\InputHandler.hpp" />
     <ClInclude Include="src\Game.hpp" />
+    <ClInclude Include="src\gamerules\Combat.hpp" />
     <ClInclude Include="src\gamerules\CombatRules.hpp" />
     <ClInclude Include="src\graphics\TileRenderer.hpp" />
     <ClInclude Include="src\interfaces\DragNDrop.hpp" />
@@ -152,6 +155,7 @@
     <ClInclude Include="src\interfaces\Toolbar.hpp" />
     <ClInclude Include="src\network\ActionMessages.hpp" />
     <ClInclude Include="src\network\ChatMessages.hpp" />
+    <ClInclude Include="src\network\CombatMessages.hpp" />
     <ClInclude Include="src\network\MapMessages.hpp" />
     <ClInclude Include="src\network\Message.hpp" />
     <ClInclude Include="src\network\Messenger.hpp" />

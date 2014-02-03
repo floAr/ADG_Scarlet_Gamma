@@ -59,6 +59,14 @@ namespace Events
 }
 
 //------------------------------------------------------------------------------
+// GAME RULES
+namespace GameRules
+{
+    class Combat;
+}
+
+
+//------------------------------------------------------------------------------
 // NETWORK
 namespace Network
 {
@@ -81,6 +89,7 @@ namespace States
     class StateMachine;
     class GameState;
     class PromptState;
+    class CommonState;
 }
 
 //------------------------------------------------------------------------------

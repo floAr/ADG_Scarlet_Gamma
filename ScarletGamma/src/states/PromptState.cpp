@@ -45,6 +45,8 @@ void PromptState::Draw(sf::RenderWindow& win)
     win.setView(backup);
 
     // Draw GUI
+    sf::Vector2u size = g_Game->GetWindow().getSize();
+    Resize(sf::Vector2f((float) size.x, (float) size.y));
     GameState::Draw(win);
 }
 
@@ -82,6 +84,13 @@ void PromptState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
         }
         break;
     }
+}
+
+void PromptState::Resize(const sf::Vector2f& _size)
+{
+    // Adjust edit box size
+    auto editBoxPtr = m_editBox.get();
+    editBoxPtr->setSize(_size.x - 2 * editBoxPtr->getPosition().x, editBoxPtr->getSize().y);
 }
 
 void PromptState::SetText(const std::string& text)

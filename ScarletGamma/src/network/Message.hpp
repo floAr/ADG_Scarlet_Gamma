@@ -11,6 +11,7 @@ namespace Network {
 		MAP,		///< Something which changes a specific map
 		OBJECT,		///< Something which changes a specific map
 		ACTION,		///< Something which changes the state of an action
+		COMBAT,		///< Something which changes the combat state
 		CHAT		///< Text for the chat
 	};
 

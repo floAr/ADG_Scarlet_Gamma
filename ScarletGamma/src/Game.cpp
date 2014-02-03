@@ -7,6 +7,7 @@
 #include "core/Map.hpp"
 #include "utils/Random.hpp"
 #include "sfutils/View.hpp"
+#include "states/CommonState.hpp"
 #include <math.h>
 
 Utils::Random* Game::RANDOM = new Utils::Random((uint32_t) time(0));

@@ -63,11 +63,17 @@ namespace States
 		///		on the mode.
 		virtual Core::Map* GetCurrentMap() = 0;
 
+		//----------------------------------------------------------------------
+		// COMBAT STUFF
+		void BeginCombat();
+		void EndCombat();
+
 	protected:
-		Utils::Falloff m_zoom;		///< Zoom for the current map
-		tgui::Gui m_gui;			///< A gui to show chat messages and everything else.
-		std::string m_name;			///< Name of the player used in the chat
-		sf::Color m_color;			///< Color of the player in the chat
+		Utils::Falloff m_zoom;       ///< Zoom for the current map
+		tgui::Gui m_gui;             ///< A gui to show chat messages and everything else.
+		std::string m_name;          ///< Name of the player used in the chat
+		sf::Color m_color;           ///< Color of the player in the chat
+		GameRules::Combat* m_combat; ///< Pointer to Combat in progress, 0 if none
 
 		/// \brief Checks which actions where done and adjusts the zoom.
 		void ZoomView(float delta);

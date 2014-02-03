@@ -75,9 +75,12 @@ size_t MsgActionBegin::Receive(Core::ActionID _action, uint8_t _sender,
     // Deserialize
     Core::ObjectID target = *_data;
 
-    std::cerr << "Player " <<  g_Game->GetWorld()->FindPlayer(_sender)->GetName()
+#ifdef _DEBUG
+    std::cout << "Player " <<  g_Game->GetWorld()->FindPlayer(_sender)->GetName()
         << " starting action '" << Actions::ActionPool::Instance().GetActionName(_action)
         << "' on target " << g_Game->GetWorld()->GetObject(target)->GetName() << '\n';
+#endif
+
     Actions::ActionPool::Instance().StartClientAction(_action, g_Game->GetWorld()->
         FindPlayer(_sender)->ID(), target, _sender);
 
@@ -104,8 +107,11 @@ size_t MsgActionEnd::Receive(Core::ActionID _action, uint8_t _sender,
     {
         // End the current action
         Actions::ActionPool::Instance().EndClientAction(_sender);
-        std::cerr << "Player " <<  std::to_string(_sender) << " ending action '"
+
+#ifdef _DEBUG
+        std::cout << "Player " <<  std::to_string(_sender) << " ending action '"
             <<  Actions::ActionPool::Instance().GetActionName(_action) << "'" << '\n';
+#endif
     }
     else
     {
@@ -142,7 +148,10 @@ size_t MsgActionInfo::Receive(Core::ActionID _action, uint8_t _sender,
     // Deserialize
     uint8_t messageType = *_data;
     std::string message((const char*) _data + sizeof(uint8_t), _size - sizeof(uint8_t));
+
+#ifdef _DEBUG
     std::cout << "Received data " << message << " of type " << std::to_string(messageType) << " from " << _sender << '\n';
+#endif
     
     Actions::ActionPool::Instance().HandleActionInfo(_sender, messageType, message);
 

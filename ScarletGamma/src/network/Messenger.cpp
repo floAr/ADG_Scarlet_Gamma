@@ -5,6 +5,7 @@
 #include "WorldMessages.hpp"
 #include "MapMessages.hpp"
 #include "ObjectMessages.hpp"
+#include "CombatMessages.hpp"
 #include "Game.hpp"
 #include "ChatMessages.hpp"
 #include "ActionMessages.hpp"
@@ -128,6 +129,10 @@ namespace Network {
 		const MessageHeader* header = reinterpret_cast<const MessageHeader*>(_packet.getData());
 		size_t size = _packet.getDataSize() - sizeof(MessageHeader);
 		size_t read = sizeof(MessageHeader);	// Deprecated but still here for testing
+
+		// Get sender ID
+		uint8_t id = std::distance(std::find(m_sockets.begin(), m_sockets.end(), _from), m_sockets.begin());
+
 		switch(header->target)
 		{
 		case Target::WORLD:
@@ -146,17 +151,17 @@ namespace Network {
 			break;
 		case Target::ACTION:
 			if ( IsServer() )
-			{
-				// Get sender ID
-				// TODO: centralize player ID stuff?
-				uint8_t id = std::distance(std::find(m_sockets.begin(), m_sockets.end(), _from), m_sockets.begin());
 				read += HandleActionMessage( static_cast<Core::ActionID>(header->targetID), buffer + sizeof(MessageHeader), size, id );
-			}
 			else
-			{
-				// Server is always 0
 				read += HandleActionMessage( static_cast<Core::ActionID>(header->targetID), buffer + sizeof(MessageHeader), size, 0 );
-			}
+			break;
+		case Target::COMBAT:
+			if ( IsServer() )
+				read += HandleCombatMessage( buffer + sizeof(MessageHeader), size, id );
+			else
+				read += HandleCombatMessage( buffer + sizeof(MessageHeader), size, 0 );
+			break;
+
 			break;
 		}
 
@@ -179,11 +184,11 @@ namespace Network {
 	}
 
 	sf::TcpSocket* Messenger::GetSocket(uint8_t _index)
-    {
-        if (g_msgInstance)
-            return g_msgInstance->m_sockets.at(_index);
-        else
-            return 0;
-    }
+	{
+		if (g_msgInstance)
+			return g_msgInstance->m_sockets.at(_index);
+		else
+			return 0;
+	}
 
 } // namespace Network

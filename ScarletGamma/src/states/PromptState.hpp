@@ -22,6 +22,7 @@ namespace States
         virtual void Draw(sf::RenderWindow& win) override;
         virtual void Update(float dt) override;
         virtual void KeyPressed(sf::Event::KeyEvent& key, bool guiHandled) override;
+        virtual void Resize(const sf::Vector2f& _size) override;
     private:
         tgui::Gui m_gui;
         tgui::EditBox::Ptr m_editBox;

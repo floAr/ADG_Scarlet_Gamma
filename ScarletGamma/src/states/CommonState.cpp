@@ -9,13 +9,19 @@
 #include "core/World.hpp"
 #include "network/ChatMessages.hpp"
 #include "actions/ActionPool.hpp"
+#include "gamerules/Combat.hpp"
 
 namespace States {
 
 CommonState::CommonState() :
 		m_zoom(Utils::Falloff::FT_QUADRATIC, 0.75f, 0.05f),
-		m_selectionChanged(false)
+		m_selectionChanged(false),
+		m_combat(0)
 {
+	// Tell the game about it's common state. Using Messenger::IsServer() you can take
+	//   a wild guess whether this is a PlayerState or MasterState
+	g_Game->SetCommonState(this);
+
 	m_gui.setWindow(g_Game->GetWindow());
 	m_gui.setGlobalFont(Content::Instance()->LoadFont("media/arial.ttf"));
 	if( !m_gui.loadWidgetsFromFile( "media/Chat.gui" ) )
@@ -31,8 +37,6 @@ void CommonState::OnEnd()
 {
 	Network::Messenger::Close();
 }
-
-
 
 void CommonState::Update( float dt )
 {
@@ -232,6 +236,17 @@ void CommonState::RemoveFromSelection( Core::ObjectID _id )
 {
 	m_selection.Remove(_id);
 	m_selectionChanged = true;
+}
+
+void CommonState::BeginCombat()
+{
+	m_combat = new GameRules::Combat();
+}
+
+void CommonState::EndCombat()
+{
+	delete(m_combat);
+	m_combat = 0;
 }
 
 

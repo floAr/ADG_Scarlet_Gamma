@@ -28,6 +28,7 @@ static const std::string STR_MULTISELECTION = std::string("<Mehrfachauswahl>");
 
 static const std::string STR_ACT_ATTACK = std::string("Angreifen");
 static const std::string STR_ACT_WALKTO = std::string("Hierher gehen");
+static const std::string STR_ACT_SETJUMPPOINT = std::string("Als Sprungziel");
 
 /************************************************************************/
 /* MESSAGES                                                             */
@@ -54,6 +55,7 @@ static const std::string STR_PROP_OBSTACLE	= std::string("Hindernis");	///< Name
 static const std::string STR_PROP_NAME		= std::string("Name");		///< Name of name property: object's name
 static const std::string STR_PROP_PLAYER	= std::string("player");	///< Name of player: flags an object as player, the value is its ID
 static const std::string STR_PROP_OWNER		= std::string("owner");		///< Name of owner: flags the object as owned by a player
+static const std::string STR_PROP_JUMPPOINT	= std::string("Sprungziel");///< Name of portal property: The value is an id of the target object.
 
 
 /************************************************************************/
@@ -68,6 +70,7 @@ static const std::string STR_PROP_WISDOM = std::string("Weisheit");
 static const std::string STR_PROP_CHARISMA = std::string("Charisma");
 static const std::string STR_PROP_HEALTH = std::string("Trefferpunkte");
 static const std::string STR_PROP_ARMORCLASS = std::string("Rüstungsklasse");
+static const std::string STR_PROP_INITIATIVE_MOD = std::string("Initiative-Modifikator");
 
 
 /************************************************************************/

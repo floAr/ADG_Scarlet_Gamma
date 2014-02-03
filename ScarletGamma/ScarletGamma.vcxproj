@@ -82,6 +82,7 @@
   <ItemGroup>
     <ClCompile Include="src\actions\ActionPool.cpp" />
     <ClCompile Include="src\actions\Attack.cpp" />
+    <ClCompile Include="src\actions\SetJumpPoint.cpp" />
     <ClCompile Include="src\actions\WalkTo.cpp" />
     <ClCompile Include="src\core\Map.cpp" />
     <ClCompile Include="src\core\Object.cpp" />
@@ -136,6 +137,7 @@
     <ClInclude Include="src\actions\Action.hpp" />
     <ClInclude Include="src\actions\ActionPool.hpp" />
     <ClInclude Include="src\actions\Attack.hpp" />
+    <ClInclude Include="src\actions\SetJumpPoint.hpp" />
     <ClInclude Include="src\actions\WalkTo.hpp" />
     <ClInclude Include="src\Constants.hpp" />
     <ClInclude Include="src\core\Map.hpp" />

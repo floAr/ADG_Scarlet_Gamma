@@ -11,13 +11,21 @@ namespace Actions
         friend class ActionPool;
 
     public:
-        /// \brief Returns the list of required properties for this action.
+        /// \brief Returns the list of required properties for the target for this action.
         /// The respective implementations needs to take care of filling the list.
         /// \return  Reference to list of requirements
-        const std::vector<std::string>& GetRequirements()
+        const std::vector<std::string>& GetTargetRequirements()
         {
-            return m_requirements;
+            return m_targetRequirements;
         }
+
+		/// \brief Returns the list of required properties for the executor.
+		/// The respective implementations needs to take care of filling the list.
+		/// \return  Reference to list of source requirements
+		const std::vector<std::string>& GetSourceRequirements()
+		{
+			return m_sourceRequirements;
+		}
 
         /// \brief Get the name of an action for human readability.
         /// \return Const reference to name string
@@ -47,14 +55,8 @@ namespace Actions
         /// \brief Default constructor, setting the name of the action
         Action(const std::string& name) : m_name(name) {}
 
-        /// \brief Get the ID of the action, mainly for networking
-        /// \return ID of the action
-        Core::ActionID GetID()
-        {
-            return m_id;
-        }
-
-        std::vector<std::string> m_requirements; ///< List of required properties for this action
+        std::vector<std::string> m_targetRequirements; ///< List of required properties in target
+		std::vector<std::string> m_sourceRequirements; ///< List of required properties in source (executor)
         const std::string m_name; ///< Human readable name of the action
         Core::ActionID m_id; ///< Action ID, i.e. index in the ActionPool's list
         Core::ObjectID m_executor; ///< The object executing the action
@@ -64,12 +66,5 @@ namespace Actions
 
         /// \brief Prevent copying.
         Action(const Action& other) {}
-
-        /// \brief Sets the ID of the actual. Should only be called by the ActionPool!
-        /// \param [in] _id  The ID of the action, i.e. the index in the ActionPool
-        void SetID( Core::ActionID _id)
-        {
-            m_id = _id;
-        }
     };
 }

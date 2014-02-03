@@ -16,6 +16,7 @@ namespace Core {
 		static const Property TARGET;
 		static const Property OBSTACLE;
 		static const Property PLAYER;
+		static const Property JUMPPOINT;
 
 		static const Property INVENTORY;
 		static const Property STRENGTH;

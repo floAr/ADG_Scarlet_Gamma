@@ -18,9 +18,10 @@ namespace Actions
         }
 
         /// \brief Returns all actions which are allowed to be executed on a given object.
+        /// \param [in] _executor A list of objects which try to do things
         /// \param [in] object  Object to be examined
         /// \returns Vector of Action pointers for which the actions are applicable
-        std::vector<Core::ActionID> GetAllowedActions(Core::Object& object);
+        std::vector<Core::ActionID> GetAllowedActions(std::vector<Core::Object*> _executors, Core::Object& object);
 
         /// \brief Get the name of an action by ID.
         /// \param [in] id  ID of the action to start, \see GetAllowedActions

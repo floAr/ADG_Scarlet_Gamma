@@ -178,6 +178,7 @@ void States::SelectionState::MouseButtonPressed(sf::Event::MouseButtonEvent& but
 		        auto action=dynamic_cast<ActionState*>( g_Game->GetStateMachine()->PushGameState(States::GST_ACTION));
 		        action->SetTargetObject(id);
 				const Core::ObjectList* selection = previousState->GetSelection();
+				//TODO: Forschleife mit mehreren aktionen für alle objekte in der selektion
 				action->SetSourceObject((*selection)[0]);
 				action->SetPosition(button.x,button.y);
 		        m_finished=true;

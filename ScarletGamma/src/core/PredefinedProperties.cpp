@@ -15,6 +15,7 @@ namespace Core {
 	const Property PROPERTY::TARGET = Property(Property::R_SYSTEMONLY, STR_PROP_TARGET, "0:0");
 	const Property PROPERTY::OBSTACLE = Property(Property::R_VC0000000, STR_PROP_OBSTACLE, STR_EMPTY);
 	const Property PROPERTY::PLAYER = Property(Property::R_SYSTEMONLY, STR_PROP_PLAYER, STR_0) ;
+	const Property PROPERTY::JUMPPOINT = Property(Property::R_VCE000000, STR_PROP_JUMPPOINT, STR_0) ;
 
 	const Property PROPERTY::INVENTORY = Property(Property::R_VCEV0EV00, STR_PROP_INVENTORY, STR_EMPTY);
 	const Property PROPERTY::STRENGTH = Property(Property::R_VCEV0EV00, STR_PROP_STRENGTH, STR_0);

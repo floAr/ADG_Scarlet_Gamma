@@ -8,8 +8,8 @@ using namespace Actions;
 WalkTo::WalkTo() : Action(STR_ACT_WALKTO)
 {
     // Set requirements
-	m_requirements.push_back(STR_PROP_X);
-    m_requirements.push_back(STR_PROP_Y);
+	m_targetRequirements.push_back(STR_PROP_X);
+    m_targetRequirements.push_back(STR_PROP_Y);
 }
 
 void WalkTo::Execute()

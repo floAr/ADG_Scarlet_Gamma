@@ -67,6 +67,7 @@ static const std::string STR_PROP_WISDOM = std::string("Weisheit");
 static const std::string STR_PROP_CHARISMA = std::string("Charisma");
 static const std::string STR_PROP_HEALTH = std::string("Trefferpunkte");
 static const std::string STR_PROP_ARMORCLASS = std::string("Rüstungsklasse");
+static const std::string STR_PROP_INITIATIVE_MOD = std::string("Initiative-Modifikator");
 
 
 /************************************************************************/

@@ -88,7 +88,7 @@ void Graphics::TileRenderer::RenderPath( sf::RenderWindow& window, const std::ve
 	}
 }
 
-void Graphics::TileRenderer::RenderSelection( sf::RenderWindow& window, const Core::ObjectList& _selection )
+void Graphics::TileRenderer::RenderSelection( sf::RenderWindow& _window, const Core::ObjectList& _selection )
 {
 	const sf::Texture& tex = Content::Instance()->LoadTexture("media/selected.png");
 	sf::Sprite drawSprite(tex);
@@ -98,6 +98,17 @@ void Graphics::TileRenderer::RenderSelection( sf::RenderWindow& window, const Co
 		Core::Object* obj = g_Game->GetWorld()->GetObject( _selection[i] );
 		drawSprite.setPosition(obj->GetPosition() * float(TILESIZE));
 		drawSprite.setScale(float(TILESIZE)/tex.getSize().x, float(TILESIZE)/tex.getSize().y);
-		window.draw(drawSprite);
+		_window.draw(drawSprite);
 	}
+}
+
+
+void Graphics::TileRenderer::RenderRect(sf::RenderWindow& _window, const sf::Vector2i& _min, const sf::Vector2i& _max)
+{
+	const sf::Texture& tex = Content::Instance()->LoadTexture("media/selected.png");
+	sf::Sprite drawSprite(tex);
+	drawSprite.setColor(sf::Color(1, 255, 255, 255));
+	drawSprite.setPosition(sf::Vector2f(_min) * float(TILESIZE));
+	drawSprite.setScale(float((_max.x-_min.x) * TILESIZE)/tex.getSize().x, float((_max.y-_min.y) * TILESIZE)/tex.getSize().y);
+	_window.draw(drawSprite);
 }

@@ -63,8 +63,8 @@ namespace Tools {
 		CheckBoundaries(_x-r0, _x+r1, _y-r0, _y+r1);
 
 		float rsq = m_diameter * m_diameter / 4.0f;				// Real radius squared to compute circle distances
-		float cx = ((m_diameter & 1) == 1) ? _x : (_x+0.5f);	// Translated center for even coordinates
-		float cy = ((m_diameter & 1) == 1) ? _y : (_y+0.5f);	// Translated center for even coordinates
+	//	float cx = ((m_diameter & 1) == 1) ? _x : (_x+0.5f);	// Translated center for even coordinates
+	//	float cy = ((m_diameter & 1) == 1) ? _y : (_y+0.5f);	// Translated center for even coordinates
 		for( int y = _y-r0; y <_y+r1; ++y )
 		{
 			for( int x = _x-r0; x <_x+r1; ++x )
@@ -137,8 +137,10 @@ namespace Tools {
 		// Allocate a new larger memory
 		int width = (m_Xmax-m_Xmin+1);
 		int height = (m_Ymax-m_Ymin+1);
-		bool* mask = new bool[(width+_nx+_px) * (height+_ny+_py)];
 		int newWidth = width + _nx + _px;
+		int newHeight = height + _ny + _py;
+		bool* mask = new bool[newWidth * newHeight];
+		memset(mask, 0, sizeof(bool) * newWidth * newHeight);
 		// Copy old part
 		for( int y=0; y<height; ++y ) {
 			for( int x=0; x<width; ++x ) {
@@ -159,13 +161,13 @@ namespace Tools {
 
 	void Brush::SetFlag( int _x, int _y )
 	{
-		m_mask[(_x-m_Xmin) + (_y-m_Ymin) * (m_Ymax - m_Ymin)] = true;
+		m_mask[(_x-m_Xmin) + (_y-m_Ymin) * (m_Xmax - m_Xmin + 1)] = true;
 	}
 
 
 	bool Brush::WasEdited( int _x, int _y ) const
 	{
-		return m_mask[(_x-m_Xmin) + (_y-m_Ymin) * (m_Ymax - m_Ymin)];
+		return m_mask[(_x-m_Xmin) + (_y-m_Ymin) * (m_Xmax - m_Xmin + 1)];
 	}
 
 } // namespace Tools

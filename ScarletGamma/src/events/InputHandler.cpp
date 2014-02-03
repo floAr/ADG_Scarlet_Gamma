@@ -85,3 +85,13 @@ void Events::InputHandler::MouseMoved(sf::Event::MouseMoveEvent& move, bool guiH
 	m_mousePos[0] = move.x;
 	m_mousePos[1] = move.y;
 }
+
+
+sf::Vector2i Events::InputHandler::GetMouseTilePosition()
+{
+	auto mousePos = sf::Mouse::getPosition( g_Game->GetWindow() );
+	sf::Vector2f tilePos = g_Game->GetWindow().mapPixelToCoords(mousePos);
+	tilePos.x /= TILESIZE;
+	tilePos.y /= TILESIZE;
+	return sf::Vector2i( (int)floor(tilePos.x), (int)floor(tilePos.y) );
+}

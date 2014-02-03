@@ -27,6 +27,9 @@ namespace Graphics
 		static void RenderPath(sf::RenderWindow& window, const std::vector<sf::Vector2i>& _path);
 
 		/// \brief Draw a focus selected objects.
-		static void RenderSelection(sf::RenderWindow& window, const Core::ObjectList& _selection);
+		static void RenderSelection(sf::RenderWindow& _window, const Core::ObjectList& _selection);
+
+		/// \brief Draw a rectangle for selection, brush, ...
+		static void RenderRect(sf::RenderWindow& _window, const sf::Vector2i& _min, const sf::Vector2i& _max);
 	};
 }

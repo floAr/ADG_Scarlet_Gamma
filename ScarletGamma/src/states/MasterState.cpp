@@ -11,6 +11,7 @@
 #include <iostream>
 #include "core/PredefinedProperties.hpp"
 #include "network/WorldMessages.hpp"
+#include "events/InputHandler.hpp"
 
 using namespace Core;
 
@@ -126,6 +127,14 @@ namespace States {
 
 		Graphics::TileRenderer::RenderSelection( win, m_selection );
 
+		// Show the brush region
+		if( m_modeTool->GetMode() == Interfaces::ModeToolbox::BRUSH )
+		{
+			int r0 = m_modeTool->Brush()->GetDiameter() / 2, r1 = m_modeTool->Brush()->GetDiameter() - r0;
+			sf::Vector2i mousePos = Events::InputHandler::GetMouseTilePosition();
+			Graphics::TileRenderer::RenderRect( win, sf::Vector2i(mousePos.x-r0, mousePos.y-r0), sf::Vector2i(mousePos.x+r1, mousePos.y+r1) );
+		}
+
 		GameState::Draw(win);
 	}
 
@@ -165,7 +174,7 @@ namespace States {
 				m_rectSelectionStart=tilePos;
 				m_rectSelection=true;
 			}
-							  } break;
+			break; }
 		case sf::Mouse::Right: {
 			if( GetCurrentMap()->GetObjectsAt(tileX, tileY).Size() > 0 )
 			{
@@ -174,7 +183,7 @@ namespace States {
 				
 			}
 
-							   } break;
+			break; }
 		}
 	}
 
@@ -257,7 +266,6 @@ namespace States {
 				}
 
 			}
-
 
 			m_rectSelection=false;
 		}
@@ -368,17 +376,12 @@ namespace States {
 		if( sf::Mouse::isButtonPressed(sf::Mouse::Left) )
 		{
 			// Most actions here require the tile position -> compute it
-			auto mousePos = sf::Mouse::getPosition( g_Game->GetWindow() );
-			sf::Vector2f tilePos = g_Game->GetWindow().mapPixelToCoords(mousePos);
-			tilePos.x /= TILESIZE;
-			tilePos.y /= TILESIZE;
-			int x = (int)floor(tilePos.x);
-			int y = (int)floor(tilePos.y);
+			sf::Vector2i mousePos = Events::InputHandler::GetMouseTilePosition();
 
 			// In brush mode paint to the current position
 			if( m_modeTool->GetMode() == Interfaces::ModeToolbox::BRUSH )
 			{
-				m_brush.Paint(x, y);
+				m_brush.Paint(mousePos.x, mousePos.y);
 			}
 		}
 	}

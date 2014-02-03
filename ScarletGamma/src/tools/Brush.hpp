@@ -40,6 +40,10 @@ namespace Tools {
 		///		drawn in the wrong moment
 		void EndPaint()	{ m_map = nullptr; }
 
+		sf::Vector2i GetMinBoundary() const	{ return sf::Vector2i(m_Xmin, m_Ymin); }
+		sf::Vector2i GetMaxBoundary() const	{ return sf::Vector2i(m_Xmax, m_Ymax); }
+		int GetDiameter() const				{ return m_diameter; }
+
 	private:
 		Core::Map* m_map;	///< The induced map on which operations take place
 		int m_diameter;		///< Diameter of the circle

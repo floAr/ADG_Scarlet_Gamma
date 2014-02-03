@@ -67,6 +67,9 @@ namespace Events
 		/// \param [in] guiHandled  Wether the GUI already used the event
 		void MouseMoved(sf::Event::MouseMoveEvent& move, bool guiHandled);
 
+		/// \brief Determine the current position of the cursor in tile-space
+		static sf::Vector2i GetMouseTilePosition();
+
 	private:
 		/// \brief Counts the total time the InputManager was updated with. Used for
 		///		determining how long a key / button was pressed.

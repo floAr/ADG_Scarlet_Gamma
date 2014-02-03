@@ -63,6 +63,10 @@ namespace States {
 		m_color = sf::Color(80,80,250);
 		m_name = "Master";
 
+		// Set window size
+		sf::Vector2u size = g_Game->GetWindow().getSize();
+		Resize( sf::Vector2f( (float) size.x, (float) size.y ) );
+
 		//set up m_hiddenLayers for 10 layers
 		/*int l;
 		for(l=0;l<10;l++)

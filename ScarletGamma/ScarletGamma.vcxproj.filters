@@ -197,6 +197,9 @@
     <ClCompile Include="src\gamerules\Combat.cpp">
       <Filter>Quelldateien\gamerules</Filter>
     </ClCompile>
+    <ClCompile Include="src\gamerules\MasterCombat.cpp">
+      <Filter>Quelldateien\gamerules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\core\Map.hpp">
@@ -359,6 +362,9 @@
       <Filter>Quelldateien\network</Filter>
     </ClInclude>
     <ClInclude Include="src\gamerules\Combat.hpp">
+      <Filter>Quelldateien\gamerules</Filter>
+    </ClInclude>
+    <ClInclude Include="src\gamerules\MasterCombat.hpp">
       <Filter>Quelldateien\gamerules</Filter>
     </ClInclude>
   </ItemGroup>

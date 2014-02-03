@@ -94,6 +94,7 @@
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\gamerules\Combat.cpp" />
     <ClCompile Include="src\gamerules\CombatRules.cpp" />
+    <ClCompile Include="src\gamerules\MasterCombat.cpp" />
     <ClCompile Include="src\graphics\TileRenderer.cpp" />
     <ClCompile Include="src\interfaces\ObjectPanel.cpp" />
     <ClCompile Include="src\interfaces\PropertyPanel.cpp" />
@@ -148,6 +149,7 @@
     <ClInclude Include="src\Game.hpp" />
     <ClInclude Include="src\gamerules\Combat.hpp" />
     <ClInclude Include="src\gamerules\CombatRules.hpp" />
+    <ClInclude Include="src\gamerules\MasterCombat.hpp" />
     <ClInclude Include="src\graphics\TileRenderer.hpp" />
     <ClInclude Include="src\interfaces\DragNDrop.hpp" />
     <ClInclude Include="src\interfaces\ObjectPanel.hpp" />

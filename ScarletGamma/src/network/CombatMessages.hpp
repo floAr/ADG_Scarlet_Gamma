@@ -8,11 +8,11 @@ namespace Network
 {
     enum struct CombatMsgType: uint8_t
     {
-        DM_COMBAT_BEGIN,         ///< DM begins combat, void
-        DM_COMBAT_INITIATIVE,    ///< DM requests initiative roll, void
-        PL_COMBAT_INITIATIVE,    ///< Player answer initiative request, int
+        DM_COMBAT_BEGIN,               ///< DM begins combat
+        PL_COMBAT_INITIATIVE,          ///< Player provides initiative roll
+        DM_COMBAT_ADD_PARTICIPANT,     ///< DM tells player about participants, in order of initiative
         /* ... */
-        DM_COMBAT_END,           ///< DM ends combat, void
+        DM_COMBAT_END,                 ///< DM ends combat, void
     };
 
     /// \brief A base class for all combat related messages.
@@ -20,8 +20,10 @@ namespace Network
     {
     public:
         /// \brief Writes the headers and the specific data to a packet and
-        ///		sends it.
-        void Send(uint8_t socket = 0);
+        ///     sends it.
+        /// \param [in] _suffix  Data to append to the packet, may be omitted
+        /// \param [in] _socket  Socket to send the packet to, may be omitted
+        void Send(Jo::Files::MemFile* _suffix = 0, uint8_t _socket = 0);
 
     private:
         CombatMsgType m_purpose;
@@ -29,9 +31,6 @@ namespace Network
     protected:
         CombatMsg(CombatMsgType _purpose)
             : m_purpose(_purpose) {}
-
-        /// \brief Write data of a specific message to the packet.
-        virtual void WriteData(Jo::Files::MemFile& _output) const = 0;
     };
 
     /// \brief Handle a message with target Master or Player.

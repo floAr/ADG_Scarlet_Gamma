@@ -33,11 +33,7 @@ namespace Interfaces {
 		bool IsMinimized() const { return m_miniMaxi->getCurrentFrame() == 0; }
 
 		virtual void setSize(float _width, float _height) override;
-		virtual sf::Vector2f getSize() const override;
-		virtual void setPosition(float _x, float _y) override;
 		virtual void unfocus() override;
-		virtual void hide() override;
-		virtual void show() override;
 
 		/// \brief If an object is dragged to this panel all properties which
 		///		are not existent are copied and the same holds for single properties.
@@ -57,6 +53,7 @@ namespace Interfaces {
 		tgui::Scrollbar::Ptr m_scrollBar;
 		tgui::EditBox::Ptr m_titleBar;			///< Contains the object name in minimized state and is the searchbar if maximized
 		tgui::AnimatedPicture::Ptr m_miniMaxi;
+		tgui::Panel::Ptr m_listContainer;		///< The subcomponent containing all stuff.
 
 		/// \brief A struct to reference all components of a line in one place.
 		/// \details This struct is used for faster searches.
@@ -87,7 +84,7 @@ namespace Interfaces {
 		void RemoveBtn(const tgui::Callback& _call);
 		void AddBtn(const tgui::Callback& _call);
 		void Scroll(const tgui::Callback& _call);
-		void MiniMaxi(const tgui::Callback& _call);
+		void MiniMaxi();
 		void ValueEntered(const tgui::Callback& _call);
 		void ValueChanged(const tgui::Callback& _call);
 		void StartDrag(const tgui::Callback& _call);
@@ -115,7 +112,7 @@ namespace Interfaces {
 		///		can contain sub elements.
 		///	\param [in] _parentName The name of the property/line which should
 		///		be the parent of this node.
-		Ptr AddNode(const std::string&  _parentName);
+		Ptr AddNode(EntryLine& _parent);
 
 		/// \brief Remove all properties from the list
 		void Clear();

@@ -3,6 +3,7 @@
 #include "Prerequisites.hpp"
 #include "states/CommonState.hpp"
 #include "interfaces/PropertyPanel.hpp"
+#include <unordered_map>
 
 namespace States
 {
@@ -23,8 +24,9 @@ namespace States
 		virtual void Update( float _dt ) override;
 
 	private:
-		Core::Object* m_player;		///< The one and only player object
-		Core::Object* m_focus;		///< The camera is tracking this object
+		Core::Object* m_player;								///< The one and only player object
+		Core::Object* m_focus;								///< The camera is tracking this object
+		std::unordered_map<int,Core::ObjectID> m_hotkeys;	///< Defined hotkeys of this client //TODO: maybe save hotkeys as properties
 
 		Interfaces::PropertyPanel::Ptr m_playerView;	///< Showing the player properties
 
@@ -32,9 +34,15 @@ namespace States
 		///		visibility of a tile for the player
 		float CheckTileVisibility(Core::Map& _map, sf::Vector2i& _tilePos, sf::Vector2f& _playerPos) const;
 
-		/// \brief Set the current view to another players position
-		/// \details Try to append the current view onto another player, if player does not exist nothing happens
-		/// \param [in] id	id of the target player
-		void SetViewToPlayer(const uint8_t id);
+		/// \brief Set the current view to another objects position
+		/// \details Try to append the current view onto another object, if player does not exist nothing happens
+		/// \param [in] hotkey	pressed hotkey of the player
+		void SetViewToObject(const int hotkey);
+
+		/// \brief Bind an object to the hotkey
+		/// \details Save the currently focussed object with the pressed hotkey
+		/// \param [in] hotkey	pressed hotkey of the player
+		/// \param [in] objectID	object to remember
+		void SetHotkeyToObject(const int hotkey, Core::ObjectID objectID);
 	};
 }

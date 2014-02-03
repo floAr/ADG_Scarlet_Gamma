@@ -130,11 +130,11 @@ void States::PlayerState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 
 	switch(key.code)
 	{
-		//case sf::Keyboard::Num0:
-		//case sf::Keyboard::Numpad0:
-		// Refocus on player
-		//	m_focus = m_player;
-		//	break;
+		case sf::Keyboard::Num0:
+		case sf::Keyboard::Numpad0:
+		 //Refocus on player
+			m_focus = m_player;
+			break;
 	case sf::Keyboard::Space:
 		// TODO: use selection as target
 		Actions::ActionPool::Instance().StartLocalAction(0, m_player->ID(), 42);
@@ -152,11 +152,12 @@ void States::PlayerState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 	case sf::Keyboard::Num8:
 	case sf::Keyboard::Num9:
 		if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
-			SetViewToPlayer(key.code - sf::Keyboard::Num1);
+			SetHotkeyToObject(key.code - sf::Keyboard::Num1,m_focus->ID());
+		else
+			SetViewToObject(key.code - sf::Keyboard::Num1);
 		break;
-	case sf::Keyboard::Num0:
-		if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
-			SetViewToPlayer(9);
+	case sf::Keyboard::Tab:
+		m_focus= g_Game->GetWorld()->GetNextObservableObject(m_focus->ID());
 		break;
 	}
 }
@@ -267,8 +268,12 @@ float States::PlayerState::CheckTileVisibility( Core::Map& _map, sf::Vector2i& _
 	return v;
 }
 
-void States::PlayerState::SetViewToPlayer(const uint8_t id){
-	Core::Object* target_player=g_Game->GetWorld()->FindPlayer(id);
-	if(target_player)
-		m_focus=target_player;
+void States::PlayerState::SetViewToObject(const int hotkey){
+	if (m_hotkeys.find(hotkey) == m_hotkeys.end())//return if there is no hotkey
+		return;
+	m_focus=g_Game->GetWorld()->GetObject(m_hotkeys[hotkey]);
+}
+
+void States::PlayerState::SetHotkeyToObject(const int hotkey, Core::ObjectID objectID){
+	m_hotkeys[hotkey] = objectID;
 }

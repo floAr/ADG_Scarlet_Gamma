@@ -104,6 +104,7 @@ namespace Core {
 		m_maps.clear();
 		m_objects.clear();
 		m_players.clear();
+		m_ownedObjects.clear();
 		m_nextFreeMapID = 0;
 		m_nextFreeObjectID = 0;
 
@@ -121,12 +122,8 @@ namespace Core {
 				ObjectID id = NewObject( (*child)[i] );
 				Object* object = GetObject(id);
 
-				// Test object if it is a player and add it.
-				if( object->HasProperty( STR_PROP_PLAYER ) )
-				{
-					Property& prop = object->GetProperty( STR_PROP_NAME );
-					m_players[prop.Value()] = id;
-				}
+				RegisterObject(object);
+
 			}
 		}
 
@@ -236,6 +233,8 @@ namespace Core {
 		return nullptr;
 	}
 
+	
+
 	std::vector<ObjectID> World::FilterObjectsByName( const std::string& _text ) const
 	{
 		std::vector<ObjectID> results;
@@ -282,6 +281,40 @@ namespace Core {
 		ObjectID id = NewObject( _sprite );
 		m_objectTemplates.Add(id);
 		return id;
+	}
+
+	Object* World::GetNextObservableObject(ObjectID currentID){
+		ObjectID result=-1;
+		bool pickNext=false;
+		for( auto it = m_ownedObjects.begin(); it != m_ownedObjects.end(); ++it )
+		{
+			ObjectID id=*it;
+			if(pickNext)
+			{
+				result=id;
+				break;
+			}
+			if(result==-1)//always select the first element, to loop through the list
+				result = id;
+			if(id == currentID) //we are at the current id
+				pickNext=true;
+		}
+		return this->GetObject(result);
+	}
+
+	void World::RegisterObject(Object* object){
+		// Test object if it is a player and add it.
+				if( object->HasProperty( STR_PROP_PLAYER ) )
+				{
+					Property& prop = object->GetProperty( STR_PROP_NAME );
+					m_players[prop.Value()] = object->ID();
+				}
+				// Test object if it has an owner and add it.
+				if( object->HasProperty( STR_PROP_OWNER ) )
+				{
+					Property& prop = object->GetProperty( STR_PROP_OWNER );
+					m_ownedObjects.push_back(object->ID());
+				}
 	}
 
 

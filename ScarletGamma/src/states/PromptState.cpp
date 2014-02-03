@@ -8,7 +8,7 @@ using namespace States;
 PromptState::PromptState()
 {
     // Load shader from file
-    // TODO: include shaders in content manager?
+	//m_shader=Content::Instance()->LoadShader("media/Prompt.frag",sf::Shader::Type::Fragment);
     m_shader.loadFromFile("media/Prompt.frag", sf::Shader::Fragment);
 
     // Create GUI

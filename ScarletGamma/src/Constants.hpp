@@ -53,6 +53,7 @@ static const std::string STR_PROP_TARGET	= std::string("target");	///< Name of t
 static const std::string STR_PROP_OBSTACLE	= std::string("Hindernis");	///< Name of obstacle property: this object collides with the player
 static const std::string STR_PROP_NAME		= std::string("Name");		///< Name of name property: object's name
 static const std::string STR_PROP_PLAYER	= std::string("player");	///< Name of player: flags an object as player, the value is its ID
+static const std::string STR_PROP_OWNER		= std::string("owner");		///< Name of owner: flags the object as owned by a player
 
 
 /************************************************************************/

@@ -67,6 +67,11 @@ namespace States
 		// COMBAT STUFF
 		void BeginCombat();
 		void EndCombat();
+		GameRules::Combat* GetCombat()
+		{
+			return m_combat;
+		}
+
 
 	protected:
 		Utils::Falloff m_zoom;       ///< Zoom for the current map

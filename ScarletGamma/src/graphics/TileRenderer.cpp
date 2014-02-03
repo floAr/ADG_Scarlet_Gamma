@@ -53,11 +53,10 @@ void Graphics::TileRenderer::Render(sf::RenderWindow& window, Core::Map& map, st
 						if( atoi(obj->GetProperty(STR_PROP_LAYER).Value().c_str()) != layer )
 							continue;
 
-						// Render visible objects TODO visib-prop
+						// Render visible objects
+						// TODO: property for visibility
 						if (obj->HasProperty(STR_PROP_SPRITE))
 						{
-							// Load texture
-
 							// Draw the tile
 							const sf::Texture& tex = Content::Instance()->LoadTexture(obj->GetProperty(STR_PROP_SPRITE).Value());
 							sf::Sprite drawSprite(tex);

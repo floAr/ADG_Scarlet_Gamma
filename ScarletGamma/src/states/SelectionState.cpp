@@ -157,7 +157,12 @@ void States::SelectionState::MouseButtonPressed(sf::Event::MouseButtonEvent& but
 	if (guiHandled)
 		return;
 
-	if (button.button == sf::Mouse::Button::Right)
+	CommonState* previousState = dynamic_cast<CommonState*>(m_previousState);
+	// The parent is not set or not of type CommonState, but it should be!
+	assert(previousState);
+
+	if (button.button == sf::Mouse::Button::Right
+		&& previousState->GetSelection()->Size() > 0)
 	{
 		auto m_Widgets=m_gui.getWidgets();
 		// mouseOnWhichWidget does not work for disabled components to search manually
@@ -170,16 +175,9 @@ void States::SelectionState::MouseButtonPressed(sf::Event::MouseButtonEvent& but
 			    auto cid=(m_Widgets[i]->getCallbackId());
 			    Core::ObjectID id = m_objects[(m_Widgets[i]->getCallbackId()-100)];
 
-				//get source object
-				CommonState* previousState = dynamic_cast<CommonState*>(m_previousState);
-				// The parent is not set or not of type CommonState, but it should be!
-				assert(previousState);
-				
-				
-
 		        auto action=dynamic_cast<ActionState*>( g_Game->GetStateMachine()->PushGameState(States::GST_ACTION));
 		        action->SetTargetObject(id);
-				const Core::ObjectList* selection=previousState->GetSelection();
+				const Core::ObjectList* selection = previousState->GetSelection();
 				action->SetSourceObject((*selection)[0]);
 				action->SetPosition(button.x,button.y);
 		        m_finished=true;

@@ -320,7 +320,7 @@ namespace Interfaces {
 		m_actionChoice->addItem( STR_ADD );
 		m_actionChoice->addItem( STR_REPLACE );
 		m_actionChoice->addItem( STR_REMOVE );
-		m_actionChoice->setSelectedItem( 0 );
+		m_actionChoice->setSelectedItem( 1 );
 
 		tgui::Label::Ptr lLayer( *this );
 		lLayer->setTextColor( sf::Color(200, 200, 200) );
@@ -332,12 +332,17 @@ namespace Interfaces {
 		m_layer->load( "media/Black.conf" );
 		m_layer->setPosition( 60.0f, 40.0f );
 		m_layer->setSize( 90.0f, 20.0f );
-		m_layer->addItem( STR_0 );
-		m_layer->addItem( STR_1 );
-		m_layer->addItem( STR_2 );
-		m_layer->addItem( STR_3 );
-		m_layer->addItem( STR_4 );
-		m_layer->addItem( STR_ONTOP );
+		m_layer->addItem( STR_LAYER0 );
+		m_layer->addItem( STR_LAYER1 );
+		m_layer->addItem( STR_LAYER2 );
+		m_layer->addItem( STR_LAYER3 );
+		m_layer->addItem( STR_LAYER4 );
+		m_layer->addItem( STR_LAYER5 );
+		m_layer->addItem( STR_LAYER6 );
+		m_layer->addItem( STR_LAYER7 );
+		m_layer->addItem( STR_LAYER8 );
+		m_layer->addItem( STR_LAYER9 );
+	//	m_layer->addItem( STR_ONTOP );
 		m_layer->setSelectedItem( 0 );
 
 		tgui::Label::Ptr lDiameter( *this );

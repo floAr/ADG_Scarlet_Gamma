@@ -23,6 +23,7 @@ PropertyPanel::PropertyPanel() :
 	m_scrollBar(nullptr),
 	m_titleBar(nullptr),
 	m_miniMaxi(nullptr),
+	m_listContainer(nullptr),
 	m_addAble(false),
 	m_autoSize(true),
 	m_oldScrollValue(0),
@@ -30,8 +31,17 @@ PropertyPanel::PropertyPanel() :
 	m_player(0),
 	m_objects()
 {
+}
+
+
+void PropertyPanel::Init( float _x, float _y, float _w, float _h,
+		bool _addAble, bool _autoSize, Core::PlayerID _player,
+		Interfaces::DragContent** _dragNDropHandler,
+		unsigned _pid )
+{
 	// Use the same basic components as the parent if possible.
-	PropertyPanel* parent = dynamic_cast<PropertyPanel*>(m_Parent);
+	PropertyPanel* parent = nullptr;
+	if( m_Parent ) parent = dynamic_cast<PropertyPanel*>(m_Parent->getParent());
 	if( parent )
 	{
 		m_basicEdit = parent->m_basicEdit;
@@ -58,7 +68,6 @@ PropertyPanel::PropertyPanel() :
 		m_basicScrollBar->load("media/Black.conf");
 		m_basicScrollBar->setAutoHide(false);
 		m_basicScrollBar->setCallbackId(0xffffffff);
-		m_basicScrollBar->bindCallbackEx( &PropertyPanel::Scroll, this, tgui::Scrollbar::ValueChanged );
 		m_basicScrollBar->setMaximum(0);
 
 		m_basicMiniMaxi = tgui::AnimatedPicture::Ptr();
@@ -67,67 +76,70 @@ PropertyPanel::PropertyPanel() :
 		m_basicMiniMaxi->setFrame(1);
 		m_basicMiniMaxi->setSize(12.0f, 12.0f);
 	}
-}
 
 
-void PropertyPanel::Init( float _x, float _y, float _w, float _h,
-		bool _addAble, bool _autoSize, Core::PlayerID _player,
-		Interfaces::DragContent** _dragNDropHandler,
-		unsigned _pid )
-{
+
 	m_addAble = _addAble;
 	m_autoSize = _autoSize;
 	m_player = _player;
 	m_dragNDropHandler = _dragNDropHandler;
 
-	Panel::setPosition(_x, _y + 20.0f);
+	Panel::setSize(_w, _h);
+	Panel::setPosition(_x, _y);
+
+	m_listContainer = tgui::Panel::Ptr( *this );
+	m_listContainer->setPosition(0.0f, 20.0f);
 	if( _autoSize )
-		Panel::setSize(_w, 0.0f);
-	else Panel::setSize(_w, _h - (m_addAble ? 40.0f : 20.0f));
-	Panel::setBackgroundColor( sf::Color(50,50,50,150) );
-	Panel::setCallbackId(_pid);
+		m_listContainer->setSize(_w, 0.0f);
+	else m_listContainer->setSize(_w, _h - (m_addAble ? 40.0f : 20.0f));
+	m_listContainer->setBackgroundColor( sf::Color(50,50,50,150) );
+	m_listContainer->setCallbackId(_pid);
 	if(m_dragNDropHandler)
 	{
-		Panel::bindCallbackEx(&PropertyPanel::StartDrag, this, tgui::Panel::LeftMousePressed);
-		Panel::bindCallbackEx(&PropertyPanel::HandleDropEvent, this, tgui::Panel::LeftMouseReleased);
+		m_listContainer->bindCallbackEx(&PropertyPanel::StartDrag, this, tgui::Panel::LeftMousePressed);
+		m_listContainer->bindCallbackEx(&PropertyPanel::HandleDropEvent, this, tgui::Panel::LeftMouseReleased);
 	}
 
 	// Create a scrollbar for long lists.
-	m_scrollBar = m_basicScrollBar.clone();
-	this->add(m_scrollBar);
-	m_scrollBar->setLowValue(unsigned(Panel::getSize().y));
-	m_scrollBar->setSize(12.0f, Panel::getSize().y);
+	if( !m_autoSize )
+	{
+		m_scrollBar = m_basicScrollBar.clone();
+		m_listContainer->add(m_scrollBar);
+		m_scrollBar->setLowValue(unsigned(m_listContainer->getSize().y));
+		m_scrollBar->setSize(12.0f, m_listContainer->getSize().y);
+		m_scrollBar->bindCallbackEx( &PropertyPanel::Scroll, this, tgui::Scrollbar::ValueChanged );
+	}
 
 	// The whole component can be minimized..
 	m_titleBar = m_basicEdit.clone();
-	m_Parent->add(m_titleBar);
+	this->add(m_titleBar);
 	m_titleBar->setSize(_w, 20.0f);
-	m_titleBar->setPosition(_x, _y);
+	m_titleBar->setPosition(0.0f, 0.0f);
 	m_titleBar->setCallbackId(_pid);
 	m_titleBar->bindCallback( &PropertyPanel::RefreshFilter, this, tgui::EditBox::TextChanged );
 	m_miniMaxi = m_basicMiniMaxi.clone();
-	m_Parent->add(m_miniMaxi);
-	m_miniMaxi->setPosition(_x+_w-16.0f, _y+4.0f);
+	this->add(m_miniMaxi);
+	m_miniMaxi->setPosition(_w-16.0f, 4.0f);
 	m_miniMaxi->setCallbackId(_pid);
-	m_miniMaxi->bindCallbackEx(&PropertyPanel::MiniMaxi, this, tgui::AnimatedPicture::LeftMouseClicked);
+	m_miniMaxi->bindCallback(&PropertyPanel::MiniMaxi, this, tgui::AnimatedPicture::LeftMouseClicked);
 
 	// Add an edit which creates a new line if changed.
 	if( m_addAble )
 	{
-		float w = Panel::getSize().x * 0.5f - 20.0f;
+		float w = m_listContainer->getSize().x * 0.5f - 20.0f;
 		m_newName = m_basicEdit.clone();
-		m_Parent->add(m_newName);
+		this->add(m_newName);
 		m_newName->setSize(w, 20.0f);
-		m_newName->setPosition(_x, _y+Panel::getSize().y+20.0f);
+		m_newName->setPosition(0.0f, m_listContainer->getSize().y+20.0f);
 		m_newName->setCallbackId(_pid);
 		m_newValue = m_basicEdit.clone();
-		m_Parent->add(m_newValue);
+		this->add(m_newValue);
 		m_newValue->setSize(w, 20.0f);
-		m_newValue->setPosition(_x+w, _y+Panel::getSize().y+20.0f);
+		m_newValue->setPosition(w, m_listContainer->getSize().y+20.0f);
 		m_newValue->setCallbackId(_pid);
 		m_newAdd = m_basicAddButton.clone();
-		m_Parent->add(m_newAdd);
-		m_newAdd->setPosition(_x+Panel::getSize().x - 40.0f, _y+Panel::getSize().y+20.0f);
+		this->add(m_newAdd);
+		m_newAdd->setPosition(m_listContainer->getSize().x - 40.0f, m_listContainer->getSize().y+20.0f);
 		m_newAdd->bindCallbackEx(&PropertyPanel::AddBtn, this, tgui::Button::LeftMouseClicked);
 		m_newAdd->setCallbackId(_pid);
 	}
@@ -142,12 +154,12 @@ void PropertyPanel::Add( const std::string& _left, bool _changable, const std::s
 	float y = (float)m_numPixelLines;
 	unsigned i = 0;
 	// Search the smallest y where for each item string is greater _left.
-	for( size_t i=1; i<m_Widgets.size(); ++i )
+	for( size_t i=1; i<m_listContainer->getWidgets().size(); ++i )
 	{
 		// Only in left row
-		if( abs(m_Widgets[i]->getPosition().x-x) < 1.0f )
+		if( abs(m_listContainer->getWidgets()[i]->getPosition().x-x) < 1.0f )
 		{
-			tgui::EditBox::Ptr next = m_Widgets[i];
+			tgui::EditBox::Ptr next = m_listContainer->getWidgets()[i];
 			std::string text = next->getText();
 			if( next != nullptr && Utils::IStringLess(_left, text) )
 			{
@@ -171,7 +183,7 @@ void PropertyPanel::Add( const std::string& _left, bool _changable, const std::s
 
 	// Create component on the left side
 	entry.left = m_basicEdit.clone();
-	this->add(entry.left);
+	m_listContainer->add(entry.left);
 	entry.left->setSize(w, 20.0f);
 	entry.left->setPosition(x, y);
 	entry.left->setCallbackId(m_lines.size());
@@ -181,7 +193,7 @@ void PropertyPanel::Add( const std::string& _left, bool _changable, const std::s
 
 	// Create the one on the right side
 	entry.right = m_basicEdit.clone();
-	this->add(entry.right);
+	m_listContainer->add(entry.right);
 	entry.right->setSize(w, 20.0f);
 	entry.right->setPosition(w+x, y);
 	entry.right->setCallbackId(m_lines.size());
@@ -195,7 +207,7 @@ void PropertyPanel::Add( const std::string& _left, bool _changable, const std::s
 	if( _changable )
 	{
 		entry.del = m_basicDeleteButton.clone();
-		this->add(entry.del);
+		m_listContainer->add(entry.del);
 		entry.del->setPosition(Panel::getSize().x - 12.0f, y+4.0f);
 		entry.del->setCallbackId(m_lines.size());
 		entry.del->bindCallbackEx(&PropertyPanel::RemoveBtn, this, tgui::Button::LeftMouseClicked);
@@ -204,35 +216,23 @@ void PropertyPanel::Add( const std::string& _left, bool _changable, const std::s
 	m_lines.push_back(std::move(entry));
 }
 
-PropertyPanel::Ptr PropertyPanel::AddNode( const std::string&  _parentName )
+PropertyPanel::Ptr PropertyPanel::AddNode( EntryLine& _parent )
 {
 	// Determine y coordinate where to insert inside panel.
-	EntryLine* parent = nullptr;
-	for( size_t i=0; i<m_lines.size(); ++i )
-	{
-		// Find an edit with _parentName - Text
-		if( m_lines[i].left->getText() == _parentName )
-		{
-			parent = &m_lines[i];
-			break;
-		}
-	}
-	assert(parent != nullptr);
-
-	float y = parent->left->getPosition().y + parent->left->getSize().y;
-	Resize(40, (int)y);
+	float y = _parent.left->getPosition().y + _parent.left->getSize().y;
+	Resize(m_addAble ? 40 : 20, (int)y);
 
 	// Level in hierarchy (indention)
 	float x = 12.0f + (IsScrollbarVisible() ? 12.0f : 0.0f);
 	// Width of a edit
-	float w = Panel::getSize().x - 12.0f - x;
+	float w = m_listContainer->getSize().x - 12.0f - x;
 
-	parent->subNode = PropertyPanel::Ptr( *this );
-	parent->subNode->Init( x, y, w, 0.0f,
+	_parent.subNode = PropertyPanel::Ptr( *m_listContainer );
+	_parent.subNode->Init( x, y, w, 0.0f,
 		m_addAble, true, m_player,
-		m_dragNDropHandler, parent->left->getCallbackId() );
+		m_dragNDropHandler, _parent.left->getCallbackId() );
 
-	return parent->subNode;
+	return _parent.subNode;
 }
 
 void PropertyPanel::RemoveBtn(const tgui::Callback& _call)
@@ -247,14 +247,14 @@ void PropertyPanel::RemoveBtn(const tgui::Callback& _call)
 		m_objects[i]->Remove( name );
 	
 	// First element is always the scrollbar
-	for( size_t i=1; i<m_Widgets.size(); ++i )
+	for( size_t i=1; i<m_listContainer->getWidgets().size(); ++i )
 	{
 		// Search and destroy
-		if( (m_Widgets[i]->getCallbackId() == delLine) )
+		if( (m_listContainer->getWidgets()[i]->getCallbackId() == delLine) )
 		{
-			minY = std::min((int)m_Widgets[i]->getPosition().y, minY);
-			maxY = std::max((int)(m_Widgets[i]->getPosition().y + std::min(m_Widgets[i]->getSize().y, 20.0f)), maxY);
-			m_Widgets.erase( m_Widgets.begin() + i );
+			minY = std::min((int)m_listContainer->getWidgets()[i]->getPosition().y, minY);
+			maxY = std::max((int)(m_listContainer->getWidgets()[i]->getPosition().y + std::min(m_listContainer->getWidgets()[i]->getSize().y, 20.0f)), maxY);
+			m_listContainer->getWidgets().erase( m_listContainer->getWidgets().begin() + i );
 			--i;
 		}
 	}
@@ -302,29 +302,33 @@ void PropertyPanel::Scroll( const tgui::Callback& _call )
 	int dif = m_oldScrollValue - _call.value;
 	m_oldScrollValue = _call.value;
 
-	// Move everything accordingly
-	for( size_t i=1; i<m_Widgets.size(); ++i )
-		m_Widgets[i]->move(0.0f, float(dif));
+	if( dif != 0 )
+	{
+		// Move everything accordingly
+		for( size_t i=1; i<m_listContainer->getWidgets().size(); ++i )
+			m_listContainer->getWidgets()[i]->move(0.0f, float(dif));
+	}
 }
 
 
-void PropertyPanel::MiniMaxi( const tgui::Callback& _call )
+void PropertyPanel::MiniMaxi()
 {
 	// Switch frame
-	tgui::AnimatedPicture* button = (tgui::AnimatedPicture*)_call.widget;
-	button->setFrame(1 - button->getCurrentFrame());
-	bool hide = button->getCurrentFrame() == 0;
+	m_miniMaxi->setFrame(1 - m_miniMaxi->getCurrentFrame());
+	bool hide = m_miniMaxi->getCurrentFrame() == 0;
 
 	// If it was the title bar toggle whole components on/of.
 	if( hide )
 	{
-		Panel::hide();
+		Panel::setSize(Panel::getSize().x, 20.0f );
+		m_listContainer->hide();
 		if(m_newName != nullptr) m_newName->hide();
 		if(m_newValue != nullptr) m_newValue->hide();
 		if(m_newAdd != nullptr) m_newAdd->hide();
-		PropertyPanel* parent = dynamic_cast<PropertyPanel*>(m_Parent);
+		PropertyPanel* parent = nullptr;
+		if( m_Parent ) parent = dynamic_cast<PropertyPanel*>(m_Parent->getParent());
 		if( parent )
-			parent->Resize( -(m_numPixelLines+20), (int)Panel::getPosition().y-1 );
+			parent->Resize( -(m_numPixelLines + (m_addAble?20:0)), (int)Panel::getPosition().y+1 );
 
 		// If minimized show component name in the title bar
 		if( m_objects.size()==1 )
@@ -333,27 +337,17 @@ void PropertyPanel::MiniMaxi( const tgui::Callback& _call )
 			m_titleBar->setText( STR_MULTISELECTION );
 		m_titleBar->disable();
 	} else {
-		PropertyPanel* parent = dynamic_cast<PropertyPanel*>(m_Parent);
-		float y0 = button->getPosition().y + 16.0f;
+		Panel::setSize(Panel::getSize().x, float(m_numPixelLines+20) );
+		PropertyPanel* parent = nullptr;
+		if( m_Parent ) parent = dynamic_cast<PropertyPanel*>(m_Parent->getParent());
 		if( parent )
-			parent->Resize( m_numPixelLines+20, (int)y0-1 );
-		Panel::show();
-		// As long as they were hidden the 4 components were not moved.
-		Panel::setPosition(Panel::getPosition().x, y0);
-		y0 += Panel::getSize().y;
+			parent->Resize( m_numPixelLines + (m_addAble?20:0), (int)Panel::getPosition().y+1 );
+		m_listContainer->show();
 
-		if(m_newName != nullptr) {
-			m_newName->show();
-			m_newName->setPosition(m_newName->getPosition().x, y0);
-		}
-		if(m_newValue != nullptr) {
-			m_newValue->show();
-			m_newValue->setPosition(m_newValue->getPosition().x, y0);
-		}
-		if(m_newAdd != nullptr) {
-			m_newAdd->show();
-			m_newAdd->setPosition(m_newAdd->getPosition().x, y0);
-		}
+		if(m_newName != nullptr)	m_newName->show();
+		if(m_newValue != nullptr)	m_newValue->show();
+		if(m_newAdd != nullptr) 	m_newAdd->show();
+
 		// Use as filter
 		m_titleBar->enable();
 		m_titleBar->setText( "" );
@@ -363,7 +357,7 @@ void PropertyPanel::MiniMaxi( const tgui::Callback& _call )
 
 void PropertyPanel::ValueEntered(const tgui::Callback& _call)
 {
-	Panel::unfocus();
+	m_listContainer->unfocus();
 	_call.widget->unfocus();
 }
 
@@ -406,30 +400,34 @@ void PropertyPanel::StartDrag(const tgui::Callback& _call)
 
 void PropertyPanel::Resize( int _addLines, int _where )
 {
+	if( _addLines == 0 ) return;
+
 	// If _where is not at the end move elements after that mark
-	for( size_t i=1; i<m_Widgets.size(); ++i )
+	for( size_t i=1; i<m_listContainer->getWidgets().size(); ++i )
 	{
 		// Do not move delete buttons (right aligned)
-		if( (int)(m_Widgets[i]->getPosition().y+0.5f) >= _where &&
-			m_Widgets[i]->isVisible() )
-			m_Widgets[i]->move(0.0f, float(_addLines) );
+		if( (int)(m_listContainer->getWidgets()[i]->getPosition().y+0.5f) >= _where &&
+			m_listContainer->getWidgets()[i]->isVisible() )
+			m_listContainer->getWidgets()[i]->move(0.0f, float(_addLines) );
 	}
 
 	m_numPixelLines += _addLines;
 	if( m_autoSize )
 	{
 		// Just rescale the area
-		Panel::setSize(Panel::getSize().x, float(m_numPixelLines));
+		m_listContainer->setSize(Panel::getSize().x, float(m_numPixelLines));
+		Panel::setSize(Panel::getSize().x, float(m_numPixelLines+20) );
 
-		// If parent is another EditList it has to be resized too
-		PropertyPanel* parent = dynamic_cast<PropertyPanel*>(m_Parent);
+		// If parent is another PropertyPanel it has to be resized too
+		PropertyPanel* parent = nullptr;
+		if( m_Parent ) parent = dynamic_cast<PropertyPanel*>(m_Parent->getParent());
 		if( parent )
 			parent->Resize( _addLines, (int)Panel::getPosition().y + m_numPixelLines - _addLines + 20 );
 
 		// Move the 3 things below
 		if( m_addAble )
 		{
-			float y = Panel::getPosition().y + m_numPixelLines;
+			float y = m_listContainer->getPosition().y + m_numPixelLines;
 			m_newName->setPosition(m_newName->getPosition().x, y);
 			m_newValue->setPosition(m_newValue->getPosition().x, y);
 			m_newAdd->setPosition(m_newAdd->getPosition().x, y);
@@ -448,72 +446,33 @@ bool PropertyPanel::IsScrollbarVisible()
 
 float PropertyPanel::GetHeight() const
 {
-	return Panel::getSize().y + (m_addAble ? 40.0f : 20.0f);
+	return m_listContainer->getSize().y + (m_addAble ? 40.0f : 20.0f);
 }
 
 void PropertyPanel::setSize( float _width, float _height )
 {
-	Panel::setSize(_width, ceil(std::max(0.0f, _height - (m_addAble ? 40.0f : 20.0f))));
+	Panel::setSize(_width, _height);
+	m_listContainer->setSize(_width, ceil(std::max(0.0f, _height - (m_addAble ? 40.0f : 20.0f))));
 	m_titleBar->setSize( _width, 20.0f );
-	float w = ceil(Panel::getSize().x * 0.5f - 20.0f);
+	float w = ceil(_width * 0.5f - 20.0f);
 	if( m_addAble )
 	{
 		m_newName->setSize(w, 20.0f);
-		m_newName->setPosition(ceil(Panel::getPosition().x),
-			ceil(Panel::getPosition().y + Panel::getSize().y));
+		m_newName->setPosition(0.0f, ceil(20.0f + m_listContainer->getSize().y));
 		m_newValue->setSize(w, 20.0f);
-		m_newValue->setPosition(ceil(Panel::getPosition().x + w),
-			ceil(Panel::getPosition().y + Panel::getSize().y));
-		m_newAdd->setPosition(ceil(Panel::getPosition().x + Panel::getSize().x - 40.0f),
-			ceil(Panel::getPosition().y + Panel::getSize().y));
+		m_newValue->setPosition(w, ceil(20.0f + m_listContainer->getSize().y));
+		m_newAdd->setPosition(ceil(m_listContainer->getSize().x - 40.0f),
+			ceil(20.0f + m_listContainer->getSize().y));
 	}
-	m_scrollBar->setLowValue( (unsigned)Panel::getSize().y );
-	m_scrollBar->setSize( 12.0f, Panel::getSize().y );
+	m_scrollBar->setLowValue( (unsigned)m_listContainer->getSize().y );
+	m_scrollBar->setSize( 12.0f, m_listContainer->getSize().y );
 }
 
-sf::Vector2f PropertyPanel::getSize() const
-{
-	return sf::Vector2f(Panel::getSize().x, GetHeight());
-}
-
-
-void PropertyPanel::setPosition(float _x, float _y)
-{
-	_x = ceil(_x);
-	_y = ceil(_y);
-	Panel::setPosition(_x, _y + 20.0f);
-	m_titleBar->setPosition(_x, _y);
-	m_miniMaxi->setPosition(_x+Panel::getSize().x-16.0f, _y+4.0f);
-	if( m_addAble )
-	{
-		m_newName->setPosition(_x, _y + 20.0f + Panel::getSize().y);
-		m_newValue->setPosition(ceil(Panel::getPosition().x + Panel::getSize().x * 0.5f - 20.0f),
-			_y + 20.0f + Panel::getSize().y);
-		m_newAdd->setPosition(_x + Panel::getSize().x - 40.0f,
-			_y + 20.0f + Panel::getSize().y);
-	}
-}
 
 void PropertyPanel::unfocus()
 {
 	Panel::unfocus();
 	m_Parent->unfocus();
-}
-
-
-void PropertyPanel::hide()
-{
-	Panel::hide();
-	m_miniMaxi->hide();
-	m_titleBar->hide();
-}
-
-
-void PropertyPanel::show()
-{
-	Panel::show();
-	m_miniMaxi->show();
-	m_titleBar->show();
 }
 
 
@@ -636,7 +595,9 @@ void PropertyPanel::Show( Core::World* _world, const Core::ObjectList& _objects 
 
 void PropertyPanel::Clear()
 {
-	m_Widgets.erase( m_Widgets.begin() + 1, m_Widgets.end() );
+	if( m_scrollBar != nullptr )
+		m_listContainer->getWidgets().erase( m_listContainer->getWidgets().begin() + 1, m_listContainer->getWidgets().end() );
+	else m_listContainer->getWidgets().erase( m_listContainer->getWidgets().begin(), m_listContainer->getWidgets().end() );
 	m_lines.clear();
 	Resize(-m_numPixelLines, 0);
 }
@@ -672,8 +633,10 @@ void PropertyPanel::RefreshFilter()
 				{
 					for( int j=0; j<allProperties[i]->GetObjects().Size(); ++j )
 					{
-						AddNode( allProperties[i]->Name() )->Show( m_world,
-							m_world->GetObject( allProperties[i]->GetObjects()[j] ) );
+						Ptr node = AddNode( m_lines.back() );
+						node->show();
+						node->Show( m_world, m_world->GetObject( allProperties[i]->GetObjects()[j] ) );
+						node->MiniMaxi();
 					}
 				}
 			}

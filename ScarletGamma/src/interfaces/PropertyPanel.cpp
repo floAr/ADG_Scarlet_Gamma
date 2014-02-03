@@ -647,7 +647,7 @@ void PropertyPanel::RefreshFilter()
 	if(IsMinimized()) return;
 	
 	Clear();
-	if( m_objects.size() < 0 ) return;
+	if( m_objects.size() == 0 ) return;
 
 	// Get all possible properties from the first object
 	auto allProperties = m_objects[0]->FilterByName( m_titleBar->getText() );

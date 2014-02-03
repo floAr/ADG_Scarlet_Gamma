@@ -180,7 +180,6 @@ namespace States {
 			{
 				SelectionState* gs = dynamic_cast<SelectionState*>(g_Game->GetStateMachine()->PushGameState(GST_SELECTION));
 				gs->SetTilePosition(tileX, tileY,(const bool*)(&m_hiddenLayers[0]));
-				
 			}
 
 			break; }
@@ -309,6 +308,19 @@ namespace States {
 		case sf::Keyboard::Num0:
 			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
 				BlendLayer(9);
+			break;
+
+		case sf::Keyboard::Delete:
+			// Delete all selected objects from the map(s)
+			for( int i=0; i<m_selection.Size(); ++i )
+			{
+				ObjectID id = m_selection[i];
+				Map* map = g_Game->GetWorld()->GetMap( g_Game->GetWorld()->GetObject(id)->GetParentMap() );
+				map->Remove( id );
+				g_Game->GetWorld()->RemoveObject( id );	// Assumes real deletion
+			}
+			m_selection.Clear();
+			m_selectionView->hide();
 			break;
 		}
 	}

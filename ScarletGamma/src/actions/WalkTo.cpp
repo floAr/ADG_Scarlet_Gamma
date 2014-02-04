@@ -5,10 +5,10 @@
 
 using namespace Actions;
 
-WalkTo::WalkTo() : Action(STR_ACT_WALKTO)
+WalkTo::WalkTo() : Action(STR_ACT_WALKTO, ActionType::MOVE_ACTION)
 {
     // Set requirements
-	m_targetRequirements.push_back(STR_PROP_X);
+    m_targetRequirements.push_back(STR_PROP_X);
     m_targetRequirements.push_back(STR_PROP_Y);
 }
 

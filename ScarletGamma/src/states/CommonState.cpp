@@ -260,7 +260,7 @@ void CommonState::InitiativeRollPromptFinished(States::GameState* ps)
 	// Send initiative roll string to server
 	Jo::Files::MemFile data;
 	const std::string& result = prompt->GetResult().c_str();
-    data.Write(&m_selection[0], sizeof(m_selection[0]));
+	data.Write(&m_selection[0], sizeof(m_selection[0]));
 	data.Write(result.c_str(), result.length());
 	Network::CombatMsg(Network::CombatMsgType::PL_COMBAT_INITIATIVE).Send(&data);
 }

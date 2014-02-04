@@ -6,7 +6,7 @@
 namespace Actions {
 
 
-	UseJumpPoint::UseJumpPoint() : Action( STR_ACT_USEJUMPPOINT )
+	UseJumpPoint::UseJumpPoint() : Action( STR_ACT_USEJUMPPOINT, ActionType::MOVE_ACTION )
 	{
 		m_targetRequirements.push_back( STR_PROP_JUMPPOINT );
 	}

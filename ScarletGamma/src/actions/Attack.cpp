@@ -16,7 +16,7 @@
 using namespace Actions;
 using namespace GameRules;
 
-Attack::Attack() : Action(STR_ACT_ATTACK)
+Attack::Attack() : Action(STR_ACT_ATTACK, ActionType::STANDARD_ACTION)
 {
     // Set requirements
     m_targetRequirements.push_back(STR_PROP_HEALTH);

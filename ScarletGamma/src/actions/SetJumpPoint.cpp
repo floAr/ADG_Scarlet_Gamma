@@ -6,7 +6,7 @@
 namespace Actions {
 
 
-SetJumpPoint::SetJumpPoint() : Action(STR_ACT_SETJUMPPOINT)
+SetJumpPoint::SetJumpPoint() : Action(STR_ACT_SETJUMPPOINT, ActionType::FREE_ACTION)
 {
 	m_sourceRequirements.push_back( STR_PROP_JUMPPOINT );
 }

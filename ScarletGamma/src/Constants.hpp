@@ -54,7 +54,7 @@ static const std::string STR_PROP_TARGET	= std::string("target");	///< Name of t
 static const std::string STR_PROP_OBSTACLE	= std::string("Hindernis");	///< Name of obstacle property: this object collides with the player
 static const std::string STR_PROP_NAME		= std::string("Name");		///< Name of name property: object's name
 static const std::string STR_PROP_PLAYER	= std::string("player");	///< Name of player: flags an object as player, the value is its ID
-static const std::string STR_PROP_OWNER		= std::string("owner");		///< Name of owner: flags the object as owned by a player
+static const std::string STR_PROP_OWNER		= std::string("Besitzer");	///< Name of owner property: flags the object as owned by a player
 static const std::string STR_PROP_JUMPPOINT	= std::string("Sprungziel");///< Name of portal property: The value is an id of the target object.
 
 
@@ -77,6 +77,7 @@ static const std::string STR_PROP_INITIATIVE_MOD = std::string("Initiative-Modif
 /* MODULES			                                                    */
 /************************************************************************/
 static const std::string STR_ATTACKABLE = std::string("Angreifbar");
+static const std::string STR_JUMPPOINT = std::string("Spungmarke");
 
 
 /************************************************************************/

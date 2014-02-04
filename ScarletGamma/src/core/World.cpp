@@ -351,18 +351,31 @@ namespace Core {
 		propertyO->Add( PROPERTY::WISDOM );
 		propertyO->Add( PROPERTY::CHARISMA );
 		propertyO->Add( PROPERTY::JUMPPOINT );
+		propertyO->Add( PROPERTY::OWNER );
+		propertyO->Add( PROPERTY::INITIATIVE_MOD );
 	}
 
 	void World::CreateDefaultModuleBase()
 	{
 		Network::MaskWorldMessage lock;
-		ObjectID OID = NewObject( STR_EMPTY );
-		m_moduleTemplates.Add( OID );
-		Object* object = GetObject( OID );
-		object->Add( PROPERTY::NAME ).SetValue( STR_ATTACKABLE );
-		object->GetProperty( STR_PROP_SPRITE ).SetRights( Property::R_SYSTEMONLY );	// Hide the sprite property
+		ObjectID OID;
+		Object* object;
+
+#		define NewModule(name)				\
+			OID = NewObject( STR_EMPTY );	\
+			m_moduleTemplates.Add( OID );	\
+			object = GetObject( OID );		\
+			object->Add( PROPERTY::NAME ).SetValue( name );	\
+			object->GetProperty( STR_PROP_SPRITE ).SetRights( Property::R_SYSTEMONLY );	// Hide the sprite property
+
+		NewModule( STR_ATTACKABLE );
 		object->Add( PROPERTY::HEALTH );
 		object->Add( PROPERTY::ARMORCLASS );
+
+		NewModule( STR_JUMPPOINT );
+		object->Add( PROPERTY::JUMPPOINT );
+
+#		undef NewModule
 	}
 
 	void World::CreateDefaultTemplateBase()

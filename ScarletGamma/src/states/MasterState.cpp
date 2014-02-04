@@ -288,16 +288,10 @@ namespace States {
 
 	void MasterState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 	{
-		// Return if the GUI already handled it
-		if (guiHandled)
-			return;
-
-		// Let common state handle input
-		CommonState::KeyPressed(key, guiHandled);
-
-		switch(key.code)
+		// This should work ALWAYS, even if GUI is focused:
+		switch (key.code)
 		{
-			//on alt clear the current mask
+		//on alt clear the current mask
 		case sf::Keyboard::LAlt:
 			int l;
 			for(l = 0; l < 10; l++)
@@ -306,7 +300,8 @@ namespace States {
 			}
 			m_firstLayerSelection=true;
 			break;
-			//for each key add the mask, as long as alt is pressed (maybe cache this in local field)
+
+		//for each key add the mask, as long as alt is pressed (maybe cache this in local field)
 		case sf::Keyboard::Num1:
 		case sf::Keyboard::Num2:
 		case sf::Keyboard::Num3:
@@ -319,12 +314,22 @@ namespace States {
 			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
 				BlendLayer(key.code - sf::Keyboard::Num1);
 			break;
-
 		case sf::Keyboard::Num0:
 			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
 				BlendLayer(9);
 			break;
+		}
 
+		// Return if the GUI already handled it
+		if (guiHandled)
+			return;
+
+		// Let common state handle input
+		CommonState::KeyPressed(key, guiHandled);
+
+		// This should work only if the GUI didn't handle before
+		switch(key.code)
+		{
 		case sf::Keyboard::Delete:
 			// Delete all selected objects from the map(s)
 			for( int i=0; i<m_selection.Size(); ++i )

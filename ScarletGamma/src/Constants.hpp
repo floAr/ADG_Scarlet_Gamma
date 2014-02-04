@@ -41,7 +41,7 @@ static const std::string STR_MSG_HIT_ARMOR_CLASS_BEAT = std::string("Rüstungskla
 static const std::string STR_MSG_HIT_ARMOR_CLASS_NOT_BEAT = std::string("Rüstungsklasse wurde nicht geschlagen.");
 static const std::string STR_MSG_CREATE_MAP_FIRST = std::string("Erstelle zunächst eine Map!");
 static const std::string STR_MSG_SELECT_TYPE_FIRST = std::string("Wähle einen Objekttypen! Dazu auf eines der Templates klicken.");
-static const std::string STR_MSG_LAYER_INVISIBLE = std::string("Der Ziel-layer ist ausgeblendet.");
+static const std::string STR_MSG_LAYER_INVISIBLE = std::string("Die Ziel-Ebene ist ausgeblendet. Drücke ALT + Zahlentaste um umzuschalten.");
 
 
 /************************************************************************/
@@ -110,15 +110,15 @@ static const std::string STR_DIAMETER = std::string("Größe");
 static const std::string STR_ADD = std::string("Hinzufügen");
 static const std::string STR_REPLACE = std::string("Ersetzen");
 static const std::string STR_REMOVE = std::string("Löschen");
-static const std::string STR_LAYER0 = std::string("Boden");
-static const std::string STR_LAYER1 = std::string("Statisches I");
-static const std::string STR_LAYER2 = std::string("Statisches II");
-static const std::string STR_LAYER3 = std::string("Gegenstände");
-static const std::string STR_LAYER4 = std::string("Magisches");
-static const std::string STR_LAYER5 = std::string("Freunde");
-static const std::string STR_LAYER6 = std::string("Neutral");
-static const std::string STR_LAYER7 = std::string("Feinde");
-static const std::string STR_LAYER8 = std::string("Eigenes I");
-static const std::string STR_LAYER9 = std::string("Eigenes II");
+static const std::string STR_LAYER0 = std::string("1: Boden");
+static const std::string STR_LAYER1 = std::string("2: Statisches I");
+static const std::string STR_LAYER2 = std::string("3: Statisches II");
+static const std::string STR_LAYER3 = std::string("4: Gegenstände");
+static const std::string STR_LAYER4 = std::string("5: Magisches");
+static const std::string STR_LAYER5 = std::string("6: Freunde");
+static const std::string STR_LAYER6 = std::string("7: Neutral");
+static const std::string STR_LAYER7 = std::string("8: einde");
+static const std::string STR_LAYER8 = std::string("9: Eigenes I");
+static const std::string STR_LAYER9 = std::string("0: Eigenes II");
 static const std::string STR_ONTOP = std::string("Obenauf");
 static const std::string STR_SELECTION = std::string("Selektion");

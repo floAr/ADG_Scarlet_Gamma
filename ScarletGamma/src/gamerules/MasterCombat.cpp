@@ -4,8 +4,11 @@
 #include "utils/ValueInterpreter.hpp"
 #include "Constants.hpp"
 #include "utils/Random.hpp"
+#include "network/CombatMessages.hpp"
+#include <iostream>
 
 using namespace GameRules;
+using namespace Network;
 
 void MasterCombat::ReceivedInitiative(Core::ObjectID _object, std::string& _initiative)
 {
@@ -60,6 +63,18 @@ void MasterCombat::ReceivedInitiative(Core::ObjectID _object, std::string& _init
         }
     }
 
+    // Tell all clients to insert participant
+    int8_t position = std::distance(m_participants.begin(), it);
+    Jo::Files::MemFile data;
+    data.Write(&_object, sizeof(_object));
+    data.Write(&position, sizeof(position));  
+    CombatMsg(CombatMsgType::DM_COMBAT_ADD_PARTICIPANT).Send(&data);
+
     // Insert object before it
     m_participants.insert(it, _object);
+
+#ifdef _DEBUG
+    std::cout << "Object " << _object << " rolled initiative " << iniEvaluated <<
+        ", inserted at position " << std::to_string(position) << ".\n";
+#endif
 }

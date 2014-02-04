@@ -25,12 +25,13 @@ namespace Network
         /// \param [in] _socket  Socket to send the packet to, may be omitted
         void Send(Jo::Files::MemFile* _suffix = 0, uint8_t _socket = 0);
 
-    private:
-        CombatMsgType m_purpose;
-
-    protected:
+        /// \brief Create a new combat message to your liking. You can provide
+        ///     it with data when you send it.
         CombatMsg(CombatMsgType _purpose)
             : m_purpose(_purpose) {}
+
+    private:
+        CombatMsgType m_purpose;
     };
 
     /// \brief Handle a message with target Master or Player.

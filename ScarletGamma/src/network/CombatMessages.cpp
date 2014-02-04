@@ -34,12 +34,12 @@ size_t Network::HandleCombatMessage(const uint8_t* _data, size_t _size, uint8_t 
 
             // Read object ID
             Core::ObjectID object = *reinterpret_cast<const Core::ObjectID*>( _data + readSize );
-            readSize += sizeof(Core::ObjectID);
+            readSize += sizeof(object);
 
             // Read initiative as string
-            std::string initiative = std::string(*reinterpret_cast<const char*>( _data + readSize ),
+            std::string initiative = std::string(reinterpret_cast<const char*>( _data + readSize ),
                 _size - readSize);
-            readSize += sizeof(initiative.length());
+            readSize += initiative.length();
 
             // Process information
             mc->ReceivedInitiative(object, initiative);

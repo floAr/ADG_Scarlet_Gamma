@@ -12,6 +12,8 @@
 #include "core/PredefinedProperties.hpp"
 #include "network/WorldMessages.hpp"
 #include "events/InputHandler.hpp"
+#include "network/CombatMessages.hpp"
+#include "GameRules/MasterCombat.hpp"
 
 using namespace Core;
 
@@ -318,6 +320,15 @@ namespace States {
 			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
 				BlendLayer(9);
 			break;
+
+        // DEBUGGING COMBAT, TODO: remove
+        case sf::Keyboard::Space:
+            if (sf::Keyboard::isKeyPressed((sf::Keyboard::LControl)))
+            {
+                m_combat = new GameRules::MasterCombat();
+                Network::CombatMsg(Network::CombatMsgType::DM_COMBAT_BEGIN).Send();
+            }
+            break;
 		}
 
 		// Return if the GUI already handled it
@@ -423,6 +434,5 @@ namespace States {
 		MapID id = m_mapTool->GetSelectedMap();
 		return g_Game->GetWorld()->GetMap(id);
 	}
-
 
 }// namespace States

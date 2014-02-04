@@ -17,7 +17,7 @@
     <node id="n0">
       <data key="d6">
         <y:GenericNode configuration="com.yworks.flowchart.offPageReference">
-          <y:Geometry height="48.75" width="42.25" x="199.11645163636354" y="-174.38061818181825"/>
+          <y:Geometry height="48.75" width="42.25" x="346.11645163636354" y="-174.38061818181825"/>
           <y:Fill color="#FFFFFF" color2="#00CCFF" transparent="false"/>
           <y:BorderStyle color="#FFFFFF" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" borderDistance="0.0" fontFamily="Trebuchet MS" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="20.255859375" modelName="sides" modelPosition="n" textColor="#000000" visible="true" width="43.5458984375" x="-0.64794921875" y="-20.255859375">Today</y:NodeLabel>
@@ -2892,7 +2892,7 @@ Abschlusspräsentation</y:NodeLabel>
       <data key="d6">
         <y:GenericNode configuration="com.yworks.flowchart.process">
           <y:Geometry height="12.0" width="336.0" x="-882.0" y="-349.3153090909091"/>
-          <y:Fill color="#FFFFFF" color2="#B7C9E3" transparent="false"/>
+          <y:Fill color="#00FF00" color2="#B7C9E3" transparent="false"/>
           <y:BorderStyle color="#FFFFFF" type="line" width="1.0"/>
           <y:NodeLabel alignment="left" autoSizePolicy="content" borderDistance="0.0" fontFamily="Trebuchet MS" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.93359375" modelName="sides" modelPosition="n" textColor="#000000" visible="true" width="79.005859375" x="128.4970703125" y="-17.93359375">Angriffsaktion</y:NodeLabel>
           <y:StyleProperties>
@@ -2996,7 +2996,7 @@ Abschlusspräsentation</y:NodeLabel>
       <data key="d6">
         <y:GenericNode configuration="com.yworks.flowchart.process">
           <y:Geometry height="12.0" width="84.0" x="-105.25854836363646" y="-223.23327272727283"/>
-          <y:Fill color="#FFFFFF" color2="#B7C9E3" transparent="false"/>
+          <y:Fill color="#00FF00" color2="#B7C9E3" transparent="false"/>
           <y:BorderStyle color="#FFFFFF" type="line" width="1.0"/>
           <y:NodeLabel alignment="left" autoSizePolicy="content" borderDistance="0.0" fontFamily="Trebuchet MS" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.93359375" modelName="sides" modelPosition="n" textColor="#000000" visible="true" width="94.48046875" x="-5.240234375" y="-17.93359375">Objekttemplates</y:NodeLabel>
           <y:StyleProperties>
@@ -3022,7 +3022,7 @@ Abschlusspräsentation</y:NodeLabel>
       <data key="d6">
         <y:GenericNode configuration="com.yworks.flowchart.process">
           <y:Geometry height="12.0" width="230.01901614545454" x="-251.277564509091" y="-265.3153090909091"/>
-          <y:Fill color="#FFFFFF" color2="#B7C9E3" transparent="false"/>
+          <y:Fill color="#00FF00" color2="#B7C9E3" transparent="false"/>
           <y:BorderStyle color="#FFFFFF" type="line" width="1.0"/>
           <y:NodeLabel alignment="left" autoSizePolicy="content" borderDistance="0.0" fontFamily="Trebuchet MS" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.93359375" modelName="sides" modelPosition="n" textColor="#000000" visible="true" width="143.1953125" x="43.41185182272727" y="-17.93359375">Objektlisten in Attributen</y:NodeLabel>
           <y:StyleProperties>
@@ -3204,7 +3204,7 @@ Abschlusspräsentation</y:NodeLabel>
       <data key="d6">
         <y:GenericNode configuration="com.yworks.flowchart.process">
           <y:Geometry height="12.0" width="63.0" x="20.741451636363536" y="-223.23327272727283"/>
-          <y:Fill color="#FFFFFF" color2="#B7C9E3" transparent="false"/>
+          <y:Fill color="#00FF00" color2="#B7C9E3" transparent="false"/>
           <y:BorderStyle color="#FFFFFF" type="line" width="1.0"/>
           <y:NodeLabel alignment="left" autoSizePolicy="content" borderDistance="0.0" fontFamily="Trebuchet MS" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.93359375" modelName="sides" modelPosition="n" textColor="#000000" visible="true" width="62.6640625" x="0.16796875" y="-17.93359375">Sprungtore</y:NodeLabel>
           <y:StyleProperties>

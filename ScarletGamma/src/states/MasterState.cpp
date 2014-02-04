@@ -171,6 +171,10 @@ namespace States {
 					Network::ChatMsg(STR_MSG_SELECT_TYPE_FIRST, sf::Color::Red).Send();
 					return;
 				}
+				if( IsLayerVisible( m_modeTool->Brush()->GetLayer() ) ) {
+					Network::ChatMsg(STR_MSG_LAYER_INVISIBLE, sf::Color::Red).Send();
+					return;
+				}
 				// Paint new objects with the brush.
 				m_brush.BeginPaint( *GetCurrentMap(),
 					m_objectsPanel->GetSelected(),

@@ -163,7 +163,14 @@ namespace States {
 		case sf::Mouse::Left: {
 			if( m_modeTool->GetMode() == Interfaces::ModeToolbox::BRUSH )
 			{
-				if( !m_objectsPanel->GetSelected() ) return;// TODO: Warnung in chat
+				if( !GetCurrentMap() ) {
+					Network::ChatMsg(STR_MSG_CREATE_MAP_FIRST, sf::Color::Red).Send();
+					return;		
+				}
+				if( !m_objectsPanel->GetSelected() ) {
+					Network::ChatMsg(STR_MSG_SELECT_TYPE_FIRST, sf::Color::Red).Send();
+					return;
+				}
 				// Paint new objects with the brush.
 				m_brush.BeginPaint( *GetCurrentMap(),
 					m_objectsPanel->GetSelected(),

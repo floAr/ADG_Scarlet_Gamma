@@ -101,10 +101,8 @@ void States::PlayerState::MouseButtonPressed(sf::Event::MouseButtonEvent& button
 				path.ClearObjects();
 				path.SetValue(STR_FALSE);
 			}
-			if(obj->GetProperty(STR_PROP_LAYER).Value()=="0"){
-				// Append to target list
-				m_player->AppendToPath( obj->ID() );
-			}
+			// Append to target list
+			m_player->AppendToPath( obj->ID() );
 		}
 		break; }
 

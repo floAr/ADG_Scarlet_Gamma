@@ -5,6 +5,7 @@
 #include "network/Messenger.hpp"
 #include <assert.h>
 #include "SetJumpPoint.hpp"
+#include "UseJumpPoint.hpp"
 
 using namespace Actions;
 
@@ -17,6 +18,7 @@ ActionPool::ActionPool()
     m_Actions.push_back(new Attack());
     m_Actions.push_back(new WalkTo());
 	m_Actions.push_back(new SetJumpPoint());
+	m_Actions.push_back(new UseJumpPoint());
     //------------------------------//
     // TODO: add more actions here! //
     //------------------------------//

@@ -29,6 +29,7 @@ static const std::string STR_MULTISELECTION = std::string("<Mehrfachauswahl>");
 static const std::string STR_ACT_ATTACK = std::string("Angreifen");
 static const std::string STR_ACT_WALKTO = std::string("Hierher gehen");
 static const std::string STR_ACT_SETJUMPPOINT = std::string("Als Sprungziel");
+static const std::string STR_ACT_USEJUMPPOINT = std::string("Betreten");
 
 /************************************************************************/
 /* MESSAGES                                                             */
@@ -39,6 +40,7 @@ static const std::string STR_MSG_HIT_NATURAL_TWENTY = std::string("Natürliche 20
 static const std::string STR_MSG_HIT_ARMOR_CLASS_BEAT = std::string("Rüstungsklasse wurde geschlagen.");
 static const std::string STR_MSG_HIT_ARMOR_CLASS_NOT_BEAT = std::string("Rüstungsklasse wurde nicht geschlagen.");
 static const std::string STR_MSG_CREATE_MAP_FIRST = std::string("Erstelle zunächst eine Map!");
+static const std::string STR_MSG_SELECT_TYPE_FIRST = std::string("Wähle einen Objekttypen! Dazu auf eines der Templates klicken.");
 
 
 /************************************************************************/

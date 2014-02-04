@@ -82,9 +82,6 @@ namespace Core {
 				prop = Get(STR_PROP_TARGET);
 				prop->SetValue( sfUtils::to_string(newPosition) );
 				Remove(STR_PROP_PATH);
-				//prop = Get(PROP_PATH);
-				//prop->ClearObjects();
-				//prop->SetValue(STR_FALSE);
 			}
 		} else
 			// The property self is always set.

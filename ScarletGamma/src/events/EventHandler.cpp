@@ -86,6 +86,7 @@ void Events::EventHandler::Update(float dt)
 			break;
 
 		case sf::Event::MouseMoved:
+			g_Game->UpdateMouseCursor(); // Notify the game
 			m_inputHandler->MouseMoved(event.mouseMove, guiHandled);
 			break;
 

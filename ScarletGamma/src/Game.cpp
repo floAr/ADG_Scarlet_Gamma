@@ -12,6 +12,12 @@
 
 Utils::Random* Game::RANDOM = new Utils::Random((uint32_t) time(0));
 
+Game::Game() : m_stateMachine(0), m_world(0), m_eventHandler(0), m_numNewChatMessages(0)
+{
+	m_cursorSprite.setTexture(Content::Instance()->LoadTexture("media/cursors.png"));
+	SetMouseCursor(MC_DEFAULT);
+}
+
 void Game::Init()
 {
 	// Create a state machine
@@ -20,6 +26,7 @@ void Game::Init()
 	// Set up SFML window
 	m_window.create(sf::VideoMode(1024, 768), "Scarlet Gamma");
 	m_window.setVerticalSyncEnabled(true);
+	m_window.setMouseCursorVisible(false);
 	m_window.setKeyRepeatEnabled(true); // PLEASE LEAVE THIS ON, because the GUI will suck otherwise.
 										// If this has a bad effect on gameplay, we'll need to find a workaround.
 										//   ~Daerst
@@ -66,18 +73,40 @@ void Game::Run()
 			m_dFpsTime = 0;
 			m_dFpsCounter = 0;
 		}
-		sf::View backup = sfUtils::View::SetDefault(&m_window);
+		sf::View fpsViewBackup = sfUtils::View::SetDefault(&m_window);
 		sf::Text t(std::to_string(m_dFps), m_dFpsFont, 12);
 		if (m_dFps < 30)
 			t.setColor(sf::Color::Red);
 		t.setPosition(5, 5);
 		m_window.draw(t);
-		m_window.setView(backup);
+		m_window.setView(fpsViewBackup);
 #endif
+		// Draw cursor with default view
+		sf::View mouseViewBackup = sfUtils::View::SetDefault(&m_window);
+		m_window.draw(m_cursorSprite);
+		m_window.setView(mouseViewBackup);
 
 		// Swap buffers
 		m_window.display();
 	}
+}
+
+void Game::UpdateMouseCursor()
+{
+	sf::Vector2i mousePos = sf::Mouse::getPosition(m_window);
+	m_cursorSprite.setPosition((float) mousePos.x, (float) mousePos.y);
+}
+
+void Game::SetMouseCursor(MouseCursor cursor)
+{
+	static const uint8_t imageSize  = 4;     // 4 cursors side by side
+	static const uint8_t cursorSize = 36;   // Each cursor is 36x36 px
+
+	uint8_t x = cursor % imageSize;
+	uint8_t y = cursor / imageSize;
+
+	sf::IntRect textureRect(x * cursorSize, y * cursorSize, cursorSize, cursorSize);
+	m_cursorSprite.setTextureRect(textureRect);
 }
 
 void Game::CleanUp()

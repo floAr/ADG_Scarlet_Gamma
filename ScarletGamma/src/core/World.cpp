@@ -393,6 +393,13 @@ namespace Core {
 		object = GetObject( NewObjectTemplate( "media/cross_big.png" ) );
 		object->Add( PROPERTY::NAME ).SetValue( STR_WALLC );
 		object->Add( PROPERTY::OBSTACLE );
+		object = GetObject( NewObjectTemplate( "media/stairs.png" ) );
+		object->Add( PROPERTY::NAME ).SetValue( STR_STAIRS );
+		object->Add( PROPERTY::JUMPPOINT );
+		object->Add( PROPERTY::COLOR ).SetValue( "777777ff" );
+		object = GetObject( NewObjectTemplate( "media/planks.png" ) );
+		object->Add( PROPERTY::NAME ).SetValue( STR_PLANKS );
+		object->Add( PROPERTY::COLOR ).SetValue( "99aa44ff" );
 
 		object = GetObject( NewObjectTemplate( "media/noise_2.png" ) );
 		object->Add( PROPERTY::NAME ).SetValue( STR_EARTH );

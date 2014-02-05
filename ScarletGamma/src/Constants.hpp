@@ -28,6 +28,8 @@ static const std::string STR_MULTISELECTION = std::string("<Mehrfachauswahl>");
 
 static const std::string STR_ACT_ATTACK = std::string("Angreifen");
 static const std::string STR_ACT_WALKTO = std::string("Hierher gehen");
+static const std::string STR_ACT_SETJUMPPOINT = std::string("Als Sprungziel");
+static const std::string STR_ACT_USEJUMPPOINT = std::string("Betreten");
 
 /************************************************************************/
 /* MESSAGES                                                             */
@@ -38,6 +40,8 @@ static const std::string STR_MSG_HIT_NATURAL_TWENTY = std::string("Natürliche 20
 static const std::string STR_MSG_HIT_ARMOR_CLASS_BEAT = std::string("Rüstungsklasse wurde geschlagen.");
 static const std::string STR_MSG_HIT_ARMOR_CLASS_NOT_BEAT = std::string("Rüstungsklasse wurde nicht geschlagen.");
 static const std::string STR_MSG_CREATE_MAP_FIRST = std::string("Erstelle zunächst eine Map!");
+static const std::string STR_MSG_SELECT_TYPE_FIRST = std::string("Wähle einen Objekttypen! Dazu auf eines der Templates klicken.");
+static const std::string STR_MSG_LAYER_INVISIBLE = std::string("Die Ziel-Ebene ist ausgeblendet. Drücke ALT + Zahlentaste um umzuschalten.");
 
 
 /************************************************************************/
@@ -53,6 +57,8 @@ static const std::string STR_PROP_TARGET	= std::string("target");	///< Name of t
 static const std::string STR_PROP_OBSTACLE	= std::string("Hindernis");	///< Name of obstacle property: this object collides with the player
 static const std::string STR_PROP_NAME		= std::string("Name");		///< Name of name property: object's name
 static const std::string STR_PROP_PLAYER	= std::string("player");	///< Name of player: flags an object as player, the value is its ID
+static const std::string STR_PROP_OWNER		= std::string("Besitzer");	///< Name of owner property: flags the object as owned by a player
+static const std::string STR_PROP_JUMPPOINT	= std::string("Sprungziel");///< Name of portal property: The value is an id of the target object.
 
 
 /************************************************************************/
@@ -67,12 +73,14 @@ static const std::string STR_PROP_WISDOM = std::string("Weisheit");
 static const std::string STR_PROP_CHARISMA = std::string("Charisma");
 static const std::string STR_PROP_HEALTH = std::string("Trefferpunkte");
 static const std::string STR_PROP_ARMORCLASS = std::string("Rüstungsklasse");
+static const std::string STR_PROP_INITIATIVE_MOD = std::string("Initiative-Modifikator");
 
 
 /************************************************************************/
 /* MODULES			                                                    */
 /************************************************************************/
 static const std::string STR_ATTACKABLE = std::string("Angreifbar");
+static const std::string STR_JUMPPOINT = std::string("Spungmarke");
 
 
 /************************************************************************/
@@ -82,6 +90,8 @@ static const std::string STR_GOBBO = std::string("Gobbo");
 static const std::string STR_WALLH = std::string("Wand_H");
 static const std::string STR_WALLV = std::string("Wand_V");
 static const std::string STR_WALLC = std::string("Wand_K");
+static const std::string STR_STAIRS = std::string("Treppe");
+static const std::string STR_PLANKS = std::string("Holz");
 static const std::string STR_EARTH = std::string("Erde");
 static const std::string STR_GRASS = std::string("Gras");
 static const std::string STR_WATER = std::string("Wasser");
@@ -98,7 +108,17 @@ static const std::string STR_NPC = std::string("NSC");
 static const std::string STR_ACTION = std::string("Aktion");
 static const std::string STR_DIAMETER = std::string("Größe");
 static const std::string STR_ADD = std::string("Hinzufügen");
-static const std::string STR_REPLACE = std::string("Ersetzten");
+static const std::string STR_REPLACE = std::string("Ersetzen");
 static const std::string STR_REMOVE = std::string("Löschen");
+static const std::string STR_LAYER0 = std::string("1: Boden");
+static const std::string STR_LAYER1 = std::string("2: Statisches I");
+static const std::string STR_LAYER2 = std::string("3: Statisches II");
+static const std::string STR_LAYER3 = std::string("4: Gegenstände");
+static const std::string STR_LAYER4 = std::string("5: Magisches");
+static const std::string STR_LAYER5 = std::string("6: Freunde");
+static const std::string STR_LAYER6 = std::string("7: Neutral");
+static const std::string STR_LAYER7 = std::string("8: Feinde");
+static const std::string STR_LAYER8 = std::string("9: Eigenes I");
+static const std::string STR_LAYER9 = std::string("0: Eigenes II");
 static const std::string STR_ONTOP = std::string("Obenauf");
 static const std::string STR_SELECTION = std::string("Selektion");

@@ -16,9 +16,15 @@
 class Game
 {
 public:
+    enum MouseCursor
+    {
+        MC_DEFAULT = 0,
+        MC_WALK,
+        MC_ATTACK
+    };
 
 	/// \brief Default constructor that tames wild pointers
-	Game() : m_stateMachine(0), m_world(0), m_eventHandler(0), m_numNewChatMessages(0) {}
+	Game();
 
 	static Utils::Random* RANDOM;
 
@@ -73,12 +79,16 @@ public:
 	bool HasLoggedNewChatMessages() const						{ return m_numNewChatMessages > 0; }
 	const Network::ChatMsg& GetNextUntreatedChatMessage()		{ return m_chatMessages[m_chatMessages.size()-(m_numNewChatMessages--)]; }
 
-private:  
+	void UpdateMouseCursor();
+	void SetMouseCursor(MouseCursor cursor);
+
+private:
 	Events::EventHandler* m_eventHandler;
 	States::StateMachine* m_stateMachine;
 	Core::World* m_world;
 	sf::RenderWindow m_window;
 	States::CommonState* m_commonState;
+	sf::Sprite m_cursorSprite;
 
 	/// \brief Collect messages independent from game state.
 	/// \details This allows to commit the message history to a new player

@@ -65,8 +65,9 @@ namespace States
 
 		//----------------------------------------------------------------------
 		// COMBAT STUFF
-		void BeginCombat();
-		void EndCombat();
+		virtual void BeginCombat();
+		virtual void InitiativeRollPromptFinished(States::GameState* ps);
+		virtual void EndCombat();
 		GameRules::Combat* GetCombat()
 		{
 			return m_combat;
@@ -89,7 +90,6 @@ namespace States
 		void DrawPathOverlay(sf::RenderWindow& _window, Core::Object* _whosePath);
 
 		void SubmitChat(const tgui::Callback& _call);
-
 		Core::ObjectList m_selection;	///< List of currently selected objects
 		bool m_selectionChanged;		///< Update gui only if something changed.
 	};

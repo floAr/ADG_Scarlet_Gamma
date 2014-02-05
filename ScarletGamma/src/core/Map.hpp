@@ -49,7 +49,8 @@ namespace Core {
 		/// \brief Tests if there are no objects with collision in the
 		///		grid cell.
 		///	\param [in] _position 2D tile-position.
-		bool IsFree(const sf::Vector2i& _position) const;
+		/// \param [in] _self     Own object ID, to avoid blocking myself
+		bool IsFree(const sf::Vector2i& _position, Core::ObjectID _self = -1) const;
 
 		/// \brief Add a new object between or on top of the existing objects.
 		/// \details If the map position is not inside the current map the map
@@ -67,6 +68,12 @@ namespace Core {
 		///		object is not on the map or has an invalid position state an
 		///		assertion will fail.
 		void Remove(ObjectID _object);
+
+		/// \brief Reevaluates wether an object needs to be updated each frame
+		/// \details This method should be called every time a static object is
+		///    made dynamic or vice versa.
+		/// \param [in] _object ID of the object that should be reevaluated.
+		void Map::ReevaluateActiveObject(ObjectID _object);
 
 		/// \brief Number for cells in x-direction
 		int Width() const	{ return m_maxX-m_minX+1; }

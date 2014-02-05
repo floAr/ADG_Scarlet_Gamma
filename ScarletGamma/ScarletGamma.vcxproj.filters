@@ -200,6 +200,12 @@
     <ClCompile Include="src\gamerules\MasterCombat.cpp">
       <Filter>Quelldateien\gamerules</Filter>
     </ClCompile>
+    <ClCompile Include="src\actions\SetJumpPoint.cpp">
+      <Filter>Quelldateien\actions</Filter>
+    </ClCompile>
+    <ClCompile Include="src\actions\UseJumpPoint.cpp">
+      <Filter>Quelldateien\actions</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\core\Map.hpp">
@@ -366,6 +372,12 @@
     </ClInclude>
     <ClInclude Include="src\gamerules\MasterCombat.hpp">
       <Filter>Quelldateien\gamerules</Filter>
+    </ClInclude>
+    <ClInclude Include="src\actions\SetJumpPoint.hpp">
+      <Filter>Quelldateien\actions</Filter>
+    </ClInclude>
+    <ClInclude Include="src\actions\UseJumpPoint.hpp">
+      <Filter>Quelldateien\actions</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

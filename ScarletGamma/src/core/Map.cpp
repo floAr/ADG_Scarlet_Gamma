@@ -114,7 +114,7 @@ namespace Core {
 		return const_cast<ObjectList&>( const_cast<const Map*>(this)->GetObjectsAt(_x, _y) );
 	}
 
-	bool Map::IsFree( const sf::Vector2i& _position ) const
+	bool Map::IsFree( const sf::Vector2i& _position, Core::ObjectID _self ) const
 	{
 		// Out of bounds -> obstacle (end of world)
 		if( _position.x < m_minX || _position.x > m_maxX ) return false;
@@ -124,7 +124,7 @@ namespace Core {
 		auto list = GetObjectsAt(_position.x, _position.y);
 		if( list.Size() == 0 ) return false;
 		for( int i=0; i<list.Size(); ++i )
-			if(m_parentWorld->GetObject(list[i])->HasProperty(STR_PROP_OBSTACLE))
+			if(list[i] != _self && m_parentWorld->GetObject(list[i])->HasProperty(STR_PROP_OBSTACLE))
 				return false;
 		return true;
 	}
@@ -175,6 +175,22 @@ namespace Core {
 	}
 
 
+	void Map::ReevaluateActiveObject(ObjectID _object)
+	{
+		Object* object = m_parentWorld->GetObject(_object);
+
+		// Does the object requires updates?
+		if( object->HasProperty(STR_PROP_TARGET) && !m_activeObjects->Contains(_object) )
+		{
+			m_activeObjects->Add(_object);
+		}
+		else if( !object->HasProperty(STR_PROP_TARGET) && m_activeObjects->Contains(_object) )
+		{
+			m_activeObjects->Remove(_object);
+		}
+	}
+
+
 	void Map::Update(float _dt)
 	{
 		for( int i=0; i<m_activeObjects->Size(); ++i )
@@ -193,9 +209,9 @@ namespace Core {
 
 			// The actor can not move over blocked tiles. Since he is allowed
 			// to move diagonal it may be necessary to clamp the direction.
-			if( !IsFree(sfUtils::Round( position + sf::Vector2f(Utils::Sign(targetDirection.x)*0.5f, 0.0f) )) )
+			if( !IsFree(sfUtils::Round( position + sf::Vector2f(Utils::Sign(targetDirection.x)*0.5f, 0.0f) ), object->ID()) )
 				targetDirection.x = 0.0f;
-			if( !IsFree(sfUtils::Round( position + sf::Vector2f(0.0f, Utils::Sign(targetDirection.y)*0.5f) )) )
+			if( !IsFree(sfUtils::Round( position + sf::Vector2f(0.0f, Utils::Sign(targetDirection.y)*0.5f) ), object->ID()) )
 				targetDirection.y = 0.0f;
 
 			float len = sfUtils::Length(targetDirection);

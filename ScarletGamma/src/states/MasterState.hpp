@@ -22,6 +22,8 @@ namespace States
 			bool guiHandled) override;
 		virtual void MouseButtonReleased(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos,
 			float time, bool guiHandled) override;
+		/// \brief Update gui elements + common state actions
+		virtual void MouseWheelMoved(sf::Event::MouseWheelEvent& wheel, bool guiHandled) override;
 		virtual void KeyPressed(sf::Event::KeyEvent& key, bool guiHandled) override;
 		virtual void Resize(const sf::Vector2f& _size) override;
 
@@ -29,6 +31,9 @@ namespace States
 		virtual void MouseMoved(int deltaX, int deltaY, bool guiHandled) override;
 
 		virtual Core::Map* GetCurrentMap() override;
+
+		/// \brief Check if a layer is currently visible
+		bool IsLayerVisible( int _layer )	{ return m_hiddenLayers[_layer] != 0; }
 
 	private:
 		const std::string m_worldFileName;	///< This is the name of the world which was loaded in constructor

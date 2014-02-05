@@ -113,7 +113,7 @@ namespace Network {
 
 	// ********************************************************************* //
 	MsgRemoveObjectFromMap::MsgRemoveObjectFromMap( const Core::MapID _map, const Core::ObjectID _object ) :
-		MapMsg( MapMsgType::INSERT_OBJECT, _map ),
+		MapMsg( MapMsgType::REMOVE_OBJECT, _map ),
 		m_object( _object )
 	{
 	}

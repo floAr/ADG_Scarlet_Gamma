@@ -10,6 +10,10 @@
 #include "network/ChatMessages.hpp"
 #include "actions/ActionPool.hpp"
 #include "gamerules/Combat.hpp"
+#include "states/PromptState.hpp"
+#include "StateMachine.hpp"
+#include "network/CombatMessages.hpp"
+#include "events/InputHandler.hpp"
 
 namespace States {
 
@@ -59,11 +63,29 @@ void CommonState::Update( float dt )
 		newestLine->setSize(newestLine->getSize().x, newestLine->getSize().y+5.0f);
 		localOut->m_FullTextHeight += localOut->getLineAmount() == 1 ? 10.0f : 5.0f;
 	}
+
+	// Update continuous actions
+	Actions::ActionPool::Instance().UpdateExecution();
 }
 
 
 void CommonState::MouseMoved(int deltaX, int deltaY, bool guiHandled)
 {
+	// Update default action if we are not in the GUI
+	if (guiHandled)
+	{
+		Actions::ActionPool::Instance().UpdateDefaultAction(m_selection, 0);
+	}
+	else
+	{
+		sf::Vector2i tilePos = Events::InputHandler::GetMouseTilePosition();
+		Core::ObjectList targets = GetCurrentMap()->GetObjectsAt(tilePos.x, tilePos.y);
+		if (targets.Size() == 0)
+			Actions::ActionPool::Instance().UpdateDefaultAction(m_selection, 0);
+		else
+			Actions::ActionPool::Instance().UpdateDefaultAction(m_selection, g_Game->GetWorld()->GetObject(targets[targets.Size() - 1]));
+	}
+
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Middle))
 	{
 		// Get the render window
@@ -241,6 +263,25 @@ void CommonState::RemoveFromSelection( Core::ObjectID _id )
 void CommonState::BeginCombat()
 {
 	m_combat = new GameRules::Combat();
+
+	// Prompt for initiative roll
+	PromptState* prompt = dynamic_cast<PromptState*>(
+		g_Game->GetStateMachine()->PushGameState(States::GST_PROMPT));
+	prompt->SetText("Angriffswurf eingeben:");
+	prompt->AddPopCallback(std::bind(&CommonState::InitiativeRollPromptFinished, this, std::placeholders::_1));
+}
+
+void CommonState::InitiativeRollPromptFinished(States::GameState* ps)
+{
+	PromptState* prompt = dynamic_cast<PromptState*>(ps);
+	assert(ps);
+
+	// Send initiative roll string to server
+	Jo::Files::MemFile data;
+	const std::string& result = prompt->GetResult().c_str();
+	data.Write(&m_selection[0], sizeof(m_selection[0]));
+	data.Write(result.c_str(), result.length());
+	Network::CombatMsg(Network::CombatMsgType::PL_COMBAT_INITIATIVE).Send(&data);
 }
 
 void CommonState::EndCombat()

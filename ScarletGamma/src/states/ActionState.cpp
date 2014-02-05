@@ -51,10 +51,12 @@ void States::ActionState::RecalculateGUI()
 	//m_screenX=pos.x*TILESIZE;
 	//m_screenY=pos.y*TILESIZE;
 	//get action list
-	std::vector<Core::ActionID> actions=Actions::ActionPool::Instance().GetAllowedActions(*o);
+    Core::ObjectList executors;
+	executors.Add( m_sourceObject );
+	std::vector<Core::ActionID> actions = Actions::ActionPool::Instance().GetAllowedActions(executors, *o);
 
 	int i=0;
-	int count =actions.size();
+	int count = actions.size();
 	//for each action 
 	for(std::vector<Core::ActionID>::iterator it = actions.begin(); it != actions.end(); ++it) {
 		tgui::Button::Ptr button = m_defaultButton.clone();

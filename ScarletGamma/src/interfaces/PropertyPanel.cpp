@@ -8,6 +8,7 @@
 #include "core/World.hpp"
 #include "core/PredefinedProperties.hpp"
 #include "Game.hpp"
+#include <algorithm>
 
 namespace Interfaces {
 
@@ -132,11 +133,13 @@ void PropertyPanel::Init( float _x, float _y, float _w, float _h,
 		m_newName->setSize(w, 20.0f);
 		m_newName->setPosition(0.0f, m_listContainer->getSize().y+20.0f);
 		m_newName->setCallbackId(_pid);
+		m_newName->bindCallbackEx(&PropertyPanel::AddBtn, this, tgui::EditBox::ReturnKeyPressed);
 		m_newValue = m_basicEdit.clone();
 		this->add(m_newValue);
 		m_newValue->setSize(w, 20.0f);
 		m_newValue->setPosition(w, m_listContainer->getSize().y+20.0f);
 		m_newValue->setCallbackId(_pid);
+		m_newValue->bindCallbackEx(&PropertyPanel::AddBtn, this, tgui::EditBox::ReturnKeyPressed);
 		m_newAdd = m_basicAddButton.clone();
 		this->add(m_newAdd);
 		m_newAdd->setPosition(m_listContainer->getSize().x - 40.0f, m_listContainer->getSize().y+20.0f);
@@ -512,7 +515,7 @@ void PropertyPanel::HandleDropEvent(const tgui::Callback& _call)
 	} else if( (*m_dragNDropHandler)->from == DragContent::OBJECT_PANEL )
 	{
 		// Find out on which property the element was dropped
-		auto mousePos = sf::Mouse::getPosition( g_Game->GetWindow() );
+		//auto mousePos = sf::Mouse::getPosition( g_Game->GetWindow() );
 		for( size_t i=0; i<m_lines.size(); ++i )
 		{
 			if( m_lines[i].left->mouseOnWidget( (float)_call.mouse.x, (float)_call.mouse.y )
@@ -534,6 +537,20 @@ void PropertyPanel::HandleDropEvent(const tgui::Callback& _call)
 	// Update gui - there are new properties
 	if( addedSomething )
 		RefreshFilter();
+}
+
+
+void PropertyPanel::Scroll( int _delta )
+{
+	// Check if this component must react
+	sf::Vector2i mousePos = sf::Mouse::getPosition(g_Game->GetWindow());
+	if( mouseOnWidget((float)mousePos.x, (float)mousePos.y) )
+	{
+		int val = m_scrollBar->getValue() - 5 * _delta;
+		val = std::min( val, (int)m_scrollBar->getMaximum() );
+		val = std::max( val, (int)m_scrollBar->getMinimum() );
+		m_scrollBar->setValue( val );
+	}
 }
 
 

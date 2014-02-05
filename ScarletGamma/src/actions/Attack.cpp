@@ -16,20 +16,23 @@
 using namespace Actions;
 using namespace GameRules;
 
-Attack::Attack() : Action(STR_ACT_ATTACK)
+Attack::Attack() : Action(STR_ACT_ATTACK, ActionType::STANDARD_ACTION, 50, Game::MC_ATTACK)
 {
     // Set requirements
-    m_requirements.push_back(STR_PROP_HEALTH);
-    m_requirements.push_back(STR_PROP_ARMORCLASS);
+    m_targetRequirements.push_back(std::pair<std::string, bool>(STR_PROP_HEALTH, true));
+    m_targetRequirements.push_back(std::pair<std::string, bool>(STR_PROP_ARMORCLASS, true));
 }
 
 Action* Attack::Clone(Core::ObjectID _executor, Core::ObjectID _target)
 {
     Attack* result = new Attack();
 
-    result->m_executor = _executor; // set executor
-    result->m_target = _target; // set target
-    result->m_id = m_id; // copy ID
+    // Set all required values
+    result->m_id = m_id;
+    result->m_priority = m_priority;
+    result->m_cursor = m_cursor;
+    result->m_executor = _executor;
+    result->m_target = _target;
 
     return dynamic_cast<Action*>(result);
 }
@@ -38,7 +41,7 @@ void Attack::Execute()
 {
     // Tell the server that we are starting an attack
     if (Network::Messenger::IsServer() == false)
-        Network::MsgActionBegin(this->GetID(), m_target).Send();
+        Network::MsgActionBegin(this->m_id, m_target).Send();
 
     // Open prompt for hit roll value
     States::PromptState* prompt = dynamic_cast<States::PromptState*>(
@@ -95,9 +98,9 @@ void Attack::AttackRollPromptFinished(States::GameState* gs)
     const std::string& result = ps->GetResult();
     if (result.empty())
     {
-        // Tell the server that player cancelled
+        // Tell the server that player canceled
         if (Network::Messenger::IsServer() == false)
-            Network::MsgActionEnd(this->GetID()).Send();
+            Network::MsgActionEnd(this->m_id).Send();
 
         // End the local action
         ActionPool::Instance().EndLocalAction();
@@ -107,7 +110,7 @@ void Attack::AttackRollPromptFinished(States::GameState* gs)
         if (Network::Messenger::IsServer() == false)
         {
             // Tell the server about the result
-            Network::MsgActionInfo(this->GetID(), static_cast<uint8_t>(ActionMsgType::PL_ATTACK_ROLL_INFO), result).Send();
+            Network::MsgActionInfo(this->m_id, static_cast<uint8_t>(ActionMsgType::PL_ATTACK_ROLL_INFO), result).Send();
         }
         else
         {
@@ -231,14 +234,14 @@ void Attack::AttackRollDMPromptFinishedLocal(States::GameState* _gs)
 void Attack::SendAttackRollHit()
 {
     // Tell client that he hit
-    Network::MsgActionInfo(this->GetID(), static_cast<uint8_t>(ActionMsgType::DM_ATTACK_ROLL_HIT),
+    Network::MsgActionInfo(this->m_id, static_cast<uint8_t>(ActionMsgType::DM_ATTACK_ROLL_HIT),
         STR_EMPTY).Send(m_sender);
 }
 
 void Attack::SendAttackRollMissed()
 {
     // Tell client that he missed and end client action
-    Network::MsgActionInfo(this->GetID(), static_cast<uint8_t>(ActionMsgType::DM_ATTACK_ROLL_MISS),
+    Network::MsgActionInfo(this->m_id, static_cast<uint8_t>(ActionMsgType::DM_ATTACK_ROLL_MISS),
         STR_EMPTY).Send(m_sender);
     Actions::ActionPool::Instance().EndClientAction(m_sender);
     // ACTION IS DONE
@@ -267,9 +270,9 @@ void Attack::HitRollPromptFinished(States::GameState* gs)
     const std::string& result = ps->GetResult();
     if (result.empty())
     {
-        // Tell the server that player cancelled
+        // Tell the server that player canceled
         if (Network::Messenger::IsServer() == false)
-            Network::MsgActionEnd(this->GetID()).Send();
+            Network::MsgActionEnd(this->m_id).Send();
 
         // End the local action
         ActionPool::Instance().EndLocalAction();
@@ -279,7 +282,7 @@ void Attack::HitRollPromptFinished(States::GameState* gs)
         if (Network::Messenger::IsServer() == false)
         {
             // Tell the server that about the result
-            Network::MsgActionInfo(this->GetID(), static_cast<uint8_t>(ActionMsgType::PL_HIT_ROLL_INFO), result).Send();
+            Network::MsgActionInfo(this->m_id, static_cast<uint8_t>(ActionMsgType::PL_HIT_ROLL_INFO), result).Send();
         }
         else
         {
@@ -348,7 +351,7 @@ void Attack::HitRollDMPromptFinished(States::GameState* _gs)
 
     // End client action
     ActionPool::Instance().EndClientAction(m_sender);
-    // TODO: tell client about it!!!
+    Network::MsgActionEnd(m_id).Send(m_sender);
 }
 
 void Attack::HitRollDMPromptFinishedLocal(States::GameState* _gs)

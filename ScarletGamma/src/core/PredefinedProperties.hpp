@@ -16,6 +16,8 @@ namespace Core {
 		static const Property TARGET;
 		static const Property OBSTACLE;
 		static const Property PLAYER;
+		static const Property JUMPPOINT;
+		static const Property OWNER;
 
 		static const Property INVENTORY;
 		static const Property STRENGTH;
@@ -26,6 +28,7 @@ namespace Core {
 		static const Property CHARISMA;
 		static const Property HEALTH;
 		static const Property ARMORCLASS;
+		static const Property INITIATIVE_MOD;
 
 		// A custom property with R_VCEV0EV00 access rights and an empty default.
 		static Property Custom( const std::string& _name )

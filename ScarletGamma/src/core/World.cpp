@@ -104,6 +104,7 @@ namespace Core {
 		m_maps.clear();
 		m_objects.clear();
 		m_players.clear();
+		m_ownedObjects.clear();
 		m_nextFreeMapID = 0;
 		m_nextFreeObjectID = 0;
 
@@ -121,12 +122,8 @@ namespace Core {
 				ObjectID id = NewObject( (*child)[i] );
 				Object* object = GetObject(id);
 
-				// Test object if it is a player and add it.
-				if( object->HasProperty( STR_PROP_PLAYER ) )
-				{
-					Property& prop = object->GetProperty( STR_PROP_NAME );
-					m_players[prop.Value()] = id;
-				}
+				RegisterObject(object);
+
 			}
 		}
 
@@ -236,6 +233,8 @@ namespace Core {
 		return nullptr;
 	}
 
+	
+
 	std::vector<ObjectID> World::FilterObjectsByName( const std::string& _text ) const
 	{
 		std::vector<ObjectID> results;
@@ -284,6 +283,40 @@ namespace Core {
 		return id;
 	}
 
+	Object* World::GetNextObservableObject(ObjectID currentID){
+		ObjectID result=-1;
+		bool pickNext=false;
+		for( auto it = m_ownedObjects.begin(); it != m_ownedObjects.end(); ++it )
+		{
+			ObjectID id=*it;
+			if(pickNext)
+			{
+				result=id;
+				break;
+			}
+			if(result==-1)//always select the first element, to loop through the list
+				result = id;
+			if(id == currentID) //we are at the current id
+				pickNext=true;
+		}
+		return this->GetObject(result);
+	}
+
+	void World::RegisterObject(Object* object){
+		// Test object if it is a player and add it.
+				if( object->HasProperty( STR_PROP_PLAYER ) )
+				{
+					Property& prop = object->GetProperty( STR_PROP_NAME );
+					m_players[prop.Value()] = object->ID();
+				}
+				// Test object if it has an owner and add it.
+				if( object->HasProperty( STR_PROP_OWNER ) )
+				{
+					Property& prop = object->GetProperty( STR_PROP_OWNER );
+					m_ownedObjects.push_back(object->ID());
+				}
+	}
+
 
 
 
@@ -317,18 +350,32 @@ namespace Core {
 		propertyO->Add( PROPERTY::INTELLIGENCE );
 		propertyO->Add( PROPERTY::WISDOM );
 		propertyO->Add( PROPERTY::CHARISMA );
+		propertyO->Add( PROPERTY::JUMPPOINT );
+		propertyO->Add( PROPERTY::OWNER );
+		propertyO->Add( PROPERTY::INITIATIVE_MOD );
 	}
 
 	void World::CreateDefaultModuleBase()
 	{
 		Network::MaskWorldMessage lock;
-		ObjectID OID = NewObject( STR_EMPTY );
-		m_moduleTemplates.Add( OID );
-		Object* object = GetObject( OID );
-		object->Add( PROPERTY::NAME ).SetValue( STR_ATTACKABLE );
-		object->GetProperty( STR_PROP_SPRITE ).SetRights( Property::R_SYSTEMONLY );	// Hide the sprite property
+		ObjectID OID;
+		Object* object;
+
+#		define NewModule(name)				\
+			OID = NewObject( STR_EMPTY );	\
+			m_moduleTemplates.Add( OID );	\
+			object = GetObject( OID );		\
+			object->Add( PROPERTY::NAME ).SetValue( name );	\
+			object->GetProperty( STR_PROP_SPRITE ).SetRights( Property::R_SYSTEMONLY );	// Hide the sprite property
+
+		NewModule( STR_ATTACKABLE );
 		object->Add( PROPERTY::HEALTH );
 		object->Add( PROPERTY::ARMORCLASS );
+
+		NewModule( STR_JUMPPOINT );
+		object->Add( PROPERTY::JUMPPOINT );
+
+#		undef NewModule
 	}
 
 	void World::CreateDefaultTemplateBase()
@@ -346,6 +393,13 @@ namespace Core {
 		object = GetObject( NewObjectTemplate( "media/cross_big.png" ) );
 		object->Add( PROPERTY::NAME ).SetValue( STR_WALLC );
 		object->Add( PROPERTY::OBSTACLE );
+		object = GetObject( NewObjectTemplate( "media/stairs.png" ) );
+		object->Add( PROPERTY::NAME ).SetValue( STR_STAIRS );
+		object->Add( PROPERTY::JUMPPOINT );
+		object->Add( PROPERTY::COLOR ).SetValue( "777777ff" );
+		object = GetObject( NewObjectTemplate( "media/planks.png" ) );
+		object->Add( PROPERTY::NAME ).SetValue( STR_PLANKS );
+		object->Add( PROPERTY::COLOR ).SetValue( "99aa44ff" );
 
 		object = GetObject( NewObjectTemplate( "media/noise_2.png" ) );
 		object->Add( PROPERTY::NAME ).SetValue( STR_EARTH );

@@ -12,6 +12,8 @@
 #include "core/PredefinedProperties.hpp"
 #include "network/WorldMessages.hpp"
 #include "events/InputHandler.hpp"
+#include "network/CombatMessages.hpp"
+#include "GameRules/MasterCombat.hpp"
 
 using namespace Core;
 
@@ -163,7 +165,18 @@ namespace States {
 		case sf::Mouse::Left: {
 			if( m_modeTool->GetMode() == Interfaces::ModeToolbox::BRUSH )
 			{
-				if( !m_objectsPanel->GetSelected() ) return;// TODO: Warnung in chat
+				if( !GetCurrentMap() ) {
+					Network::ChatMsg(STR_MSG_CREATE_MAP_FIRST, sf::Color::Red).Send();
+					return;		
+				}
+				if( !m_objectsPanel->GetSelected() ) {
+					Network::ChatMsg(STR_MSG_SELECT_TYPE_FIRST, sf::Color::Red).Send();
+					return;
+				}
+				if( IsLayerVisible( m_modeTool->Brush()->GetLayer() ) ) {
+					Network::ChatMsg(STR_MSG_LAYER_INVISIBLE, sf::Color::Red).Send();
+					return;
+				}
 				// Paint new objects with the brush.
 				m_brush.BeginPaint( *GetCurrentMap(),
 					m_objectsPanel->GetSelected(),
@@ -275,18 +288,27 @@ namespace States {
 	}
 
 
+	void MasterState::MouseWheelMoved(sf::Event::MouseWheelEvent& wheel, bool guiHandled)
+	{
+		CommonState::MouseWheelMoved(wheel, guiHandled);
+
+		// Manually scroll panels (tgui::callback not provided for this action).
+		// The scroll call has an effect only if the mouse is on the respective
+		// element. So calling it for everybody is just fine.
+		m_propertyPanel->Scroll(wheel.delta);
+		m_modulePanel->Scroll(wheel.delta);
+		m_objectsPanel->Scroll(wheel.delta);
+		m_viewPanel->Scroll(wheel.delta);
+		m_selectionView->Scroll(wheel.delta);
+	}
+
+
 	void MasterState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 	{
-		// Return if the GUI already handled it
-		if (guiHandled)
-			return;
-
-		// Let common state handle input
-		CommonState::KeyPressed(key, guiHandled);
-
-		switch(key.code)
+		// This should work ALWAYS, even if GUI is focused:
+		switch (key.code)
 		{
-			//on alt clear the current mask
+		//on alt clear the current mask
 		case sf::Keyboard::LAlt:
 			int l;
 			for(l = 0; l < 10; l++)
@@ -295,7 +317,8 @@ namespace States {
 			}
 			m_firstLayerSelection=true;
 			break;
-			//for each key add the mask, as long as alt is pressed (maybe cache this in local field)
+
+		//for each key add the mask, as long as alt is pressed (maybe cache this in local field)
 		case sf::Keyboard::Num1:
 		case sf::Keyboard::Num2:
 		case sf::Keyboard::Num3:
@@ -308,12 +331,31 @@ namespace States {
 			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
 				BlendLayer(key.code - sf::Keyboard::Num1);
 			break;
-
 		case sf::Keyboard::Num0:
 			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
 				BlendLayer(9);
 			break;
 
+        // DEBUGGING COMBAT, TODO: remove
+        case sf::Keyboard::Space:
+            if (sf::Keyboard::isKeyPressed((sf::Keyboard::LControl)))
+            {
+                m_combat = new GameRules::MasterCombat();
+                Network::CombatMsg(Network::CombatMsgType::DM_COMBAT_BEGIN).Send();
+            }
+            break;
+		}
+
+		// Return if the GUI already handled it
+		if (guiHandled)
+			return;
+
+		// Let common state handle input
+		CommonState::KeyPressed(key, guiHandled);
+
+		// This should work only if the GUI didn't handle before
+		switch(key.code)
+		{
 		case sf::Keyboard::Delete:
 			// Delete all selected objects from the map(s)
 			for( int i=0; i<m_selection.Size(); ++i )
@@ -407,6 +449,5 @@ namespace States {
 		MapID id = m_mapTool->GetSelectedMap();
 		return g_Game->GetWorld()->GetMap(id);
 	}
-
 
 }// namespace States

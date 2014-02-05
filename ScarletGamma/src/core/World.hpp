@@ -94,6 +94,14 @@ namespace Core {
 		const ObjectList& GetTemplateBase()	{ return m_objectTemplates; }
 		ObjectID NewModuleTemplate( const std::string& _sprite );
 		ObjectID NewObjectTemplate( const std::string& _sprite );
+
+		/// \brief Returns the next observable object
+		/// \param [in] ObjectID of the object currently watched
+		Object* GetNextObservableObject(ObjectID currentID);
+
+		/// \brief Registers an object in the corresponding list (currently player and owner)
+		/// \param [in] Object to be registered
+		void RegisterObject(Object* object);
     private:
         /// \brief All real existing objects.
         std::unordered_map<ObjectID, Object> m_objects;
@@ -102,6 +110,10 @@ namespace Core {
         /// \brief A subset of the objects which is flagged with a player property.
         /// \details The objects are mapped to there names to search player by name.
         std::unordered_map<std::string, Core::ObjectID> m_players;
+
+		/// \brief A subset of the objects which is flagged with the owner property.
+        /// \details The objects are mapped to there names to search this objects by name.
+		std::vector<Core::ObjectID> m_ownedObjects;
 
 		/// \brief A subset of objects which define templates
 		ObjectList m_objectTemplates;

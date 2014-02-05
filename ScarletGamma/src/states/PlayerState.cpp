@@ -165,7 +165,9 @@ void States::PlayerState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 			SetViewToObject(key.code - sf::Keyboard::Num1);
 		break;
 	case sf::Keyboard::Tab:
-		m_focus= g_Game->GetWorld()->GetNextObservableObject(m_focus->ID());
+		auto o= g_Game->GetWorld()->GetNextObservableObject(m_focus->ID());
+		if(o!=nullptr)
+			m_focus=o;
 		break;
 	}
 }

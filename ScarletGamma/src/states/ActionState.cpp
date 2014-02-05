@@ -51,8 +51,8 @@ void States::ActionState::RecalculateGUI()
 	//m_screenX=pos.x*TILESIZE;
 	//m_screenY=pos.y*TILESIZE;
 	//get action list
-	std::vector<Core::Object*> executors;
-	executors.push_back( g_Game->GetWorld()->GetObject( m_sourceObject ) );
+    Core::ObjectList executors;
+	executors.Add( m_sourceObject );
 	std::vector<Core::ActionID> actions = Actions::ActionPool::Instance().GetAllowedActions(executors, *o);
 
 	int i=0;

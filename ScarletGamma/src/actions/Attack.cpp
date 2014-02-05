@@ -19,8 +19,8 @@ using namespace GameRules;
 Attack::Attack() : Action(STR_ACT_ATTACK, ActionType::STANDARD_ACTION, 50, Game::MC_ATTACK)
 {
     // Set requirements
-    m_targetRequirements.push_back(STR_PROP_HEALTH);
-    m_targetRequirements.push_back(STR_PROP_ARMORCLASS);
+    m_targetRequirements.push_back(std::pair<std::string, bool>(STR_PROP_HEALTH, true));
+    m_targetRequirements.push_back(std::pair<std::string, bool>(STR_PROP_ARMORCLASS, true));
 }
 
 Action* Attack::Clone(Core::ObjectID _executor, Core::ObjectID _target)

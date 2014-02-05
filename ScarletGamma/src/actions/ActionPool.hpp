@@ -21,18 +21,29 @@ namespace Actions
         /// \param [in] _executor A list of objects which try to do things
         /// \param [in] object  Object to be examined
         /// \returns Vector of Action pointers for which the actions are applicable
-        std::vector<Core::ActionID> GetAllowedActions(std::vector<Core::Object*> _executors, Core::Object& _object);
+        std::vector<Core::ActionID> GetAllowedActions(Core::ObjectList& _executors, Core::Object& _object);
 
         /// \brief Get the name of an action by ID.
         /// \param [in] id  ID of the action to start, \see GetAllowedActions
         /// \returns  Name of the action specified by ID
         const std::string& GetActionName(Core::ActionID _id);
 
+        /// \brief Check whether a the default action might have changed.
+        /// \param [in] _executors  Executors that are used for the default action check.
+        /// \param [in] _object     Target that is used for the default action check.
+        void UpdateDefaultAction(Core::ObjectList& _executors, Core::Object* _object);
+
+        /// \brief Starts the current default action on the target.
+        /// \detail Be sure to call UpdateDefaultAction right before using this function!
+        /// \return True if an action was started, false otherwise (maybe we wanna handle
+        ///     that as selection or something?)
+        bool StartDefaultAction(Core::ObjectID _executor, Core::ObjectID _target);
+
         /// \brief Checks whether this action can ever be used as the default
         ///     left-click action. If not, it is only accessible using the
         ///     right-click menu.
         /// \param [in] id  The action to check.
-        bool CanBeDefaulAction(Core::ActionID _id);
+        bool CanBeDefaultAction(Core::ActionID _id);
 
         /// \brief Get a local action that is currently in progress.
         /// \returns  Pointer to action, may be 0
@@ -91,5 +102,11 @@ namespace Actions
 
         /// \brief Current local action.
         Action* m_localAction;
+
+        /// \brief Current default action that will be executed on left click.
+        Action* m_currentDefaultAction;
+
+        /// \brief Last object that was used for the default action check.
+        Core::ObjectID m_lastDefaultActionTarget;
     };
 }

@@ -13,8 +13,9 @@ using namespace Actions;
 WalkTo::WalkTo() : Action(STR_ACT_WALKTO, ActionType::MOVE_ACTION, 100, Game::MC_WALK)
 {
     // Set requirements
-    m_targetRequirements.push_back(STR_PROP_X);
-    m_targetRequirements.push_back(STR_PROP_Y);
+    m_targetRequirements.push_back(std::pair<std::string, bool>(STR_PROP_X, true));
+    m_targetRequirements.push_back(std::pair<std::string, bool>(STR_PROP_Y, true));
+    m_targetRequirements.push_back(std::pair<std::string, bool>(STR_PROP_OBSTACLE, false));
 }
 
 void WalkTo::Execute()

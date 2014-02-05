@@ -6,6 +6,7 @@
 #include <assert.h>
 #include "SetJumpPoint.hpp"
 #include "UseJumpPoint.hpp"
+#include "core/World.hpp"
 #include <iostream>
 
 using namespace Actions;
@@ -31,7 +32,7 @@ ActionPool::ActionPool()
     }
 }
 
-std::vector<Core::ActionID> ActionPool::GetAllowedActions(std::vector<Core::Object*> _executors, Core::Object& object)
+std::vector<Core::ActionID> ActionPool::GetAllowedActions(Core::ObjectList& _executors, Core::Object& object)
 {
     // Create empty result vector
     std::vector<Core::ActionID> result;
@@ -43,10 +44,10 @@ std::vector<Core::ActionID> ActionPool::GetAllowedActions(std::vector<Core::Obje
         bool allowed = true;
 
         // Get all requirements for target and loop through them
-        const std::vector<std::string>& requirements = (*action)->GetTargetRequirements();
+        const std::vector<std::pair<std::string, bool>>& requirements = (*action)->GetTargetRequirements();
         for (auto req = requirements.begin(); req != requirements.end(); ++req)
         {
-            if (object.HasProperty(*req) == false)
+            if (object.HasProperty((*req).first) != (*req).second)
             {
                 // Missing a property, remember that and get out of the requirements loop
                 allowed = false;
@@ -55,12 +56,12 @@ std::vector<Core::ActionID> ActionPool::GetAllowedActions(std::vector<Core::Obje
         }
 
 		// Get all requirements for executor and loop through them
-		const std::vector<std::string>& sourceRequirements = (*action)->GetSourceRequirements();
+		const std::vector<std::pair<std::string, bool>>& sourceRequirements = (*action)->GetSourceRequirements();
 		for (auto req = sourceRequirements.begin(); req != sourceRequirements.end() && allowed; ++req)
 		{
 			// Test all possible executors
-			for( size_t i=0; i<_executors.size(); ++i )
-			if( !_executors[i]->HasProperty(*req) )
+			for( int i=0; i<_executors.Size(); ++i )
+			if( g_Game->GetWorld()->GetObject(_executors[i])->HasProperty((*req).first) != (*req).second )
 			{
 				// Missing a property, remember that and get out of the requirements loop
 				allowed = false;
@@ -83,12 +84,51 @@ std::vector<Core::ActionID> ActionPool::GetAllowedActions(std::vector<Core::Obje
             return actions[x]->m_priority > actions[y]->m_priority;
         } );
 
-    for (auto it = result.begin(); it != result.end(); ++it)
-        std::cout << GetActionName(*it) << ' ';
-    std::cout << '\n';
-
     return result;
 }
+
+void ActionPool::UpdateDefaultAction(Core::ObjectList& _executors, Core::Object* _object)
+{
+    // Void default action if we have no target
+    if (_object == 0 || _executors.Size() == 0)
+    {
+        m_currentDefaultAction = 0;
+        m_lastDefaultActionTarget = -1;
+        g_Game->SetMouseCursor(Game::MC_DEFAULT);
+        return;
+    }
+
+    // Don't recheck on the same target, and let's just keep our fingers crossed
+    // that the executors didn't change :)
+    if (_object->ID() == m_lastDefaultActionTarget)
+        return;
+
+    // Remember last target and get sorted list of allowed actions
+    m_lastDefaultActionTarget = _object->ID();
+    auto actions = GetAllowedActions(_executors, *_object);
+
+    // Check whether we got a valid default action
+    if (actions.size() == 0 || CanBeDefaultAction(actions.front()) == false)
+    {
+        m_currentDefaultAction = 0;
+        g_Game->SetMouseCursor(Game::MC_DEFAULT);
+    }
+    else
+    {
+        m_currentDefaultAction = m_actions[actions.front()];
+        g_Game->SetMouseCursor(m_currentDefaultAction->m_cursor);
+    }
+}
+
+bool Actions::ActionPool::StartDefaultAction( Core::ObjectID _executor, Core::ObjectID _target )
+{
+    if (m_currentDefaultAction == 0)
+        return false;
+
+    StartLocalAction(m_currentDefaultAction->m_id, _executor, _target);
+    return true;
+}
+
 
 const std::string& ActionPool::GetActionName(Core::ActionID id)
 {
@@ -96,7 +136,7 @@ const std::string& ActionPool::GetActionName(Core::ActionID id)
     return unknown->GetName();
 }
 
-bool ActionPool::CanBeDefaulAction(Core::ActionID _id)
+bool ActionPool::CanBeDefaultAction(Core::ActionID _id)
 {
     return m_actions[_id]->m_priority > 0;
 }
@@ -122,7 +162,6 @@ void ActionPool::StartLocalAction(Core::ActionID _id, Core::ObjectID _executor,
         newAction->Execute();
     }
 }
-
 
 void ActionPool::StartClientAction(Core::ActionID id, Core::ObjectID _executor,
                                    Core::ObjectID target, uint8_t index)

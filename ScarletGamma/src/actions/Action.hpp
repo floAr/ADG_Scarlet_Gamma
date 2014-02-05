@@ -25,7 +25,7 @@ namespace Actions
         /// \brief Returns the list of required properties for the target for this action.
         /// The respective implementations needs to take care of filling the list.
         /// \return  Reference to list of requirements
-        const std::vector<std::string>& GetTargetRequirements()
+        const std::vector<std::pair<std::string, bool>>& GetTargetRequirements()
         {
             return m_targetRequirements;
         }
@@ -33,7 +33,7 @@ namespace Actions
         /// \brief Returns the list of required properties for the executor.
         /// The respective implementations needs to take care of filling the list.
         /// \return  Reference to list of source requirements
-        const std::vector<std::string>& GetSourceRequirements()
+        const std::vector<std::pair<std::string, bool>>& GetSourceRequirements()
         {
             return m_sourceRequirements;
         }
@@ -67,8 +67,8 @@ namespace Actions
         Action(const std::string& name, ActionType type, int priority, Game::MouseCursor cursor = Game::MC_DEFAULT) :
             m_name(name), m_actionType(type), m_priority(priority), m_cursor(cursor) {}
 
-        std::vector<std::string> m_targetRequirements; ///< List of required properties in target
-        std::vector<std::string> m_sourceRequirements; ///< List of required properties in source (executor)
+        std::vector<std::pair<std::string, bool>> m_targetRequirements; ///< List of required properties in target
+        std::vector<std::pair<std::string, bool>> m_sourceRequirements; ///< List of required properties in source (executor)
         const std::string m_name; ///< Human readable name of the action
         ActionType m_actionType; ///< Type of the action, i.e. how long the action will take in combat
         Core::ActionID m_id; ///< Action ID, i.e. index in the ActionPool's list

@@ -13,6 +13,7 @@
 #include "states/PromptState.hpp"
 #include "StateMachine.hpp"
 #include "network/CombatMessages.hpp"
+#include "events/InputHandler.hpp"
 
 namespace States {
 
@@ -67,6 +68,21 @@ void CommonState::Update( float dt )
 
 void CommonState::MouseMoved(int deltaX, int deltaY, bool guiHandled)
 {
+	// Update default action if we are not in the GUI
+	if (guiHandled)
+	{
+		Actions::ActionPool::Instance().UpdateDefaultAction(m_selection, 0);
+	}
+	else
+	{
+		sf::Vector2i tilePos = Events::InputHandler::GetMouseTilePosition();
+		Core::ObjectList targets = GetCurrentMap()->GetObjectsAt(tilePos.x, tilePos.y);
+		if (targets.Size() == 0)
+			Actions::ActionPool::Instance().UpdateDefaultAction(m_selection, 0);
+		else
+			Actions::ActionPool::Instance().UpdateDefaultAction(m_selection, g_Game->GetWorld()->GetObject(targets[targets.Size() - 1]));
+	}
+
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Middle))
 	{
 		// Get the render window

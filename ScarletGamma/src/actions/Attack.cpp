@@ -16,7 +16,7 @@
 using namespace Actions;
 using namespace GameRules;
 
-Attack::Attack() : Action(STR_ACT_ATTACK, ActionType::STANDARD_ACTION)
+Attack::Attack() : Action(STR_ACT_ATTACK, ActionType::STANDARD_ACTION, 50, Game::MC_ATTACK)
 {
     // Set requirements
     m_targetRequirements.push_back(STR_PROP_HEALTH);
@@ -27,9 +27,12 @@ Action* Attack::Clone(Core::ObjectID _executor, Core::ObjectID _target)
 {
     Attack* result = new Attack();
 
-    result->m_executor = _executor; // set executor
-    result->m_target = _target; // set target
-    result->m_id = m_id; // copy ID
+    // Set all required values
+    result->m_id = m_id;
+    result->m_priority = m_priority;
+    result->m_cursor = m_cursor;
+    result->m_executor = _executor;
+    result->m_target = _target;
 
     return dynamic_cast<Action*>(result);
 }
@@ -348,7 +351,7 @@ void Attack::HitRollDMPromptFinished(States::GameState* _gs)
 
     // End client action
     ActionPool::Instance().EndClientAction(m_sender);
-    // TODO: tell client about it!!!
+    Network::MsgActionEnd(m_id).Send(m_sender);
 }
 
 void Attack::HitRollDMPromptFinishedLocal(States::GameState* _gs)

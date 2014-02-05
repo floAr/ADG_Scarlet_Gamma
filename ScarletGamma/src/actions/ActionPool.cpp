@@ -6,27 +6,28 @@
 #include <assert.h>
 #include "SetJumpPoint.hpp"
 #include "UseJumpPoint.hpp"
+#include <iostream>
 
 using namespace Actions;
 
 // Initialize Singleton pointer
-ActionPool* ActionPool::m_Instance = nullptr;
+ActionPool* ActionPool::m_instance = nullptr;
 
 ActionPool::ActionPool()
 {
     // Adding actions
-    m_Actions.push_back(new Attack());
-    m_Actions.push_back(new WalkTo());
-	m_Actions.push_back(new SetJumpPoint());
-	m_Actions.push_back(new UseJumpPoint());
+    m_actions.push_back(new Attack());
+    m_actions.push_back(new WalkTo());
+	m_actions.push_back(new SetJumpPoint());
+	m_actions.push_back(new UseJumpPoint());
     //------------------------------//
     // TODO: add more actions here! //
     //------------------------------//
 
     // Set action IDs
-    for (unsigned int id = 0; id < m_Actions.size(); ++id)
+    for (unsigned int id = 0; id < m_actions.size(); ++id)
     {
-        m_Actions.at(id)->m_id = id;
+        m_actions.at(id)->m_id = id;
     }
 }
 
@@ -36,7 +37,7 @@ std::vector<Core::ActionID> ActionPool::GetAllowedActions(std::vector<Core::Obje
     std::vector<Core::ActionID> result;
 
     // Check all available actions
-    for (std::vector<Action*>::iterator action = m_Actions.begin(); action != m_Actions.end(); ++action)
+    for (std::vector<Action*>::iterator action = m_actions.begin(); action != m_actions.end(); ++action)
     {
         // Remember whether all properties were found, initially true
         bool allowed = true;
@@ -74,19 +75,36 @@ std::vector<Core::ActionID> ActionPool::GetAllowedActions(std::vector<Core::Obje
         }
     }
 
+    // Sort actions by property, descending
+    std::sort(result.begin(), result.end(),
+        [](int x, int y) -> bool
+        {
+            auto& actions = ActionPool::Instance().m_actions;
+            return actions[x]->m_priority > actions[y]->m_priority;
+        } );
+
+    for (auto it = result.begin(); it != result.end(); ++it)
+        std::cout << GetActionName(*it) << ' ';
+    std::cout << '\n';
+
     return result;
 }
 
 const std::string& ActionPool::GetActionName(Core::ActionID id)
 {
-    Action* unknown = m_Actions.at(id);
+    Action* unknown = m_actions.at(id);
     return unknown->GetName();
+}
+
+bool ActionPool::CanBeDefaulAction(Core::ActionID _id)
+{
+    return m_actions[_id]->m_priority > 0;
 }
 
 Core::ActionID ActionPool::GetLocalAction()
 {
-    if (m_LocalAction != 0)
-        return m_LocalAction->m_id;
+    if (m_localAction != 0)
+        return m_localAction->m_id;
     else
         return -1;
 }
@@ -94,13 +112,13 @@ Core::ActionID ActionPool::GetLocalAction()
 void ActionPool::StartLocalAction(Core::ActionID _id, Core::ObjectID _executor,
                                   Core::ObjectID _target)
 {
-    Action* toCopy = m_Actions.at(_id);
+    Action* toCopy = m_actions.at(_id);
 
     // Create a copy of the action and return it
     if (toCopy)
     {
         Action* newAction = toCopy->Clone(_executor, _target);
-        m_LocalAction = newAction;
+        m_localAction = newAction;
         newAction->Execute();
     }
 }
@@ -109,31 +127,31 @@ void ActionPool::StartLocalAction(Core::ActionID _id, Core::ObjectID _executor,
 void ActionPool::StartClientAction(Core::ActionID id, Core::ObjectID _executor,
                                    Core::ObjectID target, uint8_t index)
 {
-    Action* toCopy = m_Actions.at(id);
+    Action* toCopy = m_actions.at(id);
 
     // Create a copy of the action and return it
     if (toCopy)
     {
         Action* newAction = toCopy->Clone(_executor, target);
-        m_ClientActions[index] = newAction;
+        m_clientActions[index] = newAction;
     }
 }
 
 void ActionPool::EndLocalAction()
 {
-    delete m_LocalAction;
-    m_LocalAction = 0;
+    delete m_localAction;
+    m_localAction = 0;
 }
 
 void ActionPool::EndClientAction(uint8_t index)
 {
-    delete m_ClientActions[index];
-    m_ClientActions[index] = 0;
+    delete m_clientActions[index];
+    m_clientActions[index] = 0;
 }
 
 Core::ActionID ActionPool::GetClientAction(int index)
 {
-    return m_ClientActions[index]->m_id;
+    return m_clientActions[index]->m_id;
 }
 
 void ActionPool::HandleActionInfo(uint8_t sender, uint8_t messageType, const std::string& message)
@@ -141,13 +159,13 @@ void ActionPool::HandleActionInfo(uint8_t sender, uint8_t messageType, const std
     if (Network::Messenger::IsServer())
     {
         // Handle Client's message
-        assert(m_ClientActions[sender] && "Received MsgActionInfo while no client action was started.");
-        m_ClientActions[sender]->HandleActionInfo(messageType, message, sender);
+        assert(m_clientActions[sender] && "Received MsgActionInfo while no client action was started.");
+        m_clientActions[sender]->HandleActionInfo(messageType, message, sender);
     }
     else
     {
         // Handle server's response
-        assert(m_LocalAction && "Received MsgActionInfo while no local action was started.");
-        m_LocalAction->HandleActionInfoResponse(messageType, message);
+        assert(m_localAction && "Received MsgActionInfo while no local action was started.");
+        m_localAction->HandleActionInfoResponse(messageType, message);
     }
 }

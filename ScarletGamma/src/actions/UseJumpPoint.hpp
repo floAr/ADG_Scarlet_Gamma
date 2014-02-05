@@ -15,7 +15,7 @@ namespace Actions
 
 	private:
 		/// \brief Clones an set jump point action.
-		virtual Action* Clone(Core::ObjectID _excecutor, Core::ObjectID _target);
+		virtual Action* Clone(Core::ObjectID _executor, Core::ObjectID _target);
 
 		/// \brief Private constructor, fills requirements list.
 		UseJumpPoint();

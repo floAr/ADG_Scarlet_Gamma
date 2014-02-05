@@ -6,7 +6,7 @@
 namespace Actions {
 
 
-SetJumpPoint::SetJumpPoint() : Action(STR_ACT_SETJUMPPOINT, ActionType::FREE_ACTION)
+SetJumpPoint::SetJumpPoint() : Action(STR_ACT_SETJUMPPOINT, ActionType::FREE_ACTION, -1)
 {
 	m_sourceRequirements.push_back( STR_PROP_JUMPPOINT );
 }
@@ -20,16 +20,18 @@ void SetJumpPoint::Execute()
 	jp.SetValue( std::to_string(m_target) );
 }
 
-Action* SetJumpPoint::Clone( Core::ObjectID _excecutor, Core::ObjectID _target )
+Action* SetJumpPoint::Clone( Core::ObjectID _executor, Core::ObjectID _target )
 {
-	SetJumpPoint* jp = new SetJumpPoint();
-	// Copy the automated id from this
-	jp->m_id = m_id;
-	// Set the relevant information
-	jp->m_executor = _excecutor;
-	jp->m_target = _target;
+	SetJumpPoint* result = new SetJumpPoint();
 
-	return jp;
+	// Set all required values
+	result->m_id = m_id;
+	result->m_priority = m_priority;
+	result->m_cursor = m_cursor;
+	result->m_executor = _executor;
+	result->m_target = _target;
+
+	return result;
 }
 
 

@@ -23,7 +23,7 @@ void MasterCombat::ReceivedInitiative(Core::ObjectID _object, std::string& _init
         // Check its initiative value
         if (m_initiatives[*it] > iniEvaluated)
         {
-            // Nnnnnext!
+            // Better than me. Nnnnnext!
             ++it;
         }
         else

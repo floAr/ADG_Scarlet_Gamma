@@ -10,7 +10,7 @@
 
 using namespace Actions;
 
-WalkTo::WalkTo() : Action(STR_ACT_WALKTO, ActionType::MOVE_ACTION)
+WalkTo::WalkTo() : Action(STR_ACT_WALKTO, ActionType::MOVE_ACTION, 100, Game::MC_WALK)
 {
     // Set requirements
     m_targetRequirements.push_back(STR_PROP_X);
@@ -46,9 +46,12 @@ Action* WalkTo::Clone(Core::ObjectID _executor, Core::ObjectID _target)
 {
     WalkTo* result = new WalkTo();
 
-    result->m_executor = _executor; // set executor
-    result->m_target = _target; // set target
-    result->m_id = m_id; // copy ID
+    // Set all required values
+    result->m_id = m_id;
+    result->m_priority = m_priority;
+    result->m_cursor = m_cursor;
+    result->m_executor = _executor;
+    result->m_target = _target;
 
     return dynamic_cast<Action*>(result);
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Prerequisites.hpp"
+#include "Game.hpp"
 #include <vector>
 #include <cstdint>
 
@@ -59,11 +60,12 @@ namespace Actions
         virtual void Execute() = 0;
 
         /// \brief Create a copy of the action. Needs to AT LEAST copy the
-        ///   Action ID and the target.
+        ///   Action ID, executor and target, action type, priority and cursor.
         virtual Action* Clone(Core::ObjectID _executor, Core::ObjectID target) = 0;
 
-        /// \brief Default constructor, setting the name of the action
-        Action(const std::string& name, ActionType type) : m_name(name), m_actionType(type) {}
+        /// \brief Default constructor, setting some required variables
+        Action(const std::string& name, ActionType type, int priority, Game::MouseCursor cursor = Game::MC_DEFAULT) :
+            m_name(name), m_actionType(type), m_priority(priority), m_cursor(cursor) {}
 
         std::vector<std::string> m_targetRequirements; ///< List of required properties in target
         std::vector<std::string> m_sourceRequirements; ///< List of required properties in source (executor)
@@ -72,6 +74,8 @@ namespace Actions
         Core::ActionID m_id; ///< Action ID, i.e. index in the ActionPool's list
         Core::ObjectID m_executor; ///< The object executing the action
         Core::ObjectID m_target; ///< The object being targeted by the action
+        int m_priority; ///< The priority of the action, used for determining default actions
+        Game::MouseCursor m_cursor; ///< The cursor displayed when this action is the default action
 
     private:
 

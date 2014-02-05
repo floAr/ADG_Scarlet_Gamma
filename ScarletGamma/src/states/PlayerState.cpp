@@ -130,26 +130,8 @@ void States::PlayerState::MouseWheelMoved(sf::Event::MouseWheelEvent& wheel, boo
 
 void States::PlayerState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 {
-	// Don't react to any key if gui handled it
-	if (guiHandled)
-		return;
-	// Let common state handle input
-	CommonState::KeyPressed(key, guiHandled);
-
-	switch(key.code)
+	switch(key.code) //pre gui switch to still get event with LControl
 	{
-		case sf::Keyboard::Num0:
-		case sf::Keyboard::Numpad0:
-		 //Refocus on player
-			m_focus = m_player;
-			break;
-	case sf::Keyboard::Space:
-		// TODO: use selection as target
-		Actions::ActionPool::Instance().StartLocalAction(0, m_player->ID(), 42);
-		break;
-	case sf::Keyboard::LAlt:
-		m_focus=m_player;
-		break;
 	case sf::Keyboard::Num1:
 	case sf::Keyboard::Num2:
 	case sf::Keyboard::Num3:
@@ -163,6 +145,27 @@ void States::PlayerState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 			SetHotkeyToObject(key.code - sf::Keyboard::Num1,m_focus->ID());
 		else
 			SetViewToObject(key.code - sf::Keyboard::Num1);
+		break;
+	}
+	// Don't react to any key if gui handled it
+	if (guiHandled)
+		return;
+	// Let common state handle input
+	CommonState::KeyPressed(key, guiHandled);
+
+	switch(key.code)
+	{
+	case sf::Keyboard::Num0:
+	case sf::Keyboard::Numpad0:
+		//Refocus on player
+		m_focus = m_player;
+		break;
+	case sf::Keyboard::Space:
+		// TODO: use selection as target
+		Actions::ActionPool::Instance().StartLocalAction(0, m_player->ID(), 42);
+		break;
+	case sf::Keyboard::LAlt:
+		m_focus=m_player;
 		break;
 	case sf::Keyboard::Tab:
 		auto o= g_Game->GetWorld()->GetNextObservableObject(m_focus->ID());

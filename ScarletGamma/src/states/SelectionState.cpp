@@ -12,6 +12,7 @@
 #include "ActionState.hpp"
 #include "Constants.hpp"
 #include "core/PredefinedProperties.hpp"
+#include "PlayerState.hpp"
 
 States::SelectionState::SelectionState() :
 	m_defaultButton()
@@ -121,30 +122,39 @@ void States::SelectionState::GuiCallback(tgui::Callback& args)
 		action->SetTargetObject(id);
 		m_finished=true;
 		// */
+
 		//* NORMAL SELECTION BEHAVIOR
-		CommonState* previousState = dynamic_cast<CommonState*>(m_previousState);
-		// The parent is not set or not of type CommonState, but it should be!
-		assert(previousState);
-
-		//if shift is not pressed clear selection
-		if( !sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) )
+		if( dynamic_cast<PlayerState*>(m_previousState) )
 		{
-			previousState->ClearSelection();
-		}
-
-		const Core::ObjectList* alreadySelected = previousState->GetSelection();
-	
-		Core::ObjectID id = m_objects[args.id-100];
-		if( alreadySelected->Contains(id) )
-		{
-			// already selected
-			previousState->RemoveFromSelection(id);
+			// For player also map the left click on the action menu
+			Core::ObjectID id = m_objects[args.id-100];
+			sf::Vector2i mousePos = sf::Mouse::getPosition(g_Game->GetWindow());
+			ShowActionState( id, mousePos.x, mousePos.y );
 		} else {
-			previousState->AddToSelection(id);
+			CommonState* previousState = dynamic_cast<CommonState*>(m_previousState);
+			// The parent is not set or not of type CommonState, but it should be!
+			assert(previousState);
+
+			// If control is not pressed clear selection
+			if( !sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) && !sf::Keyboard::isKeyPressed(sf::Keyboard::RControl) )
+			{
+				previousState->ClearSelection();
+			}
+
+			const Core::ObjectList* alreadySelected = previousState->GetSelection();
+	
+			Core::ObjectID id = m_objects[args.id-100];
+			if( alreadySelected->Contains(id) )
+			{
+				// already selected
+				previousState->RemoveFromSelection(id);
+			} else {
+				previousState->AddToSelection(id);
+			}
+			m_dirty = true;
+			if( !sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) )
+				m_finished = true;
 		}
-		m_dirty=true;
-		if( !sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) )
-			m_finished = true;
 		// 	*/
 	}
 }
@@ -168,20 +178,11 @@ void States::SelectionState::MouseButtonPressed(sf::Event::MouseButtonEvent& but
 		// mouseOnWhichWidget does not work for disabled components to search manually
 	    for( size_t i=0; i<m_Widgets.size(); ++i )
 	    {
-		  //  if( m_Widgets[i]->mouseOnWidget((float)tilePos.x*TILESIZE, (float)tilePos.y*TILESIZE) ) //rightclik on button
-			if( m_Widgets[i]->mouseOnWidget((float)button.x, (float)button.y) ) //rightclik on button
+			if( m_Widgets[i]->mouseOnWidget((float)button.x, (float)button.y) ) // Right click on button
 		  
 			{
-			    auto cid=(m_Widgets[i]->getCallbackId());
 			    Core::ObjectID id = m_objects[(m_Widgets[i]->getCallbackId()-100)];
-
-		        auto action=dynamic_cast<ActionState*>( g_Game->GetStateMachine()->PushGameState(States::GST_ACTION));
-		        action->SetTargetObject(id);
-				const Core::ObjectList* selection = previousState->GetSelection();
-				//TODO: Forschleife mit mehreren aktionen für alle objekte in der selektion
-				action->SetSourceObject((*selection)[0]);
-				action->SetPosition(button.x,button.y);
-		        m_finished=true;
+				ShowActionState( id, button.x, button.y );
 			    return;
 		    }
 	    }
@@ -205,4 +206,16 @@ void  States::SelectionState::positionButton(tgui::Button::Ptr b, float angle, f
 	float bx = m_screenX - b->getSize().x*0.5f + radius * sin(angle*0.01745329251f); //0.01745329251 is to got radians from degrees
 	float by = m_screenY - b->getSize().y*0.5f + radius * cos(angle*0.01745329251f);
 	b->setPosition(bx, by);
+}
+
+
+void States::SelectionState::ShowActionState(Core::ObjectID _targetObject, int _x, int _y)
+{
+	auto action = dynamic_cast<ActionState*>( g_Game->GetStateMachine()->PushGameState(States::GST_ACTION) );
+	action->SetTargetObject(_targetObject);
+	const Core::ObjectList* selection = dynamic_cast<CommonState*>(m_previousState)->GetSelection();
+	//TODO: Forschleife mit mehreren aktionen für alle objekte in der selektion
+	action->SetSourceObject((*selection)[0]);
+	action->SetPosition(_x, _y);
+	m_finished = true;
 }

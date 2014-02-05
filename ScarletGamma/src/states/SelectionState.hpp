@@ -29,6 +29,13 @@ namespace States
 	private:
 		void positionButton(tgui::Button::Ptr b, float angle, float radius);
 
+		/// \brief Show the actions for the selected object
+		/// \details Sets m_finished to true.
+		/// \param [in] _targetObject The object on which the selection should perform tasks.
+		/// \param [in] _x Where to show the action menu.
+		/// \param [in] _y Where to show the action menu.
+		void ShowActionState(Core::ObjectID _targetObject, int _x, int _y);
+
 		tgui::Gui m_gui;
 		tgui::Button::Ptr m_defaultButton;	///< This is a preloaded button to increase RecalculateGUI performance by a height factor
 		Core::ObjectList m_objects;			///< A copy of the object list for the current tile.

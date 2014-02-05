@@ -114,7 +114,17 @@ void States::PlayerState::MouseButtonPressed(sf::Event::MouseButtonEvent& button
 		}
 		break; }
 	}
+}
 
+
+void States::PlayerState::MouseWheelMoved(sf::Event::MouseWheelEvent& wheel, bool guiHandled)
+{
+	CommonState::MouseWheelMoved(wheel, guiHandled);
+
+	// Manually scroll panels (tgui::callback not provided for this action).
+	// The scroll call has an effect only if the mouse is on the respective
+	// element. So calling it for everybody is just fine.
+	m_playerView->Scroll(wheel.delta);
 }
 
 

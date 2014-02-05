@@ -16,6 +16,8 @@ namespace States
 		virtual void MouseMoved(int deltaX, int deltaY, bool guiHandled) override;
 		virtual void MouseButtonPressed(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos,
 			bool guiHandled) override;
+		/// \brief Update gui elements + common state actions
+		virtual void MouseWheelMoved(sf::Event::MouseWheelEvent& wheel, bool guiHandled) override;
 		virtual void KeyPressed(sf::Event::KeyEvent& key, bool guiHandled) override;
 		virtual void Resize(const sf::Vector2f& _size) override;
 		virtual Core::Map* GetCurrentMap() override;

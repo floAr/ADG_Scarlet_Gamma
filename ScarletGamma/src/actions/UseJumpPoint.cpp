@@ -52,7 +52,6 @@ namespace Actions {
 			return true;
 		}
 
-
 		// Not ready yet
 		return false;
 	}

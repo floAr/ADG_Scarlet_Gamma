@@ -14,7 +14,7 @@ using namespace Actions;
 ActionPool* ActionPool::m_instance = nullptr;
 
 ActionPool::ActionPool() : 
-	m_LocalAction(nullptr)
+	m_localAction(nullptr)
 {
     // Adding actions
     m_actions.push_back(new Attack());
@@ -32,7 +32,7 @@ ActionPool::ActionPool() :
     }
 
 	for( int i=0; i<24; ++i )
-		m_ClientActions[i] = nullptr;
+		m_clientActions[i] = nullptr;
 }
 
 std::vector<Core::ActionID> ActionPool::GetAllowedActions(std::vector<Core::Object*> _executors, Core::Object& object)
@@ -146,17 +146,17 @@ void ActionPool::StartClientAction(Core::ActionID id, Core::ObjectID _executor,
 
 void ActionPool::UpdateExecution()
 {
-	if( m_LocalAction )
+	if( m_localAction )
 	{
-		if( m_LocalAction->Update() )
+		if( m_localAction->Update() )
 			EndLocalAction();
 	}
 
 	for( int i=0; i<24; ++i )
 	{
-		if( m_ClientActions[i] )
+		if( m_clientActions[i] )
 		{
-			if( m_ClientActions[i]->Update() )
+			if( m_clientActions[i]->Update() )
 				EndClientAction(i);
 		}
 	}

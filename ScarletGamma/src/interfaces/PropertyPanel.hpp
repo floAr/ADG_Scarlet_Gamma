@@ -38,6 +38,10 @@ namespace Interfaces {
 		/// \brief If an object is dragged to this panel all properties which
 		///		are not existent are copied and the same holds for single properties.
 		void HandleDropEvent(const tgui::Callback& _call);
+
+		/// \brief Call this if mouse is scrolled. It will move the scrollbar
+		///		if the cursor is on this component.
+		void Scroll( int _delta );
 	protected:
 		// A list of preloaded objects to increase creation time by a very large
 		// factor.

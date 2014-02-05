@@ -38,6 +38,10 @@ namespace Interfaces {
 
 		/// \brief Get the object which was clicked last.
 		const Core::Object* GetSelected() const	{ return m_selected; }
+
+		/// \brief Call this if mouse is scrolled. It will move the scrollbar
+		///		if the cursor is on this component.
+		void Scroll( int _delta );
 	protected:
 		tgui::EditBox::Ptr m_newName;
 		tgui::Button::Ptr m_newAdd;

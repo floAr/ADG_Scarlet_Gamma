@@ -288,6 +288,21 @@ namespace States {
 	}
 
 
+	void MasterState::MouseWheelMoved(sf::Event::MouseWheelEvent& wheel, bool guiHandled)
+	{
+		CommonState::MouseWheelMoved(wheel, guiHandled);
+
+		// Manually scroll panels (tgui::callback not provided for this action).
+		// The scroll call has an effect only if the mouse is on the respective
+		// element. So calling it for everybody is just fine.
+		m_propertyPanel->Scroll(wheel.delta);
+		m_modulePanel->Scroll(wheel.delta);
+		m_objectsPanel->Scroll(wheel.delta);
+		m_viewPanel->Scroll(wheel.delta);
+		m_selectionView->Scroll(wheel.delta);
+	}
+
+
 	void MasterState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 	{
 		// This should work ALWAYS, even if GUI is focused:

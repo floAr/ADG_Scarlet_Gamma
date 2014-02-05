@@ -79,6 +79,7 @@ void ObjectPanel::Init( float _x, float _y, float _w, float _h,
 		m_newName->setSize(w, 20.0f);
 		m_newName->setPosition(_x, _y+Panel::getSize().y+20.0f);
 		m_newName->setText(STR_EMPTY);
+		m_newName->bindCallbackEx(&ObjectPanel::AddBtn, this, tgui::EditBox::ReturnKeyPressed);
 		m_newAdd = tgui::Button::Ptr( *m_Parent );
 		m_newAdd->load("media/Black.conf");
 		m_newAdd->setPosition(_x+Panel::getSize().x - 40.0f, _y+Panel::getSize().y+20.0f);
@@ -97,7 +98,7 @@ void ObjectPanel::Add( ObjectID _object )
 
 	// Get the name of the object
 	Object* obj = g_Game->GetWorld()->GetObject(_object);
-	const std::string& name = obj->GetName();
+	std::string name = "     " + obj->GetName();
 	const std::string& sprite = obj->GetProperty(STR_PROP_SPRITE).Value();
 
 	// y coordinate where to insert inside panel
@@ -134,9 +135,7 @@ void ObjectPanel::Add( ObjectID _object )
 	nameEdit->setPosition(x, y);
 	nameEdit->setCallbackId(_object);
 	nameEdit->disable();
-	if( sprite.empty() )
-		nameEdit->setText(name);
-	else nameEdit->setText("     " + name);
+	nameEdit->setText(name);
 
 	// A preview of this sprite
 	if( !sprite.empty() )
@@ -195,6 +194,20 @@ void ObjectPanel::setPosition(float _x, float _y)
 		m_newName->setPosition(_x, _y + 20.0f + Panel::getSize().y);
 		m_newAdd->setPosition(_x + Panel::getSize().x - 40.0f,
 			_y + 20.0f + Panel::getSize().y);
+	}
+}
+
+
+void ObjectPanel::Scroll( int _delta )
+{
+	// Check if this component must react
+	sf::Vector2i mousePos = sf::Mouse::getPosition(g_Game->GetWindow());
+	if( mouseOnWidget((float)mousePos.x, (float)mousePos.y) )
+	{
+		int val = m_scrollBar->getValue() - 5 * _delta;
+		val = std::min( val, (int)m_scrollBar->getMaximum() );
+		val = std::max( val, (int)m_scrollBar->getMinimum() );
+		m_scrollBar->setValue( val );
 	}
 }
 

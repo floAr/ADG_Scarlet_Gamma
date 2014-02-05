@@ -14,6 +14,7 @@
 #include "events/InputHandler.hpp"
 #include "network/CombatMessages.hpp"
 #include "GameRules/MasterCombat.hpp"
+#include "states/PromptState.hpp"
 
 using namespace Core;
 
@@ -340,12 +341,16 @@ namespace States {
         case sf::Keyboard::Space:
             if (sf::Keyboard::isKeyPressed((sf::Keyboard::LControl)))
             {
-                m_combat = new GameRules::MasterCombat();
-                Network::CombatMsg(Network::CombatMsgType::DM_COMBAT_BEGIN).Send();
-            }
-            break;
-		}
+				m_combat = new GameRules::MasterCombat();
+				Network::CombatMsg(Network::CombatMsgType::DM_COMBAT_BEGIN).Send();
+			}
+			break;
 
+		case sf::Keyboard::T:
+			PromptState* gs = dynamic_cast<PromptState*>(g_Game->GetStateMachine()->PushGameState(GST_PROMPT));
+			gs->AddButton("testbutton",std::bind(&MasterState::TestButtonCallback,this,std::placeholders::_1));
+			break;
+		}
 		// Return if the GUI already handled it
 		if (guiHandled)
 			return;
@@ -448,6 +453,10 @@ namespace States {
 	{
 		MapID id = m_mapTool->GetSelectedMap();
 		return g_Game->GetWorld()->GetMap(id);
+	}
+
+	void States::MasterState::TestButtonCallback(std::string feedback){
+		std::cout<<feedback;
 	}
 
 }// namespace States

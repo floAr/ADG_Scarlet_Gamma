@@ -159,7 +159,7 @@ void States::PlayerState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 	case sf::Keyboard::Num7:
 	case sf::Keyboard::Num8:
 	case sf::Keyboard::Num9:
-		if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
+		if(sf::Keyboard::isKeyPressed(sf::Keyboard::LControl))
 			SetHotkeyToObject(key.code - sf::Keyboard::Num1,m_focus->ID());
 		else
 			SetViewToObject(key.code - sf::Keyboard::Num1);

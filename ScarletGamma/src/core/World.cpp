@@ -312,8 +312,10 @@ namespace Core {
 				// Test object if it has an owner and add it.
 				if( object->HasProperty( STR_PROP_OWNER ) )
 				{
-					Property& prop = object->GetProperty( STR_PROP_OWNER );
-					m_ownedObjects.push_back(object->ID());
+					if(object->HasProperty(STR_PROP_X)){ //a bit hacky to filter out non game object TODO improve
+						Property& prop = object->GetProperty( STR_PROP_OWNER );
+						m_ownedObjects.push_back(object->ID());
+					}
 				}
 	}
 

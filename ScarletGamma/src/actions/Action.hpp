@@ -56,8 +56,12 @@ namespace Actions
         virtual void HandleActionInfoResponse(uint8_t messageType, const std::string& message) {}
 
     protected:
-        /// \brief Do whatever the action does.
+        /// \brief Do whatever the action does at startup.
         virtual void Execute() = 0;
+
+		/// \brief Continue some active actions.
+		/// \return true if the action was performed and can be ended.
+		virtual bool Update() { return false; }
 
         /// \brief Create a copy of the action. Needs to AT LEAST copy the
         ///   Action ID, executor and target, action type, priority and cursor.

@@ -10,7 +10,7 @@ namespace Actions
 		friend class ActionPool;
 
 	public:
-		/// \brief Initialize an set jump point action.
+		/// \brief Set a target for the jump point.
 		virtual void Execute();
 
 	private:

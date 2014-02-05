@@ -66,6 +66,12 @@ namespace Actions
         void StartClientAction(Core::ActionID _id, Core::ObjectID _executor,
             Core::ObjectID _target, uint8_t _index);
 
+		/// \brief Call Update() for each active action.
+		/// \details Some actions are active for some time and require
+		///		continual check of the current task to be ready.
+		///		The local action is updated before the client actions
+		void UpdateExecution();
+
         /// \brief Ends a current action at the specified index
         void EndLocalAction();
 

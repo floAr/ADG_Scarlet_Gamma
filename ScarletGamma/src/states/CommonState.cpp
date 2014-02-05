@@ -63,6 +63,9 @@ void CommonState::Update( float dt )
 		newestLine->setSize(newestLine->getSize().x, newestLine->getSize().y+5.0f);
 		localOut->m_FullTextHeight += localOut->getLineAmount() == 1 ? 10.0f : 5.0f;
 	}
+
+	// Update continuous actions
+	Actions::ActionPool::Instance().UpdateExecution();
 }
 
 

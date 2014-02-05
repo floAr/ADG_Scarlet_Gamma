@@ -6,7 +6,6 @@
 #include "core/World.hpp"
 #include "core/PredefinedProperties.hpp"
 #include "core/Map.hpp"
-#include "actions/ActionPool.hpp"
 
 using namespace Actions;
 
@@ -20,7 +19,12 @@ WalkTo::WalkTo() : Action(STR_ACT_WALKTO, ActionType::MOVE_ACTION, 100, Game::MC
 
 void WalkTo::Execute()
 {
-    Core::Object* executor = g_Game->GetWorld()->GetObject(m_executor);
+	Perform(m_executor, m_target);
+}
+
+void WalkTo::Perform(Core::ObjectID _executor, Core::ObjectID _target)
+{
+    Core::Object* executor = g_Game->GetWorld()->GetObject(_executor);
     assert(executor);
 
     if (!executor->HasProperty(STR_PROP_TARGET))
@@ -34,13 +38,10 @@ void WalkTo::Execute()
     Core::Property& path = executor->GetProperty(STR_PROP_PATH);
     path.ClearObjects();
     path.SetValue(STR_FALSE);
-    executor->AppendToPath( m_target );
+    executor->AppendToPath( _target );
 
     // Reevaluate object to get it updated
-    g_Game->GetWorld()->GetMap(executor->GetParentMap())->ReevaluateActiveObject(m_executor);
-
-    // Action is done
-    Actions::ActionPool::Instance().EndLocalAction();
+    g_Game->GetWorld()->GetMap(executor->GetParentMap())->ReevaluateActiveObject(_executor);
 }
 
 Action* WalkTo::Clone(Core::ObjectID _executor, Core::ObjectID _target)

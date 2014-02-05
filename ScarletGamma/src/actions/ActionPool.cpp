@@ -14,7 +14,8 @@ using namespace Actions;
 // Initialize Singleton pointer
 ActionPool* ActionPool::m_instance = nullptr;
 
-ActionPool::ActionPool()
+ActionPool::ActionPool() : 
+	m_localAction(nullptr)
 {
     // Adding actions
     m_actions.push_back(new Attack());
@@ -30,6 +31,9 @@ ActionPool::ActionPool()
     {
         m_actions.at(id)->m_id = id;
     }
+
+	for( int i=0; i<24; ++i )
+		m_clientActions[i] = nullptr;
 }
 
 std::vector<Core::ActionID> ActionPool::GetAllowedActions(Core::ObjectList& _executors, Core::Object& object)
@@ -157,6 +161,9 @@ void ActionPool::StartLocalAction(Core::ActionID _id, Core::ObjectID _executor,
     // Create a copy of the action and return it
     if (toCopy)
     {
+		// The old action is stopped here
+		EndLocalAction();
+
         Action* newAction = toCopy->Clone(_executor, _target);
         m_localAction = newAction;
         newAction->Execute();
@@ -174,6 +181,24 @@ void ActionPool::StartClientAction(Core::ActionID id, Core::ObjectID _executor,
         Action* newAction = toCopy->Clone(_executor, target);
         m_clientActions[index] = newAction;
     }
+}
+
+void ActionPool::UpdateExecution()
+{
+	if( m_localAction )
+	{
+		if( m_localAction->Update() )
+			EndLocalAction();
+	}
+
+	for( int i=0; i<24; ++i )
+	{
+		if( m_clientActions[i] )
+		{
+			if( m_clientActions[i]->Update() )
+				EndClientAction(i);
+		}
+	}
 }
 
 void ActionPool::EndLocalAction()

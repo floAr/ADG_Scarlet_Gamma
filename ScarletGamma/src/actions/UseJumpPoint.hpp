@@ -10,8 +10,12 @@ namespace Actions
 		friend class ActionPool;
 
 	public:
-		/// \brief Initialize an set jump point action.
-		virtual void Execute();
+		/// \brief Perform a WalkTo if necessary and than jump.
+		virtual void Execute() override;
+
+		/// \brief Check if we are close enough to do the jump.
+		/// \details This ends the action.
+		virtual bool Update() override;
 
 	private:
 		/// \brief Clones an set jump point action.

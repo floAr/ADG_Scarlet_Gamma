@@ -2,6 +2,7 @@
 #include "Game.hpp"
 #include "core\World.hpp"
 #include "Constants.hpp"
+#include "actions/ActionPool.hpp"
 
 namespace Actions {
 

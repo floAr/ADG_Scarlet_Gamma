@@ -125,7 +125,7 @@ void PromptState::AddButton(const std::string _buttons,std::function<void(std::s
 	int bID=m_callbacks.size();
 	tgui::Button::Ptr button = m_defaultButton.clone();
 	m_gui.add(button);
-	button->setSize(50, 40);
+	//button->setSize(50, 40);
 	button->setText(_buttons);
 	button->setCallbackId(bID);
 	button->bindCallback(tgui::Button::LeftMouseClicked);

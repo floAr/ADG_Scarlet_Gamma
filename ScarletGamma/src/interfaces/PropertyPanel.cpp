@@ -323,7 +323,7 @@ void PropertyPanel::MiniMaxi()
 	// If it was the title bar toggle whole components on/of.
 	if( hide )
 	{
-		Panel::setSize(Panel::getSize().x, 20.0f );
+		if( m_autoSize ) Panel::setSize(Panel::getSize().x, 20.0f );
 		m_listContainer->hide();
 		if(m_newName != nullptr) m_newName->hide();
 		if(m_newValue != nullptr) m_newValue->hide();
@@ -340,7 +340,7 @@ void PropertyPanel::MiniMaxi()
 			m_titleBar->setText( STR_MULTISELECTION );
 		m_titleBar->disable();
 	} else {
-		Panel::setSize(Panel::getSize().x, float(m_numPixelLines+20) );
+		if( m_autoSize ) Panel::setSize(Panel::getSize().x, float(m_numPixelLines + (m_addAble ? 40.0f : 20.0f)) );
 		PropertyPanel* parent = nullptr;
 		if( m_Parent ) parent = dynamic_cast<PropertyPanel*>(m_Parent->getParent());
 		if( parent )

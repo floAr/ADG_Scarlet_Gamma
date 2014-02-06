@@ -12,13 +12,14 @@
 #include "states/StateMachine.hpp"
 
 
-States::PlayerState::PlayerState( const std::string& _playerName, const sf::Color& _chatColor ) :
+States::PlayerState::PlayerState( const std::string& _playerName, const sf::Color& _chatColor, Core::PlayerID _id ) :
 	m_player(nullptr),
 	m_playerView(nullptr),
 	m_focus(nullptr)
 {
 	m_color = _chatColor;
 	m_name = _playerName;
+	m_playerID = _id;
 
 	m_playerView = Interfaces::PropertyPanel::Ptr(m_gui);
 }
@@ -186,20 +187,19 @@ void States::PlayerState::OnBegin()
 	// TODO: if player does not exists create one!
 	m_player = g_Game->GetWorld()->FindPlayer( m_name );
 	assert( m_player );
-	Core::PlayerID id = m_player->GetProperty(STR_PROP_PLAYER).Evaluate();
+	m_player->GetProperty(STR_PROP_PLAYER).SetValue( std::to_string(m_playerID) );
 	// Use the players currently chosen color
 	m_player->SetColor( m_color );
-	m_player->GetProperty( STR_PROP_COLOR ).ApplyRights( 
-		id, true );
 
 	m_focus = m_player;
 
 	tgui::ChatBox::Ptr localOut = m_gui.get( "Messages" );
 	m_playerView->Init( 624.0f, 0.0f, 400.0f, localOut->getPosition().y, false, false,
-		id, nullptr );
+		m_playerID, nullptr );
 	m_playerView->Show( g_Game->GetWorld(), m_player );
 
-	this->AddToSelection(m_player->ID()); //autoselect the player
+	// Auto select the player (he is the actor)
+	this->AddToSelection(m_player->ID());
 }
 
 

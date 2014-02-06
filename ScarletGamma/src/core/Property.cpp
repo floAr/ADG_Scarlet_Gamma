@@ -7,6 +7,7 @@
 #include "Constants.hpp"
 #include "Game.hpp"
 #include <iostream>
+#include "World.hpp"
 
 using namespace std;
 
@@ -118,9 +119,17 @@ namespace Core {
 		{			// Check master flags
 			return (m_rights & 0x001) != 0;
 		} else {	// Check if player has rights and if so check flags
-			if( m_rights & (1 << (_player+8)) )
-				return (m_rights & 0x008) != 0;
-			else return (m_rights & 0x040) != 0;
+			try {
+				Object* parent = g_Game->GetWorld()->GetObject(m_parent);
+				Property& owner = parent->GetProperty( STR_PROP_OWNER );
+				Object* player = g_Game->GetWorld()->FindPlayer( _player );
+				if( player->GetProperty(STR_PROP_NAME).Value() == owner.Value() )
+					return (m_rights & 0x008) != 0;
+				else return (m_rights & 0x040) != 0;
+			} catch(...) {
+				// Standard rights
+				return (m_rights & 0x040) != 0;
+			}
 		}
 	}
 
@@ -130,9 +139,17 @@ namespace Core {
 		{			// Check master flags
 			return (m_rights & 0x2) != 0;
 		} else {	// Check if player has rights and if so check flags
-			if( m_rights & (1 << (_player+8)) )
-				return (m_rights & 0x010) != 0;
-			else return (m_rights & 0x080) != 0;
+			try {
+				Object* parent = g_Game->GetWorld()->GetObject(m_parent);
+				Property& owner = parent->GetProperty( STR_PROP_OWNER );
+				Object* player = g_Game->GetWorld()->FindPlayer( _player );
+				if( player->GetProperty(STR_PROP_NAME).Value() == owner.Value() )
+					return (m_rights & 0x010) != 0;
+				else return (m_rights & 0x080) != 0;
+			} catch(...) {
+				// Standard rights
+				return (m_rights & 0x080) != 0;
+			}
 		}
 	}
 
@@ -142,13 +159,21 @@ namespace Core {
 		{			// Check master flags
 			return (m_rights & 0x004) != 0;
 		} else {	// Check if player has rights and if so check flags
-			if( m_rights & (1 << (_player+8)) )
-				return (m_rights & 0x020) != 0;
-			else return (m_rights & 0x100) != 0;
+			try {
+				Object* parent = g_Game->GetWorld()->GetObject(m_parent);
+				Property& owner = parent->GetProperty( STR_PROP_OWNER );
+				Object* player = g_Game->GetWorld()->FindPlayer( _player );
+				if( player->GetProperty(STR_PROP_NAME).Value() == owner.Value() )
+					return (m_rights & 0x020) != 0;
+				else return (m_rights & 0x100) != 0;
+			} catch(...) {
+				// Standard rights
+				return (m_rights & 0x100) != 0;
+			}
 		}
 	}
 
-	void Property::ApplyRights( PlayerID _player, bool _hasAdvancedPlayer )
+	/*void Property::ApplyRights( PlayerID _player, bool _hasAdvancedPlayer )
 	{
 		// Set or delete the advanced flag for the player
 		uint32_t oldRights = m_rights;
@@ -159,7 +184,7 @@ namespace Core {
 		// Everybody has to know the property change.
 		if(oldRights != m_rights)
 			Network::MsgPropertyChanged( m_parent, this ).Send();
-	}
+	}*/
 
 	void Property::SetRights( Rights _newRights )
 	{
@@ -182,7 +207,7 @@ namespace Core {
 		for( uint64_t i=0; i<_node.Size(); ++i )
 		{
 			m_list.push_back( Property( _parent, _node[i] ) );
-			m_list.back().SetParent( _parent );
+			//m_list.back().SetParent( _parent );
 		}
 	}
 

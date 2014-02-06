@@ -75,9 +75,9 @@ namespace Core {
 		// Serialize old one and deserialize to new one
 		Jo::Files::MetaFileWrapper wrapper;
 		_object->Serialize( wrapper.RootNode );
-		Object newObj( wrapper.RootNode );
 		// The copy has a wrong id - give it a new one
-		newObj.m_id = m_nextFreeObjectID++;
+		wrapper.RootNode[STR_ID] =  m_nextFreeObjectID++;
+		Object newObj( wrapper.RootNode );
 
 		// Deep clone
 		for( int i=0; i<newObj.GetNumElements(); ++i )
@@ -283,7 +283,8 @@ namespace Core {
 		return id;
 	}
 
-	Object* World::GetNextObservableObject(ObjectID currentID){
+	Object* World::GetNextObservableObject(ObjectID _currentID)
+	{
 		ObjectID result=-1;
 		bool pickNext=false;
 		for( auto it = m_ownedObjects.begin(); it != m_ownedObjects.end(); ++it )
@@ -296,27 +297,46 @@ namespace Core {
 			}
 			if(result==-1)//always select the first element, to loop through the list
 				result = id;
-			if(id == currentID) //we are at the current id
+			if(id == _currentID) //we are at the current id
 				pickNext=true;
 		}
 		return this->GetObject(result);
 	}
 
-	void World::RegisterObject(Object* object){
+	void World::RegisterObject(Object* _object)
+	{
 		// Test object if it is a player and add it.
-				if( object->HasProperty( STR_PROP_PLAYER ) )
-				{
-					Property& prop = object->GetProperty( STR_PROP_NAME );
-					m_players[prop.Value()] = object->ID();
-				}
-				// Test object if it has an owner and add it.
-				if( object->HasProperty( STR_PROP_OWNER ) )
-				{
-					if(object->IsLocatedOnAMap()){ //checks if we are dealing with an actual object
-						Property& prop = object->GetProperty( STR_PROP_OWNER );
-						m_ownedObjects.push_back(object->ID());
-					}
-				}
+		if( _object->HasProperty( STR_PROP_PLAYER ) )
+		{
+			Property& prop = _object->GetProperty( STR_PROP_NAME );
+			m_players[prop.Value()] = _object->ID();
+		}
+		// Test object if it has an owner and add it.
+		if( _object->HasProperty( STR_PROP_OWNER ) )
+		{
+			if(_object->IsLocatedOnAMap()){ //checks if we are dealing with an actual object
+				Property& prop = _object->GetProperty( STR_PROP_OWNER );
+				m_ownedObjects.push_back(_object->ID());
+			}
+		}
+	}
+
+	void World::UnregisterObject(ObjectID _object)
+	{
+		// Search in owned list to delete it
+		for( size_t i=0; i<m_ownedObjects.size(); ++i )
+		{
+			if( m_ownedObjects[i] == _object )
+			{
+				// Remove by exchanging the element
+				m_ownedObjects[i] = m_ownedObjects[m_ownedObjects.size()-1];
+				m_ownedObjects.pop_back();
+				--i;
+			}
+		}
+
+		// Remove from player map
+		m_players.erase( GetObject(_object)->GetProperty(STR_PROP_NAME).Value() );
 	}
 
 

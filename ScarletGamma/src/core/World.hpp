@@ -96,12 +96,16 @@ namespace Core {
 		ObjectID NewObjectTemplate( const std::string& _sprite );
 
 		/// \brief Returns the next observable object
-		/// \param [in] ObjectID of the object currently watched
-		Object* GetNextObservableObject(ObjectID currentID);
+		/// \param [in] _currentID ObjectID of the object currently watched
+		Object* GetNextObservableObject(ObjectID _currentID);
 
 		/// \brief Registers an object in the corresponding list (currently player and owner)
-		/// \param [in] Object to be registered
-		void RegisterObject(Object* object);
+		/// \param [in] _object Object to be registered
+		void RegisterObject(Object* _object);
+
+		/// \brief Remove an object from all lists
+		/// \param [in] _object ID of the object which should be checked.
+		void UnregisterObject(ObjectID _object);
     private:
         /// \brief All real existing objects.
         std::unordered_map<ObjectID, Object> m_objects;

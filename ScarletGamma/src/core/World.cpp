@@ -75,9 +75,9 @@ namespace Core {
 		// Serialize old one and deserialize to new one
 		Jo::Files::MetaFileWrapper wrapper;
 		_object->Serialize( wrapper.RootNode );
-		Object newObj( wrapper.RootNode );
 		// The copy has a wrong id - give it a new one
-		newObj.m_id = m_nextFreeObjectID++;
+		wrapper.RootNode[STR_ID] =  m_nextFreeObjectID++;
+		Object newObj( wrapper.RootNode );
 
 		// Deep clone
 		for( int i=0; i<newObj.GetNumElements(); ++i )

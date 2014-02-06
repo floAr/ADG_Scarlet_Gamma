@@ -189,8 +189,6 @@ void States::PlayerState::OnBegin()
 	Core::PlayerID id = m_player->GetProperty(STR_PROP_PLAYER).Evaluate();
 	// Use the players currently chosen color
 	m_player->SetColor( m_color );
-	m_player->GetProperty( STR_PROP_COLOR ).ApplyRights( 
-		id, true );
 
 	m_focus = m_player;
 

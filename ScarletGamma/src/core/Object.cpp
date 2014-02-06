@@ -64,26 +64,8 @@ namespace Core {
 		Property* prop = Get(_name);
 		if( !prop ) throw Exception::NoSuchProperty();
 
-		// Check if the map must be updated
-		if( Utils::IStringEqual( _name, STR_PROP_X ) || Utils::IStringEqual( _name, STR_PROP_Y ) )
-		{
-			// Do a lot of things to make sure the map is valid.
-			assert( IsLocatedOnAMap() );
-			Core::Map* map = g_Game->GetWorld()->GetMap( GetParentMap() );
-			sf::Vector2i oldCell = sfUtils::Round( GetPosition() );
-			prop->SetValue( _value );
-			sf::Vector2f newPosition = GetPosition();
-			sf::Vector2i newCell = sfUtils::Round( newPosition );
-			map->ResetGridPosition( ID(), oldCell, newCell );
-
-			// Setting positions of active objects confuses them
-			if( HasProperty(STR_PROP_TARGET) )
-			{
-				prop = Get(STR_PROP_TARGET);
-				prop->SetValue( sfUtils::to_string(newPosition) );
-				Remove(STR_PROP_PATH);
-			}
-		} else
+		// Only update if no special case
+		if( OnPropertyChanged( _name, _value ) )
 			// The property self is always set.
 			prop->SetValue( _value );
 
@@ -163,6 +145,63 @@ namespace Core {
 	bool Object::IsLocatedOnAMap() const
 	{
 		return m_hasParent && HasProperty(STR_PROP_X);
+	}
+
+
+	void Object::OnPropertyAdd( const std::string& _name )
+	{
+		if( Utils::IStringEqual( _name, STR_PROP_OWNER ) ||
+			Utils::IStringEqual( _name, STR_PROP_PLAYER ) )
+		{
+			// Register in the list
+			if( g_Game )
+				g_Game->GetWorld()->RegisterObject(this);
+		}
+	}
+
+	bool Object::OnPropertyChanged( const std::string& _name, const std::string& _newValue )
+	{
+		// Check if the map must be updated
+		if( Utils::IStringEqual( _name, STR_PROP_X ) || Utils::IStringEqual( _name, STR_PROP_Y ) )
+		{
+			Property* prop = Get(_name);
+			// Do a lot of things to make sure the map is valid.
+			assert( IsLocatedOnAMap() );
+			Core::Map* map = g_Game->GetWorld()->GetMap( GetParentMap() );
+			sf::Vector2i oldCell = sfUtils::Round( GetPosition() );
+			prop->SetValue( _newValue );
+			sf::Vector2f newPosition = GetPosition();
+			sf::Vector2i newCell = sfUtils::Round( newPosition );
+			map->ResetGridPosition( ID(), oldCell, newCell );
+
+			// Setting positions of active objects confuses them
+			if( HasProperty(STR_PROP_TARGET) )
+			{
+				prop = Get(STR_PROP_TARGET);
+				prop->SetValue( sfUtils::to_string(newPosition) );
+				prop = Get(STR_PROP_PATH);
+				prop->SetValue(STR_FALSE);
+				prop->ClearObjects();
+			}
+			return false;
+		}
+
+		return true;
+	}
+
+	void Object::OnPropertyRemove( const std::string& _name )
+	{
+		if( Utils::IStringEqual( _name, STR_PROP_OWNER ) ||
+			Utils::IStringEqual( _name, STR_PROP_PLAYER ) )
+		{
+			if( g_Game )
+			{
+				// Remove from global list
+				g_Game->GetWorld()->UnregisterObject(m_id);
+				// Re-Add in the lists which are not the Owner-List (e.g. Player)
+				g_Game->GetWorld()->RegisterObject(this);
+			}
+		}
 	}
 
 } // namespace Core

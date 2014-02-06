@@ -71,12 +71,14 @@ public:
 		R_V00000000 = 0x001,	///< Master: See
 		R_VC0000000 = 0x003,	///< Master: See, Change
 		R_VCE000000 = 0x007,	///< Master: See, Change, Edit
-		R_V00V00000 = 0x009,	///< Master: See; APlayer: See
+		R_V00V00000 = 0x009,	///< Master: See; Owner: See
 		R_V00V00V00 = 0x049,	///< Everybody: See
 		R_V0E000000 = 0x005,	///< Master: See, Edit
-		R_VCEV00000 = 0x00f,	///< Master: See, Change, Edit; APlayer: See
-		R_V0EV00V00 = 0x04d,	///< Master: See, Edit; APlayer: See; Player: See
-		R_VCEV0EV00 = 0x06f,	///< Master: See, Change, Edit; APlayer: See, Edit; Player: See
+		R_V0EV00000 = 0x00d,	///< Master: See, Edit; Owner: See
+		R_VCEV00000 = 0x00f,	///< Master: See, Change, Edit; Owner: See
+		R_VCEV0E000 = 0x02f,	///< Master: See, Change, Edit; Owner: See, Edit
+		R_V0EV00V00 = 0x04d,	///< Master: See, Edit; Owner: See; Player: See
+		R_VCEV0EV00 = 0x06f,	///< Master: See, Change, Edit; Owner: See, Edit; Player: See
 		R_V0EV0EV0E = 0x16d,	///< Everybody: See, Edit
 		R_VCEV0EV0E = 0x16f,	///< Master: Change; Everybody: See, Edit
 		R_VCEVCEVCE = 0x1ff		///< Full rights for all
@@ -90,7 +92,7 @@ public:
 	bool CanEdit( PlayerID _player ) const;
 
 	/// \brief Sets if the player have no rights or player rights
-	void ApplyRights( PlayerID _player, bool _hasAdvancedPlayer );
+	//void ApplyRights( PlayerID _player, bool _hasAdvancedPlayer );
 
 	/// \brief Resets the 9 rights flags but keep player levels.
 	void SetRights( Rights _newRights );

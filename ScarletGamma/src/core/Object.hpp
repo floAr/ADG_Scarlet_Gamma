@@ -29,7 +29,10 @@ public:
 	/// \brief Adds a copy of a property to the end of this list.
 	/// \param [in] _property Some property object from another list or a new one.
 	/// \return An editable reference to the property inside the object
-	Property& Add( const Property& _property )	{ return Add(_property, m_id); }
+	Property& Add( const Property& _property )	{ Property& ref = Add(_property, m_id); OnPropertyAdd(ref.Name()); return ref; }
+
+	/// \brief Remove a property from this object.
+	void Remove( const std::string& _name )		{ PropertyList::Remove(_name); OnPropertyRemove(_name); }
 
 	/// \brief A saver variant to change object properties. If something depends
 	///		on the change it is modified too.
@@ -80,6 +83,7 @@ private:
 	PropertyList::Clear;
 	PropertyList::Get;
 	PropertyList::Add;
+	PropertyList::Remove;
 
 	ObjectID m_id;	///< Unique identification number for this object.
 
@@ -103,6 +107,17 @@ private:
 	/// \brief Deserialize an object.
 	/// \param [in] _node A serialized object node.
 	Object(const Jo::Files::MetaFileWrapper::Node& _node);
+
+	/// \brief This methods get called if a property is edited
+	///		and handles special cases.
+	///	\return false if the change should not happen.
+	bool OnPropertyChanged( const std::string& _name, const std::string& _newValue );
+
+	/// \brief Called after adding to do special work.
+	void OnPropertyAdd( const std::string& _name );
+
+	/// \brief Called after deleting to do special work.
+	void OnPropertyRemove( const std::string& _name );
 };
 
 

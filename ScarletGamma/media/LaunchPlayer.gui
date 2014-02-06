@@ -68,7 +68,7 @@ Window:
 		Width = 400
 		Height = 40
 		Visible = true
-		Enabled = false
+		Enabled = true
 		Transparency = 255
 		CallbackId = 0
 		Text = "ICH"

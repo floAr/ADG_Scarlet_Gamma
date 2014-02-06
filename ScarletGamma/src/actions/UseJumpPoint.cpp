@@ -44,9 +44,10 @@ namespace Actions {
 			{
 				Core::Property& prop = execObj->GetProperty(STR_PROP_TARGET);
 				prop.SetValue( sfUtils::to_string(targetObj->GetPosition()) );
-				execObj->Remove(STR_PROP_PATH);
+				Core::Property& path = execObj->GetProperty(STR_PROP_PATH);
+				path.ClearObjects();
+				path.SetValue( STR_FALSE );
 			}
-
 
 			// This action is finished
 			return true;

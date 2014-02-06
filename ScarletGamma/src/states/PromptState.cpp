@@ -67,8 +67,10 @@ void PromptState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 		}
 		else
 		{
-			m_result = m_editBox->getText();
-			m_finished = true;
+			if(m_callbacks.size()==0){//Only finish on enter when there is no button 
+				m_result = m_editBox->getText();
+				m_finished = true;
+			}
 		}
 		break;
 
@@ -111,6 +113,14 @@ const std::string& PromptState::GetResult()
 }
 
 
+void PromptState::ConfigurePromp(const std::string _message,const bool _textInputRequired){
+	if(!_textInputRequired)
+		m_editBox->hide();
+	tgui::Label::Ptr message = m_gui.get("Message");
+	message->setText(_message);
+
+}
+
 void PromptState::AddButton(const std::string _buttons,std::function<void(std::string)> _callback){
 	int bID=m_callbacks.size();
 	tgui::Button::Ptr button = m_defaultButton.clone();
@@ -127,8 +137,16 @@ void PromptState::GuiCallback(tgui::Callback&  args){
 	if(!m_callbacks.count(args.id))//no callback
 		return;
 	auto cb=(m_callbacks[args.id]);
-	cb(m_editBox->getText());
+	if(m_editBox->isVisible()){
+		m_result=m_editBox->getText();
+		cb(m_result);
 
-//	callback=(void*)m_callbacks[args.id];
+	}
+	else{
+		m_result="";
+		cb("");
+	}
+	m_finished=true;
+	//	callback=(void*)m_callbacks[args.id];
 
 }

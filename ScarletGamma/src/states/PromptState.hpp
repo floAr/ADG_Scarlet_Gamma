@@ -36,7 +36,6 @@ namespace States
         tgui::EditBox::Ptr m_editBox;
         std::string m_result;
         sf::Shader m_shader;
-		// void (*callback)(void *);
 		
 		std::unordered_map<int,std::function<void(std::string)>> m_callbacks;
     };

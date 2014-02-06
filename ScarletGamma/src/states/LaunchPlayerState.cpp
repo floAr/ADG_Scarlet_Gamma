@@ -74,8 +74,14 @@ void States::LaunchPlayerState::GuiCallback(tgui::Callback& callback)
 			sf::IpAddress adress(ipEdit->getText());
 			Network::Messenger::Initialize(&adress);
 
+			// The first packet contains the connection id
+			auto mySocket = Network::Messenger::GetSocket(0);
+			sf::Packet packet;	Core::PlayerID id;
+			mySocket->receive( packet );
+			packet >> id;
+
 			// Then the player mode can be created
-			g_Game->GetStateMachine()->PushGameState(new PlayerState(nameEdit->getText(), chatColor));
+			g_Game->GetStateMachine()->PushGameState(new PlayerState(nameEdit->getText(), chatColor, id));
 		} catch(std::string _msg) {
 			status->setTextColor( sf::Color(255, 55, 25, 255) );
 			status->setText(_msg);

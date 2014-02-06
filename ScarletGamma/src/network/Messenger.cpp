@@ -118,6 +118,12 @@ namespace Network {
 	void Messenger::AddClient( sf::TcpSocket* _newClient )
 	{
 		m_sockets.push_back( _newClient );
+
+		// Send the id to which the player is connected (it is used as PlayerID)
+		sf::Packet packet;
+		packet << (Core::PlayerID)m_sockets.size();
+		_newClient->send( packet );
+
 		// Sent whole world (in its latest state)
 		MsgLoadWorld( g_Game->GetWorld(), _newClient ).Send();
 	}

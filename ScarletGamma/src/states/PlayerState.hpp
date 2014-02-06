@@ -10,7 +10,7 @@ namespace States
 	class PlayerState : public CommonState
 	{
 	public:
-		PlayerState( const std::string& _playerName, const sf::Color& _chatColor);
+		PlayerState( const std::string& _playerName, const sf::Color& _chatColor, Core::PlayerID _id );
 		virtual void OnBegin() override;
 		virtual void Draw(sf::RenderWindow& win) override;
 		virtual void MouseMoved(int deltaX, int deltaY, bool guiHandled) override;
@@ -26,6 +26,7 @@ namespace States
 		virtual void Update( float _dt ) override;
 
 	private:
+		Core::PlayerID m_playerID;							///< The players id (set by socket index)
 		Core::Object* m_player;								///< The one and only player object
 		Core::Object* m_focus;								///< The camera is tracking this object
 		std::unordered_map<int,Core::ObjectID> m_hotkeys;	///< Defined hotkeys of this client //TODO: maybe save hotkeys as properties

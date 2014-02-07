@@ -121,11 +121,11 @@ void PromptState::ConfigurePromp(const std::string _message,const bool _textInpu
 
 }
 
-void PromptState::AddButton(const std::string _buttons,std::function<void(std::string)> _callback){
+void PromptState::AddButton(const std::string _buttons,std::function<void(std::string)> _callback,const sf::Vector2f _position){
 	int bID=m_callbacks.size();
 	tgui::Button::Ptr button = m_defaultButton.clone();
 	m_gui.add(button);
-	//button->setSize(50, 40);
+	button->setPosition(_position);
 	button->setText(_buttons);
 	button->setCallbackId(bID);
 	button->bindCallback(tgui::Button::LeftMouseClicked);

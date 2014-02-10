@@ -59,7 +59,8 @@ namespace States {
 		m_toolbar->Init( 480.0f, 0.0f, 544.0f, 100.0f );
 		m_toolbar->AddToolbox( m_mapTool );
 		m_toolbar->AddToolbox( m_modeTool );
-		m_toolbar->AddToolbox( Interfaces::PlayersToolbox::Ptr() );
+		m_toolbar->AddToolbox( m_playerTool );
+		m_playerTool->SetDragNDropHandler( &m_draggedContent );
 		m_toolbar->AddToolbox( Interfaces::NPCToolbox::Ptr() );
 
 		// Set chat color...
@@ -254,20 +255,30 @@ namespace States {
 			{
 				// Just ignore things dragged to the property list
 			} else {	// Things were dragged to the map.
-				if( m_draggedContent->from == Interfaces::DragContent::OBJECT_PANEL )
+				if( !GetCurrentMap() )
 				{
-					if( !GetCurrentMap() )
+					Network::ChatMsg(STR_MSG_CREATE_MAP_FIRST, sf::Color::Red).Send();
+				} else {
+					int x = (int)floor(tilePos.x);
+					int y = (int)floor(tilePos.y);
+					if( m_draggedContent->from == Interfaces::DragContent::OBJECT_PANEL )
 					{
-						Network::ChatMsg(STR_MSG_CREATE_MAP_FIRST, sf::Color::Red).Send();
-					} else {
 						// Insert object copy to the map
 						ObjectID id = g_Game->GetWorld()->NewObject( m_draggedContent->object );
 
-						int x = (int)floor(tilePos.x);
-						int y = (int)floor(tilePos.y);
 						// Meaningful layer: on top
 						int l = GetCurrentMap()->GetObjectsAt(x,y).Size();
 						GetCurrentMap()->Add( id, x, y, l );
+					} else if( m_draggedContent->from == Interfaces::DragContent::PLAYERS_LIST )
+					{
+						// Insert original to the map (player layer)
+						if( !m_draggedContent->object->IsLocatedOnAMap() )
+							GetCurrentMap()->Add( m_draggedContent->object->ID(), x, y, 5 );
+						else {
+							Object* object = const_cast<Object*>(m_draggedContent->object);
+							GetCurrentMap()->SetObjectPosition( object, tilePos );
+							object->ResetTarget();
+						}
 					}
 				}
 			}

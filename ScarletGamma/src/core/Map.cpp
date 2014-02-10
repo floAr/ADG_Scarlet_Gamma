@@ -412,7 +412,7 @@ namespace Core {
 		} catch(...) {
 			// Should never happen - but stable is stable
 			_object->Add( PROPERTY::X ).SetValue( to_string(_position.x) );
-			_object->Add( PROPERTY::X ).SetValue( to_string(_position.y) );
+			_object->Add( PROPERTY::Y ).SetValue( to_string(_position.y) );
 		}
 		// Update cells
 		sf::Vector2i newCell(sfUtils::Round(_position));
@@ -424,9 +424,12 @@ namespace Core {
 
 	void Map::ResetGridPosition( ObjectID _object, const sf::Vector2i& _oldCell, const sf::Vector2i& _newCell )
 	{
+		Object* object = m_parentWorld->GetObject( _object );
 		if( _oldCell != _newCell )
 		{
-			GetObjectsAt(_oldCell.x, _oldCell.y).Remove(_object);
+			Map* from = m_parentWorld->GetMap( object->GetParentMap() );
+			if( from )
+				from->GetObjectsAt(_oldCell.x, _oldCell.y).Remove(_object);
 			GetObjectsAt(_newCell.x, _newCell.y).Add(_object);
 		}
 	}

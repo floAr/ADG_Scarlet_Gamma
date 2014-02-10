@@ -13,7 +13,8 @@ namespace Interfaces {
 		enum Sources {
 			PROPERTY_PANEL,
 			MODULES_PANEL,
-			OBJECT_PANEL
+			OBJECT_PANEL,
+			PLAYERS_LIST
 		};
 
 		Sources from;				///< How filled that object?

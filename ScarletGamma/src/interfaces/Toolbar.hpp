@@ -3,6 +3,7 @@
 #include <TGUI/TGUI.hpp>
 #include "Prerequisites.hpp"
 #include "tools/brush.hpp"
+#include "DragNDrop.hpp"
 
 namespace Interfaces {
 
@@ -60,6 +61,9 @@ namespace Interfaces {
 		///		until this element has a true parent. That why Init
 		///		is required and elements can not be constructed in Ctor.
 		virtual void Init() = 0;
+
+		/// \brief Continuously update of the box which implements this function
+		virtual void Update( float _dt ) {}
 
 		virtual void unfocus() override;
 	};
@@ -152,6 +156,17 @@ namespace Interfaces {
 		PlayersToolbox();
 
 		virtual void Init() override;
+
+		void SetDragNDropHandler( DragContent** _dragNDropHandler )	{ m_dragNDropHandler = _dragNDropHandler; }
+
+		/// \brief Refresh the list if new players are added or a player died
+		virtual void Update( float _dt ) override;
+	private:
+		float m_lastUpdate;					///< Counter to avoid to many updates
+		tgui::ListBox::Ptr m_playerList;	///< List of players
+		DragContent** m_dragNDropHandler;	///< Access to the global drag&drop handler
+
+		void DragPlayer(const tgui::Callback& _caller);
 	};
 
 	/// \brief Toolbox for map selection and creation.

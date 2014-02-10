@@ -144,3 +144,5 @@ static const std::string STR_LAYER8 = std::string("9: Eigenes I");
 static const std::string STR_LAYER9 = std::string("0: Eigenes II");
 static const std::string STR_ONTOP = std::string("Obenauf");
 static const std::string STR_SELECTION = std::string("Selektion");
+static const std::string STR_CREATE = std::string("Erstellen");
+static const std::string STR_CANCEL = std::string("Abbrechen");

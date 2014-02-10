@@ -6,10 +6,15 @@
 #include "utils/Content.hpp"
 #include "SFML/Network/IpAddress.hpp"
 #include "Constants.hpp"
+#include "core/PredefinedProperties.hpp"
+#include "core/World.hpp"
 
-States::NewPlayerState::NewPlayerState(tgui::EditBox::Ptr _nameEdit) :
+namespace States {
+
+NewPlayerState::NewPlayerState(tgui::EditBox::Ptr _nameEdit) :
     GameState(),
-	m_nameOutputEdit(_nameEdit)
+	m_nameOutputEdit(_nameEdit),
+	m_name(nullptr)
 {
 	m_menuFont = Content::Instance()->LoadFont("media/arial.ttf");
 
@@ -29,11 +34,11 @@ States::NewPlayerState::NewPlayerState(tgui::EditBox::Ptr _nameEdit) :
 	label->setTextSize( 19 );
 	label->setSize( 90.0f, 30.0f );
 	label->setTextColor( sf::Color( 200, 200, 200 ) );
-	tgui::EditBox::Ptr eName( m_gui );
-	eName->load("media/Black.conf");
-	eName->setText("");
-	eName->setPosition( 120.0f, 30.0f );
-	eName->setSize( 200.0f, 30.0f );
+	m_name = tgui::EditBox::Ptr( m_gui );
+	m_name->load("media/Black.conf");
+	m_name->setText("");
+	m_name->setPosition( 120.0f, 30.0f );
+	m_name->setSize( 200.0f, 30.0f );
 	// Attitude
 	label = label.clone();		m_gui.add(label);
 	label->setPosition( 360.0f, 35.0f );
@@ -56,26 +61,26 @@ States::NewPlayerState::NewPlayerState(tgui::EditBox::Ptr _nameEdit) :
 	label = label.clone();							m_gui.add(label);
 	label->setPosition( 700.0f, 35.0f );
 	label->setText( STR_PROP_FAITH );
-	tgui::EditBox::Ptr eFaith = eName.clone();		m_gui.add(eFaith);
+	tgui::EditBox::Ptr eFaith = m_name.clone();		m_gui.add(eFaith);
 	eFaith->setPosition( 800.0f, 30.0f );
 
 	// Enter class
 	label = label.clone();							m_gui.add(label);
 	label->setPosition( 20.0f, 75.0f );
 	label->setText( STR_PROP_CLASS );
-	tgui::EditBox::Ptr eClass = eName.clone();		m_gui.add(eClass);
+	tgui::EditBox::Ptr eClass = m_name.clone();		m_gui.add(eClass);
 	eClass->setPosition( 120.0f, 70.0f );
 	// Folk
 	label = label.clone();							m_gui.add(label);
 	label->setPosition( 360.0f, 75.0f );
 	label->setText( STR_PROP_FOLK );
-	tgui::EditBox::Ptr eFolk = eName.clone();		m_gui.add(eFolk);
+	tgui::EditBox::Ptr eFolk = m_name.clone();		m_gui.add(eFolk);
 	eFolk->setPosition( 460.0f, 70.0f );
 	// Home
 	label = label.clone();							m_gui.add(label);
 	label->setPosition( 700.0f, 75.0f );
 	label->setText( STR_PROP_HOME );
-	tgui::EditBox::Ptr eHome = eName.clone();		m_gui.add(eHome);
+	tgui::EditBox::Ptr eHome = m_name.clone();		m_gui.add(eHome);
 	eHome->setPosition( 800.0f, 70.0f );
 
 	// Size
@@ -83,7 +88,7 @@ States::NewPlayerState::NewPlayerState(tgui::EditBox::Ptr _nameEdit) :
 	label->setPosition( 20.0f, 118.0f );
 	label->setText( STR_PROP_SIZE );
 	label->setTextSize( 16 );
-	tgui::EditBox::Ptr eSize = eName.clone();		m_gui.add(eSize);
+	tgui::EditBox::Ptr eSize = m_name.clone();		m_gui.add(eSize);
 	eSize->setPosition( 75.0f, 110.0f );
 	eSize->setSize( 80.0f, 30.0f );
 	// Age
@@ -121,12 +126,30 @@ States::NewPlayerState::NewPlayerState(tgui::EditBox::Ptr _nameEdit) :
 	label->setText( STR_PROP_EYECOLOR );
 	tgui::EditBox::Ptr eEye = eSize.clone();		m_gui.add(eEye);
 	eEye->setPosition( 920.0f, 110.0f );
+
+	// Create and Cancel
+	tgui::Button::Ptr button( m_gui );
+	button->load("media/Black.conf");
+	button->setText( STR_CANCEL );
+	button->setPosition( 500.0f, 700.0f );
+	button->setSize( 200.0f, 40.0f );
+	button->setTextSize( 26 );
+	button->setCallbackId( 1 );
+	button->bindCallback( &NewPlayerState::Cancel, this, tgui::Button::LeftMouseClicked );
+	button = tgui::Button::Ptr( m_gui );
+	button->load("media/Black.conf");
+	button->setText( STR_CREATE );
+	button->setPosition( 740.0f, 700.0f );
+	button->setSize( 200.0f, 40.0f );
+	button->setTextSize( 26 );
+	button->setCallbackId( 2 );
+	button->bindCallback( &NewPlayerState::Create, this, tgui::Button::LeftMouseClicked );
 }
 
 
 
 
-void States::NewPlayerState::Draw(sf::RenderWindow& win)
+void NewPlayerState::Draw(sf::RenderWindow& win)
 {
     // Set window color according to mouse position...
     win.clear(sf::Color::Black);
@@ -134,7 +157,7 @@ void States::NewPlayerState::Draw(sf::RenderWindow& win)
 	GameState::Draw(win);
 }
 
-void States::NewPlayerState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
+void NewPlayerState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 {
     switch (key.code)
     {
@@ -146,13 +169,26 @@ void States::NewPlayerState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandle
 }
 
 
-void States::NewPlayerState::GuiCallback(tgui::Callback& callback)
+void NewPlayerState::Cancel()
 {
-	switch (callback.id)
-	{
-	case 1: m_finished = true; break;
-	default:
-		// No such GUI element!
-		assert(false);
-	}
+	m_finished = true;
 }
+
+
+void NewPlayerState::Create()
+{
+	// Create a new player object
+	Core::ObjectID objID = g_Game->GetWorld()->NewObject("media/smile_2.png");
+	Core::Object* obj = g_Game->GetWorld()->GetObject(objID);
+	obj->Add( Core::PROPERTY::NAME ).SetValue( m_name->getText() );
+	obj->Add( Core::PROPERTY::OWNER ).SetValue( m_name->getText() );
+	obj->Add( Core::PROPERTY::PLAYER );
+
+	// The object will be added to the player list (because it has the player property
+	g_Game->GetWorld()->RegisterObject( obj );
+	m_nameOutputEdit->setText( m_name->getText() );
+
+	m_finished = true;
+}
+
+} // namespace States

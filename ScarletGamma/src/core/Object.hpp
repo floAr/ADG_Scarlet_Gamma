@@ -78,6 +78,9 @@ public:
 	bool IsLocatedOnAMap() const;
 	MapID GetParentMap() const		{ return m_parent.map; }
 	void SetParentMap(MapID _map)	{ m_parent.map = _map; m_hasParent = true; }
+
+	/// \brief Clear the path and target of active objects.
+	void ResetTarget();
 private:
 	// Hide some of the methods
 	PropertyList::Clear;

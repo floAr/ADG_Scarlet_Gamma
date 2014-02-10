@@ -70,12 +70,7 @@ namespace States {
 		sf::Vector2u size = g_Game->GetWindow().getSize();
 		Resize( sf::Vector2f( (float) size.x, (float) size.y ) );
 
-		//set up m_hiddenLayers for 10 layers
-		/*int l;
-		for(l=0;l<10;l++)
-		{
-			m_hiddenLayers.push_back(0);
-		}*/
+		m_rectSelection=false;
 	}
 
 	void MasterState::Update(float dt)
@@ -141,6 +136,35 @@ namespace States {
 			sf::Vector2i mousePos = Events::InputHandler::GetMouseTilePosition();
 			Graphics::TileRenderer::RenderRect( win, sf::Vector2i(mousePos.x-r0, mousePos.y-r0), sf::Vector2i(mousePos.x+r1, mousePos.y+r1) );
 		}
+
+		// Show the brush region
+		if( m_modeTool->GetMode() == Interfaces::ModeToolbox::SELECTION&&m_rectSelection )
+		{
+			sf::Vector2i mousePos = Events::InputHandler::GetMouseTilePosition();
+			int sX,sY,minX,minY,maxX,maxY;
+			if(mousePos.x<m_rectSelectionStart.x)
+			{
+				minX = (int)mousePos.x;
+				maxX = (int)m_rectSelectionStart.x;
+			}
+			else
+			{
+				maxX = (int)mousePos.x;
+				minX = (int)m_rectSelectionStart.x;
+			}
+			if(mousePos.y<m_rectSelectionStart.y)
+			{
+				minY = (int)mousePos.y;
+				maxY = (int)m_rectSelectionStart.y;
+			}
+			else
+			{
+				maxY = (int)mousePos.y;
+				minY = (int)m_rectSelectionStart.y;
+			}
+			Graphics::TileRenderer::RenderRect( win, sf::Vector2i(minX,minY), sf::Vector2i(maxX,maxY) );
+		}
+
 
 		GameState::Draw(win);
 	}
@@ -225,7 +249,7 @@ namespace States {
 				m_modulePanel->HandleDropEvent();
 			} else if( m_viewPanel->mouseOnWidget( (float)button.x, (float)button.y ) )
 			{
-			//	m_viewPanel->HandleDropEvent();
+				//	m_viewPanel->HandleDropEvent();
 			} else if( m_propertyPanel->mouseOnWidget( (float)button.x, (float)button.y ) )
 			{
 				// Just ignore things dragged to the property list
@@ -274,12 +298,19 @@ namespace States {
 				maxY = (int)tilePos.y;
 				minY = (int)m_rectSelectionStart.y;
 			}
-			SelectionState* gs = dynamic_cast<SelectionState*>(g_Game->GetStateMachine()->PushGameState(GST_SELECTION));
+			if(!sf::Keyboard::isKeyPressed(sf::Keyboard::LControl))//if not pressing cntrl -> clear selection
+				m_selection.Clear();
 			for(sX = minX; sX < maxX; sX++)
 			{
 				for(sY = minY; sY < maxY; sY++)
 				{
-					//TODO: Do selection stuff here
+					auto oList=GetCurrentMap()->GetObjectsAt(sX,sY);
+					for (int i = 0; i < oList.Size(); i++)
+					{
+						if(m_hiddenLayers[atoi(g_Game->GetWorld()->GetObject(oList[i])->GetProperty(Core::PROPERTY::LAYER.Name()).Value().c_str())])//if object is on hidden layer
+							continue;
+						AddToSelection(oList[i]);
+					}
 				}
 
 			}
@@ -309,7 +340,7 @@ namespace States {
 		// This should work ALWAYS, even if GUI is focused:
 		switch (key.code)
 		{
-		//on alt clear the current mask
+			//on alt clear the current mask
 		case sf::Keyboard::LAlt:
 			int l;
 			for(l = 0; l < 10; l++)
@@ -319,7 +350,7 @@ namespace States {
 			m_firstLayerSelection=true;
 			break;
 
-		//for each key add the mask, as long as alt is pressed (maybe cache this in local field)
+			//for each key add the mask, as long as alt is pressed (maybe cache this in local field)
 		case sf::Keyboard::Num1:
 		case sf::Keyboard::Num2:
 		case sf::Keyboard::Num3:
@@ -337,20 +368,20 @@ namespace States {
 				BlendLayer(9);
 			break;
 
-        // DEBUGGING COMBAT, TODO: remove
-        case sf::Keyboard::Space:
-            if (sf::Keyboard::isKeyPressed((sf::Keyboard::LControl)))
-            {
+			// DEBUGGING COMBAT, TODO: remove
+		case sf::Keyboard::Space:
+			if (sf::Keyboard::isKeyPressed((sf::Keyboard::LControl)))
+			{
 				m_combat = new GameRules::MasterCombat();
 				Network::CombatMsg(Network::CombatMsgType::DM_COMBAT_BEGIN).Send();
 			}
 			break;
 
-		//case sf::Keyboard::T:
-		//	PromptState* gs = dynamic_cast<PromptState*>(g_Game->GetStateMachine()->PushGameState(GST_PROMPT));
-		//	gs->ConfigurePromp("Das ist dein toller Text",false);
-		//	gs->AddButton("testbutton",std::bind(&MasterState::TestButtonCallback,this,std::placeholders::_1),sf::Vector2f(212,460));
-		//	break;
+			//case sf::Keyboard::T:
+			//	PromptState* gs = dynamic_cast<PromptState*>(g_Game->GetStateMachine()->PushGameState(GST_PROMPT));
+			//	gs->ConfigurePromp("Das ist dein toller Text",false);
+			//	gs->AddButton("testbutton",std::bind(&MasterState::TestButtonCallback,this,std::placeholders::_1),sf::Vector2f(212,460));
+			//	break;
 		}
 		// Return if the GUI already handled it
 		if (guiHandled)
@@ -456,8 +487,8 @@ namespace States {
 		return g_Game->GetWorld()->GetMap(id);
 	}
 
-	void States::MasterState::TestButtonCallback(std::string feedback){
-		std::cout<<feedback;
-	}
+	//void States::MasterState::TestButtonCallback(std::string feedback){
+	//	std::cout<<feedback;
+	//}
 
 }// namespace States

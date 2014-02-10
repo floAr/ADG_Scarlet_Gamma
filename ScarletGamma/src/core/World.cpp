@@ -300,6 +300,8 @@ namespace Core {
 			if(id == _currentID) //we are at the current id
 				pickNext=true;
 		}
+		if(result==-1)//return nullptr if no object found
+			return nullptr;
 		return this->GetObject(result);
 	}
 

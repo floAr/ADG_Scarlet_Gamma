@@ -346,10 +346,11 @@ namespace States {
 			}
 			break;
 
-		case sf::Keyboard::T:
-			PromptState* gs = dynamic_cast<PromptState*>(g_Game->GetStateMachine()->PushGameState(GST_PROMPT));
-			gs->AddButton("testbutton",std::bind(&MasterState::TestButtonCallback,this,std::placeholders::_1),sf::Vector2f(212,460));
-			break;
+		//case sf::Keyboard::T:
+		//	PromptState* gs = dynamic_cast<PromptState*>(g_Game->GetStateMachine()->PushGameState(GST_PROMPT));
+		//	gs->ConfigurePromp("Das ist dein toller Text",false);
+		//	gs->AddButton("testbutton",std::bind(&MasterState::TestButtonCallback,this,std::placeholders::_1),sf::Vector2f(212,460));
+		//	break;
 		}
 		// Return if the GUI already handled it
 		if (guiHandled)

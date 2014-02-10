@@ -119,6 +119,7 @@
     <ClCompile Include="src\states\LaunchPlayerState.cpp" />
     <ClCompile Include="src\states\MainMenuState.cpp" />
     <ClCompile Include="src\states\MasterState.cpp" />
+    <ClCompile Include="src\states\NewPlayerState.cpp" />
     <ClCompile Include="src\states\PlayerState.cpp" />
     <ClCompile Include="src\states\PromptState.cpp" />
     <ClCompile Include="src\states\SelectionState.cpp" />
@@ -178,6 +179,7 @@
     <ClInclude Include="src\states\LaunchPlayerState.hpp" />
     <ClInclude Include="src\states\MainMenuState.hpp" />
     <ClInclude Include="src\states\MasterState.hpp" />
+    <ClInclude Include="src\states\NewPlayerState.hpp" />
     <ClInclude Include="src\states\PlayerState.hpp" />
     <ClInclude Include="src\states\PromptState.hpp" />
     <ClInclude Include="src\states\SelectionState.hpp" />

@@ -74,6 +74,28 @@ static const std::string STR_PROP_CHARISMA = std::string("Charisma");
 static const std::string STR_PROP_HEALTH = std::string("Trefferpunkte");
 static const std::string STR_PROP_ARMORCLASS = std::string("Rüstungsklasse");
 static const std::string STR_PROP_INITIATIVE_MOD = std::string("Initiative-Modifikator");
+static const std::string STR_PROP_ATTITUDE = std::string("Gesinnung");
+static const std::string STR_ATT_HONESTGOOD = std::string("Rechtschaffen Gut");
+static const std::string STR_ATT_NEUTRALGOOD = std::string("Neutral Gut");
+static const std::string STR_ATT_CHAOTICGOOD = std::string("Chaotisch Gut");
+static const std::string STR_ATT_HONESTNEUTRAL = std::string("Rechtschaffen Neutral");
+static const std::string STR_ATT_NEUTRALNEUTRAL = std::string("Neutral Neutral");
+static const std::string STR_ATT_CHAOTICNEUTRAL = std::string("Chaotisch Neutral");
+static const std::string STR_ATT_HONESTEVIL = std::string("Rechtschaffen Böse");
+static const std::string STR_ATT_NEUTRALEVIL = std::string("Neutral Böse");
+static const std::string STR_ATT_CHAOTICEVIL = std::string("Chaotisch Böse");
+static const std::string STR_PROP_CLASS = std::string("Klasse");
+static const std::string STR_PROP_FOLK = std::string("Volk");
+static const std::string STR_PROP_HOME = std::string("Heimat");
+static const std::string STR_PROP_FAITH = std::string("Gottheit");
+static const std::string STR_PROP_SIZE = std::string("Größe");
+static const std::string STR_PROP_AGE = std::string("Alter");
+static const std::string STR_PROP_SEX = std::string("Geschlecht");
+static const std::string STR_SEX_M = std::string("M");
+static const std::string STR_SEX_F = std::string("W");
+static const std::string STR_PROP_WEIGHT = std::string("Gewicht");
+static const std::string STR_PROP_HAIRCOLOR = std::string("Haarfarbe");
+static const std::string STR_PROP_EYECOLOR = std::string("Augenfarbe");
 
 
 /************************************************************************/

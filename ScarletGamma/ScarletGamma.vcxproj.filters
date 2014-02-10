@@ -206,6 +206,9 @@
     <ClCompile Include="src\actions\UseJumpPoint.cpp">
       <Filter>Quelldateien\actions</Filter>
     </ClCompile>
+    <ClCompile Include="src\states\NewPlayerState.cpp">
+      <Filter>Quelldateien\states</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\core\Map.hpp">
@@ -378,6 +381,9 @@
     </ClInclude>
     <ClInclude Include="src\actions\UseJumpPoint.hpp">
       <Filter>Quelldateien\actions</Filter>
+    </ClInclude>
+    <ClInclude Include="src\states\NewPlayerState.hpp">
+      <Filter>Quelldateien\states</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

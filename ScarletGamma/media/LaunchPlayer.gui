@@ -1,5 +1,5 @@
 Window:
-{
+{	
 	Label: "IPLabel"
 	{
 		ConfigFile = "media/Black.conf"
@@ -84,11 +84,28 @@ Window:
 		NumbersOnly = false
 	}
 	
+	Button: "NewPlayer"
+	{
+		ConfigFile = "media/Black.conf"
+		Left = 350
+		Top = 200
+		Width = 400
+		Height = 40
+		Visible = true
+		Enabled = true
+		Transparency = 255
+		Callback = LeftMouseClicked
+		CallbackId = 3
+		Text = "Neuer Spieler"
+		TextColor = (200,200,200,255)
+		TextSize = 26
+	}
+	
 	Label: "ColorLabel"
 	{
 		ConfigFile = "media/Black.conf"
 		Left = 30
-		Top = 210
+		Top = 260
 		Width = 300
 		Height = 40
 		Visible = true
@@ -106,7 +123,7 @@ Window:
 	{
 		ConfigFile = "media/Black.conf"
 		Left = 350
-		Top = 200
+		Top = 250
 		Width = 120
 		Height = 40
 		Visible = true
@@ -130,7 +147,7 @@ Window:
 	{
 		ConfigFile = "media/Black.conf"
 		Left = 490
-		Top = 200
+		Top = 250
 		Width = 120
 		Height = 40
 		Visible = true
@@ -154,7 +171,7 @@ Window:
 	{
 		ConfigFile = "media/Black.conf"
 		Left = 630
-		Top = 200
+		Top = 250
 		Width = 120
 		Height = 40
 		Visible = true
@@ -178,7 +195,7 @@ Window:
 	{
 		ConfigFile = "media/Black.conf"
 		Left = 30
-		Top = 250
+		Top = 300
 		Width = 300
 		Height = 40
 		Visible = true
@@ -195,7 +212,7 @@ Window:
 	{
 		ConfigFile = "media/Black.conf"
 		Left = 350
-		Top = 260
+		Top = 310
 		Width = 300
 		Height = 40
 		Visible = true
@@ -213,7 +230,7 @@ Window:
 	{
 		ConfigFile = "media/Black.conf"
 		Left = 30
-		Top = 300
+		Top = 350
 		Width = 300
 		Height = 40
 		Visible = true

@@ -7,6 +7,7 @@
 #include "SFML/Network/IpAddress.hpp"
 #include "PlayerState.hpp"
 #include "network/Messenger.hpp"
+#include "NewPlayerState.hpp"
 
 States::LaunchPlayerState::LaunchPlayerState() :
     GameState()
@@ -87,7 +88,11 @@ void States::LaunchPlayerState::GuiCallback(tgui::Callback& callback)
 			status->setText(_msg);
 			m_gui.focusWidget( m_gui.get( "ServerIP" ) );
 		}
-		} break;
+		break; }
+	case 3: {
+		// Create a new player object first.
+		g_Game->GetStateMachine()->PushGameState(new NewPlayerState(m_gui.get( "Name" )));
+		break; }
 	default:
 		// No such GUI element!
 		assert(false);

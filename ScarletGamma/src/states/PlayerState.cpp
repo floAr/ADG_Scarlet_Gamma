@@ -180,7 +180,7 @@ void States::PlayerState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 
 void States::PlayerState::OnBegin()
 {
-	// After connecting the client is receiving the world
+	// The client is receiving the world after connecting
 	Network::Messenger::Poll( true );
 
 	// The player name is used to find the correct object in the world.

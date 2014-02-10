@@ -11,7 +11,7 @@ Window:
 		Enabled = true
 		Transparency = 255
 		CallbackId = 0
-		Text = "Load a game from file:"
+		Text = "Lade Spiel aus Datei:"
 		TextColor = (255,255,255,255)
 		TextSize = 26
 		BackgroundColor = (0,0,0,0)
@@ -53,7 +53,7 @@ Window:
 		Enabled = true
 		Transparency = 255
 		CallbackId = 0
-		Text = "Your LAN IP:"
+		Text = "Deine LAN IP:"
 		TextColor = (255,255,255,255)
 		TextSize = 26
 		BackgroundColor = (0,0,0,0)
@@ -95,7 +95,7 @@ Window:
 		Enabled = true
 		Transparency = 255
 		CallbackId = 0
-		Text = "Your web IP:"
+		Text = "Deine Web IP:"
 		TextColor = (255,255,255,255)
 		TextSize = 26
 		BackgroundColor = (0,0,0,0)
@@ -173,7 +173,7 @@ Window:
 		Transparency = 255
 		Callback = LeftMouseClicked
 		CallbackId = 1
-		Text = "Back"
+		Text = "Zurück"
 		TextColor = (200,200,200,255)
 		TextSize = 26
 	}

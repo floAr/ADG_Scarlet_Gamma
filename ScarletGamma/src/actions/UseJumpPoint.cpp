@@ -28,26 +28,12 @@ namespace Actions {
 		{
 			Core::Property& jp = jumpPointObj->GetProperty( STR_PROP_JUMPPOINT );
 
-			// Remove object from old map
-			int oldLayer = atoi(execObj->GetProperty( STR_PROP_LAYER ).Value().c_str());
-			g_Game->GetWorld()->GetMap(execObj->GetParentMap())->Remove( m_executor );
-
-			// Reinsert at new position
+			// Remove object from old map and reinsert at new position
 			Core::ObjectID targetID = (Core::ObjectID)atoi(jp.Value().c_str());
 			Core::Object* targetObj = g_Game->GetWorld()->GetObject( targetID );
-			sf::Vector2i targetPos = sfUtils::Round( targetObj->GetPosition() );
-			g_Game->GetWorld()->GetMap(targetObj->GetParentMap())->Add(
-				m_executor, targetPos.x, targetPos.y, oldLayer );
-
-			// Setting positions of active objects confuses them
-			if( execObj->HasProperty(STR_PROP_TARGET) )
-			{
-				Core::Property& prop = execObj->GetProperty(STR_PROP_TARGET);
-				prop.SetValue( sfUtils::to_string(targetObj->GetPosition()) );
-				Core::Property& path = execObj->GetProperty(STR_PROP_PATH);
-				path.ClearObjects();
-				path.SetValue( STR_FALSE );
-			}
+			Core::Map* map = g_Game->GetWorld()->GetMap(execObj->GetParentMap());
+			map->SetObjectPosition( execObj, targetObj->GetPosition() );
+			execObj->ResetTarget();
 
 			// This action is finished
 			return true;

@@ -90,6 +90,12 @@ namespace Interfaces {
 				}
 			}
 		}
+
+		// Update the toolboxes
+		for( size_t i=0; i<m_scrollPanel->getWidgets().size(); ++i )
+		{
+			((Toolbox::Ptr)m_scrollPanel->getWidgets()[i])->Update( _dt );
+		}
 	}
 
 
@@ -378,7 +384,8 @@ namespace Interfaces {
 
 
 
-	PlayersToolbox::PlayersToolbox()
+	PlayersToolbox::PlayersToolbox() :
+		m_lastUpdate(0.0f)
 	{
 		Panel::setSize( 150.0f, 100.0f );
 		Panel::setBackgroundColor( sf::Color(50,50,50,150) );
@@ -392,6 +399,54 @@ namespace Interfaces {
 		heading->setText( STR_PLAYER );
 		heading->setSize( 150.0f, 20.0f );
 		heading->disable();
+
+		m_playerList = tgui::ListBox::Ptr( *this );
+		m_playerList->load( "media/Black.conf" );
+		m_playerList->setSize( 150.0f, 80.0f );
+		m_playerList->setPosition( 0.0f, 20.0f );
+		m_playerList->setItemHeight( 19 );
+		m_playerList->getScrollbar()->setSize( 12.0f, m_playerList->getScrollbar()->getSize().y );
+		
+		// WTF would like to bind list - not possible
+		bindCallbackEx( &PlayersToolbox::DragPlayer, this, tgui::Panel::LeftMousePressed );
+	}
+
+	void PlayersToolbox::Update( float _dt )
+	{
+		m_lastUpdate += _dt;
+		if( m_lastUpdate > 0.8f )
+		{
+			m_lastUpdate = 0.0f;
+			m_playerList->removeAllItems();
+			// Test all possible player ids
+			for( int i=0; i<256; ++i )
+			{
+				Core::Object* player = g_Game->GetWorld()->FindPlayer(i);
+				if( player )
+					m_playerList->addItem( player->GetProperty( STR_PROP_NAME ).Value() );
+			}
+		}
+	}
+
+	void PlayersToolbox::DragPlayer(const tgui::Callback& _caller)
+	{
+		// Force the list to select something
+		m_playerList->leftMousePressed( (float)_caller.mouse.x, (float)_caller.mouse.y );
+
+		// Get which player must be dragged from list
+		Core::Object* player = g_Game->GetWorld()->FindPlayer( m_playerList->getSelectedItem() );
+		if( player )
+		{
+			if( !*m_dragNDropHandler )
+				*m_dragNDropHandler = new DragContent();
+			(*m_dragNDropHandler)->object = player;
+			(*m_dragNDropHandler)->from = DragContent::PLAYERS_LIST;
+			(*m_dragNDropHandler)->prop = nullptr;
+		} else if( *m_dragNDropHandler )
+		{
+			delete *m_dragNDropHandler;
+			*m_dragNDropHandler = nullptr;
+		}
 	}
 
 

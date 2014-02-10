@@ -148,6 +148,20 @@ namespace Core {
 	}
 
 
+	void Object::ResetTarget()
+	{
+		// Setting positions of active objects confuses them
+		if( HasProperty(STR_PROP_TARGET) )
+		{
+			Core::Property& prop = GetProperty(STR_PROP_TARGET);
+			prop.SetValue( sfUtils::to_string(GetPosition()) );
+			Core::Property& path = GetProperty(STR_PROP_PATH);
+			path.ClearObjects();
+			path.SetValue( STR_FALSE );
+		}
+	}
+
+
 	void Object::OnPropertyAdd( const std::string& _name )
 	{
 		if( Utils::IStringEqual( _name, STR_PROP_OWNER ) ||
@@ -175,14 +189,7 @@ namespace Core {
 			map->ResetGridPosition( ID(), oldCell, newCell );
 
 			// Setting positions of active objects confuses them
-			if( HasProperty(STR_PROP_TARGET) )
-			{
-				prop = Get(STR_PROP_TARGET);
-				prop->SetValue( sfUtils::to_string(newPosition) );
-				prop = Get(STR_PROP_PATH);
-				prop->SetValue(STR_FALSE);
-				prop->ClearObjects();
-			}
+			ResetTarget();
 			return false;
 		}
 

@@ -12,7 +12,7 @@
 States::LaunchPlayerState::LaunchPlayerState() :
     GameState()
 {
-	m_menuFont=Content::Instance()->LoadFont("media/arial.ttf");
+	m_menuFont = Content::Instance()->LoadFont("media/arial.ttf");
 
     //--------------------------------------
     // CREATE GUI

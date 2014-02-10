@@ -52,6 +52,7 @@ namespace States
 		Interfaces::Toolbar::Ptr m_toolbar;
 		Interfaces::MapToolbox::Ptr m_mapTool;
 		Interfaces::ModeToolbox::Ptr m_modeTool;
+		Interfaces::PlayersToolbox::Ptr m_playerTool;
 
 		/// \brief A permanent brush object.
 		/// \details Brushes contain an array for flags. So over the whole

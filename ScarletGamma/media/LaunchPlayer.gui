@@ -11,7 +11,7 @@ Window:
 		Enabled = true
 		Transparency = 255
 		CallbackId = 0
-		Text = "Enter the server IP:"
+		Text = "Server IP eingeben:"
 		TextColor = (255,255,255,255)
 		TextSize = 26
 		BackgroundColor = (0,0,0,0)
@@ -53,7 +53,7 @@ Window:
 		Enabled = true
 		Transparency = 255
 		CallbackId = 0
-		Text = "Enter your character name:"
+		Text = "Dein Charactername:"
 		TextColor = (255,255,255,255)
 		TextSize = 26
 		BackgroundColor = (0,0,0,0)
@@ -112,7 +112,7 @@ Window:
 		Enabled = true
 		Transparency = 255
 		CallbackId = 0
-		Text = "Choose your chat color:"
+		Text = "Farbe (Chat + Figur):"
 		TextColor = (255,255,255,255)
 		TextSize = 26
 		BackgroundColor = (0,0,0,0)
@@ -238,7 +238,7 @@ Window:
 		Transparency = 255
 		Callback = LeftMouseClicked
 		CallbackId = 1
-		Text = "Back"
+		Text = "Zurück"
 		TextColor = (200,200,200,255)
 		TextSize = 26
 	}

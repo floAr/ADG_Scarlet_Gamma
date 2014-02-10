@@ -13,11 +13,16 @@ namespace States
 		NewPlayerState(tgui::EditBox::Ptr _nameEdit);
 		virtual void Draw(sf::RenderWindow& win) override;
 		virtual void KeyPressed(sf::Event::KeyEvent& key, bool guiHandled) override;
-		virtual void GuiCallback(tgui::Callback& callback) override;
 	private:
+		void Cancel();
+		void Create();
+
 		sf::Font	m_menuFont;
 		tgui::Gui   m_gui;
 
 		tgui::EditBox::Ptr m_nameOutputEdit;
+
+		// All the components which contain data
+		tgui::EditBox::Ptr m_name;
 	};
 }

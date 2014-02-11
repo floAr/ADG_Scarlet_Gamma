@@ -16,9 +16,9 @@ SpriteAtlasBatcher* SpriteAtlasBatcher::Instance()
 	return m_instance;
 }
 
-SpriteAtlasBatcher::SpriteAtlasBatcher():m_drawArray(sf::Quads), m_atlasBounds(0, 0), m_hasBegun(false), m_yOffset(0)
+SpriteAtlasBatcher::SpriteAtlasBatcher():m_drawArray(sf::Quads), m_atlasBounds(0, 0), m_hasBegun(false), m_textureDirty(true), m_yOffset(0)
 {
-	m_atlasTexture.create(64, 64);
+	m_atlasTexture.create(512, 512);
 }
 
 
@@ -34,21 +34,25 @@ AtlasSprite& Graphics::SpriteAtlasBatcher::AddOrGetAtlasSprite( const std::strin
 	if(!(m_atlasBounds.x+tex.getSize().x<m_atlasTexture.getSize().x))//object is nolonger matching on x axsis
 	{
 		m_atlasBounds.x = 0;
-		m_atlasBounds.y += m_yOffset + 1;
+		m_atlasBounds.y += m_yOffset;
 		m_yOffset = 0;
 	}
 	result.setTexture(tex, true);
 	result.setPosition(m_atlasBounds);
 
-	result.SetTC(m_atlasBounds, m_atlasBounds+(sf::Vector2f)tex.getSize());
-
-	m_atlasTexture.draw(result);
 	result.setScale(float(TILESIZE)/tex.getSize().x, float(TILESIZE)/tex.getSize().y);
 
-	m_atlasBounds.x += tex.getSize().x + 1;
-	if(tex.getSize().y>m_yOffset)
-		m_yOffset = (float) tex.getSize().y;
-	
+
+	auto rBounds=result.getGlobalBounds();
+
+	result.SetTC(m_atlasBounds, m_atlasBounds+sf::Vector2f(rBounds.width,rBounds.height));
+
+
+	m_atlasTexture.draw(result);
+	m_atlasBounds.x += rBounds.width;
+	if(rBounds.height > m_yOffset)
+		m_yOffset = (float) rBounds.height;
+
 	m_atlas.emplace(std::make_pair(name, result));
 	return m_atlas.at(name);
 }
@@ -87,10 +91,14 @@ void SpriteAtlasBatcher::Enque(AtlasSprite as)
 void SpriteAtlasBatcher::End()
 {
 	assert(m_hasBegun);
-	m_atlasTexture.display();
-
-	// Debugging: write texture atlas to file
+	if(m_textureDirty)
+	{
+		m_atlasTexture.display();
+		m_textureDirty=false;
+		// Debugging: write texture atlas to file
 	//m_atlasTexture.getTexture().copyToImage().saveToFile("toto.png");
+
+	}
 
 	m_hasBegun = false;
 }
@@ -100,5 +108,4 @@ void SpriteAtlasBatcher::draw(sf::RenderTarget& target, sf::RenderStates states)
 	assert(!m_hasBegun);
 	states.texture = &m_atlasTexture.getTexture();
 	target.draw(m_drawArray, states);
-	//target.draw(sf::Sprite(m_atlasTexture.getTexture()), states);
 }

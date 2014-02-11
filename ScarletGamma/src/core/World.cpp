@@ -226,8 +226,7 @@ namespace Core {
 		for ( auto& it = m_players.begin(); it != m_players.end(); ++it)
 		{
 			Object* result = GetObject( it->second );
-            // STR_PROP_PLAYER starts at 1, socket-style ids at 0
-			if (result->Get(STR_PROP_PLAYER)->Evaluate() == _id + 1)
+			if (result->Get(STR_PROP_PLAYER)->Evaluate() == _id)
 				return result;
 		}
 		return nullptr;

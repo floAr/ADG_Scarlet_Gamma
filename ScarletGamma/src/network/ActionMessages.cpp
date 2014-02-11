@@ -74,15 +74,15 @@ size_t MsgActionBegin::Receive(Core::ActionID _action, uint8_t _sender,
 
     // Deserialize
     Core::ObjectID target = *_data;
+	Core::Object* player = g_Game->GetWorld()->FindPlayer(_sender+1);
 
 #ifdef _DEBUG
-    std::cout << "Player " <<  g_Game->GetWorld()->FindPlayer(_sender)->GetName()
+    std::cout << "Player " <<  player->GetName()
         << " starting action '" << Actions::ActionPool::Instance().GetActionName(_action)
         << "' on target " << g_Game->GetWorld()->GetObject(target)->GetName() << '\n';
 #endif
 
-    Actions::ActionPool::Instance().StartClientAction(_action, g_Game->GetWorld()->
-        FindPlayer(_sender)->ID(), target, _sender);
+    Actions::ActionPool::Instance().StartClientAction(_action, player->ID(), target, _sender);
 
     return sizeof(Core::ObjectID);
 }

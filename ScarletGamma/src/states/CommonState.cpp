@@ -252,7 +252,9 @@ void CommonState::AddToSelection( Core::ObjectID _id )
 {
 	// Assumes that the selection state only calls this if possible
 	// which is the case due to toggeling
-	assert( !m_selection.Contains(_id) );
+	//assert( !m_selection.Contains(_id) );
+	if(m_selection.Contains(_id))
+		return;
 	m_selection.Add(_id);
 	m_selectionChanged = true;
 }

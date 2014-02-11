@@ -65,9 +65,9 @@ namespace Interfaces {
 			tgui::EditBox::Ptr left;
 			tgui::EditBox::Ptr right;
 			tgui::Checkbox::Ptr del;
-			PropertyPanel::Ptr subNode;
+			//PropertyPanel::Ptr subNode;
 
-			EntryLine() : left(nullptr), right(nullptr), del(nullptr), subNode(nullptr)	{}
+			EntryLine() : left(nullptr), right(nullptr), del(nullptr)	{}
 		};
 
 		/// \brief A map of references to find the 2/3 objects belonging to
@@ -127,6 +127,12 @@ namespace Interfaces {
 		/// \brief Remove all lines and then show the once remaining after
 		///		filtering.
 		void RefreshFilter();
+
+		/// \brief Create a new line + sub objects from a property
+		void AddLine( unsigned _line, const Core::Property* _property );
+
+		/// \brief Reload values and sub objects.
+		void RefreshLine( unsigned _line, const Core::Property* _property );
 	};
 
 } // namespace Interfaces

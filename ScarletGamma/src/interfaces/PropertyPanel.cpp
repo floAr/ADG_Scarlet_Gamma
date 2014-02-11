@@ -78,8 +78,6 @@ void PropertyPanel::Init( float _x, float _y, float _w, float _h,
 		m_basicMiniMaxi->setSize(12.0f, 12.0f);
 	}
 
-
-
 	m_addAble = _addAble;
 	m_autoSize = _autoSize;
 	m_player = _player;
@@ -87,6 +85,7 @@ void PropertyPanel::Init( float _x, float _y, float _w, float _h,
 
 	Panel::setSize(_w, _h);
 	Panel::setPosition(_x, _y);
+	Panel::setCallbackId(_pid);
 
 	m_listContainer = tgui::Panel::Ptr( *this );
 	m_listContainer->setPosition(0.0f, 20.0f);
@@ -94,7 +93,6 @@ void PropertyPanel::Init( float _x, float _y, float _w, float _h,
 		m_listContainer->setSize(_w, 0.0f);
 	else m_listContainer->setSize(_w, _h - (m_addAble ? 40.0f : 20.0f));
 	m_listContainer->setBackgroundColor( sf::Color(50,50,50,150) );
-	m_listContainer->setCallbackId(_pid);
 	if(m_dragNDropHandler)
 	{
 		m_listContainer->bindCallbackEx(&PropertyPanel::StartDrag, this, tgui::Panel::LeftMousePressed);
@@ -176,6 +174,17 @@ void PropertyPanel::Add( const std::string& _left, bool _changable, const std::s
 
 	Resize(20, int(y));
 
+	// Repair the line indices
+	auto& widgets = m_listContainer->getWidgets();
+	for( size_t i=1; i<widgets.size(); ++i )
+	{
+		if( widgets[i]->getCallbackId() >= index )
+		{
+			// Things after the inserted element now have line index + 1
+			widgets[i]->setCallbackId( widgets[i]->getCallbackId() + 1 );
+		}
+	}
+
 	// Width of an edit
 	float w = (Panel::getSize().x - x) * 0.5f - 6.0f;
 
@@ -214,24 +223,6 @@ void PropertyPanel::Add( const std::string& _left, bool _changable, const std::s
 	}
 
 	m_lines.insert(m_lines.begin() + index, std::move(entry));
-
-	// Repair m_lines
-	for( size_t i=index+1; i<m_lines.size(); ++i )
-	{
-		m_lines[i].left->setCallbackId(i);
-		m_lines[i].right->setCallbackId(i);
-		if(m_lines[i].del != nullptr) m_lines[i].del->setCallbackId(i);
-		if(m_lines[i].subNode != nullptr)
-		{
-			m_lines[i].subNode->setCallbackId(i);
-			m_lines[i].subNode->m_newName->setCallbackId(i);
-			m_lines[i].subNode->m_newValue->setCallbackId(i);
-			m_lines[i].subNode->m_newAdd->setCallbackId(i);
-			m_lines[i].subNode->m_scrollBar->setCallbackId(i);
-			m_lines[i].subNode->m_titleBar->setCallbackId(i);
-			m_lines[i].subNode->m_miniMaxi->setCallbackId(i);
-		}
-	}
 }
 
 PropertyPanel::Ptr PropertyPanel::AddNode( EntryLine& _parent )
@@ -245,12 +236,12 @@ PropertyPanel::Ptr PropertyPanel::AddNode( EntryLine& _parent )
 	// Width of a edit
 	float w = m_listContainer->getSize().x - 12.0f - x;
 
-	_parent.subNode = PropertyPanel::Ptr( *m_listContainer );
-	_parent.subNode->Init( x, y, w, 0.0f,
+	PropertyPanel::Ptr subNode = PropertyPanel::Ptr( *m_listContainer );
+	subNode->Init( x, y, w, 0.0f,
 		m_addAble, true, m_player,
 		m_dragNDropHandler, _parent.left->getCallbackId() );
 
-	return _parent.subNode;
+	return subNode;
 }
 
 void PropertyPanel::RemoveBtn(const tgui::Callback& _call)
@@ -272,36 +263,25 @@ void PropertyPanel::Remove( unsigned _line )
 	int minY = posY, maxY = posY + (int)m_lines[_line].left->getSize().y;
 
 	// First element is always the scrollbar
-	for( size_t i=1; i<m_listContainer->getWidgets().size(); ++i )
+	auto& widgets = m_listContainer->getWidgets();
+	for( size_t i=1; i<widgets.size(); ++i )
 	{
 		// Search and destroy
 		if( (m_listContainer->getWidgets()[i]->getCallbackId() == _line) )
 		{
-			minY = std::min((int)m_listContainer->getWidgets()[i]->getPosition().y, minY);
-			maxY = std::max((int)(m_listContainer->getWidgets()[i]->getPosition().y + std::min(m_listContainer->getWidgets()[i]->getSize().y, 20.0f)), maxY);
-			m_listContainer->getWidgets().erase( m_listContainer->getWidgets().begin() + i );
+			minY = std::min((int)widgets[i]->getPosition().y, minY);
+			maxY = std::max((int)(widgets[i]->getPosition().y + std::min(widgets[i]->getSize().y, 20.0f)), maxY);
+			widgets.erase( widgets.begin() + i );
 			--i;
+		} else if( widgets[i]->getCallbackId() > _line )
+		{
+			// Things after the deleted element now have line index - 1
+			widgets[i]->setCallbackId( widgets[i]->getCallbackId() - 1 );
 		}
 	}
 
 	// Repair m_lines
 	m_lines.erase( m_lines.begin() + _line );
-	for( size_t i=_line; i<m_lines.size(); ++i )
-	{
-		m_lines[i].left->setCallbackId(i);
-		m_lines[i].right->setCallbackId(i);
-		if(m_lines[i].del != nullptr) m_lines[i].del->setCallbackId(i);
-		if(m_lines[i].subNode != nullptr)
-		{
-			m_lines[i].subNode->setCallbackId(i);
-			m_lines[i].subNode->m_newName->setCallbackId(i);
-			m_lines[i].subNode->m_newValue->setCallbackId(i);
-			m_lines[i].subNode->m_newAdd->setCallbackId(i);
-			m_lines[i].subNode->m_scrollBar->setCallbackId(i);
-			m_lines[i].subNode->m_titleBar->setCallbackId(i);
-			m_lines[i].subNode->m_miniMaxi->setCallbackId(i);
-		}
-	}
 
 	Resize(minY - maxY, posY);
 }
@@ -579,9 +559,6 @@ void PropertyPanel::Scroll( int _delta )
 
 void PropertyPanel::Show( Core::World* _world, Core::Object* _object )
 {
-	/*Core::ObjectList list;
-	list.Add(_object->ID());
-	Show( _world, list );*/
 	assert( _object );
 	m_world = _world;
 
@@ -612,31 +589,18 @@ void PropertyPanel::Show( Core::World* _world, const Core::ObjectList& _objects 
 			}
 	}
 
-//	if( listChanged )
-	{
-		// First copy the entries.
-		m_objects.clear();
-		for( int i=0; i<_objects.Size(); ++i )
-			m_objects.push_back( _world->GetObject(_objects[i]) );
+	// First copy the entries.
+	m_objects.clear();
+	for( int i=0; i<_objects.Size(); ++i )
+		m_objects.push_back( _world->GetObject(_objects[i]) );
 
-		if( !IsMinimized() ) RefreshFilter();
-		else {
-			// Use placeholder title for multiple objects.
-			if( _objects.Size() == 1 )
-				m_titleBar->setText( _world->GetObject(_objects[0])->GetName() );
-			else m_titleBar->setText( STR_MULTISELECTION );
-		}
-	}/* else {
-		// For each line refresh the value on the right side
-		for( size_t i=0; i<m_lines.size(); ++i )
-		{
-			// ... Except it is focused (than somebody is editing)
-			if( !m_lines[i].right->isFocused() )
-				m_lines[i].right->setText(
-					m_objects[0]->GetProperty( m_lines[i].left->getText() ).Value()
-				);
-		}
-	}*/
+	if( !IsMinimized() ) RefreshFilter();
+	else {
+		// Use placeholder title for multiple objects.
+		if( _objects.Size() == 1 )
+			m_titleBar->setText( _world->GetObject(_objects[0])->GetName() );
+		else m_titleBar->setText( STR_MULTISELECTION );
+	}
 }
 
 
@@ -692,39 +656,90 @@ void PropertyPanel::RefreshFilter()
 				Reevaluate:
 				if( m_lines.size() <= numAdded )
 				{
-					Add( allProperties[i]->Name(), allProperties[i]->CanChange(m_player),
-						 allProperties[i]->Value(), allProperties[i]->CanEdit(m_player) );
+					AddLine( numAdded, allProperties[i] );
 				} else {
 					std::string lineName = m_lines[numAdded].left->getText();
 					if(lineName == allProperties[i]->Name())
 					{
-						// Update except it is focused (than somebody is editing)
-						if( !m_lines[numAdded].right->isFocused() )
-							m_lines[numAdded].right->setText( allProperties[i]->Value() );
+						RefreshLine( numAdded, allProperties[i] );
 					} else if( Utils::IStringLess( allProperties[i]->Name(), lineName ) )
 					{
-						Add( allProperties[i]->Name(), allProperties[i]->CanChange(m_player),
-							allProperties[i]->Value(), allProperties[i]->CanEdit(m_player) );
+						AddLine( numAdded, allProperties[i] );
 					} else {
 						Remove( numAdded );
 						goto Reevaluate;
 					}
 				}
 
-				// Add inventory recursively
-			/*	if( allProperties[i]->IsObjectList() && m_objects.size() == 1 )
-				{
-					for( int j=0; j<allProperties[i]->GetObjects().Size(); ++j )
-					{
-						Ptr node = AddNode( m_lines.back() );
-						node->show();
-						node->Show( m_world, m_world->GetObject( allProperties[i]->GetObjects()[j] ) );
-						node->MiniMaxi();
-					}
-				}*/
-
 				++numAdded;
 			}
+		}
+	}
+}
+
+
+void PropertyPanel::AddLine( unsigned _line, const Core::Property* _property )
+{
+	Add( _property->Name(), _property->CanChange(m_player),
+		_property->Value(), _property->CanEdit(m_player) );
+
+	// Add inventory recursively
+	if( _property->IsObjectList() && m_objects.size() == 1 )
+	{
+		for( int j=0; j<_property->GetObjects().Size(); ++j )
+		{
+			Ptr node = AddNode( m_lines[_line] );
+			node->show();
+			node->Show( m_world, m_world->GetObject( _property->GetObjects()[j] ) );
+			node->MiniMaxi();
+		}
+	}
+}
+
+
+void PropertyPanel::RefreshLine( unsigned _line, const Core::Property* _property )
+{
+	// Update except it is focused (than somebody is editing)
+	if( !m_lines[_line].right->isFocused() )
+		m_lines[_line].right->setText( _property->Value() );
+	// The difficult part of updates - find the sub nodes
+	// and refresh them too.
+	if( m_objects.size() == 1 )
+	{
+		// Make a copy of the list
+		Core::ObjectList tmpObjects = _property->GetObjects();
+		auto& widgets = m_listContainer->getWidgets();
+		for( size_t i=0; i<widgets.size(); ++i )
+		{
+			// Only test objects which belong to the current line
+			if( widgets[i]->getCallbackId() == _line )
+			{
+				// Is it a sub node?
+				PropertyPanel* subNode = dynamic_cast<PropertyPanel*>(widgets[i].get());
+				if( subNode != nullptr )
+				{
+					// Now me must check for update/delete of the current node.
+					if( tmpObjects.Contains( subNode->m_objects[0]->ID() ) )
+					{
+						// Update
+						subNode->RefreshFilter();
+						tmpObjects.Remove( subNode->m_objects[0]->ID() );
+					} else { // Delete
+						// Kick only the node - the line is still there.
+						Resize( -(int)widgets[i]->getSize().y, (int)widgets[i]->getPosition().y );
+						widgets.erase( widgets.begin() + i );
+					}
+				}
+			}
+		}
+
+		// Add new objects (the ones on the list which are not found).
+		for( int i=0; i<tmpObjects.Size(); ++i )
+		{
+			Ptr node = AddNode( m_lines[_line] );
+			node->show();
+			node->Show( m_world, m_world->GetObject( tmpObjects[i] ) );
+			node->MiniMaxi();
 		}
 	}
 }

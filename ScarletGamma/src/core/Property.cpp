@@ -218,7 +218,7 @@ namespace Core {
 		// Append at the end
 		m_list.push_back(_property);
 		m_list.back().SetParent( _parent );
-		Network::MsgPropertyChanged( _property.ParentObject(), &_property ).Send();
+		Network::MsgPropertyChanged( _parent, &m_list.back() ).Send();
 
 		return m_list.back();
 	}

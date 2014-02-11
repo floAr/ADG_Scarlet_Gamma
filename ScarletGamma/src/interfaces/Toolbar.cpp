@@ -414,14 +414,15 @@ namespace Interfaces {
 	void PlayersToolbox::Update( float _dt )
 	{
 		m_lastUpdate += _dt;
-		if( m_lastUpdate > 0.8f )
+		if( m_lastUpdate > 2.0f )
 		{
 			m_lastUpdate = 0.0f;
 			m_playerList->removeAllItems();
 			// Test all possible player ids
-			for( int i=0; i<256; ++i )
+			auto players = g_Game->GetWorld()->GetAllPlayers();
+			for( size_t i=0; i<players.size(); ++i )
 			{
-				Core::Object* player = g_Game->GetWorld()->FindPlayer(i);
+				Core::Object* player = g_Game->GetWorld()->GetObject( players[i] );
 				if( player )
 					m_playerList->addItem( player->GetProperty( STR_PROP_NAME ).Value() );
 			}

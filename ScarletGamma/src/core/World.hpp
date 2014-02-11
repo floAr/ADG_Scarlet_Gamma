@@ -43,7 +43,10 @@ namespace Core {
 
         /// \brief Add a new object by deserialization.
         /// \details This method does not send messages to the network.
-        ObjectID NewObject( const Jo::Files::MetaFileWrapper::Node& _node );
+        /// \param [in] _newID Give the object the next free id instead of
+		///		using the serialized id. This is useful for imports.. where
+		///		ids must be rescheduled.
+        ObjectID NewObject( Jo::Files::MetaFileWrapper::Node& _node, bool _newID );
 
         /// \brief Add a new object by cloning.
         ObjectID NewObject( const Object* _object );
@@ -83,6 +86,9 @@ namespace Core {
         /// \brief Get all existing map IDs.
         std::vector<MapID> GetAllMaps() const;
 
+		/// \brief Get all existing player's object IDs.
+		std::vector<ObjectID> GetAllPlayers() const;
+
         /// \brief Call the update of all maps (Simulate Game).
         /// \param [in] _dt Time since last update.
         void Update( float _dt );
@@ -97,7 +103,9 @@ namespace Core {
 
 		/// \brief Returns the next observable object
 		/// \param [in] _currentID ObjectID of the object currently watched
-		Object* GetNextObservableObject(ObjectID _currentID);
+		/// \param [in] _direction -1 to get the previous one and +1 to get
+		///			the next one.
+		Object* GetNextObservableObject(ObjectID _currentID, int _direction);
 
 		/// \brief Registers an object in the corresponding list (currently player and owner)
 		/// \param [in] _object Object to be registered

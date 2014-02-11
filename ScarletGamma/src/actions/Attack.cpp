@@ -21,6 +21,7 @@ Attack::Attack() : Action(STR_ACT_ATTACK, ActionType::STANDARD_ACTION, 50, Game:
     // Set requirements
     m_targetRequirements.push_back(std::pair<std::string, bool>(STR_PROP_HEALTH, true));
     m_targetRequirements.push_back(std::pair<std::string, bool>(STR_PROP_ARMORCLASS, true));
+    m_finished = false;
 }
 
 Action* Attack::Clone(Core::ObjectID _executor, Core::ObjectID _target)
@@ -103,7 +104,7 @@ void Attack::AttackRollPromptFinished(States::GameState* gs)
             Network::MsgActionEnd(this->m_id).Send();
 
         // End the local action
-        ActionPool::Instance().EndLocalAction();
+        m_finished = true;
     }
     else
     {
@@ -258,7 +259,7 @@ void Attack::AttackRollHit()
 void Attack::AttackRollMissed()
 {
     // End local action
-    ActionPool::Instance().EndLocalAction();
+    m_finished = true;
 }
 
 void Attack::HitRollPromptFinished(States::GameState* gs)
@@ -275,7 +276,7 @@ void Attack::HitRollPromptFinished(States::GameState* gs)
             Network::MsgActionEnd(this->m_id).Send();
 
         // End the local action
-        ActionPool::Instance().EndLocalAction();
+        m_finished = true;
     }
     else
     {
@@ -365,7 +366,7 @@ void Attack::HitRollDMPromptFinishedLocal(States::GameState* _gs)
     BroadcastDamageMessage(m_hitRoll, result);
 
     // End local action and we're done
-    ActionPool::Instance().EndLocalAction();
+    m_finished = true;
 }
 
 

@@ -3,6 +3,8 @@
 #include "Prerequisites.hpp"
 #include <memory>
 #include <vector>
+#include <queue>
+#include <tuple>
 
 namespace Actions
 {
@@ -72,7 +74,7 @@ namespace Actions
 		///		The local action is updated before the client actions
 		void UpdateExecution();
 
-        /// \brief Ends a current action at the specified index
+        /// \brief Ends the current local action gracefully.
         void EndLocalAction();
 
         /// \brief End an action that a remote machine requested.
@@ -114,5 +116,13 @@ namespace Actions
 
         /// \brief Last object that was used for the default action check.
         Core::ObjectID m_lastDefaultActionTarget;
+
+        /// \brief Typedef for information about a local action.
+        typedef std::tuple<Core::ActionID, Core::ObjectID, Core::ObjectID> LocalActionInfo;
+
+        /// \brief Queue for new local actions to be started when the current one is finished.
+        /// \details Save the ActionID, the executor's ObjectID and the target's ObjectID in 
+        ///     this particular order.
+        std::queue<LocalActionInfo> m_localActionQueue;
     };
 }

@@ -133,7 +133,6 @@ bool Actions::ActionPool::StartDefaultAction( Core::ObjectID _executor, Core::Ob
     return true;
 }
 
-
 const std::string& ActionPool::GetActionName(Core::ActionID id)
 {
     Action* unknown = m_actions.at(id);
@@ -156,18 +155,7 @@ Core::ActionID ActionPool::GetLocalAction()
 void ActionPool::StartLocalAction(Core::ActionID _id, Core::ObjectID _executor,
                                   Core::ObjectID _target)
 {
-    Action* toCopy = m_actions.at(_id);
-
-    // Create a copy of the action and return it
-    if (toCopy)
-    {
-		// The old action is stopped here
-		EndLocalAction();
-
-        Action* newAction = toCopy->Clone(_executor, _target);
-        m_localAction = newAction;
-        newAction->Execute();
-    }
+    m_localActionQueue.push(LocalActionInfo(_id, _executor, _target));
 }
 
 void ActionPool::StartClientAction(Core::ActionID id, Core::ObjectID _executor,
@@ -183,34 +171,56 @@ void ActionPool::StartClientAction(Core::ActionID id, Core::ObjectID _executor,
     }
 }
 
+
+void Actions::ActionPool::EndLocalAction()
+{
+    if (m_localAction)
+        m_localAction->m_finished = true;
+}
+
+void ActionPool::EndClientAction(uint8_t _index)
+{
+    if (m_clientActions[_index])
+        m_clientActions[_index]->m_finished = true;
+}
+
 void ActionPool::UpdateExecution()
 {
-	if( m_localAction )
+	if( m_localAction && (m_localAction->Update() || m_localAction->m_finished))
 	{
-		if( m_localAction->Update() )
-			EndLocalAction();
+		delete m_localAction;
+		m_localAction = 0;
 	}
+
+    // Push local action if none is active
+    if (!m_localAction && m_localActionQueue.size() > 0)
+    {
+        // Get the new local action from the queue
+        LocalActionInfo newAction = m_localActionQueue.front();
+        m_localActionQueue.pop();
+        Action* toCopy = m_actions.at(std::get<0>(newAction));
+
+        // Create a copy of the action and return it
+        if (toCopy)
+        {
+            // The old action is stopped here
+            delete m_localAction;
+            m_localAction = 0;
+
+            // Create a copy of the new action
+            m_localAction = toCopy->Clone(std::get<1>(newAction), std::get<2>(newAction));
+            m_localAction->Execute();
+        }
+    }
 
 	for( int i=0; i<24; ++i )
 	{
-		if( m_clientActions[i] )
+		if( m_clientActions[i] && (m_clientActions[i]->Update() || m_clientActions[i]->m_finished) )
 		{
-			if( m_clientActions[i]->Update() )
-				EndClientAction(i);
+			delete m_clientActions[i];
+			m_clientActions[i] = 0;
 		}
 	}
-}
-
-void ActionPool::EndLocalAction()
-{
-    delete m_localAction;
-    m_localAction = 0;
-}
-
-void ActionPool::EndClientAction(uint8_t index)
-{
-    delete m_clientActions[index];
-    m_clientActions[index] = 0;
 }
 
 Core::ActionID ActionPool::GetClientAction(int index)

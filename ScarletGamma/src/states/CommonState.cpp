@@ -107,17 +107,6 @@ void CommonState::MouseMoved(int deltaX, int deltaY, bool guiHandled)
 	}
 }
 
-
-void CommonState::MouseWheelMoved(sf::Event::MouseWheelEvent& wheel, bool guiHandled)
-{
-	// Don't react to any key if gui handled it
-	if (guiHandled)
-		return;
-
-	m_zoom = (float)wheel.delta;
-}
-
-
 void CommonState::KeyPressed( sf::Event::KeyEvent& key, bool guiHandled )
 {
 	// Don't react to any key if gui handled it

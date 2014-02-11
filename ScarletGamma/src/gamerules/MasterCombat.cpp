@@ -5,6 +5,7 @@
 #include "Constants.hpp"
 #include "utils/Random.hpp"
 #include "network/CombatMessages.hpp"
+#include "states/PromptState.hpp"
 #include <iostream>
 
 using namespace GameRules;
@@ -25,6 +26,14 @@ void GameRules::MasterCombat::AddParticipant( Core::ObjectID _object )
         // No owner, so the DM needs to take care of the poor guy
         PushInitiativePrompt(_object);
     }
+}
+
+void GameRules::MasterCombat::InitiativeRollPromptFinished( States::GameState* _ps, Core::ObjectID _object )
+{
+    States::PromptState* prompt = dynamic_cast<States::PromptState*>(_ps);
+    assert(prompt);
+
+    ReceivedInitiative(_object, std::string(prompt->GetResult()));
 }
 
 void MasterCombat::ReceivedInitiative(Core::ObjectID _object, std::string& _initiative)

@@ -10,6 +10,7 @@ namespace GameRules
     public:
         void AddParticipant(Core::ObjectID _object);
         void ReceivedInitiative(Core::ObjectID _object, std::string& _initiative);
+        virtual void InitiativeRollPromptFinished( States::GameState* _ps, Core::ObjectID _object ) override;
 
     protected:
         /// \brief Keeps the initiative for each combat participant.

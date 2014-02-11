@@ -18,6 +18,8 @@ namespace GameRules
 
         void PushInitiativePrompt(Core::ObjectID _object);
 
+        virtual void InitiativeRollPromptFinished( States::GameState* _ps, Core::ObjectID _object );
+
     protected:
         /// \brief Map of participants, sorted by their order of initiative
         std::list<Core::ObjectID> m_participants;

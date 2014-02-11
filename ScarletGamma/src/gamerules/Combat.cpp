@@ -2,6 +2,8 @@
 #include "Game.hpp"
 #include "States/StateMachine.hpp"
 #include "states/PromptState.hpp"
+#include "network/CombatMessages.hpp"
+#include <jofilelib.hpp>
 
 using namespace GameRules;
 
@@ -30,18 +32,18 @@ void GameRules::Combat::PushInitiativePrompt( Core::ObjectID _object )
     States::PromptState* prompt = dynamic_cast<States::PromptState*>(
         g_Game->GetStateMachine()->PushGameState(States::GST_PROMPT));
     prompt->SetText("Angriffswurf eingeben:");
-    //prompt->AddPopCallback(std::bind(0x70D0, this, std::placeholders::_1));
+    prompt->AddPopCallback(std::bind(&Combat::InitiativeRollPromptFinished, this, std::placeholders::_1, _object));
 }
 
-//void States::PlayerState::InitiativeRollPromptFinished( States::GameState* _gs )
-//{
-//    PromptState* prompt = dynamic_cast<PromptState*>(ps);
-//    assert(ps);
-//
-//    // Send initiative roll string to server
-//    Jo::Files::MemFile data;
-//    const std::string& result = prompt->GetResult().c_str();
-//    data.Write(&m_selection[0], sizeof(m_selection[0]));
-//    data.Write(result.c_str(), result.length());
-//    Network::CombatMsg(Network::CombatMsgType::PL_COMBAT_INITIATIVE).Send(&data);
-//}
+void GameRules::Combat::InitiativeRollPromptFinished( States::GameState* _ps, Core::ObjectID _object )
+{
+    States::PromptState* prompt = dynamic_cast<States::PromptState*>(_ps);
+    assert(prompt);
+
+    // Send initiative roll string to server
+    Jo::Files::MemFile data;
+    const std::string& result = prompt->GetResult().c_str();
+    data.Write(&_object, sizeof(_object));
+    data.Write(result.c_str(), result.length());
+    Network::CombatMsg(Network::CombatMsgType::PL_COMBAT_INITIATIVE).Send(&data);
+}

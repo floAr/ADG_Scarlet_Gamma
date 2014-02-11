@@ -155,25 +155,22 @@ void PropertyPanel::Add( const std::string& _left, bool _changable, const std::s
 
 	// y coordinate where to insert inside panel
 	float y = (float)m_numPixelLines;
-	unsigned i = 0;
+	unsigned index = 0;
 	// Search the smallest y where for each item string is greater _left.
-	for( size_t i=1; i<m_listContainer->getWidgets().size(); ++i )
+	for( ; index < m_lines.size(); ++index )
 	{
-		// Only in left row
-		if( abs(m_listContainer->getWidgets()[i]->getPosition().x-x) < 1.0f )
+		tgui::EditBox::Ptr next = m_lines[index].left;
+		std::string text = next->getText();
+		if( Utils::IStringLess(_left, text) )
 		{
-			tgui::EditBox::Ptr next = m_listContainer->getWidgets()[i];
-			std::string text = next->getText();
-			if( next != nullptr && Utils::IStringLess(_left, text) )
-			{
-				y = std::min( next->getPosition().y, y );
-			} else if( Utils::IStringEqual(_left, text) )
-			{
-				// Key already contained -> just update and return
-				if( m_lines[next->getCallbackId()].right->getText() != _right )
-					m_lines[next->getCallbackId()].right->setText( _right );
-				return;
-			}
+			y = next->getPosition().y;
+			break;	// Found
+		} else if( Utils::IStringEqual(_left, text) )
+		{
+			// Key already contained -> just update and return
+			if( m_lines[next->getCallbackId()].right->getText() != _right )
+				m_lines[next->getCallbackId()].right->setText( _right );
+			return;
 		}
 	}
 
@@ -189,7 +186,7 @@ void PropertyPanel::Add( const std::string& _left, bool _changable, const std::s
 	m_listContainer->add(entry.left);
 	entry.left->setSize(w, 20.0f);
 	entry.left->setPosition(x, y);
-	entry.left->setCallbackId(m_lines.size());
+	entry.left->setCallbackId(index);
 	// Always disable to avoid careless changes
 	entry.left->disable();
 	entry.left->setText(_left);
@@ -199,7 +196,7 @@ void PropertyPanel::Add( const std::string& _left, bool _changable, const std::s
 	m_listContainer->add(entry.right);
 	entry.right->setSize(w, 20.0f);
 	entry.right->setPosition(w+x, y);
-	entry.right->setCallbackId(m_lines.size());
+	entry.right->setCallbackId(index);
 	entry.right->bindCallbackEx(&PropertyPanel::ValueChanged, this, tgui::EditBox::Unfocused);
 	entry.right->bindCallbackEx(&PropertyPanel::ValueEntered, this, tgui::EditBox::ReturnKeyPressed);
 	if(!_editable)
@@ -212,11 +209,29 @@ void PropertyPanel::Add( const std::string& _left, bool _changable, const std::s
 		entry.del = m_basicDeleteButton.clone();
 		m_listContainer->add(entry.del);
 		entry.del->setPosition(Panel::getSize().x - 12.0f, y+4.0f);
-		entry.del->setCallbackId(m_lines.size());
+		entry.del->setCallbackId(index);
 		entry.del->bindCallbackEx(&PropertyPanel::RemoveBtn, this, tgui::Button::LeftMouseClicked);
 	}
 
-	m_lines.push_back(std::move(entry));
+	m_lines.insert(m_lines.begin() + index, std::move(entry));
+
+	// Repair m_lines
+	for( size_t i=index+1; i<m_lines.size(); ++i )
+	{
+		m_lines[i].left->setCallbackId(i);
+		m_lines[i].right->setCallbackId(i);
+		if(m_lines[i].del != nullptr) m_lines[i].del->setCallbackId(i);
+		if(m_lines[i].subNode != nullptr)
+		{
+			m_lines[i].subNode->setCallbackId(i);
+			m_lines[i].subNode->m_newName->setCallbackId(i);
+			m_lines[i].subNode->m_newValue->setCallbackId(i);
+			m_lines[i].subNode->m_newAdd->setCallbackId(i);
+			m_lines[i].subNode->m_scrollBar->setCallbackId(i);
+			m_lines[i].subNode->m_titleBar->setCallbackId(i);
+			m_lines[i].subNode->m_miniMaxi->setCallbackId(i);
+		}
+	}
 }
 
 PropertyPanel::Ptr PropertyPanel::AddNode( EntryLine& _parent )
@@ -240,20 +255,27 @@ PropertyPanel::Ptr PropertyPanel::AddNode( EntryLine& _parent )
 
 void PropertyPanel::RemoveBtn(const tgui::Callback& _call)
 {
-	int posY = (int)_call.widget->getPosition().y;
-	int minY = posY, maxY = posY + (int)_call.widget->getSize().y;
 	unsigned delLine = _call.id;
 
 	// Remove from object(s)
 	auto name = m_lines[delLine].left->getText();
 	for( size_t i=0; i<m_objects.size(); ++i )
 		m_objects[i]->Remove( name );
+
+	Remove( delLine );
+}
+
 	
+void PropertyPanel::Remove( unsigned _line )
+{
+	int posY = (int)m_lines[_line].left->getPosition().y;
+	int minY = posY, maxY = posY + (int)m_lines[_line].left->getSize().y;
+
 	// First element is always the scrollbar
 	for( size_t i=1; i<m_listContainer->getWidgets().size(); ++i )
 	{
 		// Search and destroy
-		if( (m_listContainer->getWidgets()[i]->getCallbackId() == delLine) )
+		if( (m_listContainer->getWidgets()[i]->getCallbackId() == _line) )
 		{
 			minY = std::min((int)m_listContainer->getWidgets()[i]->getPosition().y, minY);
 			maxY = std::max((int)(m_listContainer->getWidgets()[i]->getPosition().y + std::min(m_listContainer->getWidgets()[i]->getSize().y, 20.0f)), maxY);
@@ -263,8 +285,8 @@ void PropertyPanel::RemoveBtn(const tgui::Callback& _call)
 	}
 
 	// Repair m_lines
-	m_lines.erase( m_lines.begin() + delLine );
-	for( size_t i=delLine; i<m_lines.size(); ++i )
+	m_lines.erase( m_lines.begin() + _line );
+	for( size_t i=_line; i<m_lines.size(); ++i )
 	{
 		m_lines[i].left->setCallbackId(i);
 		m_lines[i].right->setCallbackId(i);
@@ -283,6 +305,7 @@ void PropertyPanel::RemoveBtn(const tgui::Callback& _call)
 
 	Resize(minY - maxY, posY);
 }
+
 
 void PropertyPanel::AddBtn( const tgui::Callback& _call )
 {
@@ -589,7 +612,7 @@ void PropertyPanel::Show( Core::World* _world, const Core::ObjectList& _objects 
 			}
 	}
 
-	if( listChanged )
+//	if( listChanged )
 	{
 		// First copy the entries.
 		m_objects.clear();
@@ -603,7 +626,7 @@ void PropertyPanel::Show( Core::World* _world, const Core::ObjectList& _objects 
 				m_titleBar->setText( _world->GetObject(_objects[0])->GetName() );
 			else m_titleBar->setText( STR_MULTISELECTION );
 		}
-	} else {
+	}/* else {
 		// For each line refresh the value on the right side
 		for( size_t i=0; i<m_lines.size(); ++i )
 		{
@@ -613,7 +636,7 @@ void PropertyPanel::Show( Core::World* _world, const Core::ObjectList& _objects 
 					m_objects[0]->GetProperty( m_lines[i].left->getText() ).Value()
 				);
 		}
-	}
+	}*/
 }
 
 
@@ -631,11 +654,20 @@ void PropertyPanel::RefreshFilter()
 {
 	if(IsMinimized()) return;
 	
-	Clear();
-	if( m_objects.size() == 0 ) return;
+	if( m_objects.size() == 0 ) { Clear(); return; }
 
 	// Get all possible properties from the first object
 	auto allProperties = m_objects[0]->FilterByName( m_titleBar->getText() );
+
+	// Sort by name
+	std::sort( allProperties.begin(), allProperties.end(),
+		[](const Core::Property* _1, const Core::Property* _2)
+		{
+			return Utils::IStringLess(_1->Name(), _2->Name());
+		}
+	);
+
+	size_t numAdded = 0;
 
 	for( size_t i=0; i<allProperties.size(); ++i )
 	{
@@ -649,11 +681,38 @@ void PropertyPanel::RefreshFilter()
 			// Skip non-common properties
 			if( commonProperty )
 			{
-				Add( allProperties[i]->Name(), allProperties[i]->CanChange(m_player),
-					 allProperties[i]->Value(), allProperties[i]->CanEdit(m_player) );
+				// Now update / add or remove a property.
+				// Assert: All properties seen up to now are equal the seen ones
+				//		from allProperties.
+				// Case 1: The current list is just shorter -> current one is new.
+				// Case 2: The current line and the observed property are equal ->
+				//		update value.
+				// Case 3a: Unequal and newName < lineName -> we must add a new element.
+				// Case 3b: Unequal and newName > lineName -> delete the current line.
+				Reevaluate:
+				if( m_lines.size() <= numAdded )
+				{
+					Add( allProperties[i]->Name(), allProperties[i]->CanChange(m_player),
+						 allProperties[i]->Value(), allProperties[i]->CanEdit(m_player) );
+				} else {
+					std::string lineName = m_lines[numAdded].left->getText();
+					if(lineName == allProperties[i]->Name())
+					{
+						// Update except it is focused (than somebody is editing)
+						if( !m_lines[numAdded].right->isFocused() )
+							m_lines[numAdded].right->setText( allProperties[i]->Value() );
+					} else if( Utils::IStringLess( allProperties[i]->Name(), lineName ) )
+					{
+						Add( allProperties[i]->Name(), allProperties[i]->CanChange(m_player),
+							allProperties[i]->Value(), allProperties[i]->CanEdit(m_player) );
+					} else {
+						Remove( numAdded );
+						goto Reevaluate;
+					}
+				}
 
 				// Add inventory recursively
-				if( allProperties[i]->IsObjectList() && m_objects.size() == 1 )
+			/*	if( allProperties[i]->IsObjectList() && m_objects.size() == 1 )
 				{
 					for( int j=0; j<allProperties[i]->GetObjects().Size(); ++j )
 					{
@@ -662,7 +721,9 @@ void PropertyPanel::RefreshFilter()
 						node->Show( m_world, m_world->GetObject( allProperties[i]->GetObjects()[j] ) );
 						node->MiniMaxi();
 					}
-				}
+				}*/
+
+				++numAdded;
 			}
 		}
 	}

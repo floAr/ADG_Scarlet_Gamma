@@ -172,6 +172,23 @@ namespace States {
 
 	void MasterState::MouseButtonPressed(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos, bool guiHandled)
 	{
+		// Register right-click on Player-Toolbox ( tgui has no RMB support ).
+		if( button.button == sf::Mouse::Right )
+		{
+			float x = button.x - m_toolbar->getPosition().x;
+			float y = button.y - m_toolbar->getPosition().y;
+			if( m_playerTool->mouseOnWidget(x, y) )
+			{
+				// Set view to the player
+				Object* player = m_playerTool->GetPlayer(x, y);
+				sf::Vector2f pos = player->GetPosition();
+				sf::Vector2f viewPos = pos * float(TILESIZE);
+				sf::View newView = g_Game->GetWindow().getView();
+				newView.setCenter(viewPos);
+				g_Game->GetWindow().setView(newView);
+			}
+		}
+
 		// Return if the GUI already handled it
 		if (guiHandled)
 			return;

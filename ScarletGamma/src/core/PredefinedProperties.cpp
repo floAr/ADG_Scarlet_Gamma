@@ -5,7 +5,7 @@
 
 namespace Core {
 
-	const Property PROPERTY::NAME = Property(Property::R_VCEV0EV00, STR_PROP_NAME, STR_EMPTY);
+	const Property PROPERTY::NAME = Property(Property::R_VCEV00V00, STR_PROP_NAME, STR_EMPTY);
 	const Property PROPERTY::SPRITE = Property(Property::R_V0E000000, STR_PROP_SPRITE, STR_EMPTY);
 	const Property PROPERTY::X = Property(Property::R_V0EV00000, STR_PROP_X, STR_0);
 	const Property PROPERTY::Y = Property(Property::R_V0EV00000, STR_PROP_Y, STR_0 );

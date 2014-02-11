@@ -429,13 +429,19 @@ namespace Interfaces {
 		}
 	}
 
-	void PlayersToolbox::DragPlayer(const tgui::Callback& _caller)
+	Core::Object* PlayersToolbox::GetPlayer( float _x, float _y )
 	{
 		// Force the list to select something
-		m_playerList->leftMousePressed( (float)_caller.mouse.x, (float)_caller.mouse.y );
+		m_playerList->leftMousePressed( _x, _y );
 
+		return g_Game->GetWorld()->FindPlayer( m_playerList->getSelectedItem() );
+	}
+
+	void PlayersToolbox::DragPlayer(const tgui::Callback& _caller)
+	{
 		// Get which player must be dragged from list
-		Core::Object* player = g_Game->GetWorld()->FindPlayer( m_playerList->getSelectedItem() );
+		Core::Object* player = GetPlayer( (float)_caller.mouse.x, (float)_caller.mouse.y );
+
 		if( player )
 		{
 			if( !*m_dragNDropHandler )

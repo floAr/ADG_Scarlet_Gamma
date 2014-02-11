@@ -110,6 +110,9 @@ namespace Interfaces {
 		/// \brief Add or replace a line. The left side is the unique key.
 		void Add( const std::string& _left, bool _changable, const std::string& _right, bool _editable );
 
+		/// \brief Remove a line from the panel
+		void Remove( unsigned _line );
+
 		typedef int NodeID;
 
 		/// \brief Add a separating line which can be closed/opened and

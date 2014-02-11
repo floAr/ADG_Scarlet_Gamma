@@ -141,25 +141,25 @@ namespace States {
 		if( m_modeTool->GetMode() == Interfaces::ModeToolbox::SELECTION && m_rectSelection )
 		{
 			sf::Vector2i mousePos = Events::InputHandler::GetMouseTilePosition();
-			int sX,sY,minX,minY,maxX,maxY;
+			int minX,minY,maxX,maxY;
 			if(mousePos.x < m_rectSelectionStart.x)
 			{
 				minX = (int)mousePos.x;
-				maxX = (int)m_rectSelectionStart.x;
+				maxX = (int)m_rectSelectionStart.x+1;
 			}
 			else
 			{
-				maxX = (int)mousePos.x;
+				maxX = (int)mousePos.x+1;
 				minX = (int)m_rectSelectionStart.x;
 			}
 			if(mousePos.y < m_rectSelectionStart.y)
 			{
 				minY = (int)mousePos.y;
-				maxY = (int)m_rectSelectionStart.y;
+				maxY = (int)m_rectSelectionStart.y+1;
 			}
 			else
 			{
-				maxY = (int)mousePos.y;
+				maxY = (int)mousePos.y+1;
 				minY = (int)m_rectSelectionStart.y;
 			}
 			Graphics::TileRenderer::RenderRect( win, sf::Vector2i(minX,minY), sf::Vector2i(maxX,maxY) );
@@ -304,32 +304,32 @@ namespace States {
 		}
 
 		if(m_rectSelection){
-			int sX,sY,minX,minY,maxX,maxY;
+			int minX,minY,maxX,maxY;
 			if(tilePos.x<m_rectSelectionStart.x)
 			{
 				minX = (int)tilePos.x;
-				maxX = (int)m_rectSelectionStart.x;
+				maxX = (int)m_rectSelectionStart.x+1;
 			}
 			else
 			{
-				maxX = (int)tilePos.x;
+				maxX = (int)tilePos.x+1;
 				minX = (int)m_rectSelectionStart.x;
 			}
 			if(tilePos.y<m_rectSelectionStart.y)
 			{
 				minY = (int)tilePos.y;
-				maxY = (int)m_rectSelectionStart.y;
+				maxY = (int)m_rectSelectionStart.y+1;
 			}
 			else
 			{
-				maxY = (int)tilePos.y;
+				maxY = (int)tilePos.y+1;
 				minY = (int)m_rectSelectionStart.y;
 			}
 			if(!sf::Keyboard::isKeyPressed(sf::Keyboard::LControl))//if not pressing cntrl -> clear selection
 				m_selection.Clear();
-			for(sX = minX; sX < maxX; sX++)
+			for(int sX = minX; sX < maxX; sX++)
 			{
-				for(sY = minY; sY < maxY; sY++)
+				for(int sY = minY; sY < maxY; sY++)
 				{
 					auto oList=GetCurrentMap()->GetObjectsAt(sX,sY);
 					for (int i = 0; i < oList.Size(); i++)

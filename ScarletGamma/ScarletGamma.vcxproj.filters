@@ -210,7 +210,7 @@
       <Filter>Quelldateien\states</Filter>
     </ClCompile>
     <ClCompile Include="src\graphics\SpriteAtlasBatcher.cpp">
-      <Filter>Quelldateien</Filter>
+      <Filter>Quelldateien\graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -388,7 +388,9 @@
     <ClInclude Include="src\states\NewPlayerState.hpp">
       <Filter>Quelldateien\states</Filter>
     </ClInclude>
-    <ClInclude Include="src\graphics\SpriteAtlasBatcher.hpp" />
+    <ClInclude Include="src\graphics\SpriteAtlasBatcher.hpp">
+      <Filter>Quelldateien\graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />

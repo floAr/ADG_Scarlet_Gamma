@@ -25,6 +25,8 @@ namespace States
 		/// \brief CommonState Update + Player view refreshed.
 		virtual void Update( float _dt ) override;
 
+		virtual void BeginCombat(Core::ObjectID _object) override;
+
 	private:
 		Core::PlayerID m_playerID;							///< The players id (set by socket index)
 		Core::Object* m_player;								///< The one and only player object

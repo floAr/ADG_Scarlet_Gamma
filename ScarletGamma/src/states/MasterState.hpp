@@ -35,6 +35,8 @@ namespace States
 		/// \brief Check if a layer is currently visible
 		bool IsLayerVisible( int _layer )	{ return m_hiddenLayers[_layer] != 0; }
 
+		virtual void BeginCombat(Core::ObjectID _object) override;
+
 	private:
 		const std::string m_worldFileName;	///< This is the name of the world which was loaded in constructor
 

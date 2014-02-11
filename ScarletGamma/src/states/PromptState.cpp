@@ -10,7 +10,7 @@ PromptState::PromptState()
 	m_defaultButton->load("lib/TGUI-0.6-RC/widgets/Black.conf");
 	// Load shader from file
 	//m_shader=Content::Instance()->LoadShader("media/Prompt.frag",sf::Shader::Type::Fragment);
-	m_shader.loadFromFile("media/dummy.frag", sf::Shader::Fragment);
+	m_shader.loadFromFile("media/Prompt.frag", sf::Shader::Fragment);
 
 	// Create GUI
 	m_gui.setWindow(g_Game->GetWindow());

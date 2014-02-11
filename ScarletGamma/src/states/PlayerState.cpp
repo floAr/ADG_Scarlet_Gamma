@@ -12,6 +12,8 @@
 #include "states/StateMachine.hpp"
 #include "sfutils/View.hpp"
 #include "utils/StringUtil.hpp"
+#include "gamerules/Combat.hpp"
+#include "states/PromptState.hpp"
 
 
 States::PlayerState::PlayerState( const std::string& _playerName, const sf::Color& _chatColor, Core::PlayerID _id ) :
@@ -81,13 +83,6 @@ void States::PlayerState::MouseMoved(int deltaX, int deltaY, bool guiHandled)
 	// Don't react to any key if gui handled it
 	if (guiHandled)
 		return;
-
-	// Let the common state do the most things
-	CommonState::MouseMoved(deltaX, deltaY, guiHandled);
-
-	// In the case of mbm down the view was moved - disable focusing
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Middle))
-		m_focus = nullptr;
 }
 
 
@@ -339,4 +334,21 @@ void States::PlayerState::SetViewToObject(Core::Object* object){
 
 void States::PlayerState::SetHotkeyToObject(const int hotkey, Core::ObjectID objectID){
 	m_hotkeys[hotkey] = objectID;
+}
+
+void States::PlayerState::BeginCombat( Core::ObjectID _object )
+{
+    // Find the object
+    Core::Object* object = g_Game->GetWorld()->GetObject(_object);
+
+    // Does this object belong to me?
+    if (object->HasProperty(STR_PROP_OWNER) && object->GetProperty(STR_PROP_OWNER).Value() == m_name)
+    {
+        // Maybe create a new Combat object
+        if (!m_combat)
+            m_combat = new GameRules::Combat();
+
+        // Prompt for initiative roll
+        m_combat->PushInitiativePrompt(_object);
+    }
 }

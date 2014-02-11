@@ -65,8 +65,7 @@ namespace States
 
 		//----------------------------------------------------------------------
 		// COMBAT STUFF
-		virtual void BeginCombat();
-		virtual void InitiativeRollPromptFinished(States::GameState* ps);
+        virtual void BeginCombat(Core::ObjectID _object) = 0;
 		virtual void EndCombat();
 		GameRules::Combat* GetCombat()
 		{

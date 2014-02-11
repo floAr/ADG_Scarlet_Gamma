@@ -10,6 +10,23 @@
 using namespace GameRules;
 using namespace Network;
 
+void GameRules::MasterCombat::AddParticipant( Core::ObjectID _object )
+{
+    if (g_Game->GetWorld()->GetObject(_object)->HasProperty(STR_PROP_OWNER))
+    {
+        // Send message with ObjectID to all players. Each player then checks
+        // whether the object belongs to him and if so provides an initiative roll.
+        Jo::Files::MemFile data;
+        data.Write(&_object, sizeof(_object));
+        Network::CombatMsg(Network::CombatMsgType::DM_COMBAT_BEGIN).Send(&data);
+    }
+    else
+    {
+        // No owner, so the DM needs to take care of the poor guy
+        PushInitiativePrompt(_object);
+    }
+}
+
 void MasterCombat::ReceivedInitiative(Core::ObjectID _object, std::string& _initiative)
 {
     // Save initiative value
@@ -78,3 +95,4 @@ void MasterCombat::ReceivedInitiative(Core::ObjectID _object, std::string& _init
         ", inserted at position " << std::to_string(position) << ".\n";
 #endif
 }
+

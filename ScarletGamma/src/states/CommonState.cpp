@@ -265,33 +265,9 @@ void CommonState::RemoveFromSelection( Core::ObjectID _id )
 	m_selectionChanged = true;
 }
 
-void CommonState::BeginCombat()
-{
-	m_combat = new GameRules::Combat();
-
-	// Prompt for initiative roll
-	PromptState* prompt = dynamic_cast<PromptState*>(
-		g_Game->GetStateMachine()->PushGameState(States::GST_PROMPT));
-	prompt->SetText("Angriffswurf eingeben:");
-	prompt->AddPopCallback(std::bind(&CommonState::InitiativeRollPromptFinished, this, std::placeholders::_1));
-}
-
-void CommonState::InitiativeRollPromptFinished(States::GameState* ps)
-{
-	PromptState* prompt = dynamic_cast<PromptState*>(ps);
-	assert(ps);
-
-	// Send initiative roll string to server
-	Jo::Files::MemFile data;
-	const std::string& result = prompt->GetResult().c_str();
-	data.Write(&m_selection[0], sizeof(m_selection[0]));
-	data.Write(result.c_str(), result.length());
-	Network::CombatMsg(Network::CombatMsgType::PL_COMBAT_INITIATIVE).Send(&data);
-}
-
 void CommonState::EndCombat()
 {
-	delete(m_combat);
+	delete m_combat;
 	m_combat = 0;
 }
 

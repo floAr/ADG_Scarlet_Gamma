@@ -400,7 +400,12 @@ namespace States {
 			if (sf::Keyboard::isKeyPressed((sf::Keyboard::LControl)))
 			{
 				m_combat = new GameRules::MasterCombat();
-				Network::CombatMsg(Network::CombatMsgType::DM_COMBAT_BEGIN).Send();
+                Core::World* world = g_Game->GetWorld();
+                for( int i=0; i<m_selection.Size(); ++i )
+                {
+                    // Add participant to combat
+                    static_cast<GameRules::MasterCombat*>(m_combat)->AddParticipant(m_selection[i]);
+                }
 			}
 			break;
 
@@ -513,6 +518,23 @@ namespace States {
 		MapID id = m_mapTool->GetSelectedMap();
 		return g_Game->GetWorld()->GetMap(id);
 	}
+
+    void MasterState::BeginCombat( Core::ObjectID _object )
+    {
+        // Find the object
+        Core::Object* object = g_Game->GetWorld()->GetObject(_object);
+
+        // Does this object belong to me?
+        if (!object->HasProperty(STR_PROP_OWNER))
+        {
+            // Maybe create a new Combat object
+            if (!m_combat)
+                m_combat = new GameRules::MasterCombat();
+
+            // Prompt for initiative roll
+            m_combat->PushInitiativePrompt(_object);
+        }
+    }
 
 	//void States::MasterState::TestButtonCallback(std::string feedback){
 	//	std::cout<<feedback;

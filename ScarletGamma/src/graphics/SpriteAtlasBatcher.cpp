@@ -21,7 +21,7 @@ SpriteAtlasBatcher* SpriteAtlasBatcher::Instance(){
 	return m_instance;
 }
 
-SpriteAtlasBatcher::SpriteAtlasBatcher():m_drawArray(sf::Quads),m_atlasBounds(0,0),m_hasBegun(false),m_yOffset(0){
+SpriteAtlasBatcher::SpriteAtlasBatcher():m_drawArray(sf::Quads),m_atlasBounds(0,0),m_hasBegun(false),m_textureDirty(true),m_yOffset(0){
 	m_atlasTexture.create(64,64);
 }
 //
@@ -91,16 +91,17 @@ AtlasSprite Graphics::SpriteAtlasBatcher::AddOrGetAtlasSprite(const std::string 
 	m_atlasBounds.x+=tex.getSize().x;
 	if(tex.getSize().y>m_yOffset)
 		m_yOffset=tex.getSize().y;
-	
+
 
 	m_atlas.emplace(std::make_pair(name,result));
+
+	m_textureDirty=true; //reevaluate atlas texture
 	return result;
 }
 
 void SpriteAtlasBatcher::Begin(){
 	assert(!m_hasBegun);
 	m_drawArray.clear();
-	m_drawArray.setPrimitiveType(sf::PrimitiveType::Quads);
 	m_hasBegun=true;
 }
 
@@ -128,7 +129,11 @@ void SpriteAtlasBatcher::Enque(AtlasSprite as){
 
 void SpriteAtlasBatcher::End(){
 	assert(m_hasBegun);
-	m_atlasTexture.display();
+	if(m_textureDirty)
+	{
+		m_atlasTexture.display();
+		m_textureDirty=false;
+	}
 	//m_atlasTexture.getTexture().copyToImage().saveToFile("toto.png");
 	m_hasBegun=false;
 }

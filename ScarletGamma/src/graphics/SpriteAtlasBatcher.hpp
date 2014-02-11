@@ -53,6 +53,7 @@ namespace Graphics
 	protected:
 		SpriteAtlasBatcher();
 	private:
+		bool m_textureDirty;
 		bool m_hasBegun;
 		float m_yOffset;
 		virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;

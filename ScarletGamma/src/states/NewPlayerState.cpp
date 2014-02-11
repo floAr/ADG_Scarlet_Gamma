@@ -11,10 +11,11 @@
 
 namespace States {
 
-NewPlayerState::NewPlayerState(tgui::EditBox::Ptr _nameEdit) :
+NewPlayerState::NewPlayerState(tgui::EditBox::Ptr _nameEdit, Core::ObjectID* _saveID) :
     GameState(),
 	m_nameOutputEdit(_nameEdit),
-	m_name(nullptr)
+	m_name(nullptr),
+	m_newPlayer(_saveID)
 {
 	m_menuFont = Content::Instance()->LoadFont("media/arial.ttf");
 
@@ -183,10 +184,14 @@ void NewPlayerState::Create()
 	obj->Add( Core::PROPERTY::NAME ).SetValue( m_name->getText() );
 	obj->Add( Core::PROPERTY::OWNER ).SetValue( m_name->getText() );
 	obj->Add( Core::PROPERTY::PLAYER );
+	obj->Add( Core::PROPERTY::TARGET );
+	obj->Add( Core::PROPERTY::PATH );
 
-	// The object will be added to the player list (because it has the player property
-	g_Game->GetWorld()->RegisterObject( obj );
 	m_nameOutputEdit->setText( m_name->getText() );
+
+	// The problem is that during player construction there is no connection ->
+	// Object is not synchronized. It is send the moment we get a connection
+	*m_newPlayer = objID;
 
 	m_finished = true;
 }

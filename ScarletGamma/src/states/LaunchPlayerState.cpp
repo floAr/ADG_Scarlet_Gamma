@@ -8,9 +8,11 @@
 #include "PlayerState.hpp"
 #include "network/Messenger.hpp"
 #include "NewPlayerState.hpp"
+#include "network/WorldMessages.hpp"
 
 States::LaunchPlayerState::LaunchPlayerState() :
-    GameState()
+    GameState(),
+	m_newPlayer(0xffffffff)
 {
 	m_menuFont = Content::Instance()->LoadFont("media/arial.ttf");
 
@@ -81,6 +83,15 @@ void States::LaunchPlayerState::GuiCallback(tgui::Callback& callback)
 			mySocket->receive( packet );
 			packet >> id;
 
+			// If necessary we must send the player object to the server now.
+			if( m_newPlayer != 0xffffffff )
+			{
+				Network::MsgAddObject( m_newPlayer ).Send();
+			} else {
+				// Send a dummy packet.
+				mySocket->send( sf::Packet() );
+			}
+
 			// Then the player mode can be created
 			g_Game->GetStateMachine()->PushGameState(new PlayerState(nameEdit->getText(), chatColor, id));
 		} catch(std::string _msg) {
@@ -91,7 +102,7 @@ void States::LaunchPlayerState::GuiCallback(tgui::Callback& callback)
 		break; }
 	case 3: {
 		// Create a new player object first.
-		g_Game->GetStateMachine()->PushGameState(new NewPlayerState(m_gui.get( "Name" )));
+		g_Game->GetStateMachine()->PushGameState(new NewPlayerState(m_gui.get("Name"), &m_newPlayer));
 		break; }
 	default:
 		// No such GUI element!

@@ -92,10 +92,10 @@ namespace Network {
 			{
 				// Handle exactly one message in blocking mode
 				if( g_msgInstance->m_sockets[i]->receive( packet ) == sf::Socket::Done )
-					g_msgInstance->HandleMessage(packet, g_msgInstance->m_sockets[i]);
+					g_msgInstance->HandleMessage(packet, i);
 			} else {
 				while( g_msgInstance->m_sockets[i]->receive( packet ) == sf::Socket::Done )
-					g_msgInstance->HandleMessage(packet, g_msgInstance->m_sockets[i]);
+					g_msgInstance->HandleMessage(packet, i);
 			}
 		}
 	}
@@ -124,20 +124,27 @@ namespace Network {
 		packet << (Core::PlayerID)m_sockets.size();
 		_newClient->send( packet );
 
+		// Wait until new player is added or the dummy packet arrived.
+		Poll( true );
+
 		// Sent whole world (in its latest state)
 		MsgLoadWorld( g_Game->GetWorld(), _newClient ).Send();
 	}
 
 
-	void Messenger::HandleMessage( sf::Packet& _packet, sf::TcpSocket* _from )
+	void Messenger::HandleMessage( sf::Packet& _packet, unsigned _from )
 	{
+		// Get the socket for the ID.
+		sf::TcpSocket* from = g_msgInstance->m_sockets[_from];
+
+		// Received empty packet
+		if( _packet.getDataSize() < sizeof(MessageHeader) ) return;
+
+		// Get data block
 		const uint8_t* buffer = reinterpret_cast<const uint8_t*>(_packet.getData());
 		const MessageHeader* header = reinterpret_cast<const MessageHeader*>(_packet.getData());
 		size_t size = _packet.getDataSize() - sizeof(MessageHeader);
 		size_t read = sizeof(MessageHeader);	// Deprecated but still here for testing
-
-		// Get sender ID
-		uint8_t id = std::distance(std::find(m_sockets.begin(), m_sockets.end(), _from), m_sockets.begin());
 
 		switch(header->target)
 		{
@@ -157,13 +164,13 @@ namespace Network {
 			break;
 		case Target::ACTION:
 			if ( IsServer() )
-				read += HandleActionMessage( static_cast<Core::ActionID>(header->targetID), buffer + sizeof(MessageHeader), size, id );
+				read += HandleActionMessage( static_cast<Core::ActionID>(header->targetID), buffer + sizeof(MessageHeader), size, _from );
 			else
 				read += HandleActionMessage( static_cast<Core::ActionID>(header->targetID), buffer + sizeof(MessageHeader), size, 0 );
 			break;
 		case Target::COMBAT:
 			if ( IsServer() )
-				read += HandleCombatMessage( buffer + sizeof(MessageHeader), size, id );
+				read += HandleCombatMessage( buffer + sizeof(MessageHeader), size, _from );
 			else
 				read += HandleCombatMessage( buffer + sizeof(MessageHeader), size, 0 );
 			break;
@@ -178,7 +185,7 @@ namespace Network {
 			// Forward message to all other clients
 			for( size_t i=0; i<g_msgInstance->m_sockets.size(); ++i )
 			{
-				if( g_msgInstance->m_sockets[i] != _from )
+				if( g_msgInstance->m_sockets[i] != from )
 					g_msgInstance->m_sockets[i]->send( _packet );
 			}
 		}

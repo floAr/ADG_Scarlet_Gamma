@@ -556,6 +556,9 @@ void PropertyPanel::Scroll( int _delta )
 
 void PropertyPanel::Show( Core::World* _world, Core::Object* _object )
 {
+	/*Core::ObjectList list;
+	list.Add(_object->ID());
+	Show( _world, list );*/
 	assert( _object );
 	m_world = _world;
 
@@ -593,17 +596,21 @@ void PropertyPanel::Show( Core::World* _world, const Core::ObjectList& _objects 
 		for( int i=0; i<_objects.Size(); ++i )
 			m_objects.push_back( _world->GetObject(_objects[i]) );
 
-		// Use placeholder title for multiple objects.
 		if( !IsMinimized() ) RefreshFilter();
-		else m_titleBar->setText( STR_MULTISELECTION );
+		else {
+			// Use placeholder title for multiple objects.
+			if( _objects.Size() == 1 )
+				m_titleBar->setText( _world->GetObject(_objects[0])->GetName() );
+			else m_titleBar->setText( STR_MULTISELECTION );
+		}
 	} else {
 		// For each line refresh the value on the right side
 		for( size_t i=0; i<m_lines.size(); ++i )
 		{
 			// ... Except it is focused (than somebody is editing)
 			if( !m_lines[i].right->isFocused() )
-			m_lines[i].right->setText(
-				m_objects[0]->GetProperty( m_lines[i].left->getText() ).Value()
+				m_lines[i].right->setText(
+					m_objects[0]->GetProperty( m_lines[i].left->getText() ).Value()
 				);
 		}
 	}

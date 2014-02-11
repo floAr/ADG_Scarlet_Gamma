@@ -99,17 +99,22 @@ MsgActionEnd::MsgActionEnd(Core::ActionID _action)
 size_t MsgActionEnd::Receive(Core::ActionID _action, uint8_t _sender,
                              const uint8_t* _data, size_t _size)
 {
-    assert(Messenger::IsServer() && "Client got MsgActionBegin, that shouldn't happen");
-
-    Core::ActionID currentAction = Actions::ActionPool::Instance().GetClientAction(_sender);
+    Core::ActionID currentAction;
+    if (Messenger::IsServer())
+        currentAction = Actions::ActionPool::Instance().GetClientAction(_sender);
+    else
+        currentAction = Actions::ActionPool::Instance().GetLocalAction();
 
     if (currentAction == _action)
     {
         // End the current action
-        Actions::ActionPool::Instance().EndClientAction(_sender);
+        if (Messenger::IsServer())
+            Actions::ActionPool::Instance().EndClientAction(_sender);
+        else
+            Actions::ActionPool::Instance().EndLocalAction();
 
 #ifdef _DEBUG
-        std::cout << "Player " <<  std::to_string(_sender) << " ending action '"
+        std::cout << "Peer " <<  std::to_string(_sender) << " ending action '"
             <<  Actions::ActionPool::Instance().GetActionName(_action) << "'" << '\n';
 #endif
     }

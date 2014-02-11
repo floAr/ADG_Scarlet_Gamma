@@ -10,33 +10,35 @@ namespace Graphics
 	class AtlasSprite:public sf::Sprite
 	{
 	public :
-		AtlasSprite(const int id){
-			m_id=id;
-		}
-		int ID();
-		sf::Vector2f TC0(){
+		sf::Vector2f TC0()
+		{
 			return sf::Vector2f(m_TCbegin);
 		}
-		sf::Vector2f TC1(){
+
+		sf::Vector2f TC1()
+		{
 			return sf::Vector2f(m_TCbegin.x,m_TCend.y);
 		}
-		sf::Vector2f TC2(){
+
+		sf::Vector2f TC2()
+		{
 			return sf::Vector2f(m_TCend);
 		}
-		sf::Vector2f TC3(){
+
+		sf::Vector2f TC3()
+		{
 			return sf::Vector2f(m_TCend.x, m_TCbegin.y);
 		}
-		void SetTC(sf::Vector2f tcBegin,sf::Vector2f tcEnd){
+
+		void SetTC(sf::Vector2f tcBegin,sf::Vector2f tcEnd)
+		{
 			m_TCbegin=tcBegin;
 			m_TCend=tcEnd;
 		}
 
 	private:
-		unsigned int m_id;
 		sf::Vector2f m_TCbegin;
 		sf::Vector2f m_TCend;
-
-
 	};
 
 	/// \brief Renders the currently visible section of a given map.
@@ -44,9 +46,7 @@ namespace Graphics
 	{
 	public:
 		static SpriteAtlasBatcher* Instance();
-		static int ATLAS_ID;
-		AtlasSprite AddSpriteToAtlas(const std::string name,sf::Sprite sprite);
-		AtlasSprite AddOrGetAtlasSprite(const std::string name);
+        AtlasSprite& AddOrGetAtlasSprite(const std::string& name);
 		void Begin();
 		void Enque(AtlasSprite as);
 		void End();

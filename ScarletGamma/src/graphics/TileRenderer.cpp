@@ -9,6 +9,7 @@
 #include <cmath>
 #include <iostream>
 #include <unordered_map>
+#include "SpriteAtlasBatcher.hpp"
 
 
 void Graphics::TileRenderer::Render(sf::RenderWindow& window, Core::Map& map, std::function<float(Core::Map&,sf::Vector2i&)> _tileVisible,const bool* hiddenLayers)
@@ -21,7 +22,7 @@ void Graphics::TileRenderer::Render(sf::RenderWindow& window, Core::Map& map, st
 	int top = (int)floor(viewRect.top / TILESIZE);
 	int right = (int)ceil((viewRect.left + viewRect.width) / TILESIZE);
 	int bottom = (int)ceil((viewRect.top + viewRect.height) / TILESIZE);
-
+	Graphics::SpriteAtlasBatcher::Instance()->Begin();
 	// Search layer-wise
 	for (int layer = 0; layer <= map.GetMaxLayer(); layer++ )
 	{
@@ -58,20 +59,26 @@ void Graphics::TileRenderer::Render(sf::RenderWindow& window, Core::Map& map, st
 						if (obj->HasProperty(STR_PROP_SPRITE))
 						{
 							// Draw the tile
-							const sf::Texture& tex = Content::Instance()->LoadTexture(obj->GetProperty(STR_PROP_SPRITE).Value());
-							sf::Sprite drawSprite(tex);
-							drawSprite.setScale(float(TILESIZE)/tex.getSize().x, float(TILESIZE)/tex.getSize().y);
+							//const sf::Texture& tex = Content::Instance()->LoadTexture(obj->GetProperty(STR_PROP_SPRITE).Value());
+							//sf::Sprite drawSprite(tex);
+							//auto drawSprite=Graphics::SpriteAtlasBatcher::Instance()->AddSpriteToAtlas(obj->GetProperty(STR_PROP_SPRITE).Value(),sf::Sprite(tex));
+							auto drawSprite=Graphics::SpriteAtlasBatcher::Instance()->AddOrGetAtlasSprite(obj->GetProperty(STR_PROP_SPRITE).Value());
+							
+							//drawSprite.setScale(float(TILESIZE)/tex.getSize().x, float(TILESIZE)/tex.getSize().y);
 							drawSprite.setPosition(obj->GetPosition() * float(TILESIZE));
 							sf::Color color = obj->GetColor();
 							color.a = uint8_t(color.a * visibility);
 							drawSprite.setColor(color);
-							window.draw(drawSprite);
+							Graphics::SpriteAtlasBatcher::Instance()->Enque(drawSprite);
+							//window.draw(drawSprite);
 						}
 					}
 				}
 			}
 		}
 	}
+	Graphics::SpriteAtlasBatcher::Instance()->End();
+	window.draw(*Graphics::SpriteAtlasBatcher::Instance());
 }
 
 void Graphics::TileRenderer::RenderPath( sf::RenderWindow& window, const std::vector<sf::Vector2i>& _path )

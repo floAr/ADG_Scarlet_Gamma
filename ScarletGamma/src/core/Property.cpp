@@ -70,11 +70,12 @@ namespace Core {
 		}
 	}
 
-	int Property::Evaluate() const
+	int Property::Evaluate(const Object* _reference) const
 	{
         try
         {
-            return Utils::EvaluateFormula(Value(), Game::RANDOM);
+			if( !_reference ) _reference = g_Game->GetWorld()->GetObject(m_parent);
+            return Utils::EvaluateFormula(Value(), Game::RANDOM, _reference);
         }
         catch (Exception::InvalidFormula& e)
         {

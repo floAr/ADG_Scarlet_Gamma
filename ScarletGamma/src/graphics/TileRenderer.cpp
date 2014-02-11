@@ -9,6 +9,7 @@
 #include <cmath>
 #include <iostream>
 #include <unordered_map>
+#include "SpriteAtlasBatcher.hpp"
 
 
 void Graphics::TileRenderer::Render(sf::RenderWindow& window, Core::Map& map, std::function<float(Core::Map&,sf::Vector2i&)> _tileVisible,const bool* hiddenLayers)
@@ -17,10 +18,12 @@ void Graphics::TileRenderer::Render(sf::RenderWindow& window, Core::Map& map, st
 	sf::FloatRect viewRect = sfUtils::View::GetViewRect(window.getView());
 	
 	// Ceil / floor to find the top-left and bottom-right tile that is currently visible
-	int left = (int)floor(viewRect.left / TILESIZE);
-	int top = (int)floor(viewRect.top / TILESIZE);
-	int right = (int)ceil((viewRect.left + viewRect.width) / TILESIZE);
-	int bottom = (int)ceil((viewRect.top + viewRect.height) / TILESIZE);
+	int left   = (int) std::max(floor(viewRect.left / TILESIZE), (float) map.Left());
+	int top    = (int) std::max(floor(viewRect.top / TILESIZE), (float) map.Top());
+	int right  = (int) std::min(ceil((viewRect.left + viewRect.width) / TILESIZE), (float) map.Right());
+	int bottom = (int) std::min(ceil((viewRect.top + viewRect.height) / TILESIZE), (float) map.Bottom());
+
+	Graphics::SpriteAtlasBatcher::Instance()->Begin();
 
 	// Search layer-wise
 	for (int layer = 0; layer <= map.GetMaxLayer(); layer++ )
@@ -30,9 +33,9 @@ void Graphics::TileRenderer::Render(sf::RenderWindow& window, Core::Map& map, st
 				continue;
 		}
 
-		for (int y = top; y <= bottom; y++)
+		for (int y = top; y <= bottom; ++y)
 		{
-			for (int x = left; x <= right; x++)
+			for (int x = left; x <= right; ++x)
 			{
 				float visibility = _tileVisible( map, sf::Vector2i(x, y) );
 				if( visibility > 0.01f )
@@ -58,20 +61,21 @@ void Graphics::TileRenderer::Render(sf::RenderWindow& window, Core::Map& map, st
 						if (obj->HasProperty(STR_PROP_SPRITE))
 						{
 							// Draw the tile
-							const sf::Texture& tex = Content::Instance()->LoadTexture(obj->GetProperty(STR_PROP_SPRITE).Value());
-							sf::Sprite drawSprite(tex);
-							drawSprite.setScale(float(TILESIZE)/tex.getSize().x, float(TILESIZE)/tex.getSize().y);
+							auto& drawSprite = Graphics::SpriteAtlasBatcher::Instance()->AddOrGetAtlasSprite(obj->GetProperty(STR_PROP_SPRITE).Value());
 							drawSprite.setPosition(obj->GetPosition() * float(TILESIZE));
 							sf::Color color = obj->GetColor();
 							color.a = uint8_t(color.a * visibility);
 							drawSprite.setColor(color);
-							window.draw(drawSprite);
+							Graphics::SpriteAtlasBatcher::Instance()->Enque(drawSprite);
 						}
 					}
 				}
 			}
 		}
-	}
+	} // layer
+
+	Graphics::SpriteAtlasBatcher::Instance()->End();
+	window.draw(*Graphics::SpriteAtlasBatcher::Instance());
 }
 
 void Graphics::TileRenderer::RenderPath( sf::RenderWindow& window, const std::vector<sf::Vector2i>& _path )

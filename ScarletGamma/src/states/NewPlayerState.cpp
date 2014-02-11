@@ -48,13 +48,13 @@ NewPlayerState::NewPlayerState(tgui::EditBox::Ptr _nameEdit, Core::ObjectID* _sa
 	cAttitude->load( "media/Black.conf" );
 	cAttitude->setSize( 200.0f, 30.0f );
 	cAttitude->setPosition( 460.0f, 30.0f );
-	cAttitude->addItem( STR_ATT_HONESTGOOD );
+	cAttitude->addItem( STR_ATT_LAWFULGOOD );
 	cAttitude->addItem( STR_ATT_NEUTRALGOOD );
 	cAttitude->addItem( STR_ATT_CHAOTICGOOD );
-	cAttitude->addItem( STR_ATT_HONESTNEUTRAL );
+	cAttitude->addItem( STR_ATT_LAWFULNEUTRAL );
 	cAttitude->addItem( STR_ATT_NEUTRALNEUTRAL );
 	cAttitude->addItem( STR_ATT_CHAOTICNEUTRAL );
-	cAttitude->addItem( STR_ATT_HONESTEVIL );
+	cAttitude->addItem( STR_ATT_LAWFULEVIL );
 	cAttitude->addItem( STR_ATT_NEUTRALEVIL );
 	cAttitude->addItem( STR_ATT_CHAOTICEVIL );
 	cAttitude->setSelectedItem( 0 );

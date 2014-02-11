@@ -11,6 +11,7 @@
 #include "Game.hpp"
 #include "states/StateMachine.hpp"
 #include "sfutils/View.hpp"
+#include "utils/StringUtil.hpp"
 
 
 States::PlayerState::PlayerState( const std::string& _playerName, const sf::Color& _chatColor, Core::PlayerID _id ) :
@@ -169,7 +170,7 @@ void States::PlayerState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 				SetHotkeyToObject(key.code - sf::Keyboard::Num1, m_focus->ID());
 		}
 		else
-			SetViewToObject(key.code - sf::Keyboard::Num1);
+			SetViewToHotkey(key.code - sf::Keyboard::Num1);
 		break;
 	}
 
@@ -316,10 +317,24 @@ float States::PlayerState::CheckTileVisibility( Core::Map& _map, sf::Vector2i& _
 	return v;
 }
 
-void States::PlayerState::SetViewToObject(const int hotkey){
+void States::PlayerState::SetViewToHotkey(const int hotkey){
 	if (m_hotkeys.find(hotkey) == m_hotkeys.end())//return if there is no hotkey
 		return;
-	m_focus=g_Game->GetWorld()->GetObject(m_hotkeys[hotkey]);
+	SetViewToObject(g_Game->GetWorld()->GetObject(m_hotkeys[hotkey]));
+}
+
+void States::PlayerState::SetViewToObject(Core::Object* object){
+	m_focus=object;
+	if(Utils::IStringEqual(object->GetProperty(STR_PROP_OWNER).Value(),m_name))
+	{
+		m_selection.Clear();
+		AddToSelection(object->ID());
+	}
+	else
+	{
+		m_selection.Clear();
+		AddToSelection(m_player->ID());
+	}
 }
 
 void States::PlayerState::SetHotkeyToObject(const int hotkey, Core::ObjectID objectID){

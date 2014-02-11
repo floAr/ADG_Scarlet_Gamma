@@ -10,6 +10,7 @@
 #include <iostream>
 #include "Game.hpp"
 #include "states/StateMachine.hpp"
+#include "sfutils/View.hpp"
 
 
 States::PlayerState::PlayerState( const std::string& _playerName, const sf::Color& _chatColor, Core::PlayerID _id ) :
@@ -27,8 +28,21 @@ States::PlayerState::PlayerState( const std::string& _playerName, const sf::Colo
 
 void States::PlayerState::Draw(sf::RenderWindow& win)
 {
+	assert( m_focus );
+
+	// Draw some color to the background
+	static sf::Color c(20, 26, 36);
+	win.clear(c);
+
+	// Draw the current focused object's name
+	sf::View backup = sfUtils::View::SetDefault(&win);
+	sf::Text t(m_focus->GetName(), m_gui.getGlobalFont(), 24);
+	t.setPosition(20, 10);
+	win.draw(t);
+	win.setView(backup);
+
 	// Focus on the player
-	if( m_focus )
+	if( m_focus->IsLocatedOnAMap() )
 	{
 		sf::Vector2f pos = m_focus->GetPosition();
 		sf::Vector2f viewPos = pos * float(TILESIZE);
@@ -36,24 +50,26 @@ void States::PlayerState::Draw(sf::RenderWindow& win)
 		sf::View newView = win.getView();
 		newView.setCenter(viewPos);
 		win.setView(newView);
+
+		// Render
+		using namespace std::placeholders;
+		std::function<float(Core::Map&,sf::Vector2i&)> visibilityFunc =
+			std::bind(&PlayerState::CheckTileVisibility, this, _1, _2, m_focus->GetPosition());
+		Graphics::TileRenderer::Render(win, *GetCurrentMap(),
+			visibilityFunc);
+
+		// Draw the players path
+		DrawPathOverlay(win, m_focus);
+
+		Graphics::TileRenderer::RenderSelection( win, m_selection );
+	} else {
+		// The player is not on the map - bring that into attention
+		sfUtils::View::SetDefault(&win);
+		sf::Text t(STR_PLAYER_NOT_ON_MAP, m_gui.getGlobalFont(), 30);
+		t.setPosition(230, 320);
+		win.draw(t);
+		win.setView(backup);
 	}
-
-	// Draw some color to the background
-	static sf::Color c(20, 26, 36);
-	win.clear(c);
-
-	// Render
-	assert(m_player->IsLocatedOnAMap());
-	using namespace std::placeholders;
-	std::function<float(Core::Map&,sf::Vector2i&)> visibilityFunc =
-		std::bind(&PlayerState::CheckTileVisibility, this, _1, _2, m_player->GetPosition());
-	Graphics::TileRenderer::Render(win, *GetCurrentMap(),
-		visibilityFunc);
-
-	// Draw the players path
-	DrawPathOverlay(win, m_player);
-
-	Graphics::TileRenderer::RenderSelection( win, m_selection );
 
 	GameState::Draw(win);
 }
@@ -79,6 +95,12 @@ void States::PlayerState::MouseButtonPressed(sf::Event::MouseButtonEvent& button
 	// Return if the GUI already handled it
 	if (guiHandled)
 		return;
+
+	// Don't interact if focused object cannot be controlled
+	if( !m_focus->IsLocatedOnAMap() ||
+		m_focus->GetProperty( STR_PROP_OWNER ).Value() != m_player->GetName() )
+		return;
+
 	int tileX = (int)tilePos.x;
 	int tileY = (int)tilePos.y;
 
@@ -88,7 +110,7 @@ void States::PlayerState::MouseButtonPressed(sf::Event::MouseButtonEvent& button
 		//------------------------------------//
 		// move player to tile position		  //
 		//------------------------------------//
-		assert(m_player->IsLocatedOnAMap());
+		assert(m_focus->IsLocatedOnAMap());
 		auto& tiles = GetCurrentMap()->GetObjectsAt(tileX,tileY);
 		if( tiles.Size() > 0 )
 		{
@@ -97,13 +119,13 @@ void States::PlayerState::MouseButtonPressed(sf::Event::MouseButtonEvent& button
 			// Delete current target(s) if not appending
 			if( !sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) )
 			{
-				m_player->GetProperty(STR_PROP_TARGET).SetValue(STR_EMPTY);
+				m_focus->GetProperty(STR_PROP_TARGET).SetValue(STR_EMPTY);
 				Core::Property& path = m_player->GetProperty(STR_PROP_PATH);
 				path.ClearObjects();
 				path.SetValue(STR_FALSE);
 			}
 			// Append to target list
-			m_player->AppendToPath( obj->ID() );
+			m_focus->AppendToPath( obj->ID() );
 		}
 		break; }
 
@@ -144,15 +166,17 @@ void States::PlayerState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 	case sf::Keyboard::Num9:
 		if(sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)){
 			if(m_focus!=nullptr)//check for null
-				SetHotkeyToObject(key.code - sf::Keyboard::Num1,m_focus->ID());
+				SetHotkeyToObject(key.code - sf::Keyboard::Num1, m_focus->ID());
 		}
 		else
 			SetViewToObject(key.code - sf::Keyboard::Num1);
 		break;
 	}
+
 	// Don't react to any key if gui handled it
 	if (guiHandled)
 		return;
+
 	// Let common state handle input
 	CommonState::KeyPressed(key, guiHandled);
 
@@ -160,7 +184,7 @@ void States::PlayerState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 	{
 	case sf::Keyboard::Num0:
 	case sf::Keyboard::Numpad0:
-		//Refocus on player
+		// Refocus on player
 		m_focus = m_player;
 		break;
 	case sf::Keyboard::Space:
@@ -168,13 +192,22 @@ void States::PlayerState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 		Actions::ActionPool::Instance().StartLocalAction(0, m_player->ID(), 42);
 		break;
 	case sf::Keyboard::LAlt:
-		m_focus=m_player;
+		m_focus = m_player;
 		break;
-	case sf::Keyboard::Tab:
-		auto o= g_Game->GetWorld()->GetNextObservableObject(m_focus->ID());
-		if(o!=nullptr)
-			m_focus=o;
-		break;
+	case sf::Keyboard::Tab: {
+		Core::Object* object;
+		if( sf::Keyboard::isKeyPressed( sf::Keyboard::LShift ) )
+			object = g_Game->GetWorld()->GetNextObservableObject(m_focus->ID(), -1);
+		else
+			object = g_Game->GetWorld()->GetNextObservableObject(m_focus->ID(), 1);
+		if(object != nullptr)
+		{
+			m_focus = object;
+			// Always have the current focused element in selection
+			m_selection.Clear();
+			m_selection.Add( object->ID() );
+		}
+		break; }
 	}
 }
 
@@ -229,7 +262,7 @@ void States::PlayerState::Resize(const sf::Vector2f& _size)
 
 Core::Map* States::PlayerState::GetCurrentMap()
 {
-	return g_Game->GetWorld()->GetMap(m_player->GetParentMap());
+	return g_Game->GetWorld()->GetMap(m_focus->GetParentMap());
 }
 
 

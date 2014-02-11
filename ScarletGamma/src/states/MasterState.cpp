@@ -107,7 +107,6 @@ namespace States {
 		// Update the viewed properties
 		if( m_selectionView->isVisible() )
 			m_selectionView->Show( g_Game->GetWorld(), m_selection );
-
 	}
 
 	void MasterState::Draw(sf::RenderWindow& win)
@@ -139,11 +138,11 @@ namespace States {
 		}
 
 		// Show the brush region
-		if( m_modeTool->GetMode() == Interfaces::ModeToolbox::SELECTION&&m_rectSelection )
+		if( m_modeTool->GetMode() == Interfaces::ModeToolbox::SELECTION && m_rectSelection )
 		{
 			sf::Vector2i mousePos = Events::InputHandler::GetMouseTilePosition();
 			int sX,sY,minX,minY,maxX,maxY;
-			if(mousePos.x<m_rectSelectionStart.x)
+			if(mousePos.x < m_rectSelectionStart.x)
 			{
 				minX = (int)mousePos.x;
 				maxX = (int)m_rectSelectionStart.x;
@@ -153,7 +152,7 @@ namespace States {
 				maxX = (int)mousePos.x;
 				minX = (int)m_rectSelectionStart.x;
 			}
-			if(mousePos.y<m_rectSelectionStart.y)
+			if(mousePos.y < m_rectSelectionStart.y)
 			{
 				minY = (int)mousePos.y;
 				maxY = (int)m_rectSelectionStart.y;

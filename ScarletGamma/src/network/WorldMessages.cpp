@@ -136,7 +136,7 @@ namespace Network {
 
 	void MsgAddObject::Receive( Core::World* _world, Jo::Files::MemFile& _input )
 	{
-		_world->NewObject( Jo::Files::MetaFileWrapper(_input).RootNode );
+		_world->NewObject( Jo::Files::MetaFileWrapper(_input).RootNode, true );
 	}
 
 	/*void SendAddObject( const Core::ObjectID _object )

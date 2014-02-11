@@ -69,9 +69,9 @@ namespace Network {
 		/// \brief Analyze the headers and deliver the message to the
 		///		appropriate target handler.
 		///	\details The received data must be stored in m_buffer.
-		///	\param [in] _from From whom the message was received in case to do
-		///		proper answering.
-		void HandleMessage( sf::Packet& _packet, sf::TcpSocket* _from );
+		///	\param [in] _from SocketID from whom the message was received in
+		///		case to do proper answering.
+		void HandleMessage( sf::Packet& _packet, unsigned _from );
 	};
 
 } // namespace Network

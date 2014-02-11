@@ -13,7 +13,7 @@ using namespace Network;
 void MasterCombat::ReceivedInitiative(Core::ObjectID _object, std::string& _initiative)
 {
     // Save initiative value
-    int iniEvaluated = Utils::EvaluateFormula(_initiative, Game::RANDOM);
+    int iniEvaluated = Utils::EvaluateFormula(_initiative, Game::RANDOM, g_Game->GetWorld()->GetObject(_object));
     m_initiatives.insert( std::pair<Core::ObjectID, int>( _object, iniEvaluated) );
 
     // Insert combattant into list of participants

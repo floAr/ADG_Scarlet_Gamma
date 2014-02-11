@@ -44,8 +44,11 @@ public:
 
 	/// \brief Interprets the value as formula/number and returns the result
 	///		after evaluation.
+	///	\param [in] _reference Should be nullptr or the pointer to the parent
+	///		object. This is only required if evaluation takes place before
+	///		loading a world.
 	/// \throws Exception::NotEvaluateable
-	int Evaluate() const;
+	int Evaluate(const Object* _reference = nullptr) const;
 
 	/// \brief Read access to the value string
 	const std::string& Value() const;

@@ -148,8 +148,8 @@ void Attack::AttackRollInfoReceived(const std::string& _message)
     m_attackRoll = _message;
 
     // Evaluate it
-	// TODO: GIVE THE CORRECT POINTER - OTHERWISE EvaluateFormula WILL CRASH IF FORMULA USES REFERENCES!!!
-    int result = Utils::EvaluateFormula(_message, Game::RANDOM, nullptr);
+    int result = Utils::EvaluateFormula(_message, Game::RANDOM,
+        g_Game->GetWorld()->GetObject(m_executor));
 
     // Push prompt
     PushAttackRollDMPrompt(result, &Attack::AttackRollDMPromptFinished);
@@ -165,8 +165,8 @@ void Attack::AttackRollInfoLocal(const std::string& _message)
     m_attackRoll = _message;
 
     // Evaluate it
-	// TODO: GIVE THE CORRECT POINTER - OTHERWISE EvaluateFormula WILL CRASH IF FORMULA USES REFERENCES!!!
-    int result = Utils::EvaluateFormula(m_attackRoll, Game::RANDOM, nullptr);
+    int result = Utils::EvaluateFormula(m_attackRoll, Game::RANDOM,
+        g_Game->GetWorld()->GetObject(m_executor));
 
     // Push prompt
     PushAttackRollDMPrompt(result, &Attack::AttackRollDMPromptFinishedLocal);
@@ -303,8 +303,8 @@ void Attack::HitRollInfoReceived(const std::string& _message)
     m_hitRoll = _message;
 
     // Evaluate it
-	// TODO: GIVE THE CORRECT POINTER - OTHERWISE EvaluateFormula WILL CRASH IF FORMULA USES REFERENCES!!!
-    int result = Utils::EvaluateFormula(m_hitRoll, Game::RANDOM, nullptr);
+    int result = Utils::EvaluateFormula(m_hitRoll, Game::RANDOM,
+        g_Game->GetWorld()->GetObject(m_executor));
 
     // Push prompt
     PushHitRollDMPrompt(result, &Attack::HitRollDMPromptFinished);
@@ -318,8 +318,8 @@ void Attack::HitRollInfoLocal(const std::string& _message)
     m_hitRoll = _message;
 
     // Evaluate it
-	// TODO: GIVE THE CORRECT POINTER - OTHERWISE EvaluateFormula WILL CRASH IF FORMULA USES REFERENCES!!!
-    int result = Utils::EvaluateFormula(m_hitRoll, Game::RANDOM, nullptr);
+    int result = Utils::EvaluateFormula(m_hitRoll, Game::RANDOM,
+        g_Game->GetWorld()->GetObject(m_executor));
 
     // Push prompt
     PushHitRollDMPrompt(result, &Attack::HitRollDMPromptFinishedLocal);

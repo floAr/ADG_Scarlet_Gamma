@@ -107,7 +107,6 @@ namespace States {
 		// Update the viewed properties
 		if( m_selectionView->isVisible() )
 			m_selectionView->Show( g_Game->GetWorld(), m_selection );
-
 	}
 
 	void MasterState::Draw(sf::RenderWindow& win)
@@ -139,28 +138,28 @@ namespace States {
 		}
 
 		// Show the brush region
-		if( m_modeTool->GetMode() == Interfaces::ModeToolbox::SELECTION&&m_rectSelection )
+		if( m_modeTool->GetMode() == Interfaces::ModeToolbox::SELECTION && m_rectSelection )
 		{
 			sf::Vector2i mousePos = Events::InputHandler::GetMouseTilePosition();
-			int sX,sY,minX,minY,maxX,maxY;
-			if(mousePos.x<m_rectSelectionStart.x)
+			int minX,minY,maxX,maxY;
+			if(mousePos.x < m_rectSelectionStart.x)
 			{
 				minX = (int)mousePos.x;
-				maxX = (int)m_rectSelectionStart.x;
+				maxX = (int)m_rectSelectionStart.x+1;
 			}
 			else
 			{
-				maxX = (int)mousePos.x;
+				maxX = (int)mousePos.x+1;
 				minX = (int)m_rectSelectionStart.x;
 			}
-			if(mousePos.y<m_rectSelectionStart.y)
+			if(mousePos.y < m_rectSelectionStart.y)
 			{
 				minY = (int)mousePos.y;
-				maxY = (int)m_rectSelectionStart.y;
+				maxY = (int)m_rectSelectionStart.y+1;
 			}
 			else
 			{
-				maxY = (int)mousePos.y;
+				maxY = (int)mousePos.y+1;
 				minY = (int)m_rectSelectionStart.y;
 			}
 			Graphics::TileRenderer::RenderRect( win, sf::Vector2i(minX,minY), sf::Vector2i(maxX,maxY) );
@@ -173,6 +172,23 @@ namespace States {
 
 	void MasterState::MouseButtonPressed(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos, bool guiHandled)
 	{
+		// Register right-click on Player-Toolbox ( tgui has no RMB support ).
+		if( button.button == sf::Mouse::Right )
+		{
+			float x = button.x - m_toolbar->getPosition().x;
+			float y = button.y - m_toolbar->getPosition().y;
+			if( m_playerTool->mouseOnWidget(x, y) )
+			{
+				// Set view to the player
+				Object* player = m_playerTool->GetPlayer(x, y);
+				sf::Vector2f pos = player->GetPosition();
+				sf::Vector2f viewPos = pos * float(TILESIZE);
+				sf::View newView = g_Game->GetWindow().getView();
+				newView.setCenter(viewPos);
+				g_Game->GetWindow().setView(newView);
+			}
+		}
+
 		// Return if the GUI already handled it
 		if (guiHandled)
 			return;
@@ -288,32 +304,32 @@ namespace States {
 		}
 
 		if(m_rectSelection){
-			int sX,sY,minX,minY,maxX,maxY;
+			int minX,minY,maxX,maxY;
 			if(tilePos.x<m_rectSelectionStart.x)
 			{
 				minX = (int)tilePos.x;
-				maxX = (int)m_rectSelectionStart.x;
+				maxX = (int)m_rectSelectionStart.x+1;
 			}
 			else
 			{
-				maxX = (int)tilePos.x;
+				maxX = (int)tilePos.x+1;
 				minX = (int)m_rectSelectionStart.x;
 			}
 			if(tilePos.y<m_rectSelectionStart.y)
 			{
 				minY = (int)tilePos.y;
-				maxY = (int)m_rectSelectionStart.y;
+				maxY = (int)m_rectSelectionStart.y+1;
 			}
 			else
 			{
-				maxY = (int)tilePos.y;
+				maxY = (int)tilePos.y+1;
 				minY = (int)m_rectSelectionStart.y;
 			}
 			if(!sf::Keyboard::isKeyPressed(sf::Keyboard::LControl))//if not pressing cntrl -> clear selection
 				m_selection.Clear();
-			for(sX = minX; sX < maxX; sX++)
+			for(int sX = minX; sX < maxX; sX++)
 			{
-				for(sY = minY; sY < maxY; sY++)
+				for(int sY = minY; sY < maxY; sY++)
 				{
 					auto oList=GetCurrentMap()->GetObjectsAt(sX,sY);
 					for (int i = 0; i < oList.Size(); i++)
@@ -333,8 +349,6 @@ namespace States {
 
 	void MasterState::MouseWheelMoved(sf::Event::MouseWheelEvent& wheel, bool guiHandled)
 	{
-		CommonState::MouseWheelMoved(wheel, guiHandled);
-
 		// Manually scroll panels (tgui::callback not provided for this action).
 		// The scroll call has an effect only if the mouse is on the respective
 		// element. So calling it for everybody is just fine.
@@ -343,6 +357,11 @@ namespace States {
 		m_objectsPanel->Scroll(wheel.delta);
 		m_viewPanel->Scroll(wheel.delta);
 		m_selectionView->Scroll(wheel.delta);
+
+		if (guiHandled)
+			return;
+
+		m_zoom = (float)wheel.delta;
 	}
 
 
@@ -384,7 +403,12 @@ namespace States {
 			if (sf::Keyboard::isKeyPressed((sf::Keyboard::LControl)))
 			{
 				m_combat = new GameRules::MasterCombat();
-				Network::CombatMsg(Network::CombatMsgType::DM_COMBAT_BEGIN).Send();
+                Core::World* world = g_Game->GetWorld();
+                for( int i=0; i<m_selection.Size(); ++i )
+                {
+                    // Add participant to combat
+                    static_cast<GameRules::MasterCombat*>(m_combat)->AddParticipant(m_selection[i]);
+                }
 			}
 			break;
 
@@ -497,6 +521,23 @@ namespace States {
 		MapID id = m_mapTool->GetSelectedMap();
 		return g_Game->GetWorld()->GetMap(id);
 	}
+
+    void MasterState::BeginCombat( Core::ObjectID _object )
+    {
+        // Find the object
+        Core::Object* object = g_Game->GetWorld()->GetObject(_object);
+
+        // Does this object belong to me?
+        if (!object->HasProperty(STR_PROP_OWNER))
+        {
+            // Maybe create a new Combat object
+            if (!m_combat)
+                m_combat = new GameRules::MasterCombat();
+
+            // Prompt for initiative roll
+            m_combat->PushInitiativePrompt(_object);
+        }
+    }
 
 	//void States::MasterState::TestButtonCallback(std::string feedback){
 	//	std::cout<<feedback;

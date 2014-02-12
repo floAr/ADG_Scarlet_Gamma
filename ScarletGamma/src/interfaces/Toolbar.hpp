@@ -161,6 +161,8 @@ namespace Interfaces {
 
 		/// \brief Refresh the list if new players are added or a player died
 		virtual void Update( float _dt ) override;
+
+		Core::Object* GetPlayer( float _x, float _y );
 	private:
 		float m_lastUpdate;					///< Counter to avoid to many updates
 		tgui::ListBox::Ptr m_playerList;	///< List of players

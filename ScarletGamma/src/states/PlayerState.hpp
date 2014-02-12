@@ -25,6 +25,8 @@ namespace States
 		/// \brief CommonState Update + Player view refreshed.
 		virtual void Update( float _dt ) override;
 
+		virtual void BeginCombat(Core::ObjectID _object) override;
+
 	private:
 		Core::PlayerID m_playerID;							///< The players id (set by socket index)
 		Core::Object* m_player;								///< The one and only player object
@@ -40,7 +42,14 @@ namespace States
 		/// \brief Set the current view to another objects position
 		/// \details Try to append the current view onto another object, if player does not exist nothing happens
 		/// \param [in] hotkey	pressed hotkey of the player
-		void SetViewToObject(const int hotkey);
+		void SetViewToHotkey(const int hotkey);
+
+		/// \brief Set the current view to another objects position
+		/// \details Try to append the current view onto another object, if player does not exist nothing happens
+		/// \param [in] object	object to view
+		void SetViewToObject(Core::Object* object );
+
+
 
 		/// \brief Bind an object to the hotkey
 		/// \details Save the currently focussed object with the pressed hotkey

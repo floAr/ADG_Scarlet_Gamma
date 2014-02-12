@@ -40,7 +40,8 @@ namespace UnitTest {
 		ObjectID objID = world->NewObject("media/smile_2.png");
 		Object* obj = world->GetObject(objID);
 		obj->Add( PROPERTY::NAME ).SetValue("ICH");
-		obj->Add( PROPERTY::PLAYER ).SetValue("1");
+		obj->Add( PROPERTY::OWNER ).SetValue("ICH");
+		obj->Add( PROPERTY::PLAYER ).SetValue("0");
 		obj->Add( PROPERTY::TARGET ).SetValue("0:3");
 		auto& path = obj->Add( PROPERTY::PATH );
 		path.AddObject(map->GetObjectsAt(0,0)[0]);

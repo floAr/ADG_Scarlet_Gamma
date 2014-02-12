@@ -79,11 +79,14 @@ void CommonState::MouseMoved(int deltaX, int deltaY, bool guiHandled)
 	else
 	{
 		sf::Vector2i tilePos = Events::InputHandler::GetMouseTilePosition();
-		Core::ObjectList targets = GetCurrentMap()->GetObjectsAt(tilePos.x, tilePos.y);
-		if (targets.Size() == 0)
-			Actions::ActionPool::Instance().UpdateDefaultAction(m_selection, 0);
-		else
-			Actions::ActionPool::Instance().UpdateDefaultAction(m_selection, g_Game->GetWorld()->GetObject(targets[targets.Size() - 1]));
+		if( GetCurrentMap() )
+		{
+			Core::ObjectList targets = GetCurrentMap()->GetObjectsAt(tilePos.x, tilePos.y);
+			if (targets.Size() == 0)
+				Actions::ActionPool::Instance().UpdateDefaultAction(m_selection, 0);
+			else
+				Actions::ActionPool::Instance().UpdateDefaultAction(m_selection, g_Game->GetWorld()->GetObject(targets[targets.Size() - 1]));
+		}
 	}
 
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Middle))
@@ -103,17 +106,6 @@ void CommonState::MouseMoved(int deltaX, int deltaY, bool guiHandled)
 		win.setView(newView);
 	}
 }
-
-
-void CommonState::MouseWheelMoved(sf::Event::MouseWheelEvent& wheel, bool guiHandled)
-{
-	// Don't react to any key if gui handled it
-	if (guiHandled)
-		return;
-
-	m_zoom = (float)wheel.delta;
-}
-
 
 void CommonState::KeyPressed( sf::Event::KeyEvent& key, bool guiHandled )
 {
@@ -249,7 +241,9 @@ void CommonState::AddToSelection( Core::ObjectID _id )
 {
 	// Assumes that the selection state only calls this if possible
 	// which is the case due to toggeling
-	assert( !m_selection.Contains(_id) );
+	//assert( !m_selection.Contains(_id) );
+	if(m_selection.Contains(_id))
+		return;
 	m_selection.Add(_id);
 	m_selectionChanged = true;
 }
@@ -260,33 +254,9 @@ void CommonState::RemoveFromSelection( Core::ObjectID _id )
 	m_selectionChanged = true;
 }
 
-void CommonState::BeginCombat()
-{
-	m_combat = new GameRules::Combat();
-
-	// Prompt for initiative roll
-	PromptState* prompt = dynamic_cast<PromptState*>(
-		g_Game->GetStateMachine()->PushGameState(States::GST_PROMPT));
-	prompt->SetText("Angriffswurf eingeben:");
-	prompt->AddPopCallback(std::bind(&CommonState::InitiativeRollPromptFinished, this, std::placeholders::_1));
-}
-
-void CommonState::InitiativeRollPromptFinished(States::GameState* ps)
-{
-	PromptState* prompt = dynamic_cast<PromptState*>(ps);
-	assert(ps);
-
-	// Send initiative roll string to server
-	Jo::Files::MemFile data;
-	const std::string& result = prompt->GetResult().c_str();
-	data.Write(&m_selection[0], sizeof(m_selection[0]));
-	data.Write(result.c_str(), result.length());
-	Network::CombatMsg(Network::CombatMsgType::PL_COMBAT_INITIATIVE).Send(&data);
-}
-
 void CommonState::EndCombat()
 {
-	delete(m_combat);
+	delete m_combat;
 	m_combat = 0;
 }
 

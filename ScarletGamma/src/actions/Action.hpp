@@ -61,7 +61,7 @@ namespace Actions
 
 		/// \brief Continue some active actions.
 		/// \return true if the action was performed and can be ended.
-		virtual bool Update() { return false; }
+		virtual bool Update() { return m_finished; }
 
         /// \brief Create a copy of the action. Needs to AT LEAST copy the
         ///   Action ID, executor and target, action type, priority and cursor.
@@ -69,7 +69,7 @@ namespace Actions
 
         /// \brief Default constructor, setting some required variables
         Action(const std::string& name, ActionType type, int priority, Game::MouseCursor cursor = Game::MC_DEFAULT) :
-            m_name(name), m_actionType(type), m_priority(priority), m_cursor(cursor) {}
+            m_name(name), m_actionType(type), m_priority(priority), m_cursor(cursor), m_finished(true) {}
 
         std::vector<std::pair<std::string, bool>> m_targetRequirements; ///< List of required properties in target
         std::vector<std::pair<std::string, bool>> m_sourceRequirements; ///< List of required properties in source (executor)
@@ -80,6 +80,7 @@ namespace Actions
         Core::ObjectID m_target; ///< The object being targeted by the action
         int m_priority; ///< The priority of the action, used for determining default actions
         Game::MouseCursor m_cursor; ///< The cursor displayed when this action is the default action
+        bool m_finished; ///< Set to true when the action is finished.
 
     private:
 

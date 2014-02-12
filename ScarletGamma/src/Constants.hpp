@@ -42,6 +42,7 @@ static const std::string STR_MSG_HIT_ARMOR_CLASS_NOT_BEAT = std::string("Rüstung
 static const std::string STR_MSG_CREATE_MAP_FIRST = std::string("Erstelle zunächst eine Map!");
 static const std::string STR_MSG_SELECT_TYPE_FIRST = std::string("Wähle einen Objekttypen! Dazu auf eines der Templates klicken.");
 static const std::string STR_MSG_LAYER_INVISIBLE = std::string("Die Ziel-Ebene ist ausgeblendet. Drücke ALT + Zahlentaste um umzuschalten.");
+static const std::string STR_PLAYER_NOT_ON_MAP = std::string("Der Spieler befindet sich nicht auf einer Karte.\nRespawn notwendig.");
 
 
 /************************************************************************/
@@ -65,23 +66,30 @@ static const std::string STR_PROP_JUMPPOINT	= std::string("Sprungziel");///< Nam
 /* PLAYER ATTRIBUTES                                                    */
 /************************************************************************/
 static const std::string STR_PROP_INVENTORY = std::string("Inventar");
-static const std::string STR_PROP_STRENGTH = std::string("Stärke");
-static const std::string STR_PROP_DEXTERITY = std::string("Geschicklichkeit");
-static const std::string STR_PROP_CONSTITUTION = std::string("Konstitution");
-static const std::string STR_PROP_INTELLIGENCE = std::string("Intelligenz");
-static const std::string STR_PROP_WISDOM = std::string("Weisheit");
-static const std::string STR_PROP_CHARISMA = std::string("Charisma");
-static const std::string STR_PROP_HEALTH = std::string("Trefferpunkte");
-static const std::string STR_PROP_ARMORCLASS = std::string("Rüstungsklasse");
-static const std::string STR_PROP_INITIATIVE_MOD = std::string("Initiative-Modifikator");
+static const std::string STR_PROP_STRENGTH = std::string("ST");
+static const std::string STR_PROP_STRENGTH_MOD = std::string("ST-Mod");
+static const std::string STR_PROP_DEXTERITY = std::string("GE");
+static const std::string STR_PROP_DEXTERITY_MOD = std::string("GE-Mod");
+static const std::string STR_PROP_CONSTITUTION = std::string("KO");
+static const std::string STR_PROP_CONSTITUTION_MOD = std::string("KO-Mod");
+static const std::string STR_PROP_INTELLIGENCE = std::string("IN");
+static const std::string STR_PROP_INTELLIGENCE_MOD = std::string("IN-Mod");
+static const std::string STR_PROP_WISDOM = std::string("WE");
+static const std::string STR_PROP_WISDOM_MOD = std::string("WE-Mod");
+static const std::string STR_PROP_CHARISMA = std::string("CH");
+static const std::string STR_PROP_CHARISMA_MOD = std::string("CH-Mod");
+static const std::string STR_PROP_HEALTH = std::string("TP");
+static const std::string STR_PROP_HEALTH_MAX = std::string("TP-Max");
+static const std::string STR_PROP_ARMORCLASS = std::string("RK");
+static const std::string STR_PROP_INITIATIVE_MOD = std::string("INI-Mod");
 static const std::string STR_PROP_ATTITUDE = std::string("Gesinnung");
-static const std::string STR_ATT_HONESTGOOD = std::string("Rechtschaffen Gut");
+static const std::string STR_ATT_LAWFULGOOD = std::string("Rechtschaffen Gut");
 static const std::string STR_ATT_NEUTRALGOOD = std::string("Neutral Gut");
 static const std::string STR_ATT_CHAOTICGOOD = std::string("Chaotisch Gut");
-static const std::string STR_ATT_HONESTNEUTRAL = std::string("Rechtschaffen Neutral");
-static const std::string STR_ATT_NEUTRALNEUTRAL = std::string("Neutral Neutral");
+static const std::string STR_ATT_LAWFULNEUTRAL = std::string("Rechtschaffen Neutral");
+static const std::string STR_ATT_NEUTRALNEUTRAL = std::string("Neutral");
 static const std::string STR_ATT_CHAOTICNEUTRAL = std::string("Chaotisch Neutral");
-static const std::string STR_ATT_HONESTEVIL = std::string("Rechtschaffen Böse");
+static const std::string STR_ATT_LAWFULEVIL = std::string("Rechtschaffen Böse");
 static const std::string STR_ATT_NEUTRALEVIL = std::string("Neutral Böse");
 static const std::string STR_ATT_CHAOTICEVIL = std::string("Chaotisch Böse");
 static const std::string STR_PROP_CLASS = std::string("Klasse");

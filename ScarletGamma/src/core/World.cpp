@@ -60,12 +60,17 @@ namespace Core {
 	}
 
 
-	ObjectID World::NewObject( const Jo::Files::MetaFileWrapper::Node& _node )
+	ObjectID World::NewObject( Jo::Files::MetaFileWrapper::Node& _node, bool _newID )
 	{
-		// Deserialize -> update maximum used ObjectID
+		// Deserialize -> update maximum used ObjectID or generate a new one
+		if( _newID ) _node[STR_ID] = m_nextFreeObjectID++;
 		Object newObj(_node);
 		m_nextFreeObjectID = max(m_nextFreeObjectID, newObj.ID());
 		m_objects.insert(std::make_pair<ObjectID,Object>( newObj.ID(), std::move(newObj) ) );
+
+		// Insert to player list...
+		RegisterObject(GetObject(newObj.ID()));
+
 		return newObj.ID();
 	}
 
@@ -76,7 +81,7 @@ namespace Core {
 		Jo::Files::MetaFileWrapper wrapper;
 		_object->Serialize( wrapper.RootNode );
 		// The copy has a wrong id - give it a new one
-		wrapper.RootNode[STR_ID] =  m_nextFreeObjectID++;
+		wrapper.RootNode[STR_ID] = m_nextFreeObjectID++;
 		Object newObj( wrapper.RootNode );
 
 		// Deep clone
@@ -110,20 +115,17 @@ namespace Core {
 
 		// The save game is a top level file which contains maps and objects
 		// serialized.
-		const Jo::Files::MetaFileWrapper saveGame(_file);
+		Jo::Files::MetaFileWrapper saveGame(_file);
 
 		// There should be an array of objects
-		const Jo::Files::MetaFileWrapper::Node* child;
+		Jo::Files::MetaFileWrapper::Node* child;
 		if( saveGame.RootNode.HasChild(string("Objects"), &child) )
 		{
 			// OK child should be an array of objects.
 			for( unsigned i=0; i<child->Size(); ++i )
 			{
-				ObjectID id = NewObject( (*child)[i] );
+				ObjectID id = NewObject( (*child)[i], false );
 				Object* object = GetObject(id);
-
-				RegisterObject(object);
-
 			}
 		}
 
@@ -226,8 +228,8 @@ namespace Core {
 		for ( auto& it = m_players.begin(); it != m_players.end(); ++it)
 		{
 			Object* result = GetObject( it->second );
-            // STR_PROP_PLAYER starts at 1, socket-style ids at 0
-			if (result->Get(STR_PROP_PLAYER)->Evaluate() == _id + 1)
+			// Using atoi is much faster than Evaluate
+			if (atoi(result->Get(STR_PROP_PLAYER)->Value().c_str()) == _id)
 				return result;
 		}
 		return nullptr;
@@ -261,6 +263,16 @@ namespace Core {
 	}
 
 
+	std::vector<ObjectID> World::GetAllPlayers() const
+	{
+		// Enumerate all and store the ids.
+		std::vector<ObjectID> results;
+		for( auto it=m_players.begin(); it!=m_players.end(); ++it )
+			results.push_back( it->second );
+		return results;
+	}
+
+
 	void World::Update( float _dt )
 	{
 		for( auto it=m_maps.begin(); it!=m_maps.end(); ++it )
@@ -283,26 +295,15 @@ namespace Core {
 		return id;
 	}
 
-	Object* World::GetNextObservableObject(ObjectID _currentID)
+	Object* World::GetNextObservableObject(ObjectID _currentID, int _direction)
 	{
-		ObjectID result=-1;
-		bool pickNext=false;
-		for( auto it = m_ownedObjects.begin(); it != m_ownedObjects.end(); ++it )
-		{
-			ObjectID id=*it;
-			if(pickNext)
-			{
-				result=id;
-				break;
-			}
-			if(result==-1)//always select the first element, to loop through the list
-				result = id;
-			if(id == _currentID) //we are at the current id
-				pickNext=true;
-		}
-		if(result==-1)//return nullptr if no object found
-			return nullptr;
-		return this->GetObject(result);
+		if( m_ownedObjects.empty() ) return nullptr;
+
+		assert( _direction == -1 || _direction == 1 );
+		size_t currentIndex = std::find(m_ownedObjects.begin(), m_ownedObjects.end(), _currentID) - m_ownedObjects.begin();
+		size_t next = currentIndex + _direction;
+		next = (next + m_ownedObjects.size()) % m_ownedObjects.size();
+		return GetObject( m_ownedObjects[next] );
 	}
 
 	void World::RegisterObject(Object* _object)
@@ -316,10 +317,10 @@ namespace Core {
 		// Test object if it has an owner and add it.
 		if( _object->HasProperty( STR_PROP_OWNER ) )
 		{
-			if(_object->IsLocatedOnAMap()){ //checks if we are dealing with an actual object
-				Property& prop = _object->GetProperty( STR_PROP_OWNER );
+			Property& prop = _object->GetProperty( STR_PROP_OWNER );
+			// Filter the template objects (they should all have owner = ""
+			if( !prop.Value().empty() )
 				m_ownedObjects.push_back(_object->ID());
-			}
 		}
 	}
 

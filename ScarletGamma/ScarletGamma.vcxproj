@@ -59,6 +59,7 @@
       <AdditionalDependencies>tgui-s-d.lib;jofile.lib;thor-s-d.lib;sfml-audio-s-d.lib;sfml-graphics-s-d.lib;sfml-network-s-d.lib;sfml-window-s-d.lib;sfml-system-s-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OptimizeReferences>false</OptimizeReferences>
       <DelayLoadDLLs>libsndfile-1.dll;OpenAL32.dll</DelayLoadDLLs>
+      <Profile>true</Profile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -77,6 +78,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>lib/SFML-2.1/lib;lib/JoFile/lib/Release;lib/TGUI-0.6-RC/lib;lib/Thor-VS11x32/lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>jofile.lib;tgui-s.lib;thor-s.lib;sfml-audio-s.lib;sfml-graphics-s.lib;sfml-network-s.lib;sfml-window-s.lib;sfml-system-s.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <Profile>true</Profile>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -97,6 +99,7 @@
     <ClCompile Include="src\gamerules\Combat.cpp" />
     <ClCompile Include="src\gamerules\CombatRules.cpp" />
     <ClCompile Include="src\gamerules\MasterCombat.cpp" />
+    <ClCompile Include="src\graphics\SpriteAtlasBatcher.cpp" />
     <ClCompile Include="src\graphics\TileRenderer.cpp" />
     <ClCompile Include="src\interfaces\ObjectPanel.cpp" />
     <ClCompile Include="src\interfaces\PropertyPanel.cpp" />
@@ -155,6 +158,7 @@
     <ClInclude Include="src\gamerules\Combat.hpp" />
     <ClInclude Include="src\gamerules\CombatRules.hpp" />
     <ClInclude Include="src\gamerules\MasterCombat.hpp" />
+    <ClInclude Include="src\graphics\SpriteAtlasBatcher.hpp" />
     <ClInclude Include="src\graphics\TileRenderer.hpp" />
     <ClInclude Include="src\interfaces\DragNDrop.hpp" />
     <ClInclude Include="src\interfaces\ObjectPanel.hpp" />

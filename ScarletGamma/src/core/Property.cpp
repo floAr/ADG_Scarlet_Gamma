@@ -70,11 +70,12 @@ namespace Core {
 		}
 	}
 
-	int Property::Evaluate() const
+	int Property::Evaluate(const Object* _reference) const
 	{
         try
         {
-            return Utils::EvaluateFormula(Value(), Game::RANDOM);
+			if( !_reference ) _reference = g_Game->GetWorld()->GetObject(m_parent);
+            return Utils::EvaluateFormula(Value(), Game::RANDOM, _reference);
         }
         catch (Exception::InvalidFormula& e)
         {
@@ -218,7 +219,7 @@ namespace Core {
 		// Append at the end
 		m_list.push_back(_property);
 		m_list.back().SetParent( _parent );
-		Network::MsgPropertyChanged( _property.ParentObject(), &_property ).Send();
+		Network::MsgPropertyChanged( _parent, &m_list.back() ).Send();
 
 		return m_list.back();
 	}

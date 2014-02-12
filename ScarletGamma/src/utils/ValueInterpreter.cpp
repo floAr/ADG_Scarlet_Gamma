@@ -6,6 +6,7 @@
 #include <list>
 #include <vector>
 #include <cassert>
+#include "core\Object.hpp"
 
 namespace Utils {
 
@@ -26,7 +27,7 @@ namespace Utils {
 
 	static bool IsLimiter( char _c )
 	{
-		return IsOperator(_c) || _c == '(' || _c == ')';
+		return IsOperator(_c) || _c == '(' || _c == ')' || _c == '\'';
 	}
 
 	// Handle operator precedence
@@ -55,10 +56,17 @@ namespace Utils {
 	};
 
 	// Parse a pure value string
-	static Token EvaluateValue( std::string _value, Random* _generator )
+	static Token EvaluateValue( const std::string& _value, Random* _generator, const Core::Object* _object )
 	{
+		if( _value.find_last_not_of( "0123456789wW" ) != std::string::npos )
+		{
+			// It is a property - use recursive evaluation
+			if( !_object ) throw Exception::InvalidFormula("Formula references a property but no object is given.");
+			if( !_object->HasProperty(_value) ) throw Exception::InvalidFormula("Formula references " + _value + " which is not part of the given object.");
+			return Token( _object->GetProperty( _value ).Evaluate(_object), true );
+		}
+
 		try {
-			if( _value.find_last_not_of( "0123456789wW" ) != std::string::npos ) throw 1;
 			// Iterate and look for a 'w'. The buffer only contains integers before
 			// or after the w.
 			size_t pos = _value.find_first_of( "wW" );
@@ -89,7 +97,7 @@ namespace Utils {
 			case '+': _valueStack.push_back( lhs + rhs ); break;
 			case '-': _valueStack.push_back( lhs - rhs ); break;
 			case '*': _valueStack.push_back( lhs * rhs ); break;
-			case '/': _valueStack.push_back( lhs / rhs ); break;
+			case '/': _valueStack.push_back( (int)floor(float(lhs) / rhs) ); break;
 		}
 	}
 
@@ -155,30 +163,45 @@ namespace Utils {
 		return valueStack.front();
 	}
 
-	int EvaluateFormula( std::string _formula, Random* _generator )
+	int EvaluateFormula( const std::string& _formula, Random* _generator, const Core::Object* _object )
 	{
 		// Remove whitespaces
-		_formula.erase( std::remove_if( _formula.begin(), _formula.end(), ::isspace ), _formula.end() );
-
-		// Validate
-		if( _formula.length() == 0 ) throw Exception::InvalidFormula( "Formula is empty" );
-		//if( !IsFormula(*_formula.begin()) ) throw Exception::InvalidFormula( 0, _formula.c_str() );
+		//_formula.erase( std::remove_if( _formula.begin(), _formula.end(), ::isspace ), _formula.end() );
 
 		// Build a token sequence
 		std::list<Token> tokens;
 		std::string buffer = "";
 		for( auto it = _formula.begin(); it != _formula.end(); ++it )
 		{
-			if( IsLimiter(*it) )
+			if( !isspace(*it) )
 			{
-				if(!buffer.empty()) tokens.push_back( EvaluateValue(buffer, _generator) );
-				tokens.push_back( Token(*it, false) );
-				buffer = "";
-			} else
-				buffer += *it;
+				if( *it == '\'' )
+				{
+					if(!buffer.empty())	tokens.push_back( EvaluateValue(buffer, _generator, _object) );
+					buffer = "";
+					// Buffer the full name and do not interpret inside names
+					++it;
+					while(it != _formula.end() && *it != '\'')
+					{
+						buffer += *it;
+						++it;
+					}
+					tokens.push_back( EvaluateValue(buffer, _generator, _object) );
+					buffer = "";
+				} else if( IsLimiter(*it) )
+				{
+					if(!buffer.empty())	tokens.push_back( EvaluateValue(buffer, _generator, _object) );
+					tokens.push_back( Token(*it, false) );
+					buffer = "";
+				} else
+					buffer += *it;
+			}
 		}
-		if(!buffer.empty()) tokens.push_back( EvaluateValue(buffer, _generator) );
+		if(!buffer.empty()) tokens.push_back( EvaluateValue(buffer, _generator, _object) );
 	 
+		// Validate
+		if( tokens.empty() ) throw Exception::InvalidFormula( "Formula is empty" );
+
 		// Call recursive
 		return EvaluateFormula( tokens );
 	}

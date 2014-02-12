@@ -22,8 +22,14 @@ size_t Network::HandleCombatMessage(const uint8_t* _data, size_t _size, uint8_t 
     {
 
     case CombatMsgType::DM_COMBAT_BEGIN:
-        g_Game->GetCommonState()->BeginCombat();
-        break;
+        {
+            // Read object ID
+            Core::ObjectID object = *reinterpret_cast<const Core::ObjectID*>( _data + readSize );
+            readSize += sizeof(object);
+        
+            // Begin combat for this object
+            g_Game->GetCommonState()->BeginCombat(object);
+        } break;
 
     case CombatMsgType::PL_COMBAT_INITIATIVE:
         {
@@ -60,7 +66,7 @@ size_t Network::HandleCombatMessage(const uint8_t* _data, size_t _size, uint8_t 
             }
 
             // Add participant to combat
-            g_Game->GetCommonState()->GetCombat()->AddParticipant(object, index);
+            g_Game->GetCommonState()->GetCombat()->AddParticipantWithInitiative(object, index);
         } break;
 
     case CombatMsgType::DM_COMBAT_END:

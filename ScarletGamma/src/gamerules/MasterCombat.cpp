@@ -5,15 +5,41 @@
 #include "Constants.hpp"
 #include "utils/Random.hpp"
 #include "network/CombatMessages.hpp"
+#include "states/PromptState.hpp"
 #include <iostream>
 
 using namespace GameRules;
 using namespace Network;
 
+void GameRules::MasterCombat::AddParticipant( Core::ObjectID _object )
+{
+    if (g_Game->GetWorld()->GetObject(_object)->HasProperty(STR_PROP_OWNER))
+    {
+        // Send message with ObjectID to all players. Each player then checks
+        // whether the object belongs to him and if so provides an initiative roll.
+        Jo::Files::MemFile data;
+        data.Write(&_object, sizeof(_object));
+        Network::CombatMsg(Network::CombatMsgType::DM_COMBAT_BEGIN).Send(&data);
+    }
+    else
+    {
+        // No owner, so the DM needs to take care of the poor guy
+        PushInitiativePrompt(_object);
+    }
+}
+
+void GameRules::MasterCombat::InitiativeRollPromptFinished( States::GameState* _ps, Core::ObjectID _object )
+{
+    States::PromptState* prompt = dynamic_cast<States::PromptState*>(_ps);
+    assert(prompt);
+
+    ReceivedInitiative(_object, std::string(prompt->GetResult()));
+}
+
 void MasterCombat::ReceivedInitiative(Core::ObjectID _object, std::string& _initiative)
 {
     // Save initiative value
-    int iniEvaluated = Utils::EvaluateFormula(_initiative, Game::RANDOM);
+    int iniEvaluated = Utils::EvaluateFormula(_initiative, Game::RANDOM, g_Game->GetWorld()->GetObject(_object));
     m_initiatives.insert( std::pair<Core::ObjectID, int>( _object, iniEvaluated) );
 
     // Insert combattant into list of participants
@@ -78,3 +104,4 @@ void MasterCombat::ReceivedInitiative(Core::ObjectID _object, std::string& _init
         ", inserted at position " << std::to_string(position) << ".\n";
 #endif
 }
+

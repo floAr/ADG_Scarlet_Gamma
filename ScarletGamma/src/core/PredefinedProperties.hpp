@@ -21,12 +21,19 @@ namespace Core {
 
 		static const Property INVENTORY;
 		static const Property STRENGTH;
+		static const Property STRENGTH_MOD;
 		static const Property DEXTERITY;
+		static const Property DEXTERITY_MOD;
 		static const Property CONSTITUTION;
+		static const Property CONSTITUTION_MOD;
 		static const Property INTELLIGENCE;
+		static const Property INTELLIGENCE_MOD;
 		static const Property WISDOM;
+		static const Property WISDOM_MOD;
 		static const Property CHARISMA;
+		static const Property CHARISMA_MOD;
 		static const Property HEALTH;
+		static const Property HEALTH_MAX;
 		static const Property ARMORCLASS;
 		static const Property INITIATIVE_MOD;
 

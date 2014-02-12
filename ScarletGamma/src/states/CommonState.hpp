@@ -30,9 +30,6 @@ namespace States
 		/// \brief TODO: Selection stuff
 		virtual void MouseButtonPressed(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePo, bool guiHandleds) override {}
 
-		/// \brief Change the zoom.
-		virtual void MouseWheelMoved(sf::Event::MouseWheelEvent& wheel, bool guiHandled) override;
-
 		/// \brief Open a chat menu on Enter.
 		virtual void KeyPressed(sf::Event::KeyEvent& key, bool guiHandled) override;
 
@@ -65,8 +62,7 @@ namespace States
 
 		//----------------------------------------------------------------------
 		// COMBAT STUFF
-		virtual void BeginCombat();
-		virtual void InitiativeRollPromptFinished(States::GameState* ps);
+        virtual void BeginCombat(Core::ObjectID _object) = 0;
 		virtual void EndCombat();
 		GameRules::Combat* GetCombat()
 		{

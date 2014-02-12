@@ -174,10 +174,23 @@ namespace Utils {
 		{
 			if( !isspace(*it) )
 			{
-				if( IsLimiter(*it) )
+				if( *it == '\'' )
 				{
 					if(!buffer.empty())	tokens.push_back( EvaluateValue(buffer, _generator, _object) );
-					if( *it != '\'' )	tokens.push_back( Token(*it, false) );
+					buffer = "";
+					// Buffer the full name and do not interpret inside names
+					++it;
+					while(it != _formula.end() && *it != '\'')
+					{
+						buffer += *it;
+						++it;
+					}
+					tokens.push_back( EvaluateValue(buffer, _generator, _object) );
+					buffer = "";
+				} else if( IsLimiter(*it) )
+				{
+					if(!buffer.empty())	tokens.push_back( EvaluateValue(buffer, _generator, _object) );
+					tokens.push_back( Token(*it, false) );
 					buffer = "";
 				} else
 					buffer += *it;

@@ -102,8 +102,8 @@ void CombatMsg::Send(Jo::Files::MemFile* _suffix, int8_t _socket)
     if (_suffix)
         data.Write(_suffix->GetBuffer(), _suffix->GetSize());
 
-    if (_socket < 0)
-        Messenger::Send(data.GetBuffer(), (size_t)data.GetSize());
-    else
+    if (_socket >= 0)
         Messenger::Send(data.GetBuffer(), (size_t)data.GetSize(), Network::Messenger::GetSocket(_socket));
+    else
+        Messenger::Send(data.GetBuffer(), (size_t)data.GetSize(), 0);
 }

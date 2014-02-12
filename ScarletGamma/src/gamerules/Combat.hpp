@@ -31,5 +31,7 @@ namespace GameRules
 
         /// \brief The object whose turn it currently is.
         Core::ObjectID m_currentObject;
+
+
     };
 }

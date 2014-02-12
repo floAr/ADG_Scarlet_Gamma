@@ -36,4 +36,16 @@ namespace Core {
     const Property PROPERTY::ARMORCLASS = Property(Property::R_VCEV0EV00, STR_PROP_ARMORCLASS, "10 + 'GE-Mod'");
 	const Property PROPERTY::INITIATIVE_MOD = Property(Property::R_VCEV0EV00, STR_PROP_INITIATIVE_MOD, STR_0);
 
+	const Property PROPERTY::ATTITUDE = Property(Property::R_VCEV0EV00, STR_PROP_ATTITUDE, STR_ATT_LAWFULGOOD);
+	const Property PROPERTY::CLASS = Property(Property::R_VCEV0EV00, STR_PROP_CLASS, STR_EMPTY);
+	const Property PROPERTY::FOLK = Property(Property::R_VCEV0EV00, STR_PROP_FOLK, STR_EMPTY);
+	const Property PROPERTY::HOME = Property(Property::R_VCEV0EV00, STR_PROP_HOME, STR_EMPTY);
+	const Property PROPERTY::FAITH = Property(Property::R_VCEV0EV00, STR_PROP_FAITH, STR_EMPTY);
+	const Property PROPERTY::SIZE = Property(Property::R_VCEV0EV00, STR_PROP_SIZE, STR_0);
+	const Property PROPERTY::AGE = Property(Property::R_VCEV0EV00, STR_PROP_AGE, STR_0);
+	const Property PROPERTY::SEX = Property(Property::R_VCEV0EV00, STR_PROP_SEX, STR_SEX_M);
+	const Property PROPERTY::WEIGHT = Property(Property::R_VCEV0EV00, STR_PROP_WEIGHT, STR_0);
+	const Property PROPERTY::HAIRCOLOR = Property(Property::R_VCEV0EV00, STR_PROP_HAIRCOLOR, STR_FFFFFFFF);
+	const Property PROPERTY::EYECOLOR = Property(Property::R_VCEV0EV00, STR_PROP_EYECOLOR, STR_FFFFFFFF);
+
 } // namespace Core

@@ -37,6 +37,19 @@ namespace Core {
 		static const Property ARMORCLASS;
 		static const Property INITIATIVE_MOD;
 
+		static const Property ATTITUDE;
+		static const Property CLASS;
+		static const Property FOLK;
+		static const Property HOME;
+		static const Property FAITH;
+		static const Property SIZE;
+		static const Property AGE;
+		static const Property SEX;
+		static const Property WEIGHT;
+		static const Property HAIRCOLOR;
+		static const Property EYECOLOR;
+
+
 		// A custom property with R_VCEV0EV00 access rights and an empty default.
 		static Property Custom( const std::string& _name )
 		{

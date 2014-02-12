@@ -19,5 +19,6 @@ namespace States
 		sf::Font	m_menuFont;
 		int			m_mousePos[3];
 		tgui::Gui   m_gui;
+		sf::Sprite	m_background;
 	};
 }

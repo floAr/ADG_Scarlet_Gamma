@@ -58,14 +58,15 @@ namespace Utils {
 	// Parse a pure value string
 	static Token EvaluateValue( const std::string& _value, Random* _generator, const Core::Object* _object )
 	{
+		if( _value.find_last_not_of( "0123456789wW" ) != std::string::npos )
+		{
+			// It is a property - use recursive evaluation
+			if( !_object ) throw Exception::InvalidFormula("Formula references a property but no object is given.");
+			if( !_object->HasProperty(_value) ) throw Exception::InvalidFormula("Formula references " + _value + " which is not part of the given object.");
+			return Token( _object->GetProperty( _value ).Evaluate(_object), true );
+		}
+
 		try {
-			if( _value.find_last_not_of( "0123456789wW" ) != std::string::npos )
-			{
-				// It is a property - use recursive evaluation
-				if( !_object ) throw Exception::InvalidFormula("Formula references a property but no object is given.");
-				if( !_object->HasProperty(_value) ) throw Exception::InvalidFormula("Formula references " + _value + " which is not part of the given object.");
-				return Token( _object->GetProperty( _value ).Evaluate(_object), true );
-			}
 			// Iterate and look for a 'w'. The buffer only contains integers before
 			// or after the w.
 			size_t pos = _value.find_first_of( "wW" );
@@ -96,7 +97,7 @@ namespace Utils {
 			case '+': _valueStack.push_back( lhs + rhs ); break;
 			case '-': _valueStack.push_back( lhs - rhs ); break;
 			case '*': _valueStack.push_back( lhs * rhs ); break;
-			case '/': _valueStack.push_back( lhs / rhs ); break;
+			case '/': _valueStack.push_back( (int)floor(float(lhs) / rhs) ); break;
 		}
 	}
 

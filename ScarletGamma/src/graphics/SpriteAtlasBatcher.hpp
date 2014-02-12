@@ -7,6 +7,9 @@
 
 namespace Graphics
 {
+	// TODO: DOCUMENT THIS CODE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	// WHAT THE HELL IS TC ????
+	// USE BETTER NAMES + DESCRIBING DOC
 	class AtlasSprite:public sf::Sprite
 	{
 	public :

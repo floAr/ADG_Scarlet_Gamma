@@ -37,8 +37,8 @@ void Graphics::TileRenderer::Render(sf::RenderWindow& window, Core::Map& map, st
 		{
 			for (int x = left; x <= right; ++x)
 			{
-				float visibility = _tileVisible( map, sf::Vector2i(x, y) );
-				if( visibility > 0.01f )
+		//		float visibility = _tileVisible( map, sf::Vector2i(x, y) );
+			//	if( visibility > 0.01f )
 				{
 					Core::ObjectList& objList = map.GetObjectsAt(x, y);
 			
@@ -57,15 +57,14 @@ void Graphics::TileRenderer::Render(sf::RenderWindow& window, Core::Map& map, st
 							continue;
 
 						// Render visible objects
-						// TODO: property for visibility
 						if (obj->HasProperty(STR_PROP_SPRITE))
 						{
 							// Draw the tile
 							auto& drawSprite = Graphics::SpriteAtlasBatcher::Instance()->AddOrGetAtlasSprite(obj->GetProperty(STR_PROP_SPRITE).Value());
 							drawSprite.setPosition(obj->GetPosition() * float(TILESIZE));
-							sf::Color color = obj->GetColor();
-							color.a = uint8_t(color.a * visibility);
-							drawSprite.setColor(color);
+					//		sf::Color color = obj->GetColor();
+					//		color.a = uint8_t(color.a * visibility);
+							drawSprite.setColor(obj->GetColor());
 							Graphics::SpriteAtlasBatcher::Instance()->Enque(drawSprite);
 						}
 					}
@@ -73,6 +72,23 @@ void Graphics::TileRenderer::Render(sf::RenderWindow& window, Core::Map& map, st
 			}
 		}
 	} // layer
+
+	// Draw overlays to hide things (visibility shadowing)
+	for (int y = top; y <= bottom; ++y)
+	{
+		for (int x = left; x <= right; ++x)
+		{
+			float visibility = _tileVisible( map, sf::Vector2i(x, y) );
+			if( visibility >= 0.95f ) continue;
+
+			auto& drawSprite = Graphics::SpriteAtlasBatcher::Instance()->AddOrGetAtlasSprite("media/shadow.png");
+			drawSprite.setPosition(sf::Vector2f((float)x, (float)y) * float(TILESIZE));
+			sf::Color color = sf::Color::White;
+			color.a = uint8_t(255.0f - 255.0f * visibility);
+			drawSprite.setColor(color);
+			Graphics::SpriteAtlasBatcher::Instance()->Enque(drawSprite);
+		}
+	}
 
 	Graphics::SpriteAtlasBatcher::Instance()->End();
 	window.draw(*Graphics::SpriteAtlasBatcher::Instance());

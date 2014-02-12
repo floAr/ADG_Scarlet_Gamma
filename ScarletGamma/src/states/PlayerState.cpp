@@ -37,13 +37,6 @@ void States::PlayerState::Draw(sf::RenderWindow& win)
 	static sf::Color c(20, 26, 36);
 	win.clear(c);
 
-	// Draw the current focused object's name
-	sf::View backup = sfUtils::View::SetDefault(&win);
-	sf::Text t(m_focus->GetName(), m_gui.getGlobalFont(), 24);
-	t.setPosition(20, 10);
-	win.draw(t);
-	win.setView(backup);
-
 	// Focus on the player
 	if( m_focus->IsLocatedOnAMap() )
 	{
@@ -67,12 +60,19 @@ void States::PlayerState::Draw(sf::RenderWindow& win)
 		Graphics::TileRenderer::RenderSelection( win, m_selection );
 	} else {
 		// The player is not on the map - bring that into attention
-		sfUtils::View::SetDefault(&win);
+		sf::View backup = sfUtils::View::SetDefault(&win);
 		sf::Text t(STR_PLAYER_NOT_ON_MAP, m_gui.getGlobalFont(), 30);
 		t.setPosition(230, 320);
 		win.draw(t);
 		win.setView(backup);
 	}
+
+	// Draw the current focused object's name
+	sf::View backup = sfUtils::View::SetDefault(&win);
+	sf::Text t(m_focus->GetName(), m_gui.getGlobalFont(), 24);
+	t.setPosition(20, 10);
+	win.draw(t);
+	win.setView(backup);
 
 	GameState::Draw(win);
 }
@@ -268,7 +268,7 @@ float States::PlayerState::CheckTileVisibility( Core::Map& _map, sf::Vector2i& _
 	float distance = sfUtils::Length(direction);
 
 	// The father away the less visible
-	float v = std::min( 1.0f, 2.0f - distance * 0.3f );
+	float v = std::max(0.0f, std::min( 1.0f, 2.0f - distance * 0.3f ));
 
 	// Search an occluder - simple ray march with a Bresenham.
 	// http://de.wikipedia.org/wiki/Bresenham-Algorithmus#C-Implementierung
@@ -277,21 +277,20 @@ float States::PlayerState::CheckTileVisibility( Core::Map& _map, sf::Vector2i& _
 	sf::Vector2i currentTile = sfUtils::Round(_playerPos);
 	int dx =  abs(_tilePos.x-currentTile.x), sx = currentTile.x<_tilePos.x ? 1 : -1;
 	int dy = -abs(_tilePos.y-currentTile.y), sy = currentTile.y<_tilePos.y ? 1 : -1;
-	int err = dx+dy, e2; /* error value e_xy */
-	while(currentTile != _tilePos)
+	int err = dx+dy, e2; // error value e_xy
+	while(v > 0.001f && currentTile != _tilePos)
 	{
 		if( !_map.IsFree(currentTile) )
 		{
 			// Use ray - tile distance to weight the occlusion.
-			sf::Vector2f closest = _playerPos + sfUtils::Dot(sf::Vector2f(currentTile) - _playerPos, direction) * direction;
-			v *= std::min(1.0f, sfUtils::Length(closest - sf::Vector2f(currentTile)));
+		//	sf::Vector2f closest = _playerPos + sfUtils::Dot(sf::Vector2f(currentTile) - _playerPos, direction) * direction;
+		//	v *= std::min(1.0f, std::max(0.0f, sfUtils::Length(closest - sf::Vector2f(currentTile)) - 0.2f));
+			v = 0.0f;
 		}
 		e2 = 2*err;
-		// Modification: only go in one direction (4 neighborhood) in one step.
-		if (e2 > dy) { err += dy; currentTile.x += sx; } /* e_xy+e_x > 0 */
-		else if (e2 < dx) { err += dx; currentTile.y += sy; } /* e_xy+e_y < 0 */
-	}
-#endif
+		if (e2 > dy) { err += dy; currentTile.x += sx; }	// e_xy+e_x > 0
+		if (e2 < dx) { err += dx; currentTile.y += sy; }	// e_xy+e_y < 0
+	}//*/
 
 	/*float t = 1.0f;
 	while( t < distance && v > 0.01f )
@@ -307,7 +306,8 @@ float States::PlayerState::CheckTileVisibility( Core::Map& _map, sf::Vector2i& _
 	}
 	//v *= std::min(1.0f, sfUtils::Length(sf::Vector2f(tile) - rayPos));
 	t += 0.5f;
-	}*/
+	}//*/
+#endif
 
 	return v;
 }

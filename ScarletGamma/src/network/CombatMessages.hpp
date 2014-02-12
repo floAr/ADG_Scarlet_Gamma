@@ -11,6 +11,7 @@ namespace Network
         DM_COMBAT_BEGIN,               ///< DM begins combat
         PL_COMBAT_INITIATIVE,          ///< Player provides initiative roll
         DM_COMBAT_ADD_PARTICIPANT,     ///< DM tells player about participants, in order of initiative
+        DM_COMBAT_SET_TURN,            ///< DM tells everybody whose turn it is
         /* ... */
         DM_COMBAT_END,                 ///< DM ends combat, void
     };
@@ -21,9 +22,9 @@ namespace Network
     public:
         /// \brief Writes the headers and the specific data to a packet and
         ///     sends it.
-        /// \param [in] _suffix  Data to append to the packet, may be omitted
-        /// \param [in] _socket  Socket to send the packet to, may be omitted
-        void Send(Jo::Files::MemFile* _suffix = 0, uint8_t _socket = 0);
+        /// \param [in] _suffix  Data to append to the packet, may be omitted to leave void
+        /// \param [in] _socket  Socket to send the packet to, may be omitted to broadcast
+        void Send(Jo::Files::MemFile* _suffix = 0, int8_t _socket = -1);
 
         /// \brief Create a new combat message to your liking. You can provide
         ///     it with data when you send it.

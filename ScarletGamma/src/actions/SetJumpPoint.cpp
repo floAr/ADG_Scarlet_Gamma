@@ -7,7 +7,7 @@
 namespace Actions {
 
 
-SetJumpPoint::SetJumpPoint() : Action(STR_ACT_SETJUMPPOINT, ActionType::FREE_ACTION, -1)
+SetJumpPoint::SetJumpPoint() : Action(STR_ACT_SETJUMPPOINT, Duration::FREE_ACTION, -1)
 {
 	m_sourceRequirements.push_back( std::pair<std::string, bool>(STR_PROP_JUMPPOINT, true) );
 }

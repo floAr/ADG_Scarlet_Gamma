@@ -2,19 +2,21 @@
 
 #include "Prerequisites.hpp"
 #include "Game.hpp"
+#include "core/Object.hpp"
+#include "core/World.hpp"
 #include <vector>
 #include <cstdint>
 
 namespace Actions
 {
-    enum struct ActionType : uint8_t
+    /// \brief Determines the duration when used in combat.
+    enum struct Duration : uint8_t
     {
         STANDARD_ACTION, ///< Do something, most commonly to make an attack or cast a spell
         MOVE_ACTION,     ///< Move up to your speed or perform an action that takes a similar amount of time
         FULL_ACTION,     ///< Consumes all your effort during a round
         FREE_ACTION,     ///< Consume a very small amount of time and effort
-        SWIFT_ACTION,    ///< Consumes a very small amount of time, but more than a free action
-        NOT_IN_COMBAT    ///< Only when exectutor is not in combat
+        SWIFT_ACTION     ///< Consumes a very small amount of time, but more than a free action
     };
 
     class Action
@@ -22,14 +24,6 @@ namespace Actions
         friend class ActionPool;
 
     public:
-        /// \brief Returns the list of required properties for the target for this action.
-        /// The respective implementations needs to take care of filling the list.
-        /// \return  Reference to list of requirements
-        const std::vector<std::pair<std::string, bool>>& GetTargetRequirements()
-        {
-            return m_targetRequirements;
-        }
-
         /// \brief Returns the list of required properties for the executor.
         /// The respective implementations needs to take care of filling the list.
         /// \return  Reference to list of source requirements
@@ -68,13 +62,34 @@ namespace Actions
         virtual Action* Clone(Core::ObjectID _executor, Core::ObjectID target) = 0;
 
         /// \brief Default constructor, setting some required variables
-        Action(const std::string& name, ActionType type, int priority, Game::MouseCursor cursor = Game::MC_DEFAULT) :
-            m_name(name), m_actionType(type), m_priority(priority), m_cursor(cursor), m_finished(true) {}
+        Action(const std::string& name, Duration type, int priority, Game::MouseCursor cursor = Game::MC_DEFAULT) :
+            m_name(name), m_duration(type), m_priority(priority), m_cursor(cursor), m_finished(true) {}
+
+        /// \brief Returns true if this action can be used right now. Overwrite to
+        ///     define other conditions.
+        virtual bool CanUse(Core::ObjectList& _executors, Core::Object& _object)
+        {
+            // Get all requirements for target and loop through them
+            const std::vector<std::pair<std::string, bool>>& requirements = m_targetRequirements;
+            for (auto req = requirements.begin(); req != requirements.end(); ++req)
+                if (_object.HasProperty((*req).first) != (*req).second)
+                    return false;
+
+            // Get all requirements for executor and loop through them
+            const std::vector<std::pair<std::string, bool>>& sourceRequirements = m_sourceRequirements;
+            for (auto req = sourceRequirements.begin(); req != sourceRequirements.end(); ++req)
+                // Test all possible executors
+                for( int i=0; i<_executors.Size(); ++i )
+                    if( g_Game->GetWorld()->GetObject(_executors[i])->HasProperty((*req).first) != (*req).second )
+                        return false;
+
+            return true;
+        }
 
         std::vector<std::pair<std::string, bool>> m_targetRequirements; ///< List of required properties in target
         std::vector<std::pair<std::string, bool>> m_sourceRequirements; ///< List of required properties in source (executor)
         const std::string m_name; ///< Human readable name of the action
-        ActionType m_actionType; ///< Type of the action, i.e. how long the action will take in combat
+        Duration m_duration; ///< Duration of the action, i.e. how long the action will take in combat
         Core::ActionID m_id; ///< Action ID, i.e. index in the ActionPool's list
         Core::ObjectID m_executor; ///< The object executing the action
         Core::ObjectID m_target; ///< The object being targeted by the action

@@ -51,6 +51,9 @@ namespace Actions
         void BroadcastHitMessage(const std::string& _dice, int _result);
         void BroadcastDamageMessage(const std::string& _dice, int _result);
 
+        /// \brief Action can be used only in combat, so we need to overwrite CanUse.
+        virtual bool CanUse(Core::ObjectList& _executors, Core::Object& _object) override;
+
         /// \brief Clones an attack action.
         virtual Action* Clone(Core::ObjectID _executor, Core::ObjectID target);
 

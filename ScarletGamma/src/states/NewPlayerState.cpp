@@ -19,6 +19,17 @@ NewPlayerState::NewPlayerState(tgui::EditBox::Ptr _nameEdit, Core::ObjectID* _sa
 	m_newPlayerID(_saveID),
 	m_newPlayer(nullptr),
 	m_name(nullptr),
+	m_cAttitude(nullptr),
+	m_eFaith(nullptr),
+	m_eClass(nullptr),
+	m_eFolk(nullptr),
+	m_eHome(nullptr),
+	m_eSize(nullptr),
+	m_eAge(nullptr),
+	m_cSex(nullptr),
+	m_eWeight(nullptr),
+	m_eHair(nullptr),
+	m_eEye(nullptr),
 	m_eSt(nullptr),
 	m_eStMod(nullptr),
 	m_eGe(nullptr),
@@ -30,7 +41,10 @@ NewPlayerState::NewPlayerState(tgui::EditBox::Ptr _nameEdit, Core::ObjectID* _sa
 	m_eWe(nullptr),
 	m_eWeMod(nullptr),
 	m_eCh(nullptr),
-	m_eChMod(nullptr)
+	m_eChMod(nullptr),
+	m_eTP(nullptr),
+	m_eTPMax(nullptr),
+	m_eRK(nullptr)
 {
     //--------------------------------------
     // CREATE GUI
@@ -58,89 +72,89 @@ NewPlayerState::NewPlayerState(tgui::EditBox::Ptr _nameEdit, Core::ObjectID* _sa
 	label = label.clone();		m_gui.add(label);
 	label->setPosition( 360.0f, 35.0f );
 	label->setText( STR_PROP_ATTITUDE );
-	tgui::ComboBox::Ptr cAttitude( m_gui );
-	cAttitude->load( "media/Black.conf" );
-	cAttitude->setSize( 200.0f, 30.0f );
-	cAttitude->setPosition( 460.0f, 30.0f );
-	cAttitude->addItem( STR_ATT_LAWFULGOOD );
-	cAttitude->addItem( STR_ATT_NEUTRALGOOD );
-	cAttitude->addItem( STR_ATT_CHAOTICGOOD );
-	cAttitude->addItem( STR_ATT_LAWFULNEUTRAL );
-	cAttitude->addItem( STR_ATT_NEUTRALNEUTRAL );
-	cAttitude->addItem( STR_ATT_CHAOTICNEUTRAL );
-	cAttitude->addItem( STR_ATT_LAWFULEVIL );
-	cAttitude->addItem( STR_ATT_NEUTRALEVIL );
-	cAttitude->addItem( STR_ATT_CHAOTICEVIL );
-	cAttitude->setSelectedItem( 0 );
+	m_cAttitude = tgui::ComboBox::Ptr( m_gui );
+	m_cAttitude->load( "media/Black.conf" );
+	m_cAttitude->setSize( 200.0f, 30.0f );
+	m_cAttitude->setPosition( 460.0f, 30.0f );
+	m_cAttitude->addItem( STR_ATT_LAWFULGOOD );
+	m_cAttitude->addItem( STR_ATT_NEUTRALGOOD );
+	m_cAttitude->addItem( STR_ATT_CHAOTICGOOD );
+	m_cAttitude->addItem( STR_ATT_LAWFULNEUTRAL );
+	m_cAttitude->addItem( STR_ATT_NEUTRALNEUTRAL );
+	m_cAttitude->addItem( STR_ATT_CHAOTICNEUTRAL );
+	m_cAttitude->addItem( STR_ATT_LAWFULEVIL );
+	m_cAttitude->addItem( STR_ATT_NEUTRALEVIL );
+	m_cAttitude->addItem( STR_ATT_CHAOTICEVIL );
+	m_cAttitude->setSelectedItem( 0 );
 	// Faith
 	label = label.clone();							m_gui.add(label);
 	label->setPosition( 700.0f, 35.0f );
 	label->setText( STR_PROP_FAITH );
-	tgui::EditBox::Ptr eFaith = m_name.clone();		m_gui.add(eFaith);
-	eFaith->setPosition( 800.0f, 30.0f );
+	m_eFaith = m_name.clone();						m_gui.add(m_eFaith);
+	m_eFaith->setPosition( 800.0f, 30.0f );
 
 	// Enter class
 	label = label.clone();							m_gui.add(label);
 	label->setPosition( 20.0f, 75.0f );
 	label->setText( STR_PROP_CLASS );
-	tgui::EditBox::Ptr eClass = m_name.clone();		m_gui.add(eClass);
-	eClass->setPosition( 120.0f, 70.0f );
+	m_eClass = m_name.clone();						m_gui.add(m_eClass);
+	m_eClass->setPosition( 120.0f, 70.0f );
 	// Folk
 	label = label.clone();							m_gui.add(label);
 	label->setPosition( 360.0f, 75.0f );
 	label->setText( STR_PROP_FOLK );
-	tgui::EditBox::Ptr eFolk = m_name.clone();		m_gui.add(eFolk);
-	eFolk->setPosition( 460.0f, 70.0f );
+	m_eFolk = m_name.clone();						m_gui.add(m_eFolk);
+	m_eFolk->setPosition( 460.0f, 70.0f );
 	// Home
 	label = label.clone();							m_gui.add(label);
 	label->setPosition( 700.0f, 75.0f );
 	label->setText( STR_PROP_HOME );
-	tgui::EditBox::Ptr eHome = m_name.clone();		m_gui.add(eHome);
-	eHome->setPosition( 800.0f, 70.0f );
+	m_eHome = m_name.clone();						m_gui.add(m_eHome);
+	m_eHome->setPosition( 800.0f, 70.0f );
 
 	// Size
 	label = label.clone();							m_gui.add(label);
 	label->setPosition( 20.0f, 118.0f );
 	label->setText( STR_PROP_SIZE );
 	label->setTextSize( 16 );
-	tgui::EditBox::Ptr eSize = m_name.clone();		m_gui.add(eSize);
-	eSize->setPosition( 75.0f, 110.0f );
-	eSize->setSize( 80.0f, 30.0f );
+	m_eSize = m_name.clone();						m_gui.add(m_eSize);
+	m_eSize->setPosition( 75.0f, 110.0f );
+	m_eSize->setSize( 80.0f, 30.0f );
 	// Age
 	label = label.clone();							m_gui.add(label);
 	label->setPosition( 175.0f, 118.0f );
 	label->setText( STR_PROP_AGE );
-	tgui::EditBox::Ptr eAge = eSize.clone();		m_gui.add(eAge);
-	eAge->setPosition( 220.0f, 110.0f );
+	m_eAge = m_eSize.clone();						m_gui.add(m_eAge);
+	m_eAge->setPosition( 220.0f, 110.0f );
 	// Sex
 	label = label.clone();							m_gui.add(label);
 	label->setPosition( 320.0f, 118.0f );
 	label->setText( STR_PROP_SEX );
-	tgui::ComboBox::Ptr cSex = cAttitude.clone();	m_gui.add(cSex);
-	cSex->setPosition( 403.0f, 110.0f );
-	cSex->setSize( 70.0f, 30.0f );
-	cSex->removeAllItems();
-	cSex->addItem(STR_SEX_M);
-	cSex->addItem(STR_SEX_F);
-	cSex->setSelectedItem( 0 );
+	m_cSex = m_cAttitude.clone();					m_gui.add(m_cSex);
+	m_cSex->setPosition( 403.0f, 110.0f );
+	m_cSex->setSize( 70.0f, 30.0f );
+	m_cSex->removeAllItems();
+	m_cSex->addItem(STR_SEX_M);
+	m_cSex->addItem(STR_SEX_F);
+	m_cSex->setSelectedItem( 0 );
 	// Weight
 	label = label.clone();							m_gui.add(label);
 	label->setPosition( 498.0f, 118.0f );
 	label->setText( STR_PROP_WEIGHT );
-	tgui::EditBox::Ptr eWeight = eSize.clone();		m_gui.add(eWeight);
-	eWeight->setPosition( 560.0f, 110.0f );
+	m_eWeight = m_eSize.clone();					m_gui.add(m_eWeight);
+	m_eWeight->setPosition( 560.0f, 110.0f );
 	// Hair color
 	label = label.clone();							m_gui.add(label);
 	label->setPosition( 660.0f, 118.0f );
 	label->setText( STR_PROP_HAIRCOLOR );
-	tgui::EditBox::Ptr eHair = eSize.clone();		m_gui.add(eHair);
-	eHair->setPosition( 737.0f, 110.0f );
+	m_eHair = m_eSize.clone();						m_gui.add(m_eHair);
+	m_eHair->setPosition( 737.0f, 110.0f );
 	// Eye color
 	label = label.clone();							m_gui.add(label);
 	label->setPosition( 834.0f, 118.0f );
 	label->setText( STR_PROP_EYECOLOR );
-	tgui::EditBox::Ptr eEye = eSize.clone();		m_gui.add(eEye);
-	eEye->setPosition( 920.0f, 110.0f );
+	m_eEye = m_eSize.clone();						m_gui.add(m_eEye);
+	m_eEye->setPosition( 920.0f, 110.0f );
 
 	// Attributes
 	label = label.clone();							m_gui.add(label);
@@ -148,7 +162,7 @@ NewPlayerState::NewPlayerState(tgui::EditBox::Ptr _nameEdit, Core::ObjectID* _sa
 	label->setPosition( 20.0f, 165.0f );
 	label->setSize( 145.0f, 30.0f );
 	label->setText( "ST (Stärke)" );
-	m_eSt = eSize.clone();							m_gui.add(m_eSt);
+	m_eSt = m_eSize.clone();						m_gui.add(m_eSt);
 	m_eSt->setNumbersOnly( true );
 	m_eSt->setText( STR_0 );
 	m_eSt->setPosition( 175.0f, 160.0f );
@@ -197,16 +211,25 @@ NewPlayerState::NewPlayerState(tgui::EditBox::Ptr _nameEdit, Core::ObjectID* _sa
 	m_eChMod = m_eStMod.clone();					m_gui.add(m_eChMod);
 	m_eChMod->setPosition( 265.0f, 360.0f );
 
-	// Create and Cancel
-	/*tgui::Button::Ptr button( m_gui );
-	button->load("media/Black.conf");
-	button->setText( STR_CANCEL );
-	button->setPosition( 500.0f, 700.0f );
-	button->setSize( 200.0f, 40.0f );
-	button->setTextSize( 26 );
-	button->setCallbackId( 1 );
-	button->bindCallback( &NewPlayerState::Cancel, this, tgui::Button::LeftMouseClicked );
-	button = tgui::Button::Ptr( m_gui );*/
+	// Health
+	label = label.clone();							m_gui.add(label);
+	label->setPosition( 20.0f, 415.0f );
+	label->setText( "TP akt./max." );
+	m_eTP = m_eSt.clone();							m_gui.add(m_eTP);
+	m_eTP->setPosition( 175.0f, 410.0f );
+	m_eTPMax = m_eSt.clone();						m_gui.add(m_eTPMax);
+	m_eTPMax->setPosition( 265.0f, 410.0f );
+
+	// Armor class
+	label = label.clone();							m_gui.add(label);
+	label->setPosition( 20.0f, 465.0f );
+	label->setText( "RK (Rüstungsklasse)" );
+	m_eRK = m_eSt.clone();							m_gui.add(m_eRK);
+	m_eRK->setPosition( 175.0f, 460.0f );
+	m_eRK->setSize( 170.0f, 30.0f );
+	m_eRK->setNumbersOnly( false );
+
+	// Create/Go back to where we came from
 	tgui::Button::Ptr button( m_gui );
 	button->load("media/Black.conf");
 	button->setText( STR_CREATE );
@@ -216,7 +239,7 @@ NewPlayerState::NewPlayerState(tgui::EditBox::Ptr _nameEdit, Core::ObjectID* _sa
 	button->setCallbackId( 2 );
 	button->bindCallback( &NewPlayerState::Create, this, tgui::Button::LeftMouseClicked );
 
-
+	// Load the player or create a new one
 	if( *_saveID == 0xffffffff ) CreateNew();
 	else {
 		m_newPlayer = g_Game->GetWorld()->GetObject(*m_newPlayerID);
@@ -271,6 +294,24 @@ void NewPlayerState::CreateNew()
 	m_newPlayer->Add( Core::PROPERTY::WISDOM_MOD );
 	m_newPlayer->Add( Core::PROPERTY::CHARISMA );
 	m_newPlayer->Add( Core::PROPERTY::CHARISMA_MOD );
+
+	m_newPlayer->Add( Core::PROPERTY::HEALTH );
+	m_newPlayer->Add( Core::PROPERTY::HEALTH_MAX );
+	m_newPlayer->Add( Core::PROPERTY::ARMORCLASS );
+
+	m_newPlayer->Add( Core::PROPERTY::ATTITUDE );
+	m_newPlayer->Add( Core::PROPERTY::CLASS );
+	m_newPlayer->Add( Core::PROPERTY::FOLK );
+	m_newPlayer->Add( Core::PROPERTY::HOME );
+	m_newPlayer->Add( Core::PROPERTY::FAITH );
+	m_newPlayer->Add( Core::PROPERTY::SIZE );
+	m_newPlayer->Add( Core::PROPERTY::AGE );
+	m_newPlayer->Add( Core::PROPERTY::SEX );
+	m_newPlayer->Add( Core::PROPERTY::WEIGHT );
+	m_newPlayer->Add( Core::PROPERTY::HAIRCOLOR );
+	m_newPlayer->Add( Core::PROPERTY::EYECOLOR );
+
+	ShowPlayer();
 }
 
 void NewPlayerState::Create()
@@ -278,6 +319,38 @@ void NewPlayerState::Create()
 	m_nameOutputEdit->setText( m_name->getText() );
 	m_newPlayer->GetProperty( STR_PROP_NAME ).SetValue( m_name->getText() );
 	m_newPlayer->GetProperty( STR_PROP_OWNER ).SetValue( m_name->getText() );
+
+	// Set all the attributes which are not updated automatically
+	if( m_newPlayer->HasProperty(STR_PROP_HEALTH) )
+		m_newPlayer->GetProperty( STR_PROP_HEALTH ).SetValue(m_eTP->getText());
+	if( m_newPlayer->HasProperty(STR_PROP_HEALTH_MAX) )
+		m_newPlayer->GetProperty( STR_PROP_HEALTH_MAX ).SetValue(m_eTPMax->getText());
+	if( m_newPlayer->HasProperty(STR_PROP_ARMORCLASS) )
+		m_newPlayer->GetProperty( STR_PROP_ARMORCLASS ).SetValue(m_eRK->getText());
+
+	if( m_newPlayer->HasProperty(STR_PROP_ATTITUDE) )
+		// Find the right combobox entry
+		m_newPlayer->GetProperty( STR_PROP_ATTITUDE ).SetValue(m_cAttitude->getSelectedItem());
+	if( m_newPlayer->HasProperty(STR_PROP_CLASS) )
+		m_newPlayer->GetProperty( STR_PROP_CLASS ).SetValue(m_eClass->getText());
+	if( m_newPlayer->HasProperty(STR_PROP_FOLK) )
+		m_newPlayer->GetProperty( STR_PROP_FOLK ).SetValue(m_eFolk->getText());
+	if( m_newPlayer->HasProperty(STR_PROP_HOME) )
+		m_newPlayer->GetProperty( STR_PROP_HOME ).SetValue(m_eHome->getText());
+	if( m_newPlayer->HasProperty(STR_PROP_FAITH) )
+		m_newPlayer->GetProperty( STR_PROP_FAITH ).SetValue(m_eFaith->getText());
+	if( m_newPlayer->HasProperty(STR_PROP_SIZE) )
+		m_newPlayer->GetProperty( STR_PROP_SIZE ).SetValue(m_eSize->getText());
+	if( m_newPlayer->HasProperty(STR_PROP_AGE) )
+		m_newPlayer->GetProperty( STR_PROP_AGE ).SetValue(m_eAge->getText());
+	if( m_newPlayer->HasProperty(STR_PROP_SEX) )
+		m_newPlayer->GetProperty( STR_PROP_SEX ).SetValue(m_cSex->getSelectedItem());
+	if( m_newPlayer->HasProperty(STR_PROP_WEIGHT) )
+		m_newPlayer->GetProperty( STR_PROP_WEIGHT ).SetValue(m_eWeight->getText());
+	if( m_newPlayer->HasProperty(STR_PROP_HAIRCOLOR) )
+		m_newPlayer->GetProperty( STR_PROP_HAIRCOLOR ).SetValue(m_eHair->getText());
+	if( m_newPlayer->HasProperty(STR_PROP_EYECOLOR) )
+		m_newPlayer->GetProperty( STR_PROP_EYECOLOR ).SetValue(m_eEye->getText());
 
 	m_finished = true;
 }
@@ -371,6 +444,37 @@ void NewPlayerState::ShowPlayer()
 		m_eCh->setText( m_newPlayer->GetProperty( STR_PROP_CHARISMA ).Value() );
 		AttributeCharismaChanged();
 	}
+
+	if( m_newPlayer->HasProperty(STR_PROP_HEALTH) )
+		m_eTP->setText( m_newPlayer->GetProperty( STR_PROP_HEALTH ).Value() );
+	if( m_newPlayer->HasProperty(STR_PROP_HEALTH_MAX) )
+		m_eTPMax->setText( m_newPlayer->GetProperty( STR_PROP_HEALTH_MAX ).Value() );
+	if( m_newPlayer->HasProperty(STR_PROP_ARMORCLASS) )
+		m_eRK->setText( m_newPlayer->GetProperty( STR_PROP_ARMORCLASS ).Value() );
+
+	if( m_newPlayer->HasProperty(STR_PROP_ATTITUDE) )
+		// Find the right combobox entry
+		m_cAttitude->setSelectedItem( m_newPlayer->GetProperty( STR_PROP_ATTITUDE ).Value() );
+	if( m_newPlayer->HasProperty(STR_PROP_CLASS) )
+		m_eClass->setText( m_newPlayer->GetProperty( STR_PROP_CLASS ).Value() );
+	if( m_newPlayer->HasProperty(STR_PROP_FOLK) )
+		m_eFolk->setText( m_newPlayer->GetProperty( STR_PROP_FOLK ).Value() );
+	if( m_newPlayer->HasProperty(STR_PROP_HOME) )
+		m_eHome->setText( m_newPlayer->GetProperty( STR_PROP_HOME ).Value() );
+	if( m_newPlayer->HasProperty(STR_PROP_FAITH) )
+		m_eFaith->setText( m_newPlayer->GetProperty( STR_PROP_FAITH ).Value() );
+	if( m_newPlayer->HasProperty(STR_PROP_SIZE) )
+		m_eSize->setText( m_newPlayer->GetProperty( STR_PROP_SIZE ).Value() );
+	if( m_newPlayer->HasProperty(STR_PROP_AGE) )
+		m_eAge->setText( m_newPlayer->GetProperty( STR_PROP_AGE ).Value() );
+	if( m_newPlayer->HasProperty(STR_PROP_SEX) )
+		m_cSex->setSelectedItem( m_newPlayer->GetProperty( STR_PROP_SEX ).Value() );
+	if( m_newPlayer->HasProperty(STR_PROP_WEIGHT) )
+		m_eWeight->setText( m_newPlayer->GetProperty( STR_PROP_WEIGHT ).Value() );
+	if( m_newPlayer->HasProperty(STR_PROP_HAIRCOLOR) )
+		m_eHair->setText( m_newPlayer->GetProperty( STR_PROP_HAIRCOLOR ).Value() );
+	if( m_newPlayer->HasProperty(STR_PROP_EYECOLOR) )
+		m_eEye->setText( m_newPlayer->GetProperty( STR_PROP_EYECOLOR ).Value() );
 }
 
 } // namespace States

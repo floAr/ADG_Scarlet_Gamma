@@ -12,11 +12,12 @@
 #include "core/World.hpp"
 #include "gamerules/CombatRules.hpp"
 #include "utils/Exception.hpp"
+#include "states/CommonState.hpp"
 
 using namespace Actions;
 using namespace GameRules;
 
-Attack::Attack() : Action(STR_ACT_ATTACK, ActionType::STANDARD_ACTION, 50, Game::MC_ATTACK)
+Attack::Attack() : Action(STR_ACT_ATTACK, Duration::STANDARD_ACTION, 50, Game::MC_ATTACK)
 {
     // Set requirements
     m_targetRequirements.push_back(std::pair<std::string, bool>(STR_PROP_HEALTH, true));
@@ -417,4 +418,10 @@ void Attack::BroadcastDamageMessage(const std::string& _dice, int _result)
     stream << "Trefferwurf " << _dice << " = " << std::to_string(_result) << " Schaden";
     Network::ChatMsg message(stream.str(), sf::Color::White);
     message.Send();
+}
+
+bool Actions::Attack::CanUse( Core::ObjectList& _executors, Core::Object& _object )
+{
+    // Only usable when in combat!
+    return (g_Game->GetCommonState()->GetCombat() && Action::CanUse(_executors, _object));
 }

@@ -69,6 +69,16 @@ size_t Network::HandleCombatMessage(const uint8_t* _data, size_t _size, uint8_t 
             g_Game->GetCommonState()->GetCombat()->AddParticipantWithInitiative(object, index);
         } break;
 
+    case CombatMsgType::DM_COMBAT_SET_TURN:
+        {
+            // Read object ID
+            Core::ObjectID object = *reinterpret_cast<const Core::ObjectID*>( _data + readSize );
+            readSize += sizeof(Core::ObjectID);
+
+            // Set turn
+            g_Game->GetCommonState()->GetCombat()->SetTurn(object);
+        } break;
+
     case CombatMsgType::DM_COMBAT_END:
         g_Game->GetCommonState()->EndCombat();
         break;
@@ -81,7 +91,7 @@ size_t Network::HandleCombatMessage(const uint8_t* _data, size_t _size, uint8_t 
 ////////////////////////////////////////////////////////////////////////////////
 // CombatMsg
 
-void CombatMsg::Send(Jo::Files::MemFile* _suffix, uint8_t _socket)
+void CombatMsg::Send(Jo::Files::MemFile* _suffix, int8_t _socket)
 {
     // Write headers
     Jo::Files::MemFile data;
@@ -92,5 +102,8 @@ void CombatMsg::Send(Jo::Files::MemFile* _suffix, uint8_t _socket)
     if (_suffix)
         data.Write(_suffix->GetBuffer(), _suffix->GetSize());
 
-    Messenger::Send(data.GetBuffer(), (size_t)data.GetSize(), Network::Messenger::GetSocket(_socket));
+    if (_socket >= 0)
+        Messenger::Send(data.GetBuffer(), (size_t)data.GetSize(), Network::Messenger::GetSocket(_socket));
+    else
+        Messenger::Send(data.GetBuffer(), (size_t)data.GetSize(), 0);
 }

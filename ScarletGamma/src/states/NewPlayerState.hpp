@@ -38,6 +38,17 @@ namespace States
 
 		// All the components which contain data
 		tgui::EditBox::Ptr m_name;
+		tgui::ComboBox::Ptr m_cAttitude;
+		tgui::EditBox::Ptr m_eFaith;
+		tgui::EditBox::Ptr m_eClass;
+		tgui::EditBox::Ptr m_eFolk;
+		tgui::EditBox::Ptr m_eHome;
+		tgui::EditBox::Ptr m_eSize;
+		tgui::EditBox::Ptr m_eAge;
+		tgui::ComboBox::Ptr m_cSex;
+		tgui::EditBox::Ptr m_eWeight;
+		tgui::EditBox::Ptr m_eHair;
+		tgui::EditBox::Ptr m_eEye;
 		tgui::EditBox::Ptr m_eSt;
 		tgui::EditBox::Ptr m_eStMod;
 		tgui::EditBox::Ptr m_eGe;
@@ -50,5 +61,8 @@ namespace States
 		tgui::EditBox::Ptr m_eWeMod;
 		tgui::EditBox::Ptr m_eCh;
 		tgui::EditBox::Ptr m_eChMod;
+		tgui::EditBox::Ptr m_eTP;
+		tgui::EditBox::Ptr m_eTPMax;
+		tgui::EditBox::Ptr m_eRK;
 	};
 }

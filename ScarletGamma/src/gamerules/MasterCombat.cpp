@@ -36,7 +36,18 @@ void GameRules::MasterCombat::InitiativeRollPromptFinished( States::GameState* _
     ReceivedInitiative(_object, std::string(prompt->GetResult()));
 }
 
-void MasterCombat::ReceivedInitiative(Core::ObjectID _object, std::string& _initiative)
+void GameRules::MasterCombat::SetTurn( Core::ObjectID _object )
+{
+    // Do everything locally
+    Combat::SetTurn(_object);
+
+    // Notify players
+    Jo::Files::MemFile data;
+    data.Write(&_object, sizeof(_object));
+    Network::CombatMsg(CombatMsgType::DM_COMBAT_SET_TURN).Send(&data);
+}
+
+void MasterCombat::ReceivedInitiative( Core::ObjectID _object, std::string& _initiative )
 {
     // Save initiative value
     int iniEvaluated = Utils::EvaluateFormula(_initiative, Game::RANDOM, g_Game->GetWorld()->GetObject(_object));

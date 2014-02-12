@@ -23,7 +23,7 @@ namespace Network
         ///     sends it.
         /// \param [in] _suffix  Data to append to the packet, may be omitted
         /// \param [in] _socket  Socket to send the packet to, may be omitted
-        void Send(Jo::Files::MemFile* _suffix = 0, uint8_t _socket = 0);
+        void Send(Jo::Files::MemFile* _suffix = 0, int8_t _socket = -1);
 
         /// \brief Create a new combat message to your liking. You can provide
         ///     it with data when you send it.

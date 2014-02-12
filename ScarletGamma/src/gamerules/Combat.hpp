@@ -26,5 +26,7 @@ namespace GameRules
 
         /// \brief The object whose move it currently is.
         Core::ObjectID m_currentObject;
+
+
     };
 }

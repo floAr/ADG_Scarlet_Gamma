@@ -36,7 +36,7 @@ ActionPool::ActionPool() :
 		m_clientActions[i] = nullptr;
 }
 
-std::vector<Core::ActionID> ActionPool::GetAllowedActions(Core::ObjectList& _executors, Core::Object& object)
+std::vector<Core::ActionID> ActionPool::GetAllowedActions(Core::ObjectList& _executors, Core::Object& _object)
 {
     // Create empty result vector
     std::vector<Core::ActionID> result;
@@ -44,40 +44,8 @@ std::vector<Core::ActionID> ActionPool::GetAllowedActions(Core::ObjectList& _exe
     // Check all available actions
     for (std::vector<Action*>::iterator action = m_actions.begin(); action != m_actions.end(); ++action)
     {
-        // Remember whether all properties were found, initially true
-        bool allowed = true;
-
-        // Get all requirements for target and loop through them
-        const std::vector<std::pair<std::string, bool>>& requirements = (*action)->GetTargetRequirements();
-        for (auto req = requirements.begin(); req != requirements.end(); ++req)
-        {
-            if (object.HasProperty((*req).first) != (*req).second)
-            {
-                // Missing a property, remember that and get out of the requirements loop
-                allowed = false;
-                break;
-            }
-        }
-
-		// Get all requirements for executor and loop through them
-		const std::vector<std::pair<std::string, bool>>& sourceRequirements = (*action)->GetSourceRequirements();
-		for (auto req = sourceRequirements.begin(); req != sourceRequirements.end() && allowed; ++req)
-		{
-			// Test all possible executors
-			for( int i=0; i<_executors.Size(); ++i )
-			if( g_Game->GetWorld()->GetObject(_executors[i])->HasProperty((*req).first) != (*req).second )
-			{
-				// Missing a property, remember that and get out of the requirements loop
-				allowed = false;
-				break;
-			}
-		}
-
-        // Did the object have all properties?
-        if (allowed)
-        {
+        if ((*action)->CanUse(_executors, _object))
             result.push_back((*action)->m_id);
-        }
     }
 
     // Sort actions by property, descending

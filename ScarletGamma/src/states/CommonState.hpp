@@ -27,9 +27,6 @@ namespace States
 		/// \brief Move the visible position on middle mouse button down
 		virtual void MouseMoved(int deltaX, int deltaY, bool guiHandled) override;
 
-		/// \brief TODO: Selection stuff
-		virtual void MouseButtonPressed(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePo, bool guiHandleds) override {}
-
 		/// \brief Open a chat menu on Enter.
 		virtual void KeyPressed(sf::Event::KeyEvent& key, bool guiHandled) override;
 

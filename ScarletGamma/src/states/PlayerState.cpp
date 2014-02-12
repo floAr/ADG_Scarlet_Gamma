@@ -80,9 +80,10 @@ void States::PlayerState::Draw(sf::RenderWindow& win)
 
 void States::PlayerState::MouseMoved(int deltaX, int deltaY, bool guiHandled)
 {
+    // TODO: update default action!
+
 	// Don't react to any key if gui handled it
 	if (guiHandled)
-		return;
 }
 
 
@@ -110,18 +111,22 @@ void States::PlayerState::MouseButtonPressed(sf::Event::MouseButtonEvent& button
 		auto& tiles = GetCurrentMap()->GetObjectsAt(tileX,tileY);
 		if( tiles.Size() > 0 )
 		{
-			// TODO: intelligent select?
-			Core::Object* obj = g_Game->GetWorld()->GetObject(tiles[tiles.Size()-1]);
+			Core::Object* object = g_Game->GetWorld()->GetObject(tiles[tiles.Size()-1]);
+			Core::ObjectList focusList;
+			focusList.Add(m_focus->ID());
+			Actions::ActionPool::Instance().UpdateDefaultAction(focusList, object);
+			Actions::ActionPool::Instance().StartDefaultAction(m_focus->ID(), object->ID());
+
 			// Delete current target(s) if not appending
-			if( !sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) )
-			{
-				m_focus->GetProperty(STR_PROP_TARGET).SetValue(STR_EMPTY);
-				Core::Property& path = m_player->GetProperty(STR_PROP_PATH);
-				path.ClearObjects();
-				path.SetValue(STR_FALSE);
-			}
-			// Append to target list
-			m_focus->AppendToPath( obj->ID() );
+			//if( !sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) )
+			//{
+			//	m_focus->GetProperty(STR_PROP_TARGET).SetValue(STR_EMPTY);
+			//	Core::Property& path = m_player->GetProperty(STR_PROP_PATH);
+			//	path.ClearObjects();
+			//	path.SetValue(STR_FALSE);
+			//}
+			//// Append to target list
+			//m_focus->AppendToPath( obj->ID() );
 		}
 		break; }
 
@@ -338,17 +343,17 @@ void States::PlayerState::SetHotkeyToObject(const int hotkey, Core::ObjectID obj
 
 void States::PlayerState::BeginCombat( Core::ObjectID _object )
 {
-    // Find the object
-    Core::Object* object = g_Game->GetWorld()->GetObject(_object);
+	// Find the object
+	Core::Object* object = g_Game->GetWorld()->GetObject(_object);
 
-    // Does this object belong to me?
-    if (object->HasProperty(STR_PROP_OWNER) && object->GetProperty(STR_PROP_OWNER).Value() == m_name)
-    {
-        // Maybe create a new Combat object
-        if (!m_combat)
-            m_combat = new GameRules::Combat();
+	// Does this object belong to me?
+	if (object->HasProperty(STR_PROP_OWNER) && object->GetProperty(STR_PROP_OWNER).Value() == m_name)
+	{
+		// Maybe create a new Combat object
+		if (!m_combat)
+			m_combat = new GameRules::Combat();
 
-        // Prompt for initiative roll
-        m_combat->PushInitiativePrompt(_object);
-    }
+		// Prompt for initiative roll
+		m_combat->PushInitiativePrompt(_object);
+	}
 }

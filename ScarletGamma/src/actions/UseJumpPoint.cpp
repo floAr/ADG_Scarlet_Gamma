@@ -7,7 +7,7 @@
 namespace Actions {
 
 
-	UseJumpPoint::UseJumpPoint() : Action( STR_ACT_USEJUMPPOINT, ActionType::MOVE_ACTION, -1 )
+	UseJumpPoint::UseJumpPoint() : Action( STR_ACT_USEJUMPPOINT, Duration::MOVE_ACTION, -1 )
 	{
 		m_targetRequirements.push_back( std::pair<std::string, bool>(STR_PROP_JUMPPOINT, true) );
 	}

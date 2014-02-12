@@ -9,7 +9,7 @@
 
 using namespace Actions;
 
-WalkTo::WalkTo() : Action(STR_ACT_WALKTO, ActionType::MOVE_ACTION, 100, Game::MC_WALK)
+WalkTo::WalkTo() : Action(STR_ACT_WALKTO, Duration::MOVE_ACTION, 100, Game::MC_WALK)
 {
     // Set requirements
     m_targetRequirements.push_back(std::pair<std::string, bool>(STR_PROP_X, true));

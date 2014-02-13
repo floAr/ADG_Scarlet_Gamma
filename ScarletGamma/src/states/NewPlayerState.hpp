@@ -47,6 +47,9 @@ namespace States
 		tgui::EditBox::Ptr m_eClass;
 		tgui::EditBox::Ptr m_eFolk;
 		tgui::EditBox::Ptr m_eHome;
+		tgui::EditBox::Ptr m_eExperience;
+		tgui::EditBox::Ptr m_eLevel;
+		tgui::EditBox::Ptr m_eSpeed;
 		tgui::EditBox::Ptr m_eSize;
 		tgui::EditBox::Ptr m_eAge;
 		tgui::ComboBox::Ptr m_cSex;

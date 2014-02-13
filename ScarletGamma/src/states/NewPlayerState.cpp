@@ -64,7 +64,7 @@ NewPlayerState::NewPlayerState(tgui::EditBox::Ptr _nameEdit, Core::ObjectID* _sa
 	label->setPosition( 20.0f, 35.0f );
 	label->setText( STR_PROP_NAME );
 	label->setTextSize( 19 );
-	label->setSize( 90.0f, 30.0f );
+	label->setSize( 95.0f, 30.0f );
 	label->setTextColor( sf::Color( 200, 200, 200 ) );
 	m_name = tgui::EditBox::Ptr( m_gui );
 	m_name->load("media/Black.conf");
@@ -115,49 +115,70 @@ NewPlayerState::NewPlayerState(tgui::EditBox::Ptr _nameEdit, Core::ObjectID* _sa
 	m_eHome = m_name.clone();						m_gui.add(m_eHome);
 	m_eHome->setPosition( 800.0f, 70.0f );
 
+	// Experience
+	label = label.clone();							m_gui.add(label);
+	label->setPosition( 20.0f, 115.0f );
+	label->setText( STR_PROP_EXPERIENCE );
+	m_eExperience = m_name.clone();					m_gui.add(m_eExperience);
+	m_eExperience->setPosition( 120.0f, 110.0f );
+	m_eExperience->setNumbersOnly( true );
+	// Level
+	label = label.clone();							m_gui.add(label);
+	label->setPosition( 360.0f, 115.0f );
+	label->setText( STR_PROP_LEVEL );
+	m_eLevel = m_name.clone();						m_gui.add(m_eLevel);
+	m_eLevel->setPosition( 460.0f, 110.0f );
+	m_eLevel->setNumbersOnly(true);
+	// Speed
+	label = label.clone();							m_gui.add(label);
+	label->setPosition( 700.0f, 115.0f );
+	label->setText( STR_PROP_SPEED );
+	m_eSpeed = m_name.clone();						m_gui.add(m_eSpeed);
+	m_eSpeed->setPosition( 800.0f, 110.0f );
+
 	// Size
 	label = label.clone();							m_gui.add(label);
-	label->setPosition( 20.0f, 118.0f );
+	label->setPosition( 430.0f, 576.0f );
 	label->setText( STR_PROP_SIZE );
-	label->setTextSize( 16 );
+	label->setTextSize( 18 );
 	m_eSize = m_name.clone();						m_gui.add(m_eSize);
-	m_eSize->setPosition( 75.0f, 110.0f );
+	m_eSize->setPosition( 530.0f, 570.0f );
 	m_eSize->setSize( 80.0f, 30.0f );
 	// Age
 	label = label.clone();							m_gui.add(label);
-	label->setPosition( 175.0f, 118.0f );
+	label->setPosition( 625.0f, 576.0f );
 	label->setText( STR_PROP_AGE );
 	m_eAge = m_eSize.clone();						m_gui.add(m_eAge);
-	m_eAge->setPosition( 220.0f, 110.0f );
+	m_eAge->setPosition( 725.0f, 570.0f );
 	// Sex
 	label = label.clone();							m_gui.add(label);
-	label->setPosition( 320.0f, 118.0f );
+	label->setPosition( 820.0f, 576.0f );
 	label->setText( STR_PROP_SEX );
 	m_cSex = m_cAttitude.clone();					m_gui.add(m_cSex);
-	m_cSex->setPosition( 403.0f, 110.0f );
-	m_cSex->setSize( 70.0f, 30.0f );
+	m_cSex->setPosition( 920.0f, 570.0f );
+	m_cSex->setSize( 80.0f, 30.0f );
 	m_cSex->removeAllItems();
 	m_cSex->addItem(STR_SEX_M);
 	m_cSex->addItem(STR_SEX_F);
 	m_cSex->setSelectedItem( 0 );
 	// Weight
 	label = label.clone();							m_gui.add(label);
-	label->setPosition( 498.0f, 118.0f );
+	label->setPosition( 430.0f, 616.0f );
 	label->setText( STR_PROP_WEIGHT );
 	m_eWeight = m_eSize.clone();					m_gui.add(m_eWeight);
-	m_eWeight->setPosition( 560.0f, 110.0f );
+	m_eWeight->setPosition( 530.0f, 610.0f );
 	// Hair color
 	label = label.clone();							m_gui.add(label);
-	label->setPosition( 660.0f, 118.0f );
+	label->setPosition( 625.0f, 616.0f );
 	label->setText( STR_PROP_HAIRCOLOR );
 	m_eHair = m_eSize.clone();						m_gui.add(m_eHair);
-	m_eHair->setPosition( 737.0f, 110.0f );
+	m_eHair->setPosition( 725.0f, 610.0f );
 	// Eye color
 	label = label.clone();							m_gui.add(label);
-	label->setPosition( 834.0f, 118.0f );
+	label->setPosition( 820.0f, 616.0f );
 	label->setText( STR_PROP_EYECOLOR );
 	m_eEye = m_eSize.clone();						m_gui.add(m_eEye);
-	m_eEye->setPosition( 920.0f, 110.0f );
+	m_eEye->setPosition( 920.0f, 610.0f );
 
 	// Attributes
 	label = label.clone();							m_gui.add(label);
@@ -318,6 +339,9 @@ void NewPlayerState::CreateNew()
 	m_newPlayer->Add( Core::PROPERTY::HEALTH );
 	m_newPlayer->Add( Core::PROPERTY::HEALTH_MAX );
 	m_newPlayer->Add( Core::PROPERTY::ARMORCLASS );
+	m_newPlayer->Add( Core::PROPERTY::EXPERIENCE );
+	m_newPlayer->Add( Core::PROPERTY::LEVEL );
+	m_newPlayer->Add( Core::PROPERTY::SPEED );
 
 	m_newPlayer->Add( Core::PROPERTY::ATTITUDE );
 	m_newPlayer->Add( Core::PROPERTY::CLASS );
@@ -369,6 +393,12 @@ void NewPlayerState::Create()
 		m_newPlayer->GetProperty( STR_PROP_HEALTH_MAX ).SetValue(m_eTPMax->getText());
 	if( m_newPlayer->HasProperty(STR_PROP_ARMORCLASS) )
 		m_newPlayer->GetProperty( STR_PROP_ARMORCLASS ).SetValue(m_eRK->getText());
+	if( m_newPlayer->HasProperty(STR_PROP_EXPERIENCE) )
+		m_newPlayer->GetProperty( STR_PROP_EXPERIENCE ).SetValue(m_eExperience->getText());
+	if( m_newPlayer->HasProperty(STR_PROP_LEVEL) )
+		m_newPlayer->GetProperty( STR_PROP_LEVEL ).SetValue(m_eLevel->getText());
+	if( m_newPlayer->HasProperty(STR_PROP_SPEED) )
+		m_newPlayer->GetProperty( STR_PROP_SPEED ).SetValue(m_eSpeed->getText());
 
 	if( m_newPlayer->HasProperty(STR_PROP_ATTITUDE) )
 		// Find the right combobox entry
@@ -493,6 +523,12 @@ void NewPlayerState::ShowPlayer()
 		m_eTPMax->setText( m_newPlayer->GetProperty( STR_PROP_HEALTH_MAX ).Value() );
 	if( m_newPlayer->HasProperty(STR_PROP_ARMORCLASS) )
 		m_eRK->setText( m_newPlayer->GetProperty( STR_PROP_ARMORCLASS ).Value() );
+	if( m_newPlayer->HasProperty(STR_PROP_EXPERIENCE) )
+		m_eExperience->setText( m_newPlayer->GetProperty( STR_PROP_EXPERIENCE ).Value() );
+	if( m_newPlayer->HasProperty(STR_PROP_LEVEL) )
+		m_eLevel->setText( m_newPlayer->GetProperty( STR_PROP_LEVEL ).Value() );
+	if( m_newPlayer->HasProperty(STR_PROP_SPEED) )
+		m_eSpeed->setText( m_newPlayer->GetProperty( STR_PROP_SPEED ).Value() );
 
 	if( m_newPlayer->HasProperty(STR_PROP_ATTITUDE) )
 		// Find the right combobox entry

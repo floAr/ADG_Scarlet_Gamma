@@ -104,6 +104,9 @@ static const std::string STR_SEX_F = std::string("W");
 static const std::string STR_PROP_WEIGHT = std::string("Gewicht");
 static const std::string STR_PROP_HAIRCOLOR = std::string("Haarfarbe");
 static const std::string STR_PROP_EYECOLOR = std::string("Augenfarbe");
+static const std::string STR_PROP_EXPERIENCE = std::string("Erfahrung");
+static const std::string STR_PROP_LEVEL = std::string("Stufe");
+static const std::string STR_PROP_SPEED = std::string("Bewegungsrate");
 
 static const std::string STR_PROP_TALENTS = std::string("Fertigkeiten");
 static const std::string STR_PROP_ACROBATICS = std::string("Akrobatik");

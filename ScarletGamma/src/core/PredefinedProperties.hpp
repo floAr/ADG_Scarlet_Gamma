@@ -36,6 +36,9 @@ namespace Core {
 		static const Property HEALTH_MAX;
 		static const Property ARMORCLASS;
 		static const Property INITIATIVE_MOD;
+		static const Property EXPERIENCE;
+		static const Property LEVEL;
+		static const Property SPEED;
 
 		static const Property ATTITUDE;
 		static const Property CLASS;

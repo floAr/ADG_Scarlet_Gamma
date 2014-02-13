@@ -35,6 +35,9 @@ namespace Core {
 	const Property PROPERTY::HEALTH_MAX = Property(Property::R_VCEV0EV00, STR_PROP_HEALTH_MAX, STR_0);
     const Property PROPERTY::ARMORCLASS = Property(Property::R_VCEV0EV00, STR_PROP_ARMORCLASS, "10 + 'GE-Mod'");
 	const Property PROPERTY::INITIATIVE_MOD = Property(Property::R_VCEV0EV00, STR_PROP_INITIATIVE_MOD, STR_0);
+	const Property PROPERTY::EXPERIENCE = Property(Property::R_VCEV0EV00, STR_PROP_EXPERIENCE, STR_0);
+	const Property PROPERTY::LEVEL = Property(Property::R_VCEV0EV00, STR_PROP_LEVEL, STR_0);
+	const Property PROPERTY::SPEED = Property(Property::R_VCEV0EV00, STR_PROP_SPEED, STR_0);
 
 	const Property PROPERTY::ATTITUDE = Property(Property::R_VCEV0EV00, STR_PROP_ATTITUDE, STR_ATT_LAWFULGOOD);
 	const Property PROPERTY::CLASS = Property(Property::R_VCEV0EV00, STR_PROP_CLASS, STR_EMPTY);

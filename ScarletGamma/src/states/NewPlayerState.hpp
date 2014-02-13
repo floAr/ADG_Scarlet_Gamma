@@ -27,6 +27,10 @@ namespace States
 		void AttributeWisdomChanged();
 		void AttributeCharismaChanged();
 
+		/// \brief Call enable()/disable() and make the component transparent.
+		/// \return Pass through of the _enable parameter
+		bool SetComponentEnable( tgui::Widget::Ptr _component, bool _enable );
+
 		sf::Font	m_menuFont;
 		tgui::Gui   m_gui;
 		Utils::Random m_rand;

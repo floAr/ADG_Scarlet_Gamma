@@ -9,6 +9,7 @@
 #include "network/Messenger.hpp"
 #include "NewPlayerState.hpp"
 #include "network/WorldMessages.hpp"
+#include "core/World.hpp"
 
 States::LaunchPlayerState::LaunchPlayerState() :
     GameState(),
@@ -102,10 +103,16 @@ void States::LaunchPlayerState::GuiCallback(tgui::Callback& callback)
 		break; }
 	case 3: {
 		// Create a new player object first.
-		g_Game->GetStateMachine()->PushGameState(new NewPlayerState(m_gui.get("Name"), &m_newPlayer));
+		g_Game->GetStateMachine()->PushGameState(new CharacterState(&m_newPlayer));
 		break; }
 	default:
 		// No such GUI element!
 		assert(false);
 	}
+}
+
+void States::LaunchPlayerState::OnResume()
+{
+	auto name = g_Game->GetWorld()->GetObject( m_newPlayer )->GetName();
+	tgui::EditBox::Ptr(m_gui.get("Name"))->setText( name );
 }

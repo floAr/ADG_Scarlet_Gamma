@@ -12,10 +12,9 @@
 
 namespace States {
 
-NewPlayerState::NewPlayerState(tgui::EditBox::Ptr _nameEdit, Core::ObjectID* _saveID) :
+CharacterState::CharacterState(Core::ObjectID* _saveID) :
     GameState(),
-	m_nameOutputEdit(_nameEdit),
-	m_rand((uint32_t)_nameEdit.get()),
+	m_rand((uint32_t)this),
 	m_draggedContent(nullptr),
 	m_newPlayerID(_saveID),
 	m_newPlayer(nullptr),
@@ -190,7 +189,7 @@ NewPlayerState::NewPlayerState(tgui::EditBox::Ptr _nameEdit, Core::ObjectID* _sa
 	m_eSt->setNumbersOnly( true );
 	m_eSt->setText( STR_0 );
 	m_eSt->setPosition( 175.0f, 160.0f );
-	m_eSt->bindCallback( &NewPlayerState::AttributeStrengthChanged, this , tgui::EditBox::TextChanged );
+	m_eSt->bindCallback( &CharacterState::AttributeStrengthChanged, this , tgui::EditBox::TextChanged );
 	m_eStMod = m_eSt.clone();						m_gui.add(m_eStMod);
 	m_eStMod->disable();
 	m_eStMod->setPosition( 265.0f, 160.0f );
@@ -199,7 +198,7 @@ NewPlayerState::NewPlayerState(tgui::EditBox::Ptr _nameEdit, Core::ObjectID* _sa
 	label->setText( "GE (Geschick)" );
 	m_eGe = m_eSt.clone();							m_gui.add(m_eGe);
 	m_eGe->setPosition( 175.0f, 200.0f );
-	m_eGe->bindCallback( &NewPlayerState::AttributeDexterityChanged, this , tgui::EditBox::TextChanged );
+	m_eGe->bindCallback( &CharacterState::AttributeDexterityChanged, this , tgui::EditBox::TextChanged );
 	m_eGeMod = m_eStMod.clone();					m_gui.add(m_eGeMod);
 	m_eGeMod->setPosition( 265.0f, 200.0f );
 	label = label.clone();							m_gui.add(label);
@@ -207,7 +206,7 @@ NewPlayerState::NewPlayerState(tgui::EditBox::Ptr _nameEdit, Core::ObjectID* _sa
 	label->setText( "KO (Konstitution)" );
 	m_eKo = m_eSt.clone();							m_gui.add(m_eKo);
 	m_eKo->setPosition( 175.0f, 240.0f );
-	m_eKo->bindCallback( &NewPlayerState::AttributeConstitutionChanged, this , tgui::EditBox::TextChanged );
+	m_eKo->bindCallback( &CharacterState::AttributeConstitutionChanged, this , tgui::EditBox::TextChanged );
 	m_eKoMod = m_eStMod.clone();					m_gui.add(m_eKoMod);
 	m_eKoMod->setPosition( 265.0f, 240.0f );
 	label = label.clone();							m_gui.add(label);
@@ -215,7 +214,7 @@ NewPlayerState::NewPlayerState(tgui::EditBox::Ptr _nameEdit, Core::ObjectID* _sa
 	label->setText( "IN (Intelligenz)" );
 	m_eIn = m_eSt.clone();							m_gui.add(m_eIn);
 	m_eIn->setPosition( 175.0f, 280.0f );
-	m_eIn->bindCallback( &NewPlayerState::AttributeIntelligenceChanged, this , tgui::EditBox::TextChanged );
+	m_eIn->bindCallback( &CharacterState::AttributeIntelligenceChanged, this , tgui::EditBox::TextChanged );
 	m_eInMod = m_eStMod.clone();					m_gui.add(m_eInMod);
 	m_eInMod->setPosition( 265.0f, 280.0f );
 	label = label.clone();							m_gui.add(label);
@@ -223,7 +222,7 @@ NewPlayerState::NewPlayerState(tgui::EditBox::Ptr _nameEdit, Core::ObjectID* _sa
 	label->setText( "WE (Weisheit)" );
 	m_eWe = m_eSt.clone();							m_gui.add(m_eWe);
 	m_eWe->setPosition( 175.0f, 320.0f );
-	m_eWe->bindCallback( &NewPlayerState::AttributeWisdomChanged, this , tgui::EditBox::TextChanged );
+	m_eWe->bindCallback( &CharacterState::AttributeWisdomChanged, this , tgui::EditBox::TextChanged );
 	m_eWeMod = m_eStMod.clone();					m_gui.add(m_eWeMod);
 	m_eWeMod->setPosition( 265.0f, 320.0f );
 	label = label.clone();							m_gui.add(label);
@@ -231,7 +230,7 @@ NewPlayerState::NewPlayerState(tgui::EditBox::Ptr _nameEdit, Core::ObjectID* _sa
 	label->setText( "CH (Charisma)" );
 	m_eCh = m_eSt.clone();							m_gui.add(m_eCh);
 	m_eCh->setPosition( 175.0f, 360.0f );
-	m_eCh->bindCallback( &NewPlayerState::AttributeCharismaChanged, this , tgui::EditBox::TextChanged );
+	m_eCh->bindCallback( &CharacterState::AttributeCharismaChanged, this , tgui::EditBox::TextChanged );
 	m_eChMod = m_eStMod.clone();					m_gui.add(m_eChMod);
 	m_eChMod->setPosition( 265.0f, 360.0f );
 
@@ -261,7 +260,7 @@ NewPlayerState::NewPlayerState(tgui::EditBox::Ptr _nameEdit, Core::ObjectID* _sa
 	button->setSize( 200.0f, 40.0f );
 	button->setTextSize( 26 );
 	button->setCallbackId( 2 );
-	button->bindCallback( &NewPlayerState::Create, this, tgui::Button::LeftMouseClicked );
+	button->bindCallback( &CharacterState::Create, this, tgui::Button::LeftMouseClicked );
 
 	m_playerTalents = Interfaces::PropertyPanel::Ptr( m_gui );
 	label = label.clone();							m_gui.add(label);
@@ -292,7 +291,7 @@ NewPlayerState::NewPlayerState(tgui::EditBox::Ptr _nameEdit, Core::ObjectID* _sa
 
 
 
-void NewPlayerState::Draw(sf::RenderWindow& win)
+void CharacterState::Draw(sf::RenderWindow& win)
 {
     // Set window color according to mouse position...
     win.clear(sf::Color::Black);
@@ -300,7 +299,7 @@ void NewPlayerState::Draw(sf::RenderWindow& win)
 	GameState::Draw(win);
 }
 
-void NewPlayerState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
+void CharacterState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 {
     switch (key.code)
     {
@@ -312,7 +311,7 @@ void NewPlayerState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 }
 
 
-void NewPlayerState::CreateNew()
+void CharacterState::CreateNew()
 {
 	// Create a new player object
 	*m_newPlayerID = g_Game->GetWorld()->NewObject("media/smile_2.png");
@@ -380,9 +379,8 @@ void NewPlayerState::CreateNew()
 	ShowPlayer();
 }
 
-void NewPlayerState::Create()
+void CharacterState::Create()
 {
-	m_nameOutputEdit->setText( m_name->getText() );
 	m_newPlayer->GetProperty( STR_PROP_NAME ).SetValue( m_name->getText() );
 	m_newPlayer->GetProperty( STR_PROP_OWNER ).SetValue( m_name->getText() );
 
@@ -428,7 +426,7 @@ void NewPlayerState::Create()
 }
 
 
-void NewPlayerState::AttributeStrengthChanged()
+void CharacterState::AttributeStrengthChanged()
 {
 	// Send new data to player and recalculate dependent attributes
 	try {
@@ -438,7 +436,7 @@ void NewPlayerState::AttributeStrengthChanged()
 	} catch(...) {}
 }
 
-void NewPlayerState::AttributeDexterityChanged()
+void CharacterState::AttributeDexterityChanged()
 {
 	// Send new data to player and recalculate dependent attributes
 	try {
@@ -448,7 +446,7 @@ void NewPlayerState::AttributeDexterityChanged()
 	} catch(...) {}
 }
 
-void NewPlayerState::AttributeConstitutionChanged()
+void CharacterState::AttributeConstitutionChanged()
 {
 	// Send new data to player and recalculate dependent attributes
 	try {
@@ -458,7 +456,7 @@ void NewPlayerState::AttributeConstitutionChanged()
 	} catch(...) {}
 }
 
-void NewPlayerState::AttributeIntelligenceChanged()
+void CharacterState::AttributeIntelligenceChanged()
 {
 	// Send new data to player and recalculate dependent attributes
 	try {
@@ -468,7 +466,7 @@ void NewPlayerState::AttributeIntelligenceChanged()
 	} catch(...) {}
 }
 
-void NewPlayerState::AttributeWisdomChanged()
+void CharacterState::AttributeWisdomChanged()
 {
 	// Send new data to player and recalculate dependent attributes
 	try {
@@ -478,7 +476,7 @@ void NewPlayerState::AttributeWisdomChanged()
 	} catch(...) {}
 }
 
-void NewPlayerState::AttributeCharismaChanged()
+void CharacterState::AttributeCharismaChanged()
 {
 	// Send new data to player and recalculate dependent attributes
 	try {
@@ -488,7 +486,7 @@ void NewPlayerState::AttributeCharismaChanged()
 	} catch(...) {}
 }
 
-void NewPlayerState::ShowPlayer()
+void CharacterState::ShowPlayer()
 {
 	if( m_newPlayer->HasProperty(STR_PROP_NAME) )
 		m_name->setText( m_newPlayer->GetProperty( STR_PROP_NAME ).Value() );

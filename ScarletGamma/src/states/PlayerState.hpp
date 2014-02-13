@@ -30,6 +30,7 @@ namespace States
 	private:
 		Core::PlayerID m_playerID;							///< The players id (set by socket index)
 		Core::Object* m_player;								///< The one and only player object
+		Core::ObjectID m_playerObjectID;					///< Persistent memory with the id required to show the characterstate.
 		Core::Object* m_focus;								///< The camera is tracking this object
 		std::unordered_map<int,Core::ObjectID> m_hotkeys;	///< Defined hotkeys of this client //TODO: maybe save hotkeys as properties
 

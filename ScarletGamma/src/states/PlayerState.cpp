@@ -106,9 +106,6 @@ void States::PlayerState::MouseButtonPressed(sf::Event::MouseButtonEvent& button
 	switch (button.button)
 	{
 	case sf::Mouse::Left: {
-		//------------------------------------//
-		// move player to tile position		  //
-		//------------------------------------//
 		assert(m_focus->IsLocatedOnAMap());
 		auto& tiles = GetCurrentMap()->GetObjectsAt(tileX,tileY);
 		if( tiles.Size() > 0 )
@@ -156,6 +153,9 @@ void States::PlayerState::MouseWheelMoved(sf::Event::MouseWheelEvent& wheel, boo
 
 void States::PlayerState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 {
+	// Let common state handle input
+	CommonState::KeyPressed(key, guiHandled);
+
 	switch(key.code) //pre gui switch to still get event with LControl
 	{
 	case sf::Keyboard::Num1:
@@ -174,14 +174,28 @@ void States::PlayerState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 		else
 			SetViewToHotkey(key.code - sf::Keyboard::Num1);
 		break;
+
+	// Pre-GUI Tabbing to prevent loosing focus (focus tabbing of gui cannot be
+	// deactivated.
+	case sf::Keyboard::Tab: {
+		Core::Object* object;
+		if( sf::Keyboard::isKeyPressed( sf::Keyboard::LShift ) )
+			object = g_Game->GetWorld()->GetNextObservableObject(m_focus->ID(), -1);
+		else
+			object = g_Game->GetWorld()->GetNextObservableObject(m_focus->ID(), 1);
+		if(object != nullptr)
+		{
+			m_focus = object;
+			// Always have the current focused element in selection
+			m_selection.Clear();
+			m_selection.Add( object->ID() );
+		}
+		return; }
 	}
 
 	// Don't react to any key if gui handled it
 	if (guiHandled)
 		return;
-
-	// Let common state handle input
-	CommonState::KeyPressed(key, guiHandled);
 
 	switch(key.code)
 	{
@@ -197,20 +211,6 @@ void States::PlayerState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 	case sf::Keyboard::LAlt:
 		m_focus = m_player;
 		break;
-	case sf::Keyboard::Tab: {
-		Core::Object* object;
-		if( sf::Keyboard::isKeyPressed( sf::Keyboard::LShift ) )
-			object = g_Game->GetWorld()->GetNextObservableObject(m_focus->ID(), -1);
-		else
-			object = g_Game->GetWorld()->GetNextObservableObject(m_focus->ID(), 1);
-		if(object != nullptr)
-		{
-			m_focus = object;
-			// Always have the current focused element in selection
-			m_selection.Clear();
-			m_selection.Add( object->ID() );
-		}
-		break; }
 	case sf::Keyboard::C:
 		g_Game->GetStateMachine()->PushGameState(new CharacterState(&m_playerObjectID));
 		break;

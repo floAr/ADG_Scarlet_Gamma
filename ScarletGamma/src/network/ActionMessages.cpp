@@ -44,7 +44,7 @@ void ActionMsg::Send(uint8_t sender)
 {
     // Write headers
     Jo::Files::MemFile data;
-    data.Write(&MessageHeader(Target::ACTION, m_action), sizeof(MessageHeader));
+    data.Write(&MessageHeader(Target::ACTION, m_action, false), sizeof(MessageHeader));
     data.Write(&m_purpose, sizeof(ActionMsgType));
 
     // Write data

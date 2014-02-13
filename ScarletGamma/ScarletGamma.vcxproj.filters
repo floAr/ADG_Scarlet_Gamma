@@ -212,6 +212,9 @@
     <ClCompile Include="src\graphics\SpriteAtlasBatcher.cpp">
       <Filter>Quelldateien\graphics</Filter>
     </ClCompile>
+    <ClCompile Include="src\actions\UseSwitch.cpp">
+      <Filter>Quelldateien\actions</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\core\Map.hpp">
@@ -390,6 +393,9 @@
     </ClInclude>
     <ClInclude Include="src\graphics\SpriteAtlasBatcher.hpp">
       <Filter>Quelldateien\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\actions\UseSwitch.hpp">
+      <Filter>Quelldateien\actions</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

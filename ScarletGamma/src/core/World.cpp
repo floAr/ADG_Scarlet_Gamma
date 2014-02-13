@@ -376,6 +376,7 @@ namespace Core {
 		propertyO->Add( PROPERTY::NAME );
 		propertyO->Add( PROPERTY::OBSTACLE );
 		propertyO->Add( PROPERTY::JUMPPOINT );
+		propertyO->Add( PROPERTY::SWITCH );
 		propertyO->Add( PROPERTY::OWNER );
 
 		propertyO->Add( PROPERTY::INVENTORY );
@@ -460,6 +461,9 @@ namespace Core {
 
 		NewModule( STR_JUMPPOINT );
 		object->Add( PROPERTY::JUMPPOINT );
+
+		NewModule( STR_PROP_SWITCH );
+		object->Add( PROPERTY::SWITCH );
 
 #		undef NewModule
 	}

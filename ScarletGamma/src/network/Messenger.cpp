@@ -180,7 +180,7 @@ namespace Network {
 
 		assert(_packet.getDataSize() == read);
 
-		if( IsServer() && (header->target != Target::ACTION) )
+		if( IsServer() && header->forward )
 		{
 			// Forward message to all other clients
 			for( size_t i=0; i<g_msgInstance->m_sockets.size(); ++i )

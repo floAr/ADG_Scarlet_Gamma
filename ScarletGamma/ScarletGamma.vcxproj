@@ -86,6 +86,7 @@
     <ClCompile Include="src\actions\Attack.cpp" />
     <ClCompile Include="src\actions\SetJumpPoint.cpp" />
     <ClCompile Include="src\actions\UseJumpPoint.cpp" />
+    <ClCompile Include="src\actions\UseSwitch.cpp" />
     <ClCompile Include="src\actions\WalkTo.cpp" />
     <ClCompile Include="src\core\Map.cpp" />
     <ClCompile Include="src\core\Object.cpp" />
@@ -144,6 +145,7 @@
     <ClInclude Include="src\actions\Attack.hpp" />
     <ClInclude Include="src\actions\SetJumpPoint.hpp" />
     <ClInclude Include="src\actions\UseJumpPoint.hpp" />
+    <ClInclude Include="src\actions\UseSwitch.hpp" />
     <ClInclude Include="src\actions\WalkTo.hpp" />
     <ClInclude Include="src\Constants.hpp" />
     <ClInclude Include="src\core\Map.hpp" />

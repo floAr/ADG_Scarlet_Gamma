@@ -33,7 +33,7 @@ namespace Network {
 		Jo::Files::MemFile data;
 
 		uint16_t length = m_msg.size();
-		data.Write( &MessageHeader( Target::CHAT, 0 ), sizeof(MessageHeader) );
+		data.Write( &MessageHeader( Target::CHAT, 0, m_forward ), sizeof(MessageHeader) );
 		data.Write( &m_color, sizeof(sf::Color) );
 		data.Write( &length, sizeof(uint16_t) );
 		data.Write( m_msg.c_str(), length );

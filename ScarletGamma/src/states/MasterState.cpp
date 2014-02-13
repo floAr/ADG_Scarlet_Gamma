@@ -142,26 +142,7 @@ namespace States {
 		{
 			sf::Vector2i mousePos = Events::InputHandler::GetMouseTilePosition();
 			int minX,minY,maxX,maxY;
-			if(mousePos.x < m_rectSelectionStart.x)
-			{
-				minX = (int)mousePos.x;
-				maxX = (int)m_rectSelectionStart.x+1;
-			}
-			else
-			{
-				maxX = (int)mousePos.x+1;
-				minX = (int)m_rectSelectionStart.x;
-			}
-			if(mousePos.y < m_rectSelectionStart.y)
-			{
-				minY = (int)mousePos.y;
-				maxY = (int)m_rectSelectionStart.y+1;
-			}
-			else
-			{
-				maxY = (int)mousePos.y+1;
-				minY = (int)m_rectSelectionStart.y;
-			}
+			ComputeSelectionRect( mousePos, minX, maxX, minY, maxY );
 			Graphics::TileRenderer::RenderRect( win, sf::Vector2i(minX,minY), sf::Vector2i(maxX,maxY) );
 		}
 
@@ -229,9 +210,10 @@ namespace States {
 			}
 			if( m_modeTool->GetMode() == Interfaces::ModeToolbox::SELECTION )
 			{
-				//TODO Start rect-selection
-				m_rectSelectionStart=tilePos;
-				m_rectSelection=true;
+				// Start rect-selection
+				m_rectSelectionStart.x = tileX;
+				m_rectSelectionStart.y = tileY;
+				m_rectSelection = true;
 			}
 			break; }
 		case sf::Mouse::Right: {
@@ -303,46 +285,76 @@ namespace States {
 			m_draggedContent = nullptr;
 		}
 
-		if(m_rectSelection){
-			int minX,minY,maxX,maxY;
-			if(tilePos.x<m_rectSelectionStart.x)
-			{
-				minX = (int)tilePos.x;
-				maxX = (int)m_rectSelectionStart.x+1;
-			}
-			else
-			{
-				maxX = (int)tilePos.x+1;
-				minX = (int)m_rectSelectionStart.x;
-			}
-			if(tilePos.y<m_rectSelectionStart.y)
-			{
-				minY = (int)tilePos.y;
-				maxY = (int)m_rectSelectionStart.y+1;
-			}
-			else
-			{
-				maxY = (int)tilePos.y+1;
-				minY = (int)m_rectSelectionStart.y;
-			}
-			if(!sf::Keyboard::isKeyPressed(sf::Keyboard::LControl))//if not pressing cntrl -> clear selection
+		if(m_rectSelection)
+		{
+			// If not pressing cntrl -> clear selection
+			if(!sf::Keyboard::isKeyPressed(sf::Keyboard::LControl))
 				m_selection.Clear();
-			for(int sX = minX; sX < maxX; sX++)
+
+			sf::Vector2i tile((int)floor(tilePos.x), (int)floor(tilePos.y));
+			// The cursor did not leave the tile -> interpret asa click only it time was also short
+			if( tile.x==m_rectSelectionStart.x && tile.y==m_rectSelectionStart.y && time < 0.4f)
 			{
-				for(int sY = minY; sY < maxY; sY++)
+				// Take only the topmost visible tile
+				auto& objectList = GetCurrentMap()->GetObjectsAt((int)tilePos.x, (int)tilePos.y);
+				ObjectID topmostObject = 0xffffffff;
+				int maxLayer = -1000;
+				for (int i = objectList.Size()-1; i >= 0; --i)
 				{
-					auto oList=GetCurrentMap()->GetObjectsAt(sX,sY);
-					for (int i = 0; i < oList.Size(); i++)
+					// If object is not on hidden layer it is worth a closer look
+					int layer = g_Game->GetWorld()->GetObject(objectList[i])->GetLayer();
+					if( !m_hiddenLayers[layer] && layer > maxLayer )
 					{
-						if(m_hiddenLayers[atoi(g_Game->GetWorld()->GetObject(oList[i])->GetProperty(Core::PROPERTY::LAYER.Name()).Value().c_str())])//if object is on hidden layer
-							continue;
-						AddToSelection(oList[i]);
+						topmostObject = objectList[i];
+						maxLayer = layer;
 					}
 				}
+				if( topmostObject != 0xffffffff )
+					AddToSelection(topmostObject);
+			} else {
+				int minX,minY,maxX,maxY;
+				ComputeSelectionRect( tile, minX, maxX, minY, maxY );
+				for(int sX = minX; sX < maxX; sX++)
+				{
+					for(int sY = minY; sY < maxY; sY++)
+					{
+						auto& objectList = GetCurrentMap()->GetObjectsAt(sX,sY);
+						for (int i = 0; i < objectList.Size(); i++)
+						{
+							// if object is not on hidden layer add it
+							if(!m_hiddenLayers[g_Game->GetWorld()->GetObject(objectList[i])->GetLayer()])
+								AddToSelection(objectList[i]);
+						}
+					}
 
+				}
 			}
-
 			m_rectSelection=false;
+		}
+	}
+
+
+	void MasterState::ComputeSelectionRect( const sf::Vector2i& _position, int& _minX, int& _maxX, int& _minY, int& _maxY )
+	{
+		if(_position.x < m_rectSelectionStart.x)
+		{
+			_minX = _position.x;
+			_maxX = m_rectSelectionStart.x + 1;
+		}
+		else
+		{
+			_maxX = _position.x + 1;
+			_minX = m_rectSelectionStart.x;
+		}
+		if(_position.y < m_rectSelectionStart.y)
+		{
+			_minY = _position.y;
+			_maxY = m_rectSelectionStart.y + 1;
+		}
+		else
+		{
+			_maxY = _position.y + 1;
+			_minY = m_rectSelectionStart.y;
 		}
 	}
 

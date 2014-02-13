@@ -53,7 +53,7 @@ void Graphics::TileRenderer::Render(sf::RenderWindow& window, Core::Map& map, st
 						assert(obj);
 
 						// Skip objects from the wrong layer
-						if( atoi(obj->GetProperty(STR_PROP_LAYER).Value().c_str()) != layer )
+						if( obj->GetLayer() != layer )
 							continue;
 
 						// Render visible objects

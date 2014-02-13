@@ -70,8 +70,9 @@ namespace States
 		/// \brief Helper to blend the different layers on and off
 		void BlendLayer(int layerId);
 
-		sf::Vector2f m_rectSelectionStart;	///< Starting point where the DM began selection
+		sf::Vector2i m_rectSelectionStart;	///< Starting point where the DM began selection
 		bool m_rectSelection;
+		void ComputeSelectionRect( const sf::Vector2i& _position, int& _minX, int& _maxX, int& _minY, int& _maxY );
 
 		bool m_firstLayerSelection;			///< bool to indicate if this is the first layer selected with alt (to hide the rest)
 		std::vector<char> m_hiddenLayers;	///< List of currently hidden layers

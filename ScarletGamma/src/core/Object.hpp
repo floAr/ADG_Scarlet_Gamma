@@ -3,6 +3,7 @@
 #include "Prerequisites.hpp"
 #include "Property.hpp"
 #include "SFML\Graphics\Color.hpp"
+#include "Constants.hpp"
 
 namespace Core {
 
@@ -47,6 +48,11 @@ public:
 	///		cast. So buffer the position if used more than once.
 	/// \throws Exception::NoSuchProperty
 	sf::Vector2f GetPosition() const;
+
+	/// \brief Return the integer index of the layer where the object is placed.
+	/// \details The layer only exits if the object is placed on a map.
+	/// \throws Exception::NoSuchProperty
+	int GetLayer() const	{ return atoi(GetProperty(STR_PROP_LAYER).Value().c_str()); }
 
 	/// \brief Returns the value of the name property and the id as string
 	///		if there is no such property.

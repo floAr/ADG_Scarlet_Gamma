@@ -27,7 +27,9 @@ namespace States {
 		m_selectionView(nullptr),
 		m_toolbar(nullptr),
 		m_hiddenLayers(10, 0),
-		m_worldFileName(_loadFile)
+		m_worldFileName(_loadFile),
+		m_rectSelection(false),
+		m_draggedContent(nullptr)
 	{
 		// Load the map
 		Jo::Files::HDDFile file(_loadFile);
@@ -39,7 +41,6 @@ namespace States {
 		// Load properties from database into gui
 		m_propertyPanel = Interfaces::PropertyPanel::Ptr(m_gui);
 		m_propertyPanel->Init( 0.0f, 0.0f, 240.0f, 384.0f, true, false, 0, &m_draggedContent );
-		// The all-properties object has ID 0
 		m_propertyPanel->Show( g_Game->GetWorld(), g_Game->GetWorld()->GetPropertyBaseObject() );
 
 		// Load Modules from database into gui
@@ -70,8 +71,11 @@ namespace States {
 		// Set window size
 		sf::Vector2u size = g_Game->GetWindow().getSize();
 		Resize( sf::Vector2f( (float) size.x, (float) size.y ) );
+	}
 
-		m_rectSelection=false;
+	MasterState::~MasterState()
+	{
+		delete m_draggedContent;
 	}
 
 	void MasterState::Update(float dt)

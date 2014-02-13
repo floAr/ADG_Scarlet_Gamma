@@ -4,6 +4,7 @@
 #include <TGUI/TGUI.hpp>
 #include "Prerequisites.hpp"
 #include "utils/Random.hpp"
+#include "interfaces/PropertyPanel.hpp"
 
 namespace States
 {
@@ -36,6 +37,9 @@ namespace States
 		Core::ObjectID* m_newPlayerID;
 		Core::Object * m_newPlayer;
 
+		/// \brief Used to pull talents from templates to the player
+		Interfaces::DragContent* m_draggedContent;
+
 		// All the components which contain data
 		tgui::EditBox::Ptr m_name;
 		tgui::ComboBox::Ptr m_cAttitude;
@@ -64,5 +68,7 @@ namespace States
 		tgui::EditBox::Ptr m_eTP;
 		tgui::EditBox::Ptr m_eTPMax;
 		tgui::EditBox::Ptr m_eRK;
+		Interfaces::PropertyPanel::Ptr m_playerTalents;
+		Interfaces::PropertyPanel::Ptr m_talentTemplates;
 	};
 }

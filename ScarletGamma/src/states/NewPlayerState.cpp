@@ -16,6 +16,7 @@ NewPlayerState::NewPlayerState(tgui::EditBox::Ptr _nameEdit, Core::ObjectID* _sa
     GameState(),
 	m_nameOutputEdit(_nameEdit),
 	m_rand((uint32_t)_nameEdit.get()),
+	m_draggedContent(nullptr),
 	m_newPlayerID(_saveID),
 	m_newPlayer(nullptr),
 	m_name(nullptr),
@@ -44,7 +45,9 @@ NewPlayerState::NewPlayerState(tgui::EditBox::Ptr _nameEdit, Core::ObjectID* _sa
 	m_eChMod(nullptr),
 	m_eTP(nullptr),
 	m_eTPMax(nullptr),
-	m_eRK(nullptr)
+	m_eRK(nullptr),
+	m_playerTalents(nullptr),
+	m_talentTemplates(nullptr)
 {
     //--------------------------------------
     // CREATE GUI
@@ -246,6 +249,14 @@ NewPlayerState::NewPlayerState(tgui::EditBox::Ptr _nameEdit, Core::ObjectID* _sa
 		ShowPlayer();
 		button->setText( "OK" );
 	}
+
+	m_playerTalents = Interfaces::PropertyPanel::Ptr( m_gui );
+	m_talentTemplates = Interfaces::PropertyPanel::Ptr( m_gui );
+	m_talentTemplates->Init( 760.0f, 300.0f, 240.0f, 360.0f, true, false, 0, &m_draggedContent );
+	// Search for the talents sub-object from template base
+	Core::Object* propBase = g_Game->GetWorld()->GetPropertyBaseObject();
+	Core::ObjectID talentBase = propBase->GetProperty( STR_PROP_TALENTS ).GetObjects()[0];
+	m_talentTemplates->Show( g_Game->GetWorld(), g_Game->GetWorld()->GetObject(talentBase) );
 }
 
 
@@ -312,7 +323,10 @@ void NewPlayerState::CreateNew()
 	m_newPlayer->Add( Core::PROPERTY::EYECOLOR );
 
 	// Create a player sub-object containing his talents
-	m_newPlayer->Add( Core::PROPERTY::TALENTS );
+	/*Core::Object* talentO = g_Game->GetWorld()->GetObject( g_Game->GetWorld()->NewObject( STR_EMPTY ) );
+	m_newPlayer->Add( Core::PROPERTY::TALENTS ).AddObject(talentO->ID());
+	talentO->GetProperty( STR_PROP_SPRITE ).SetRights( Core::Property::R_SYSTEMONLY );
+	talentO->GetProperty( STR_PROP_NAME ).SetRights( Core::Property::R_SYSTEMONLY );*/
 
 	ShowPlayer();
 }

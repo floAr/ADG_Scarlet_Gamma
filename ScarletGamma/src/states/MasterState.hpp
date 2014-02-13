@@ -14,6 +14,7 @@ namespace States
 	{
 	public:
 		MasterState( const std::string& _loadFile );
+		~MasterState();
 		virtual void OnBegin() override;
 		virtual void OnEnd() override;
 		virtual void Update(float dt) override;

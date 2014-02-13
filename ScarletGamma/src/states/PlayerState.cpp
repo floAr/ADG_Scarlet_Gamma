@@ -84,6 +84,7 @@ void States::PlayerState::MouseMoved(int deltaX, int deltaY, bool guiHandled)
 
 	// Don't react to any key if gui handled it
 	if (guiHandled)
+		return;
 }
 
 

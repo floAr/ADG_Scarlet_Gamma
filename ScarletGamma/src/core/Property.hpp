@@ -81,10 +81,12 @@ public:
 		R_VCEV00000 = 0x00f,	///< Master: See, Change, Edit; Owner: See
 		R_VCEV0E000 = 0x02f,	///< Master: See, Change, Edit; Owner: See, Edit
 		R_V0EV00V00 = 0x04d,	///< Master: See, Edit; Owner: See; Player: See
+		R_VC0V00V00 = 0x04b,	///< Master: See, Change; Owner: See; Player: See
 		R_VCEV00V00 = 0x04f,	///< Master: See, Change, Edit; Owner: See; Player: See
 		R_VCEV0EV00 = 0x06f,	///< Master: See, Change, Edit; Owner: See, Edit; Player: See
+		R_VCEVCEV00 = 0x07f,	///< Master: All; Owner: See, Edit, Change; Player: See
 		R_V0EV0EV0E = 0x16d,	///< Everybody: See, Edit
-		R_VCEV0EV0E = 0x16f,	///< Master: Change; Everybody: See, Edit
+		R_VCEV0EV0E = 0x16f,	///< Master: All; Everybody: See, Edit
 		R_VCEVCEVCE = 0x1ff		///< Full rights for all
 	};
 

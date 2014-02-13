@@ -7,8 +7,8 @@ namespace Core {
 
 	const Property PROPERTY::NAME = Property(Property::R_VCEV00V00, STR_PROP_NAME, STR_EMPTY);
 	const Property PROPERTY::SPRITE = Property(Property::R_V0E000000, STR_PROP_SPRITE, STR_EMPTY);
-	const Property PROPERTY::X = Property(Property::R_V0EV00000, STR_PROP_X, STR_0);
-	const Property PROPERTY::Y = Property(Property::R_V0EV00000, STR_PROP_Y, STR_0 );
+	const Property PROPERTY::X = Property(Property::R_V0E000000, STR_PROP_X, STR_0);
+	const Property PROPERTY::Y = Property(Property::R_V0E000000, STR_PROP_Y, STR_0 );
 	const Property PROPERTY::LAYER = Property(Property::R_V0E000000, STR_PROP_LAYER, STR_0);
 	const Property PROPERTY::COLOR = Property(Property::R_VCEV0EV00, STR_PROP_COLOR, STR_FFFFFFFF);
 	const Property PROPERTY::PATH = Property(Property::R_SYSTEMONLY, STR_PROP_PATH, STR_FALSE);
@@ -47,5 +47,33 @@ namespace Core {
 	const Property PROPERTY::WEIGHT = Property(Property::R_VCEV0EV00, STR_PROP_WEIGHT, STR_0);
 	const Property PROPERTY::HAIRCOLOR = Property(Property::R_VCEV0EV00, STR_PROP_HAIRCOLOR, STR_FFFFFFFF);
 	const Property PROPERTY::EYECOLOR = Property(Property::R_VCEV0EV00, STR_PROP_EYECOLOR, STR_FFFFFFFF);
+
+	const Property PROPERTY::TALENTS = Property(Property::R_VC0V00V00, STR_PROP_TALENTS, STR_EMPTY);
+	const Property PROPERTY::ACROBATICS = Property(Property::R_VCEVCEV00, STR_PROP_ACROBATICS, STR_0);
+	const Property PROPERTY::DEMEANOR = Property(Property::R_VCEVCEV00, STR_PROP_DEMEANOR, STR_0);
+	const Property PROPERTY::PROFESSION = Property(Property::R_VCEVCEV00, STR_PROP_PROFESSION, STR_0);
+	const Property PROPERTY::BLUFFING = Property(Property::R_VCEVCEV00, STR_PROP_BLUFFING, STR_0);
+	const Property PROPERTY::DIPLOMACY = Property(Property::R_VCEVCEV00, STR_PROP_DIPLOMACY, STR_0);
+	const Property PROPERTY::INTIMIDATE = Property(Property::R_VCEVCEV00, STR_PROP_INTIMIDATE, STR_0);
+	const Property PROPERTY::UNLEASHING = Property(Property::R_VCEVCEV00, STR_PROP_UNLEASHING, STR_0);
+	const Property PROPERTY::PRESTIDIGITATION = Property(Property::R_VCEVCEV00, STR_PROP_PRESTIDIGITATION, STR_0);
+	const Property PROPERTY::FLYING = Property(Property::R_VCEVCEV00, STR_PROP_FLYING, STR_0);
+	const Property PROPERTY::CRAFT = Property(Property::R_VCEVCEV00, STR_PROP_CRAFT, STR_0);
+	const Property PROPERTY::MEDICINE = Property(Property::R_VCEVCEV00, STR_PROP_MEDICINE, STR_0);
+	const Property PROPERTY::STEALTH = Property(Property::R_VCEVCEV00, STR_PROP_STEALTH, STR_0);
+	const Property PROPERTY::CLIMBING = Property(Property::R_VCEVCEV00, STR_PROP_CLIMBING, STR_0);
+	const Property PROPERTY::MAGICUSING = Property(Property::R_VCEVCEV00, STR_PROP_MAGICUSING, STR_0);
+	const Property PROPERTY::DEACTIVATE = Property(Property::R_VCEVCEV00, STR_PROP_DEACTIVATE, STR_0);
+	const Property PROPERTY::ANIMALDEALING = Property(Property::R_VCEVCEV00, STR_PROP_ANIMALDEALING, STR_0);
+	const Property PROPERTY::MOTIVERECOGNITION = Property(Property::R_VCEVCEV00, STR_PROP_MOTIVERECOGNITION, STR_0);
+	const Property PROPERTY::RIDING = Property(Property::R_VCEVCEV00, STR_PROP_RIDING, STR_0);
+	const Property PROPERTY::ESTIMATE = Property(Property::R_VCEVCEV00, STR_PROP_ESTIMATE, STR_0);
+	const Property PROPERTY::SWIMMING = Property(Property::R_VCEVCEV00, STR_PROP_SWIMMING, STR_0);
+	const Property PROPERTY::LANGUAGEUNDERSTANDING = Property(Property::R_VCEVCEV00, STR_PROP_LANGUAGEUNDERSTANDING, STR_0);
+	const Property PROPERTY::SURVIVALING = Property(Property::R_VCEVCEV00, STR_PROP_SURVIVALING, STR_0);
+	const Property PROPERTY::MASQUERADING = Property(Property::R_VCEVCEV00, STR_PROP_MASQUERADING, STR_0);
+	const Property PROPERTY::PERCEPTION = Property(Property::R_VCEVCEV00, STR_PROP_PERCEPTION, STR_0);
+	const Property PROPERTY::KNOWLEDGE = Property(Property::R_VCEVCEV00, STR_PROP_KNOWLEDGE, STR_0);
+	const Property PROPERTY::MAGICART = Property(Property::R_VCEVCEV00, STR_PROP_MAGICART, STR_0);
 
 } // namespace Core

@@ -368,16 +368,70 @@ namespace Core {
 		propertyO->SetColor( sf::Color::White );
 		propertyO->Add( PROPERTY::NAME );
 		propertyO->Add( PROPERTY::OBSTACLE );
-		propertyO->Add( PROPERTY::INVENTORY );
-		propertyO->Add( PROPERTY::STRENGTH );
-		propertyO->Add( PROPERTY::DEXTERITY );
-		propertyO->Add( PROPERTY::CONSTITUTION );
-		propertyO->Add( PROPERTY::INTELLIGENCE );
-		propertyO->Add( PROPERTY::WISDOM );
-		propertyO->Add( PROPERTY::CHARISMA );
 		propertyO->Add( PROPERTY::JUMPPOINT );
 		propertyO->Add( PROPERTY::OWNER );
+
+		propertyO->Add( PROPERTY::INVENTORY );
+		propertyO->Add( PROPERTY::STRENGTH );
+		propertyO->Add( PROPERTY::STRENGTH_MOD );
+		propertyO->Add( PROPERTY::DEXTERITY );
+		propertyO->Add( PROPERTY::DEXTERITY_MOD );
+		propertyO->Add( PROPERTY::CONSTITUTION );
+		propertyO->Add( PROPERTY::CONSTITUTION_MOD );
+		propertyO->Add( PROPERTY::INTELLIGENCE );
+		propertyO->Add( PROPERTY::INTELLIGENCE_MOD );
+		propertyO->Add( PROPERTY::WISDOM );
+		propertyO->Add( PROPERTY::WISDOM_MOD );
+		propertyO->Add( PROPERTY::CHARISMA );
+		propertyO->Add( PROPERTY::CHARISMA_MOD );
+		propertyO->Add( PROPERTY::HEALTH );
+		propertyO->Add( PROPERTY::HEALTH_MAX );
+		propertyO->Add( PROPERTY::ARMORCLASS );
 		propertyO->Add( PROPERTY::INITIATIVE_MOD );
+
+		propertyO->Add( PROPERTY::ATTITUDE );
+		propertyO->Add( PROPERTY::CLASS );
+		propertyO->Add( PROPERTY::FOLK );
+		propertyO->Add( PROPERTY::HOME );
+		propertyO->Add( PROPERTY::FAITH );
+		propertyO->Add( PROPERTY::SIZE );
+		propertyO->Add( PROPERTY::AGE );
+		propertyO->Add( PROPERTY::SEX );
+		propertyO->Add( PROPERTY::WEIGHT );
+		propertyO->Add( PROPERTY::HAIRCOLOR );
+		propertyO->Add( PROPERTY::EYECOLOR );
+
+		Object* talentO = GetObject( NewObject( STR_EMPTY ) );
+		propertyO->Add( PROPERTY::TALENTS ).AddObject(talentO->ID());
+		talentO->Add( PROPERTY::NAME ).SetValue( STR_PROP_TALENTS );
+		talentO->GetProperty( STR_PROP_SPRITE ).SetRights( Property::R_SYSTEMONLY );
+		talentO->GetProperty( STR_PROP_NAME ).SetRights( Property::R_SYSTEMONLY );
+		talentO->Add( PROPERTY::ACROBATICS );
+		talentO->Add( PROPERTY::DEMEANOR );
+		talentO->Add( PROPERTY::PROFESSION );
+		talentO->Add( PROPERTY::BLUFFING );
+		talentO->Add( PROPERTY::DIPLOMACY );
+		talentO->Add( PROPERTY::INTIMIDATE );
+		talentO->Add( PROPERTY::UNLEASHING );
+		talentO->Add( PROPERTY::PRESTIDIGITATION );
+		talentO->Add( PROPERTY::FLYING );
+		talentO->Add( PROPERTY::CRAFT );
+		talentO->Add( PROPERTY::MEDICINE );
+		talentO->Add( PROPERTY::STEALTH );
+		talentO->Add( PROPERTY::CLIMBING );
+		talentO->Add( PROPERTY::MAGICUSING );
+		talentO->Add( PROPERTY::DEACTIVATE );
+		talentO->Add( PROPERTY::ANIMALDEALING );
+		talentO->Add( PROPERTY::MOTIVERECOGNITION );
+		talentO->Add( PROPERTY::RIDING );
+		talentO->Add( PROPERTY::ESTIMATE );
+		talentO->Add( PROPERTY::SWIMMING );
+		talentO->Add( PROPERTY::LANGUAGEUNDERSTANDING );
+		talentO->Add( PROPERTY::SURVIVALING );
+		talentO->Add( PROPERTY::MASQUERADING );
+		talentO->Add( PROPERTY::PERCEPTION );
+		talentO->Add( PROPERTY::KNOWLEDGE );
+		talentO->Add( PROPERTY::MAGICART );
 	}
 
 	void World::CreateDefaultModuleBase()

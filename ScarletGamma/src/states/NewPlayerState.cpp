@@ -311,6 +311,9 @@ void NewPlayerState::CreateNew()
 	m_newPlayer->Add( Core::PROPERTY::HAIRCOLOR );
 	m_newPlayer->Add( Core::PROPERTY::EYECOLOR );
 
+	// Create a player sub-object containing his talents
+	m_newPlayer->Add( Core::PROPERTY::TALENTS );
+
 	ShowPlayer();
 }
 

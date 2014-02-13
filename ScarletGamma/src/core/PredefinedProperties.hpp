@@ -49,6 +49,34 @@ namespace Core {
 		static const Property HAIRCOLOR;
 		static const Property EYECOLOR;
 
+		static const Property TALENTS;
+		static const Property ACROBATICS;
+		static const Property DEMEANOR;
+		static const Property PROFESSION;
+		static const Property BLUFFING;
+		static const Property DIPLOMACY;
+		static const Property INTIMIDATE;
+		static const Property UNLEASHING;
+		static const Property PRESTIDIGITATION;
+		static const Property FLYING;
+		static const Property CRAFT;
+		static const Property MEDICINE;
+		static const Property STEALTH;
+		static const Property CLIMBING;
+		static const Property MAGICUSING;
+		static const Property DEACTIVATE;
+		static const Property ANIMALDEALING;
+		static const Property MOTIVERECOGNITION;
+		static const Property RIDING;
+		static const Property ESTIMATE;
+		static const Property SWIMMING;
+		static const Property LANGUAGEUNDERSTANDING;
+		static const Property SURVIVALING;
+		static const Property MASQUERADING;
+		static const Property PERCEPTION;
+		static const Property KNOWLEDGE;
+		static const Property MAGICART;
+
 
 		// A custom property with R_VCEV0EV00 access rights and an empty default.
 		static Property Custom( const std::string& _name )

@@ -303,8 +303,9 @@ void CharacterState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 {
     switch (key.code)
     {
-    // Quit with escape
+    // Quit with escape and c
     case sf::Keyboard::Escape:
+	case sf::Keyboard::C:
         m_finished = true;
         break;
     }
@@ -381,8 +382,13 @@ void CharacterState::CreateNew()
 
 void CharacterState::Create()
 {
-	m_newPlayer->GetProperty( STR_PROP_NAME ).SetValue( m_name->getText() );
-	m_newPlayer->GetProperty( STR_PROP_OWNER ).SetValue( m_name->getText() );
+	if( m_newPlayer->HasProperty(STR_PROP_NAME) )
+		m_newPlayer->GetProperty( STR_PROP_NAME ).SetValue( m_name->getText() );
+	else if(!m_name->getText().isEmpty())
+		// What there is no name? - Going to change that.
+		m_newPlayer->Add( Core::PROPERTY::NAME ).SetValue( m_name->getText() );
+	if( m_newPlayer->HasProperty(STR_PROP_OWNER) )
+		m_newPlayer->GetProperty( STR_PROP_OWNER ).SetValue( m_name->getText() );
 
 	// Set all the attributes which are not updated automatically
 	if( m_newPlayer->HasProperty(STR_PROP_HEALTH) )
@@ -486,73 +492,88 @@ void CharacterState::AttributeCharismaChanged()
 	} catch(...) {}
 }
 
+bool CharacterState::SetComponentEnable( tgui::Widget::Ptr _component, bool _enable )
+{
+	if( _enable )
+	{
+		_component->enable();
+		_component->setTransparency(255);
+	} else {
+		_component->setTransparency(150);
+		_component->disable();
+	}
+
+	// Pass through for ifs
+	return _enable;
+}
+
 void CharacterState::ShowPlayer()
 {
-	if( m_newPlayer->HasProperty(STR_PROP_NAME) )
+	if( m_newPlayer->HasProperty(STR_PROP_NAME) )	
 		m_name->setText( m_newPlayer->GetProperty( STR_PROP_NAME ).Value() );
-	if( m_newPlayer->HasProperty(STR_PROP_STRENGTH) )	{
+	if( SetComponentEnable( m_eSt, m_newPlayer->HasProperty(STR_PROP_STRENGTH) ) )	{
 		m_eSt->setText( m_newPlayer->GetProperty( STR_PROP_STRENGTH ).Value() );
 		AttributeStrengthChanged();
 	}
-	if( m_newPlayer->HasProperty(STR_PROP_DEXTERITY) )	{
+	if( SetComponentEnable( m_eGe, m_newPlayer->HasProperty(STR_PROP_DEXTERITY) ) )	{
 		m_eGe->setText( m_newPlayer->GetProperty( STR_PROP_DEXTERITY ).Value() );
 		AttributeDexterityChanged();
 	}
-	if( m_newPlayer->HasProperty(STR_PROP_CONSTITUTION) )	{
+	if( SetComponentEnable( m_eKo, m_newPlayer->HasProperty(STR_PROP_CONSTITUTION) ) )	{
 		m_eKo->setText( m_newPlayer->GetProperty( STR_PROP_CONSTITUTION ).Value() );
 		AttributeConstitutionChanged();
 	}
-	if( m_newPlayer->HasProperty(STR_PROP_INTELLIGENCE) )	{
+	if( SetComponentEnable( m_eIn, m_newPlayer->HasProperty(STR_PROP_INTELLIGENCE) ) )	{
 		m_eIn->setText( m_newPlayer->GetProperty( STR_PROP_INTELLIGENCE ).Value() );
 		AttributeIntelligenceChanged();
 	}
-	if( m_newPlayer->HasProperty(STR_PROP_WISDOM) )	{
+	if( SetComponentEnable( m_eWe, m_newPlayer->HasProperty(STR_PROP_WISDOM) ) )	{
 		m_eWe->setText( m_newPlayer->GetProperty( STR_PROP_WISDOM ).Value() );
 		AttributeWisdomChanged();
 	}
-	if( m_newPlayer->HasProperty(STR_PROP_CHARISMA) )	{
+	if( SetComponentEnable( m_eCh, m_newPlayer->HasProperty(STR_PROP_CHARISMA) ) )	{
 		m_eCh->setText( m_newPlayer->GetProperty( STR_PROP_CHARISMA ).Value() );
 		AttributeCharismaChanged();
 	}
 
-	if( m_newPlayer->HasProperty(STR_PROP_HEALTH) )
+	if( SetComponentEnable( m_eTP, m_newPlayer->HasProperty(STR_PROP_HEALTH) ) )
 		m_eTP->setText( m_newPlayer->GetProperty( STR_PROP_HEALTH ).Value() );
-	if( m_newPlayer->HasProperty(STR_PROP_HEALTH_MAX) )
+	if( SetComponentEnable( m_eTPMax, m_newPlayer->HasProperty(STR_PROP_HEALTH_MAX) ) )
 		m_eTPMax->setText( m_newPlayer->GetProperty( STR_PROP_HEALTH_MAX ).Value() );
-	if( m_newPlayer->HasProperty(STR_PROP_ARMORCLASS) )
+	if( SetComponentEnable( m_eRK, m_newPlayer->HasProperty(STR_PROP_ARMORCLASS) ) )
 		m_eRK->setText( m_newPlayer->GetProperty( STR_PROP_ARMORCLASS ).Value() );
-	if( m_newPlayer->HasProperty(STR_PROP_EXPERIENCE) )
+	if( SetComponentEnable( m_eExperience, m_newPlayer->HasProperty(STR_PROP_EXPERIENCE) ) )
 		m_eExperience->setText( m_newPlayer->GetProperty( STR_PROP_EXPERIENCE ).Value() );
-	if( m_newPlayer->HasProperty(STR_PROP_LEVEL) )
+	if( SetComponentEnable( m_eLevel, m_newPlayer->HasProperty(STR_PROP_LEVEL) ) )
 		m_eLevel->setText( m_newPlayer->GetProperty( STR_PROP_LEVEL ).Value() );
-	if( m_newPlayer->HasProperty(STR_PROP_SPEED) )
+	if( SetComponentEnable( m_eSpeed, m_newPlayer->HasProperty(STR_PROP_SPEED) ) )
 		m_eSpeed->setText( m_newPlayer->GetProperty( STR_PROP_SPEED ).Value() );
 
-	if( m_newPlayer->HasProperty(STR_PROP_ATTITUDE) )
+	if( SetComponentEnable( m_cAttitude, m_newPlayer->HasProperty(STR_PROP_ATTITUDE) ) )
 		// Find the right combobox entry
 		m_cAttitude->setSelectedItem( m_newPlayer->GetProperty( STR_PROP_ATTITUDE ).Value() );
-	if( m_newPlayer->HasProperty(STR_PROP_CLASS) )
+	if( SetComponentEnable( m_eClass, m_newPlayer->HasProperty(STR_PROP_CLASS) ) )
 		m_eClass->setText( m_newPlayer->GetProperty( STR_PROP_CLASS ).Value() );
-	if( m_newPlayer->HasProperty(STR_PROP_FOLK) )
+	if( SetComponentEnable( m_eFolk, m_newPlayer->HasProperty(STR_PROP_FOLK) ) )
 		m_eFolk->setText( m_newPlayer->GetProperty( STR_PROP_FOLK ).Value() );
-	if( m_newPlayer->HasProperty(STR_PROP_HOME) )
+	if( SetComponentEnable( m_eHome, m_newPlayer->HasProperty(STR_PROP_HOME) ) )
 		m_eHome->setText( m_newPlayer->GetProperty( STR_PROP_HOME ).Value() );
-	if( m_newPlayer->HasProperty(STR_PROP_FAITH) )
+	if( SetComponentEnable( m_eFaith, m_newPlayer->HasProperty(STR_PROP_FAITH) ) )
 		m_eFaith->setText( m_newPlayer->GetProperty( STR_PROP_FAITH ).Value() );
-	if( m_newPlayer->HasProperty(STR_PROP_SIZE) )
+	if( SetComponentEnable( m_eSize, m_newPlayer->HasProperty(STR_PROP_SIZE) ) )
 		m_eSize->setText( m_newPlayer->GetProperty( STR_PROP_SIZE ).Value() );
-	if( m_newPlayer->HasProperty(STR_PROP_AGE) )
+	if( SetComponentEnable( m_eAge, m_newPlayer->HasProperty(STR_PROP_AGE) ) )
 		m_eAge->setText( m_newPlayer->GetProperty( STR_PROP_AGE ).Value() );
-	if( m_newPlayer->HasProperty(STR_PROP_SEX) )
+	if( SetComponentEnable( m_cSex, m_newPlayer->HasProperty(STR_PROP_SEX) ) )
 		m_cSex->setSelectedItem( m_newPlayer->GetProperty( STR_PROP_SEX ).Value() );
-	if( m_newPlayer->HasProperty(STR_PROP_WEIGHT) )
+	if( SetComponentEnable(m_eWeight, m_newPlayer->HasProperty(STR_PROP_WEIGHT) ) )
 		m_eWeight->setText( m_newPlayer->GetProperty( STR_PROP_WEIGHT ).Value() );
-	if( m_newPlayer->HasProperty(STR_PROP_HAIRCOLOR) )
+	if( SetComponentEnable( m_eHair, m_newPlayer->HasProperty(STR_PROP_HAIRCOLOR) ) )
 		m_eHair->setText( m_newPlayer->GetProperty( STR_PROP_HAIRCOLOR ).Value() );
-	if( m_newPlayer->HasProperty(STR_PROP_EYECOLOR) )
+	if( SetComponentEnable( m_eEye, m_newPlayer->HasProperty(STR_PROP_EYECOLOR) ) )
 		m_eEye->setText( m_newPlayer->GetProperty( STR_PROP_EYECOLOR ).Value() );
 
-	if( m_newPlayer->HasProperty(STR_PROP_TALENTS) )
+	if( SetComponentEnable( m_playerTalents, m_newPlayer->HasProperty(STR_PROP_TALENTS) ) )
 	{
 		Core::ObjectID talentID = m_newPlayer->GetProperty(STR_PROP_TALENTS).GetObjects()[0];
 		m_playerTalents->Show( g_Game->GetWorld(), g_Game->GetWorld()->GetObject(talentID) );

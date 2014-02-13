@@ -15,6 +15,7 @@
 #include "network/CombatMessages.hpp"
 #include "GameRules/MasterCombat.hpp"
 #include "states/PromptState.hpp"
+#include "NewPlayerState.hpp"
 
 using namespace Core;
 
@@ -412,6 +413,13 @@ namespace States {
 		case sf::Keyboard::Num0:
 			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt))
 				BlendLayer(9);
+			break;
+
+		case sf::Keyboard::C:
+			// If only one object is selected show the character screen. Even
+			// if it has no character properties. GM should know better...
+			if( m_selection.Size() == 1 )
+			g_Game->GetStateMachine()->PushGameState(new CharacterState(&m_selection[0]));
 			break;
 
 			// DEBUGGING COMBAT, TODO: remove

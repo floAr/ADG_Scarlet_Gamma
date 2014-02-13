@@ -107,16 +107,16 @@ static const std::string STR_PROP_EYECOLOR = std::string("Augenfarbe");
 
 static const std::string STR_PROP_TALENTS = std::string("Fertigkeiten");
 static const std::string STR_PROP_ACROBATICS = std::string("Akrobatik");
-static const std::string STR_PROP_DEMEANOR = std::string("Auftreten ___");
-static const std::string STR_PROP_PROFESSION = std::string("Beruf ___*");
+static const std::string STR_PROP_DEMEANOR = std::string("Auftreten ---");
+static const std::string STR_PROP_PROFESSION = std::string("Beruf ---*");
 static const std::string STR_PROP_BLUFFING = std::string("Bluffen");
 static const std::string STR_PROP_DIPLOMACY = std::string("Diplomatie");
 static const std::string STR_PROP_INTIMIDATE = std::string("Einschüchtern");
 static const std::string STR_PROP_UNLEASHING = std::string("Enfesslungskunst");
 static const std::string STR_PROP_PRESTIDIGITATION = std::string("Fingerfertigkeit*");
 static const std::string STR_PROP_FLYING = std::string("Fliegen");
-static const std::string STR_PROP_CRAFT = std::string("Handwerk ___");
-static const std::string STR_PROP_MEDICINE = std::string("Heilkunde ___");
+static const std::string STR_PROP_CRAFT = std::string("Handwerk ---");
+static const std::string STR_PROP_MEDICINE = std::string("Heilkunde ---");
 static const std::string STR_PROP_STEALTH = std::string("Heimlichkeit");
 static const std::string STR_PROP_CLIMBING = std::string("Klettern");
 static const std::string STR_PROP_MAGICUSING = std::string("Magiekunde*");
@@ -130,8 +130,8 @@ static const std::string STR_PROP_LANGUAGEUNDERSTANDING = std::string("Sprachkun
 static const std::string STR_PROP_SURVIVALING = std::string("Überlebenskunst");
 static const std::string STR_PROP_MASQUERADING = std::string("Verkleiden");
 static const std::string STR_PROP_PERCEPTION = std::string("Wahrnehmung");
-static const std::string STR_PROP_KNOWLEDGE = std::string("Wissen ___*");
-static const std::string STR_PROP_MAGICART = std::string("Zauberkunde");
+static const std::string STR_PROP_KNOWLEDGE = std::string("Wissen ---*");
+static const std::string STR_PROP_MAGICART = std::string("Zauberkunde*");
 
 
 /************************************************************************/

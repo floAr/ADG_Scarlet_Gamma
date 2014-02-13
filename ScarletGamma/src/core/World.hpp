@@ -14,6 +14,9 @@ namespace Core {
         /// \brief Start with an empty world.
         World();
 
+		/// \brief Create the default object template bases
+		void Init();
+
         /// \brief Get one of the maps by a handle which is equal for server
         ///		and clients.
         Map* GetMap(MapID _id);

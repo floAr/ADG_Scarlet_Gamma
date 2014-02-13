@@ -242,6 +242,23 @@ NewPlayerState::NewPlayerState(tgui::EditBox::Ptr _nameEdit, Core::ObjectID* _sa
 	button->setCallbackId( 2 );
 	button->bindCallback( &NewPlayerState::Create, this, tgui::Button::LeftMouseClicked );
 
+	m_playerTalents = Interfaces::PropertyPanel::Ptr( m_gui );
+	label = label.clone();							m_gui.add(label);
+	label->setPosition( 430.0f, 165.0f );
+	label->setSize( 300.0f, 30.0f );
+	label->setText( "Deine Fertigkeiten" );
+	m_playerTalents->Init( 430.0f, 195.0f, 270.0f, 360.0f, true, false, 0, &m_draggedContent );
+
+	m_talentTemplates = Interfaces::PropertyPanel::Ptr( m_gui );
+	label = label.clone();							m_gui.add(label);
+	label->setPosition( 730.0f, 165.0f );
+	label->setText( "Fertigkeiten Vorgaben" );
+	m_talentTemplates->Init( 730.0f, 195.0f, 270.0f, 360.0f, true, false, 0, &m_draggedContent );
+	// Search for the talents sub-object from template base
+	Core::Object* propBase = g_Game->GetWorld()->GetPropertyBaseObject();
+	Core::ObjectID talentBase = propBase->GetProperty( STR_PROP_TALENTS ).GetObjects()[0];
+	m_talentTemplates->Show( g_Game->GetWorld(), g_Game->GetWorld()->GetObject(talentBase) );
+
 	// Load the player or create a new one
 	if( *_saveID == 0xffffffff ) CreateNew();
 	else {
@@ -249,14 +266,6 @@ NewPlayerState::NewPlayerState(tgui::EditBox::Ptr _nameEdit, Core::ObjectID* _sa
 		ShowPlayer();
 		button->setText( "OK" );
 	}
-
-	m_playerTalents = Interfaces::PropertyPanel::Ptr( m_gui );
-	m_talentTemplates = Interfaces::PropertyPanel::Ptr( m_gui );
-	m_talentTemplates->Init( 760.0f, 300.0f, 240.0f, 360.0f, true, false, 0, &m_draggedContent );
-	// Search for the talents sub-object from template base
-	Core::Object* propBase = g_Game->GetWorld()->GetPropertyBaseObject();
-	Core::ObjectID talentBase = propBase->GetProperty( STR_PROP_TALENTS ).GetObjects()[0];
-	m_talentTemplates->Show( g_Game->GetWorld(), g_Game->GetWorld()->GetObject(talentBase) );
 }
 
 
@@ -323,10 +332,26 @@ void NewPlayerState::CreateNew()
 	m_newPlayer->Add( Core::PROPERTY::EYECOLOR );
 
 	// Create a player sub-object containing his talents
-	/*Core::Object* talentO = g_Game->GetWorld()->GetObject( g_Game->GetWorld()->NewObject( STR_EMPTY ) );
+	Core::Object* talentO = g_Game->GetWorld()->GetObject( g_Game->GetWorld()->NewObject( STR_EMPTY ) );
 	m_newPlayer->Add( Core::PROPERTY::TALENTS ).AddObject(talentO->ID());
+	talentO->Add( Core::PROPERTY::NAME ).SetValue( STR_PROP_TALENTS );
 	talentO->GetProperty( STR_PROP_SPRITE ).SetRights( Core::Property::R_SYSTEMONLY );
-	talentO->GetProperty( STR_PROP_NAME ).SetRights( Core::Property::R_SYSTEMONLY );*/
+	talentO->GetProperty( STR_PROP_NAME ).SetRights( Core::Property::R_SYSTEMONLY );
+	talentO->Add( Core::PROPERTY::ACROBATICS );
+	talentO->Add( Core::PROPERTY::BLUFFING );
+	talentO->Add( Core::PROPERTY::DIPLOMACY );
+	talentO->Add( Core::PROPERTY::INTIMIDATE );
+	talentO->Add( Core::PROPERTY::UNLEASHING );
+	talentO->Add( Core::PROPERTY::FLYING );
+	talentO->Add( Core::PROPERTY::STEALTH );
+	talentO->Add( Core::PROPERTY::CLIMBING );
+	talentO->Add( Core::PROPERTY::MOTIVERECOGNITION );
+	talentO->Add( Core::PROPERTY::RIDING );
+	talentO->Add( Core::PROPERTY::ESTIMATE );
+	talentO->Add( Core::PROPERTY::SWIMMING );
+	talentO->Add( Core::PROPERTY::SURVIVALING );
+	talentO->Add( Core::PROPERTY::MASQUERADING );
+	talentO->Add( Core::PROPERTY::PERCEPTION );
 
 	ShowPlayer();
 }
@@ -492,6 +517,12 @@ void NewPlayerState::ShowPlayer()
 		m_eHair->setText( m_newPlayer->GetProperty( STR_PROP_HAIRCOLOR ).Value() );
 	if( m_newPlayer->HasProperty(STR_PROP_EYECOLOR) )
 		m_eEye->setText( m_newPlayer->GetProperty( STR_PROP_EYECOLOR ).Value() );
+
+	if( m_newPlayer->HasProperty(STR_PROP_TALENTS) )
+	{
+		Core::ObjectID talentID = m_newPlayer->GetProperty(STR_PROP_TALENTS).GetObjects()[0];
+		m_playerTalents->Show( g_Game->GetWorld(), g_Game->GetWorld()->GetObject(talentID) );
+	}
 }
 
 } // namespace States

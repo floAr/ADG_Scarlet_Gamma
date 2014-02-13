@@ -36,6 +36,7 @@ void Game::Init()
 
 	// Create an empty game world
 	m_world = new Core::World();
+	m_world->Init();
 
 	// Push states. Note that the last state is current!
 	m_stateMachine->PushGameState(States::GST_MAIN_MENU);

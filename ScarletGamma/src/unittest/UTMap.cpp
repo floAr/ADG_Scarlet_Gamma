@@ -18,6 +18,7 @@ namespace UnitTest {
 
 		// Create a map
 		World* world = new Core::World();
+		world->Init();
 		MapID mapID = world->NewMap("Scarlet Square",10,10);
 		Map* map = world->GetMap( mapID );
 

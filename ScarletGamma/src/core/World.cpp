@@ -18,6 +18,13 @@ namespace Core {
 		m_nextFreeObjectID = 0;
 	}
 
+	void World::Init()
+	{
+		CreateDefaultPropertyBase();
+		CreateDefaultModuleBase();
+		CreateDefaultTemplateBase();
+	}
+
 	Map* World::GetMap(MapID _id)
 	{
 		auto it = m_maps.find(_id);
@@ -148,17 +155,17 @@ namespace Core {
 		if( saveGame.RootNode.HasChild(string("PropertyObject"), &child) )
 		{
 			m_propertyTemplates = (ObjectID)*child;
-		} else CreateDefaultPropertyBase();
+		}// else CreateDefaultPropertyBase();
 
 		if( saveGame.RootNode.HasChild(string("Modules"), &child) )
 		{
 			m_moduleTemplates = ObjectList( *child );
-		} else CreateDefaultModuleBase();
+		}// else CreateDefaultModuleBase();
 
 		if( saveGame.RootNode.HasChild(string("Templates"), &child) )
 		{
 			m_objectTemplates = ObjectList( *child );
-		} else CreateDefaultTemplateBase();
+		}// else CreateDefaultTemplateBase();
 	}
 
 	void World::Save( Jo::Files::IFile& _file ) const

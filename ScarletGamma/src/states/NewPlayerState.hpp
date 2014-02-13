@@ -8,12 +8,12 @@
 
 namespace States
 {
-	class NewPlayerState : public GameState
+	class CharacterState : public GameState
 	{
 	public:
-		/// \brief Creating a new player also sets the name in the given edit
-		///		to communicate the new name.
-		NewPlayerState(tgui::EditBox::Ptr _nameEdit, Core::ObjectID* _saveID);
+		/// \brief Creating a new player also sets the id in the given variable
+		///		to communicate the new object.
+		CharacterState(Core::ObjectID* _saveID);
 		virtual void Draw(sf::RenderWindow& win) override;
 		virtual void KeyPressed(sf::Event::KeyEvent& key, bool guiHandled) override;
 	private:
@@ -31,8 +31,6 @@ namespace States
 		tgui::Gui   m_gui;
 		Utils::Random m_rand;
 
-		/// \brief Output of the name to the parent state
-		tgui::EditBox::Ptr m_nameOutputEdit;
 		/// \brief Output of the id to the parent state
 		Core::ObjectID* m_newPlayerID;
 		Core::Object * m_newPlayer;

@@ -14,6 +14,7 @@
 #include "utils/StringUtil.hpp"
 #include "gamerules/Combat.hpp"
 #include "states/PromptState.hpp"
+#include "NewPlayerState.hpp"
 
 
 States::PlayerState::PlayerState( const std::string& _playerName, const sf::Color& _chatColor, Core::PlayerID _id ) :
@@ -210,6 +211,9 @@ void States::PlayerState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 			m_selection.Add( object->ID() );
 		}
 		break; }
+	case sf::Keyboard::C:
+		g_Game->GetStateMachine()->PushGameState(new CharacterState(&m_playerObjectID));
+		break;
 	}
 }
 
@@ -225,6 +229,7 @@ void States::PlayerState::OnBegin()
 	m_player = g_Game->GetWorld()->FindPlayer( m_name );
 	assert( m_player );
 	m_player->GetProperty(STR_PROP_PLAYER).SetValue( std::to_string(m_playerID) );
+	m_playerObjectID = m_player->ID();
 	// Use the players currently chosen color
 	m_player->SetColor( m_color );
 

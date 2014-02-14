@@ -16,6 +16,7 @@ namespace Network {
 
 	size_t HandleObjectMessage( Core::Object* _object, const uint8_t* _data, size_t _size )
 	{
+		if( !_object ) throw std::string("[HandleObjectMessage] Target object does not exists.");
 		assert(_size > sizeof(ObjectMsgType));
 		MaskObjectMessage messageLock;
 

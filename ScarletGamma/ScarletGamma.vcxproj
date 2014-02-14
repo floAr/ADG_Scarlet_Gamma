@@ -117,6 +117,7 @@
     <ClCompile Include="src\sfutils\Vectors.cpp" />
     <ClCompile Include="src\sfutils\View.cpp" />
     <ClCompile Include="src\states\ActionState.cpp" />
+    <ClCompile Include="src\states\ChoosePlayerState.cpp" />
     <ClCompile Include="src\states\CommonState.cpp" />
     <ClCompile Include="src\states\GameState.cpp" />
     <ClCompile Include="src\states\IntroState.cpp" />
@@ -180,6 +181,7 @@
     <ClInclude Include="src\sfutils\View.hpp" />
     <ClInclude Include="src\sfutils\Vectors.hpp" />
     <ClInclude Include="src\states\ActionState.hpp" />
+    <ClInclude Include="src\states\ChoosePlayerState.hpp" />
     <ClInclude Include="src\states\CommonState.hpp" />
     <ClInclude Include="src\states\GameState.hpp" />
     <ClInclude Include="src\states\IntroState.hpp" />

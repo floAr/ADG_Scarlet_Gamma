@@ -1,10 +1,7 @@
 #include "states/NewPlayerState.hpp"
 #include "StateMachine.hpp"
 #include "Game.hpp"
-#include "SFML/Window.hpp"
-#include <iostream>
 #include "utils/Content.hpp"
-#include "SFML/Network/IpAddress.hpp"
 #include "Constants.hpp"
 #include "core/PredefinedProperties.hpp"
 #include "core/World.hpp"
@@ -315,7 +312,7 @@ void CharacterState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 void CharacterState::CreateNew()
 {
 	// Create a new player object
-	*m_newPlayerID = g_Game->GetWorld()->NewObject("media/smile_2.png");
+	*m_newPlayerID = g_Game->GetWorld()->NewObject("media/smile_1.png");
 	m_newPlayer = g_Game->GetWorld()->GetObject(*m_newPlayerID);
 	m_newPlayer->Add( Core::PROPERTY::NAME );
 	m_newPlayer->Add( Core::PROPERTY::OWNER );

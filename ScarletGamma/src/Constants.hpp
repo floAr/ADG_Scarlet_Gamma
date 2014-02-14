@@ -43,7 +43,7 @@ static const std::string STR_MSG_HIT_ARMOR_CLASS_NOT_BEAT = std::string("Rüstung
 static const std::string STR_MSG_CREATE_MAP_FIRST = std::string("Erstelle zunächst eine Map!");
 static const std::string STR_MSG_SELECT_TYPE_FIRST = std::string("Wähle einen Objekttypen! Dazu auf eines der Templates klicken.");
 static const std::string STR_MSG_LAYER_INVISIBLE = std::string("Die Ziel-Ebene ist ausgeblendet. Drücke ALT + Zahlentaste um umzuschalten.");
-static const std::string STR_PLAYER_NOT_ON_MAP = std::string("Der Spieler befindet sich nicht auf einer Karte.\nRespawn notwendig.");
+static const std::string STR_PLAYER_NOT_ON_MAP = std::string("Der Charakter befindet sich nicht auf\neiner Karte.\n\nRespawn notwendig.");
 
 
 /************************************************************************/

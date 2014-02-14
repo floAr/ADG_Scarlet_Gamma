@@ -51,6 +51,9 @@ namespace Core {
 
 	ObjectID World::NewObject( const std::string& _sprite )
 	{
+		// Lock, otherwise the insertion will cause a property to be send before the object
+		Network::MaskObjectMessage lock;
+
 		m_objects.insert(std::make_pair<ObjectID,Object>(ObjectID(m_nextFreeObjectID+0), Object(m_nextFreeObjectID, _sprite)));
 		Network::MsgAddObject( m_nextFreeObjectID ).Send();
 		++m_nextFreeObjectID;
@@ -224,22 +227,19 @@ namespace Core {
 	Object* World::FindPlayer( std::string _name )
 	{
 		// The player must not exists
-		auto& it = m_players.find( _name );
-		if( it != m_players.end() )
-			return GetObject( it->second );
+		for ( auto& it = m_players.begin(); it != m_players.end(); ++it)
+		{
+			Object* result = GetObject( it->second );
+			// Using atoi is much faster than Evaluate
+			if( result->GetName() == _name )
+				return result;
+		}
 		return nullptr;
 	}
 
 	Object* World::FindPlayer( uint8_t _id )
 	{
-		for ( auto& it = m_players.begin(); it != m_players.end(); ++it)
-		{
-			Object* result = GetObject( it->second );
-			// Using atoi is much faster than Evaluate
-			if (atoi(result->Get(STR_PROP_PLAYER)->Value().c_str()) == _id)
-				return result;
-		}
-		return nullptr;
+		return GetObject(m_players[_id]);
 	}
 
 	
@@ -318,8 +318,17 @@ namespace Core {
 		// Test object if it is a player and add it.
 		if( _object->HasProperty( STR_PROP_PLAYER ) )
 		{
-			Property& prop = _object->GetProperty( STR_PROP_NAME );
-			m_players[prop.Value()] = _object->ID();
+			Property& prop = _object->GetProperty( STR_PROP_PLAYER );
+			Core::PlayerID id = atoi(prop.Value().c_str());
+			// Avoid having the same object twice
+			if( !m_players.empty() )
+				for( auto it = m_players.begin(); it != m_players.end(); ++it )
+					if( it->second == _object->ID() )
+					{
+						m_players.erase(it);
+						break;
+					}
+			m_players[id] = _object->ID();
 		}
 		// Test object if it has an owner and add it.
 		if( _object->HasProperty( STR_PROP_OWNER ) )
@@ -346,7 +355,8 @@ namespace Core {
 		}
 
 		// Remove from player map
-		m_players.erase( GetObject(_object)->GetProperty(STR_PROP_NAME).Value() );
+		if( GetObject(_object)->HasProperty(STR_PROP_PLAYER) )
+			m_players.erase( atoi(GetObject(_object)->GetProperty(STR_PROP_PLAYER).Value().c_str()) );
 	}
 
 

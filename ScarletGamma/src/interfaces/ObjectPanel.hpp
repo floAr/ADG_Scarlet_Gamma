@@ -34,7 +34,7 @@ namespace Interfaces {
 		virtual void setPosition(float _x, float _y) override;
 
 		/// \brief Just ignore things dragged to the object list
-		void HandleDropEvent()	{}
+		void HandleDropEvent()	{ delete *m_dragNDropHandler; *m_dragNDropHandler = nullptr; }
 
 		/// \brief Get the object which was clicked last.
 		const Core::Object* GetSelected() const	{ return m_selected; }

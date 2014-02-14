@@ -18,6 +18,7 @@ namespace Core {
 	const Property PROPERTY::JUMPPOINT = Property(Property::R_VCE000000, STR_PROP_JUMPPOINT, STR_0);
 	const Property PROPERTY::OWNER = Property(Property::R_VCEV0E000, STR_PROP_OWNER, STR_EMPTY);
 	const Property PROPERTY::SWITCH = Property(Property::R_VCE000000, STR_PROP_SWITCH, STR_FALSE);
+	const Property PROPERTY::ITEM = Property(Property::R_VC0000000, STR_PROP_ITEM, STR_EMPTY);
 
 	const Property PROPERTY::INVENTORY = Property(Property::R_VCEV0EV00, STR_PROP_INVENTORY, STR_EMPTY);
 	const Property PROPERTY::STRENGTH = Property(Property::R_VCEV0EV00, STR_PROP_STRENGTH, STR_0);

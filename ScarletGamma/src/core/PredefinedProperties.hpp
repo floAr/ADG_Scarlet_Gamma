@@ -19,6 +19,7 @@ namespace Core {
 		static const Property JUMPPOINT;
 		static const Property OWNER;
 		static const Property SWITCH;
+		static const Property ITEM;
 
 		static const Property INVENTORY;
 		static const Property STRENGTH;

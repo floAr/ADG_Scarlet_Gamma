@@ -42,6 +42,10 @@ namespace Interfaces {
 		/// \brief Call this if mouse is scrolled. It will move the scrollbar
 		///		if the cursor is on this component.
 		void Scroll( int _delta );
+
+		/// \brief Remove all lines and then show the once remaining after
+		///		filtering.
+		void RefreshFilter();
 	protected:
 		// A list of preloaded objects to increase creation time by a very large
 		// factor.
@@ -124,15 +128,15 @@ namespace Interfaces {
 		/// \brief Remove all properties from the list
 		void Clear();
 
-		/// \brief Remove all lines and then show the once remaining after
-		///		filtering.
-		void RefreshFilter();
-
 		/// \brief Create a new line + sub objects from a property
 		void AddLine( unsigned _line, const Core::Property* _property );
 
 		/// \brief Reload values and sub objects.
 		void RefreshLine( unsigned _line, const Core::Property* _property );
+
+		/// \brief Gets the index of the line under the position or -1
+		///		if there is nothing
+		int FindLine( float _x, float _y );
 	};
 
 } // namespace Interfaces

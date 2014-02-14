@@ -112,6 +112,7 @@ namespace States {
 		// Update the viewed properties
 		if( m_selectionView->isVisible() )
 			m_selectionView->Show( g_Game->GetWorld(), m_selection );
+		m_viewPanel->RefreshFilter();
 	}
 
 	void MasterState::Draw(sf::RenderWindow& win)

@@ -44,6 +44,8 @@ static const std::string STR_MSG_CREATE_MAP_FIRST = std::string("Erstelle zunäch
 static const std::string STR_MSG_SELECT_TYPE_FIRST = std::string("Wähle einen Objekttypen! Dazu auf eines der Templates klicken.");
 static const std::string STR_MSG_LAYER_INVISIBLE = std::string("Die Ziel-Ebene ist ausgeblendet. Drücke ALT + Zahlentaste um umzuschalten.");
 static const std::string STR_PLAYER_NOT_ON_MAP = std::string("Der Charakter befindet sich nicht auf\neiner Karte.\n\nRespawn notwendig.");
+static const std::string STR_AMBIGIOUS_DRAG = std::string("Objekte können nicht in eine Multiselektion verschoben werden.");
+static const std::string STR_AMBIGIOUS_DROP_TARGET = std::string("Ein Objekt muss auf eine Eigenschaft gezogen werden.");
 
 
 /************************************************************************/
@@ -62,6 +64,7 @@ static const std::string STR_PROP_PLAYER	= std::string("player");	///< Name of p
 static const std::string STR_PROP_OWNER		= std::string("Besitzer");	///< Name of owner property: flags the object as owned by a player
 static const std::string STR_PROP_SWITCH	= std::string("Schalter");
 static const std::string STR_PROP_JUMPPOINT	= std::string("Sprungziel");///< Name of portal property: The value is an id of the target object.
+static const std::string STR_PROP_ITEM		= std::string("Item");
 
 
 /************************************************************************/

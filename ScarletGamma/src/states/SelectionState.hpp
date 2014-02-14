@@ -3,6 +3,7 @@
 #include "GameState.hpp"
 #include "../core/Object.hpp"
 #include <TGUI/TGUI.hpp>
+#include "interfaces/CircularMenu.hpp"
 
 namespace States
 {
@@ -15,7 +16,7 @@ namespace States
 		/// \param [in] x	x-position in tile-coords
 		/// \param [in] y	y-position in tile-coords
 		/// \param [in] hiddenLayers	optional, layers which should be disregarded when selecting
-		void SetTilePosition(int x, int y,const bool* hiddenLayers=nullptr);
+		void SetTilePosition(int x, int y, const bool* hiddenLayers=nullptr);
 				/// \brief Triggers a recalculation of the GUI
 		/// \details Let the GUI recalculate all the buttons and position
 		void RecalculateGUI();
@@ -27,8 +28,6 @@ namespace States
 			bool guiHandled) override;
 
 	private:
-		void positionButton(tgui::Button::Ptr b, float angle, float radius);
-
 		/// \brief Show the actions for the selected object
 		/// \details Sets m_finished to true.
 		/// \param [in] _targetObject The object on which the selection should perform tasks.
@@ -37,7 +36,7 @@ namespace States
 		void ShowActionState(Core::ObjectID _targetObject, int _x, int _y);
 
 		tgui::Gui m_gui;
-		tgui::Button::Ptr m_defaultButton;	///< This is a preloaded button to increase RecalculateGUI performance by a height factor
+		Interfaces::CircularMenu m_menu;
 		Core::ObjectList m_objects;			///< A copy of the object list for the current tile.
 		bool m_dirty;						///< Flag to mark a change in the GUI
 		bool m_controlWasPressed;			///< Buffer for control key

@@ -15,26 +15,20 @@
 #include "PlayerState.hpp"
 
 States::SelectionState::SelectionState() :
-	m_defaultButton()
+	m_menu(m_gui)
 {
 	m_gui.setWindow(g_Game->GetWindow());
 	m_gui.setGlobalFont( Content::Instance()->LoadFont("media/arial.ttf") );
 	m_dirty = false;
 	m_hiddenLayers=nullptr;
 
-	m_defaultButton->load("lib/TGUI-0.6-RC/widgets/Black.conf");
+	// Finally, use SetGui() to activate the GUI (rendering, events, callbacks)
+	SetGui(&m_gui);
 }
 
 void States::SelectionState::OnBegin()
 {
 	m_controlWasPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::LControl);
-
-	// If control is not hold clear old selection //No longer clear the selection on startup
-	//if( !sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) )
-	//{
-	//	CommonState* previousState = dynamic_cast<CommonState*>(m_previousState);
-	//	previousState->ClearSelection();
-	//}
 }
 
 void States::SelectionState::SetTilePosition(int x, int y,const bool* hiddenLayers)
@@ -47,49 +41,29 @@ void States::SelectionState::SetTilePosition(int x, int y,const bool* hiddenLaye
 	m_hiddenLayers = hiddenLayers;
 
 	m_dirty = true;
-	
 }
 
 void States::SelectionState::RecalculateGUI()
 {
-	m_gui.removeAllWidgets(); //clear gui
+	std::vector<Interfaces::CircularMenu::ObjInfo> items;
 
 	// Get current selection to make buttons transparent when they not selected
 	CommonState* previousState = dynamic_cast<CommonState*>(m_previousState);
 	const Core::ObjectList* alreadySelected = previousState->GetSelection();
 
-	int count = m_objects.Size();
-
-	int i;
-	for(i=0;i<count;i++){
-		Core::Object* o=g_Game->GetWorld()->GetObject(m_objects[i]);
-
-		if(m_hiddenLayers)//if hidden layers have been set
-			if(m_hiddenLayers[atoi(o->GetProperty(Core::PROPERTY::LAYER.Name()).Value().c_str())])//if object is on hidden layer
+	for( int i = 0; i < m_objects.Size(); ++i )
+	{
+		Core::Object* object = g_Game->GetWorld()->GetObject(m_objects[i]);
+		if(m_hiddenLayers) // if hidden layers have been set
+			if(m_hiddenLayers[atoi(object->GetProperty(Core::PROPERTY::LAYER.Name()).Value().c_str())]) // if object is on hidden layer
 				continue;
-			
-		tgui::Button::Ptr button = m_defaultButton.clone();
-		m_gui.add(button);
-		button->setSize(50, 40);
-		positionButton(button, 360.0f / count * i, 45.0f + count * 3.0f);
-		if(o->HasProperty(STR_PROP_NAME))
-			button->setText(o->GetProperty(STR_PROP_NAME).Value());
-		else
-			button->setText(std::to_string(o->ID()));
-		if( alreadySelected->Contains(m_objects[i]) ) {
-			// already selected
-			button->setTransparency(255);
-		} else {
-			button->setTransparency(150);
-		}
 
-		button->setCallbackId(100+i);
-		button->bindCallback(tgui::Button::LeftMouseClicked);
+		items.push_back( Interfaces::CircularMenu::ObjInfo( m_objects[i], alreadySelected->Contains(m_objects[i]) ) );
 	}
 
-	// Finally, use SetGui() to activate the GUI (rendering, events, callbacks)
-	SetGui(&m_gui);
-	m_dirty=false;
+	m_menu.Show( sf::Vector2f((float)m_screenX, (float)m_screenY), items );
+
+	m_dirty = false;
 }
 
 void States::SelectionState::Update(float dt)
@@ -108,55 +82,42 @@ void States::SelectionState::Draw(sf::RenderWindow& win)
 	m_previousState->Draw(win);
 
 	GameState::Draw(win);
-
 }
 
 
 void States::SelectionState::GuiCallback(tgui::Callback& args)
 {
-	if(args.id>=100)//item clicked
+	//* NORMAL SELECTION BEHAVIOR
+	if( dynamic_cast<PlayerState*>(m_previousState) )
 	{
-		/* ACTION SELECTION BEHAVIOUR
-		Core::ObjectID id = (*m_objects)[args.id-100];
-		auto action=dynamic_cast<ActionState*>( g_Game->GetStateMachine()->PushGameState(States::GST_ACTION));
-		action->SetTargetObject(id);
-		m_finished=true;
-		// */
+		// For player also map the left click on the action menu
+		sf::Vector2i mousePos = sf::Mouse::getPosition(g_Game->GetWindow());
+		ShowActionState( args.id, mousePos.x, mousePos.y );
+	} else {
+		CommonState* previousState = dynamic_cast<CommonState*>(m_previousState);
+		// The parent is not set or not of type CommonState, but it should be!
+		assert(previousState);
 
-		//* NORMAL SELECTION BEHAVIOR
-		if( dynamic_cast<PlayerState*>(m_previousState) )
+		// If control is not pressed clear selection
+		if( !sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) && !sf::Keyboard::isKeyPressed(sf::Keyboard::RControl) )
 		{
-			// For player also map the left click on the action menu
-			Core::ObjectID id = m_objects[args.id-100];
-			sf::Vector2i mousePos = sf::Mouse::getPosition(g_Game->GetWindow());
-			ShowActionState( id, mousePos.x, mousePos.y );
-		} else {
-			CommonState* previousState = dynamic_cast<CommonState*>(m_previousState);
-			// The parent is not set or not of type CommonState, but it should be!
-			assert(previousState);
-
-			// If control is not pressed clear selection
-			if( !sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) && !sf::Keyboard::isKeyPressed(sf::Keyboard::RControl) )
-			{
-				previousState->ClearSelection();
-			}
-
-			const Core::ObjectList* alreadySelected = previousState->GetSelection();
-	
-			Core::ObjectID id = m_objects[args.id-100];
-			if( alreadySelected->Contains(id) )
-			{
-				// already selected
-				previousState->RemoveFromSelection(id);
-			} else {
-				previousState->AddToSelection(id);
-			}
-			m_dirty = true;
-			if( !sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) )
-				m_finished = true;
+			previousState->ClearSelection();
 		}
-		// 	*/
+
+		const Core::ObjectList* alreadySelected = previousState->GetSelection();
+	
+		if( alreadySelected->Contains(args.id) )
+		{
+			// already selected
+			previousState->RemoveFromSelection(args.id);
+		} else {
+			previousState->AddToSelection(args.id);
+		}
+		m_dirty = true;
+		if( !sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) )
+			m_finished = true;
 	}
+	// 	*/
 }
 
 
@@ -171,24 +132,20 @@ void States::SelectionState::MouseButtonPressed(sf::Event::MouseButtonEvent& but
 	// The parent is not set or not of type CommonState, but it should be!
 	assert(previousState);
 
-	if (button.button == sf::Mouse::Button::Right
-		&& previousState->GetSelection()->Size() > 0)
+	if (button.button == sf::Mouse::Button::Right)
 	{
-		auto m_Widgets=m_gui.getWidgets();
-		// mouseOnWhichWidget does not work for disabled components to search manually
-	    for( size_t i=0; i<m_Widgets.size(); ++i )
-	    {
-			if( m_Widgets[i]->mouseOnWidget((float)button.x, (float)button.y) ) // Right click on button
-		  
+		if(previousState->GetSelection()->Size() > 0)
+		{
+			Core::ObjectID id = m_menu.GetClickedItem((float)button.x, (float)button.y);
+			if( id != 0xffffffff )
 			{
-			    Core::ObjectID id = m_objects[(m_Widgets[i]->getCallbackId()-100)];
 				ShowActionState( id, button.x, button.y );
-			    return;
-		    }
-	    }
+				return;
+			}
+		}
+
 		// Reset menu position
 		SetTilePosition((int)floor(tilePos.x), (int)floor(tilePos.y));
-
 	}
 	else if(button.button == sf::Mouse::Left)
 	{
@@ -198,14 +155,6 @@ void States::SelectionState::MouseButtonPressed(sf::Event::MouseButtonEvent& but
 		else
 			SetTilePosition((int)floor(tilePos.x), (int)floor(tilePos.y));
 	}
-}
-
-
-void  States::SelectionState::positionButton(tgui::Button::Ptr b, float angle, float radius)
-{
-	float bx = m_screenX - b->getSize().x*0.5f + radius * sin(angle*0.01745329251f); //0.01745329251 is to got radians from degrees
-	float by = m_screenY - b->getSize().y*0.5f + radius * cos(angle*0.01745329251f);
-	b->setPosition(bx, by);
 }
 
 

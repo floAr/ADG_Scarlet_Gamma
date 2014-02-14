@@ -19,9 +19,10 @@ namespace Interfaces {
 		{
 			Core::ObjectID id;	///< The object id determines the button callback-id
 			bool highlight;		///< This button should be better visible than others
+			std::string text;	///< What should be written on the button
 
-			ObjInfo( Core::ObjectID _id, bool _highlight ) :
-				id(_id), highlight(_highlight)	{}
+			ObjInfo( Core::ObjectID _id, bool _highlight, const std::string& _text ) :
+				id(_id), highlight(_highlight), text(_text)	{}
 		};
 
 		/// \brief Create as many buttons as necessary and order them in a

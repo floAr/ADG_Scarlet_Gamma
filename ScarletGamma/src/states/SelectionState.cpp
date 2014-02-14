@@ -58,7 +58,9 @@ void States::SelectionState::RecalculateGUI()
 			if(m_hiddenLayers[atoi(object->GetProperty(Core::PROPERTY::LAYER.Name()).Value().c_str())]) // if object is on hidden layer
 				continue;
 
-		items.push_back( Interfaces::CircularMenu::ObjInfo( m_objects[i], alreadySelected->Contains(m_objects[i]) ) );
+		items.push_back( Interfaces::CircularMenu::ObjInfo( m_objects[i],
+			alreadySelected->Contains(m_objects[i]),
+			object->GetName() ) );
 	}
 
 	m_menu.Show( sf::Vector2f((float)m_screenX, (float)m_screenY), items );

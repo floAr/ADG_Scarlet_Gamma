@@ -58,7 +58,8 @@ void States::ActionState::RecalculateGUI()
 	std::vector<Interfaces::CircularMenu::ObjInfo> items;
 	//for each action 
 	for(std::vector<Core::ActionID>::iterator it = actions.begin(); it != actions.end(); ++it) {
-		items.push_back( Interfaces::CircularMenu::ObjInfo( *it, true ) );
+		items.push_back( Interfaces::CircularMenu::ObjInfo( *it, true,
+			Actions::ActionPool::Instance().GetActionName((*it))) );
 	}
 
 	m_menu.Show( sf::Vector2f((float)m_screenX, (float)m_screenY), items );

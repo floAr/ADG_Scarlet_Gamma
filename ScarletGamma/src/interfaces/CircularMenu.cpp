@@ -45,12 +45,11 @@ namespace Interfaces {
 
 		for( size_t i = 0; i < _objects.size(); ++i )
 		{
-			Core::Object* object = g_Game->GetWorld()->GetObject( _objects[i].id );
 			tgui::Button::Ptr button = m_defaultButton.clone();
 			m_gui.add(button);
 			m_buttons.push_back(button);
 			button->setSize( 50, 40 );
-			button->setText( object->GetName() );
+			button->setText( _objects[i].text );
 			button->setCallbackId( _objects[i].id );
 			button->bindCallback( tgui::Button::LeftMouseClicked );
 			PositionButton( _position, button, 360.0f / _objects.size() * i, radius );

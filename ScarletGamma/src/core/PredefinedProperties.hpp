@@ -40,6 +40,10 @@ namespace Core {
 		static const Property EXPERIENCE;
 		static const Property LEVEL;
 		static const Property SPEED;
+		static const Property REFLEX;
+		static const Property WILL;
+		static const Property RESILENCE;
+		static const Property BASIC_ATTACK;
 
 		static const Property ATTITUDE;
 		static const Property CLASS;

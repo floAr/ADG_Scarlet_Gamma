@@ -220,6 +220,7 @@ namespace Core {
 	void World::RemoveObject( ObjectID _object )
 	{
 		Network::MsgRemoveObject( _object ).Send();
+		UnregisterObject( _object );
 		// TODO: Test if destructor is called proper
 		m_objects.erase( _object );
 	}

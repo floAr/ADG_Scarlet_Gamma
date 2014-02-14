@@ -39,6 +39,10 @@ namespace Core {
 	const Property PROPERTY::EXPERIENCE = Property(Property::R_VCEV0EV00, STR_PROP_EXPERIENCE, STR_0);
 	const Property PROPERTY::LEVEL = Property(Property::R_VCEV0EV00, STR_PROP_LEVEL, STR_0);
 	const Property PROPERTY::SPEED = Property(Property::R_VCEV0EV00, STR_PROP_SPEED, STR_0);
+	const Property PROPERTY::REFLEX = Property(Property::R_VCEV0EV00, STR_PROP_REFLEX, STR_0);
+	const Property PROPERTY::WILL = Property(Property::R_VCEV0EV00, STR_PROP_WILL, STR_0);
+	const Property PROPERTY::RESILENCE = Property(Property::R_VCEV0EV00, STR_PROP_RESILENCE, STR_0);
+	const Property PROPERTY::BASIC_ATTACK = Property(Property::R_VCEV0EV00, STR_PROP_BASIC_ATTACK, STR_0);
 
 	const Property PROPERTY::ATTITUDE = Property(Property::R_VCEV0EV00, STR_PROP_ATTITUDE, STR_ATT_LAWFULGOOD);
 	const Property PROPERTY::CLASS = Property(Property::R_VCEV0EV00, STR_PROP_CLASS, STR_EMPTY);

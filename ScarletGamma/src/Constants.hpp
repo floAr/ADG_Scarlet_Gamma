@@ -109,6 +109,10 @@ static const std::string STR_PROP_EYECOLOR = std::string("Augenfarbe");
 static const std::string STR_PROP_EXPERIENCE = std::string("Erfahrung");
 static const std::string STR_PROP_LEVEL = std::string("Stufe");
 static const std::string STR_PROP_SPEED = std::string("Bewegungsrate");
+static const std::string STR_PROP_REFLEX = std::string("Reflex");
+static const std::string STR_PROP_WILL = std::string("Willen");
+static const std::string STR_PROP_RESILENCE = std::string("Zähigkeit");
+static const std::string STR_PROP_BASIC_ATTACK = std::string("Grundangriff");
 
 static const std::string STR_PROP_TALENTS = std::string("Fertigkeiten");
 static const std::string STR_PROP_ACROBATICS = std::string("Akrobatik");

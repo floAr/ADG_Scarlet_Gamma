@@ -16,9 +16,10 @@ namespace Network {
 		void Send();
 
 		//ChatMsg( const sf::String& _msg ) : m_msg(_msg)		{}
-		ChatMsg( const std::string& _msg, const sf::Color _color ) :
+		ChatMsg( const std::string& _msg, const sf::Color _color, bool _forMasterOnly = false ) :
 			m_msg(_msg),
-			m_color(_color)
+			m_color(_color),
+			m_forward(!_forMasterOnly)
 		{}
 
 		const std::string& Text() const	{ return m_msg; }
@@ -26,6 +27,7 @@ namespace Network {
 	private:
 		std::string m_msg;
 		sf::Color m_color;
+		bool m_forward;
 
 	protected:
 	};

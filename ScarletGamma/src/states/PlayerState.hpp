@@ -10,7 +10,8 @@ namespace States
 	class PlayerState : public CommonState
 	{
 	public:
-		PlayerState( const std::string& _playerName, const sf::Color& _chatColor, Core::PlayerID _id );
+		PlayerState( Core::ObjectID _player );
+
 		virtual void OnBegin() override;
 		virtual void Draw(sf::RenderWindow& win) override;
 		virtual void MouseMoved(int deltaX, int deltaY, bool guiHandled) override;

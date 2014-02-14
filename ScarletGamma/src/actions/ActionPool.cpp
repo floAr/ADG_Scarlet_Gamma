@@ -8,6 +8,7 @@
 #include "UseJumpPoint.hpp"
 #include "core/World.hpp"
 #include <iostream>
+#include "UseSwitch.hpp"
 
 using namespace Actions;
 
@@ -22,6 +23,7 @@ ActionPool::ActionPool() :
     m_actions.push_back(new WalkTo());
 	m_actions.push_back(new SetJumpPoint());
 	m_actions.push_back(new UseJumpPoint());
+	m_actions.push_back(new UseSwitch());
     //------------------------------//
     // TODO: add more actions here! //
     //------------------------------//

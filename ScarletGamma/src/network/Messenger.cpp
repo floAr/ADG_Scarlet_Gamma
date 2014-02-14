@@ -124,9 +124,6 @@ namespace Network {
 		packet << (Core::PlayerID)m_sockets.size();
 		_newClient->send( packet );
 
-		// Wait until new player is added or the dummy packet arrived.
-		Poll( true );
-
 		// Sent whole world (in its latest state)
 		MsgLoadWorld( g_Game->GetWorld(), _newClient ).Send();
 	}
@@ -180,7 +177,7 @@ namespace Network {
 
 		assert(_packet.getDataSize() == read);
 
-		if( IsServer() && (header->target != Target::ACTION) )
+		if( IsServer() && header->forward )
 		{
 			// Forward message to all other clients
 			for( size_t i=0; i<g_msgInstance->m_sockets.size(); ++i )

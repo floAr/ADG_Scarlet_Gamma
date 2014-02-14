@@ -95,7 +95,7 @@ void CombatMsg::Send(Jo::Files::MemFile* _suffix, int8_t _socket)
 {
     // Write headers
     Jo::Files::MemFile data;
-    data.Write(&MessageHeader(Target::COMBAT, 0), sizeof(MessageHeader));
+    data.Write(&MessageHeader(Target::COMBAT, 0, true), sizeof(MessageHeader));
     data.Write(&m_purpose, sizeof(CombatMsgType));
 
     // Write user data

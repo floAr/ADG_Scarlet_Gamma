@@ -112,6 +112,7 @@ namespace States {
 		// Update the viewed properties
 		if( m_selectionView->isVisible() )
 			m_selectionView->Show( g_Game->GetWorld(), m_selection );
+		m_viewPanel->RefreshFilter();
 	}
 
 	void MasterState::Draw(sf::RenderWindow& win)
@@ -275,13 +276,13 @@ namespace States {
 					} else if( m_draggedContent->from == Interfaces::DragContent::PLAYERS_LIST )
 					{
 						// Insert original to the map (player layer)
-						if( !m_draggedContent->object->IsLocatedOnAMap() )
-							GetCurrentMap()->Add( m_draggedContent->object->ID(), x, y, 5 );
+						Object* object = const_cast<Object*>(m_draggedContent->object);
+						if( !object->IsLocatedOnAMap() )
+							GetCurrentMap()->Add( object->ID(), x, y, 5 );
 						else {
-							Object* object = const_cast<Object*>(m_draggedContent->object);
 							GetCurrentMap()->SetObjectPosition( object, tilePos );
-							object->ResetTarget();
 						}
+						object->ResetTarget();
 					}
 				}
 			}

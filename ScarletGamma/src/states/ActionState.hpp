@@ -3,6 +3,7 @@
 #include "GameState.hpp"
 #include "../core/Object.hpp"
 #include <TGUI/TGUI.hpp>
+#include "interfaces/CircularMenu.hpp"
 
 namespace States
 {
@@ -36,10 +37,8 @@ namespace States
 			bool guiHandled) override;
 	
 	private:
-		void positionButton(tgui::Button::Ptr b, float angle, float radius);
-
 		tgui::Gui m_gui;
-		tgui::Button::Ptr m_defaultButton;	///< This is a preloaded button to increase RecalculateGUI performance by a high factor
+		Interfaces::CircularMenu m_menu;
 		Core::ObjectID m_targetObject;		///< The object to be used
 		Core::ObjectID m_sourceObject;		///< The object starting the action
 		bool m_dirty;						///< Flag to mark a change in the GUI

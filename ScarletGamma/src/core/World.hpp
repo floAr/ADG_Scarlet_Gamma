@@ -124,7 +124,7 @@ namespace Core {
 
         /// \brief A subset of the objects which is flagged with a player property.
         /// \details The objects are mapped to there names to search player by name.
-        std::unordered_map<std::string, Core::ObjectID> m_players;
+        std::unordered_map<Core::PlayerID, Core::ObjectID> m_players;
 
 		/// \brief A subset of the objects which is flagged with the owner property.
         /// \details The objects are mapped to there names to search this objects by name.

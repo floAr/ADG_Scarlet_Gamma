@@ -9,6 +9,7 @@
 #include "core/PredefinedProperties.hpp"
 #include "Game.hpp"
 #include <algorithm>
+#include "core/Property.hpp"
 
 namespace Interfaces {
 
@@ -264,14 +265,15 @@ void PropertyPanel::Remove( unsigned _line )
 
 	// First element is always the scrollbar
 	auto& widgets = m_listContainer->getWidgets();
+	Panel::unfocusWidgets();
 	for( size_t i=1; i<widgets.size(); ++i )
 	{
 		// Search and destroy
-		if( (m_listContainer->getWidgets()[i]->getCallbackId() == _line) )
+		if( (widgets[i]->getCallbackId() == _line) )
 		{
 			minY = std::min((int)widgets[i]->getPosition().y, minY);
 			maxY = std::max((int)(widgets[i]->getPosition().y + std::min(widgets[i]->getSize().y, 20.0f)), maxY);
-			widgets.erase( widgets.begin() + i );
+			m_listContainer->remove( widgets[i] );
 			--i;
 		} else if( widgets[i]->getCallbackId() > _line )
 		{
@@ -383,24 +385,40 @@ void PropertyPanel::ValueChanged(const tgui::Callback& _call)
 
 void PropertyPanel::StartDrag(const tgui::Callback& _call)
 {
-	// mouseOnWhichWidget does not work for disabled components to search manually
-	for( size_t i=0; i<m_lines.size(); ++i )
+	// mouseOnWhichWidget does not work for disabled components so search manually
+	int line = FindLine( (float)_call.mouse.x, (float)_call.mouse.y );
+	if( line != -1 )
 	{
-		bool onThisLine = false;
-		onThisLine |= m_lines[i].left->mouseOnWidget((float)_call.mouse.x, (float)_call.mouse.y);
-		onThisLine |= m_lines[i].right->mouseOnWidget((float)_call.mouse.x, (float)_call.mouse.y);
-		if( onThisLine )
-		{
-			// Overwrite the last referenced content if it was not handled.
-			if( !*m_dragNDropHandler ) *m_dragNDropHandler = new Interfaces::DragContent();
-			(*m_dragNDropHandler)->from = DragContent::PROPERTY_PANEL;
-			(*m_dragNDropHandler)->object = nullptr;
-			// Each object must have this property!
-			(*m_dragNDropHandler)->prop = &m_objects[0]->GetProperty( m_lines[i].left->getText() );
-			return;
-		}
+		// Overwrite the last referenced content if it was not handled.
+		if( !*m_dragNDropHandler ) *m_dragNDropHandler = new Interfaces::DragContent();
+		(*m_dragNDropHandler)->from = DragContent::PROPERTY_PANEL;
+		(*m_dragNDropHandler)->object = nullptr;
+		// Each object must have this property!
+		(*m_dragNDropHandler)->prop = &m_objects[0]->GetProperty( m_lines[line].left->getText() );
+		return;
 	}
-	// TODO: drag objects (nodes) away.
+
+	// Drag objects (nodes) away.
+	for( size_t i = 0; i < m_listContainer->getWidgets().size(); ++i )
+	{
+		 // Also search for node drags of children from this line
+		 PropertyPanel* child = dynamic_cast<PropertyPanel*>(m_listContainer->getWidgets()[i].get());
+		 if( child && child->m_titleBar->mouseOnWidget(_call.mouse.x - child->getPosition().x, _call.mouse.y - child->getPosition().y) )
+		 {
+			 // Overwrite the last referenced content if it was not handled.
+			 if( !*m_dragNDropHandler ) *m_dragNDropHandler = new Interfaces::DragContent();
+			 (*m_dragNDropHandler)->from = DragContent::PROPERTY_PANEL;
+			 (*m_dragNDropHandler)->object = child->m_objects[0];
+			 // The property which contains this object can be found by the
+			 // callback-id because it always contains the line index
+			 (*m_dragNDropHandler)->prop = &m_objects[0]->GetProperty( m_lines[child->getCallbackId()].left->getText() );
+			 return;
+		 }
+	 }
+
+	// Nothing will be dragged remove old stuff
+	delete *m_dragNDropHandler;
+	*m_dragNDropHandler = nullptr;
 }
 
 
@@ -486,6 +504,15 @@ void PropertyPanel::HandleDropEvent(const tgui::Callback& _call)
 {
 	if( !(*m_dragNDropHandler) ) return;
 
+	// Do not handle things which are targeted to a children
+	for( size_t i = 0; i < m_listContainer->getWidgets().size(); ++i )
+	{
+		// Also search for node drags of children from this line
+		PropertyPanel* child = dynamic_cast<PropertyPanel*>(m_listContainer->getWidgets()[i].get());
+		if( child && child->mouseOnWidget((float)_call.mouse.x, (float)_call.mouse.y) )
+			return;
+	}
+
 	bool addedSomething = false;
 	if( (*m_dragNDropHandler)->from == DragContent::MODULES_PANEL )
 	{
@@ -506,6 +533,25 @@ void PropertyPanel::HandleDropEvent(const tgui::Callback& _call)
 		}
 	} else if( (*m_dragNDropHandler)->from == DragContent::PROPERTY_PANEL )
 	{
+		// Insert a single property or move an object
+		if( (*m_dragNDropHandler)->object)
+		{
+			if( (*m_dragNDropHandler)->object->HasProperty(STR_PROP_ITEM) )
+			{
+				if( m_objects.size() != 1 ) throw STR_AMBIGIOUS_DRAG;
+				int line = FindLine((float)_call.mouse.x, (float)_call.mouse.y);
+				if( line != -1 )
+				{
+					// Take away from the source object
+					(*m_dragNDropHandler)->prop->RemoveObject((*m_dragNDropHandler)->object->ID());
+
+					// Insert
+					std::string propName = m_lines[line].left->getText();
+					m_objects[0]->GetProperty( propName ).AddObject( (*m_dragNDropHandler)->object->ID() );
+					addedSomething = true;
+				}
+			}
+		} else
 		for( size_t i=0; i<m_objects.size(); ++i )
 		{
 			// Check if the property is new and do not overwrite if it already exists.
@@ -518,25 +564,27 @@ void PropertyPanel::HandleDropEvent(const tgui::Callback& _call)
 	} else if( (*m_dragNDropHandler)->from == DragContent::OBJECT_PANEL )
 	{
 		// Find out on which property the element was dropped
-		//auto mousePos = sf::Mouse::getPosition( g_Game->GetWindow() );
-		for( size_t i=0; i<m_lines.size(); ++i )
+		int line = FindLine( (float)_call.mouse.x, (float)_call.mouse.y );
+		if( line != -1 )
 		{
-			if( m_lines[i].left->mouseOnWidget( (float)_call.mouse.x, (float)_call.mouse.y )
-				|| m_lines[i].right->mouseOnWidget( (float)_call.mouse.x, (float)_call.mouse.y ) )
+			// Found the property
+			std::string propName = m_lines[line].left->getText();
+			// Add a clone into all objects
+			for( size_t i=0; i<m_objects.size(); ++i )
 			{
-				// Found the property
-				std::string propName = m_lines[i].left->getText();
-				// Add a clone into all objects
-				for( size_t i=0; i<m_objects.size(); ++i )
-				{
-					// One clone for everybody
-					Core::ObjectID id = m_world->NewObject( (*m_dragNDropHandler)->object );
-					m_objects[i]->GetProperty( propName ).AddObject( id );
-					addedSomething = true;
-				}
+				// One clone for everybody
+				Core::ObjectID id = m_world->NewObject( (*m_dragNDropHandler)->object );
+				// Every new added object is now flagged as item (can be
+				// dragged away again)
+				m_world->GetObject(id)->Add( Core::PROPERTY::ITEM );
+				m_objects[i]->GetProperty( propName ).AddObject( id );
+				addedSomething = true;
 			}
 		}
 	}
+	delete *m_dragNDropHandler;
+	*m_dragNDropHandler = nullptr;
+
 	// Update gui - there are new properties
 	if( addedSomething )
 		RefreshFilter();
@@ -617,6 +665,8 @@ void PropertyPanel::Clear()
 void PropertyPanel::RefreshFilter()
 {
 	if(IsMinimized()) return;
+
+	Panel::unfocusWidgets();
 	
 	if( m_objects.size() == 0 ) { Clear(); return; }
 
@@ -742,6 +792,23 @@ void PropertyPanel::RefreshLine( unsigned _line, const Core::Property* _property
 			node->MiniMaxi();
 		}
 	}
+}
+
+
+int PropertyPanel::FindLine( float _x, float _y )
+{
+	// Find out on which line the mouse is
+	for( size_t i=0; i<m_lines.size(); ++i )
+	{
+		if( m_lines[i].left->mouseOnWidget( _x, _y )
+			|| m_lines[i].right->mouseOnWidget( _x, _y ) )
+		{
+			// Found
+			return i;
+		}
+	}
+
+	return -1;
 }
 
 } // namespace Graphics

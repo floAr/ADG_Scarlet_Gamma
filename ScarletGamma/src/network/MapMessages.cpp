@@ -44,7 +44,7 @@ namespace Network {
 		{
 			// Write headers
 			Jo::Files::MemFile data;
-			data.Write( &MessageHeader( Target::MAP, m_map ), sizeof(MessageHeader) );
+			data.Write( &MessageHeader( Target::MAP, m_map, true ), sizeof(MessageHeader) );
 			data.Write( &m_purpose, sizeof(MapMsgType) );
 			// Write data
 			WriteData( data );

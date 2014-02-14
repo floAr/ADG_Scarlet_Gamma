@@ -18,6 +18,8 @@ namespace Core {
 		static const Property PLAYER;
 		static const Property JUMPPOINT;
 		static const Property OWNER;
+		static const Property SWITCH;
+		static const Property ITEM;
 
 		static const Property INVENTORY;
 		static const Property STRENGTH;
@@ -39,6 +41,10 @@ namespace Core {
 		static const Property EXPERIENCE;
 		static const Property LEVEL;
 		static const Property SPEED;
+		static const Property REFLEX;
+		static const Property WILL;
+		static const Property RESILENCE;
+		static const Property BASIC_ATTACK;
 
 		static const Property ATTITUDE;
 		static const Property CLASS;

@@ -21,8 +21,9 @@ namespace Network {
 	{
 		Target target;		///< Type of target
 		uint64_t targetID;	///< ID if there are multiple targets of the same type.
+		bool forward;		///< != 0 if the message should be broadcasted.
 
-		MessageHeader( Target _target, uint64_t _id ) : target(_target), targetID(_id)	{}
+		MessageHeader( Target _target, uint64_t _id, bool _forward ) : target(_target), targetID(_id), forward(_forward)	{}
 	};
 
 } // namespace Network

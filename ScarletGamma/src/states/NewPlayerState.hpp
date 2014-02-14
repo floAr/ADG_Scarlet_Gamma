@@ -35,9 +35,10 @@ namespace States
 		tgui::Gui   m_gui;
 		Utils::Random m_rand;
 
-		/// \brief Output of the id to the parent state
-		Core::ObjectID* m_newPlayerID;
-		Core::Object * m_newPlayer;
+		/// \brief Input/Output of the id to the parent state
+		Core::ObjectID* m_playerID;
+		Core::Object* m_player;
+		bool m_creatingNew;			///< Currently in a state to create a new player
 
 		/// \brief Used to pull talents from templates to the player
 		Interfaces::DragContent* m_draggedContent;
@@ -73,6 +74,10 @@ namespace States
 		tgui::EditBox::Ptr m_eTP;
 		tgui::EditBox::Ptr m_eTPMax;
 		tgui::EditBox::Ptr m_eRK;
+		tgui::EditBox::Ptr m_eBasicAttack;
+		tgui::EditBox::Ptr m_eReflex;
+		tgui::EditBox::Ptr m_eWill;
+		tgui::EditBox::Ptr m_eResilence;
 		Interfaces::PropertyPanel::Ptr m_playerTalents;
 		Interfaces::PropertyPanel::Ptr m_talentTemplates;
 	};

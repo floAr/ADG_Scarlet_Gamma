@@ -212,6 +212,15 @@
     <ClCompile Include="src\graphics\SpriteAtlasBatcher.cpp">
       <Filter>Quelldateien\graphics</Filter>
     </ClCompile>
+    <ClCompile Include="src\actions\UseSwitch.cpp">
+      <Filter>Quelldateien\actions</Filter>
+    </ClCompile>
+    <ClCompile Include="src\interfaces\CircularMenu.cpp">
+      <Filter>Quelldateien\interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="src\states\ChoosePlayerState.cpp">
+      <Filter>Quelldateien\states</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\core\Map.hpp">
@@ -390,6 +399,15 @@
     </ClInclude>
     <ClInclude Include="src\graphics\SpriteAtlasBatcher.hpp">
       <Filter>Quelldateien\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\actions\UseSwitch.hpp">
+      <Filter>Quelldateien\actions</Filter>
+    </ClInclude>
+    <ClInclude Include="src\interfaces\CircularMenu.hpp">
+      <Filter>Quelldateien\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="src\states\ChoosePlayerState.hpp">
+      <Filter>Quelldateien\states</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

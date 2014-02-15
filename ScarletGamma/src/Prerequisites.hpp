@@ -37,6 +37,7 @@ namespace Core
     /// \details This typedef allows to introduce 64Bit or even complexer types
     ///		if necessary.
     typedef unsigned int ObjectID;
+	const unsigned int INVALID_ID = 0xffffffff;
 
     /// \brief General definition of an action handle.
     /// \details This is an index to one of the actions in the ActionPool.

@@ -14,7 +14,6 @@ namespace States
 	{
 	public:
 		MasterState( const std::string& _loadFile );
-		~MasterState();
 		virtual void OnBegin() override;
 		virtual void OnEnd() override;
 		virtual void Update(float dt) override;
@@ -32,9 +31,6 @@ namespace States
 		virtual void MouseMoved(int deltaX, int deltaY, bool guiHandled) override;
 
 		virtual Core::Map* GetCurrentMap() override;
-
-		/// \brief Check if a layer is currently visible
-		bool IsLayerVisible( int _layer )	{ return m_hiddenLayers[_layer] != 0; }
 
 		virtual void BeginCombat(Core::ObjectID _object) override;
 
@@ -64,10 +60,6 @@ namespace States
 		///		up would be unsafe.
 		Tools::Brush m_brush;
 
-		/// \brief Some components fill this with content if mouse is pushed.
-		///		On release an according action should be done.
-		Interfaces::DragContent* m_draggedContent;
-
 		/// \brief Helper to blend the different layers on and off
 		void BlendLayer(int layerId);
 
@@ -76,8 +68,5 @@ namespace States
 		void ComputeSelectionRect( const sf::Vector2i& _position, int& _minX, int& _maxX, int& _minY, int& _maxY );
 
 		bool m_firstLayerSelection;			///< bool to indicate if this is the first layer selected with alt (to hide the rest)
-		std::vector<char> m_hiddenLayers;	///< List of currently hidden layers
-
-		void TestButtonCallback(std::string feedback);
 	};
 }

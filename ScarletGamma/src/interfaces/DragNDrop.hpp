@@ -14,12 +14,13 @@ namespace Interfaces {
 			PROPERTY_PANEL,
 			MODULES_PANEL,
 			OBJECT_PANEL,
-			PLAYERS_LIST
+			PLAYERS_LIST,
+			MAP
 		};
 
 		Sources from;				///< How filled that object?
-		const Core::Object* object;	///< The object which is dragged or the object which contains the property which is dragged.
-		const Core::Property* prop;	///< nullptr or a property which was below the cursor on drag start
+		Core::Object* object;		///< The object which is dragged or the object which contains the property which is dragged.
+		Core::Property* prop;		///< nullptr or a property which was below the cursor on drag start
 
 		DragContent() : object(nullptr), prop(nullptr)	{}
 	};

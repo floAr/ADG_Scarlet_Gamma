@@ -218,6 +218,15 @@
     <ClCompile Include="src\states\DismissableDialogState.cpp">
       <Filter>Quelldateien\states</Filter>
     </ClCompile>
+    <ClCompile Include="src\interfaces\CircularMenu.cpp">
+      <Filter>Quelldateien\interfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="src\states\ChoosePlayerState.cpp">
+      <Filter>Quelldateien\states</Filter>
+    </ClCompile>
+    <ClCompile Include="src\actions\TakeObject.cpp">
+      <Filter>Quelldateien\actions</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\core\Map.hpp">
@@ -402,6 +411,15 @@
     </ClInclude>
     <ClInclude Include="src\states\DismissableDialogState.hpp">
       <Filter>Quelldateien\states</Filter>
+    </ClInclude>
+    <ClInclude Include="src\interfaces\CircularMenu.hpp">
+      <Filter>Quelldateien\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="src\states\ChoosePlayerState.hpp">
+      <Filter>Quelldateien\states</Filter>
+    </ClInclude>
+    <ClInclude Include="src\actions\TakeObject.hpp">
+      <Filter>Quelldateien\actions</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

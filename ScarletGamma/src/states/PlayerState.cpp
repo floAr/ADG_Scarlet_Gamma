@@ -17,14 +17,19 @@
 #include "NewPlayerState.hpp"
 
 
-States::PlayerState::PlayerState( const std::string& _playerName, const sf::Color& _chatColor, Core::PlayerID _id ) :
+States::PlayerState::PlayerState( Core::ObjectID _player ) :
 	m_player(nullptr),
 	m_playerView(nullptr),
 	m_focus(nullptr)
 {
-	m_color = _chatColor;
-	m_name = _playerName;
-	m_playerID = _id;
+	m_playerObjectID = _player;
+	m_player = g_Game->GetWorld()->GetObject(_player);
+	m_playerID = m_player->GetProperty(STR_PROP_PLAYER).Evaluate();
+	m_color = m_player->GetColor();
+	m_name = m_player->GetName();
+
+	// Set camera at the player's position
+	m_focus = m_player;
 
 	m_playerView = Interfaces::PropertyPanel::Ptr(m_gui);
 }
@@ -52,8 +57,8 @@ void States::PlayerState::Draw(sf::RenderWindow& win)
 		using namespace std::placeholders;
 		std::function<float(Core::Map&,sf::Vector2i&)> visibilityFunc =
 			std::bind(&PlayerState::CheckTileVisibility, this, _1, _2, m_focus->GetPosition());
-		Graphics::TileRenderer::Render(win, *GetCurrentMap(),
-			visibilityFunc);
+		Graphics::TileRenderer::Render(win, *GetCurrentMap(), visibilityFunc,
+			(const bool*)(&m_hiddenLayers[0]));
 
 		// Draw the players path
 		DrawPathOverlay(win, m_focus);
@@ -63,7 +68,7 @@ void States::PlayerState::Draw(sf::RenderWindow& win)
 		// The player is not on the map - bring that into attention
 		sf::View backup = sfUtils::View::SetDefault(&win);
 		sf::Text t(STR_PLAYER_NOT_ON_MAP, m_gui.getGlobalFont(), 30);
-		t.setPosition(230, 320);
+		t.setPosition(30, 320);
 		win.draw(t);
 		win.setView(backup);
 	}
@@ -136,6 +141,33 @@ void States::PlayerState::MouseButtonPressed(sf::Event::MouseButtonEvent& button
 			gs->SetTilePosition(tileX,tileY);
 		}
 		break; }
+	}
+}
+
+
+void States::PlayerState::MouseButtonReleased( sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos, float time, bool guiHandled)
+{
+	// Return if the GUI already handled it
+	if (guiHandled)
+		return;
+
+	// Handle drop-event of drag&drop action
+	if( m_draggedContent && GetCurrentMap())
+	{
+		if( m_draggedContent->from == Interfaces::DragContent::PROPERTY_PANEL )
+		{
+			if( m_draggedContent->object->HasProperty( STR_PROP_ITEM ) )
+			{
+				// Take away from the source object
+				m_draggedContent->prop->RemoveObject(m_draggedContent->object->ID());
+				// Insert into map
+				int x = (int)floor(tilePos.x);
+				int y = (int)floor(tilePos.y);
+				GetCurrentMap()->Add( m_draggedContent->object->ID(), x, y, AutoDetectLayer(m_draggedContent->object) );
+			}
+		}
+		delete m_draggedContent;
+		m_draggedContent = nullptr;
 	}
 }
 
@@ -221,23 +253,9 @@ void States::PlayerState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 
 void States::PlayerState::OnBegin()
 {
-	// The client is receiving the world after connecting
-	Network::Messenger::Poll( true );
-
-	// The player name is used to find the correct object in the world.
-	// TODO: if player does not exists create one!
-	m_player = g_Game->GetWorld()->FindPlayer( m_name );
-	assert( m_player );
-	m_player->GetProperty(STR_PROP_PLAYER).SetValue( std::to_string(m_playerID) );
-	m_playerObjectID = m_player->ID();
-	// Use the players currently chosen color
-	m_player->SetColor( m_color );
-
-	m_focus = m_player;
-
 	tgui::ChatBox::Ptr localOut = m_gui.get( "Messages" );
 	m_playerView->Init( 624.0f, 0.0f, 400.0f, localOut->getPosition().y, false, false,
-		m_playerID, nullptr );
+		m_playerID, &m_draggedContent );
 	m_playerView->Show( g_Game->GetWorld(), m_player );
 
 	// Auto select the player (he is the actor)

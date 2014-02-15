@@ -10,12 +10,15 @@ namespace States
 	class PlayerState : public CommonState
 	{
 	public:
-		PlayerState( const std::string& _playerName, const sf::Color& _chatColor, Core::PlayerID _id );
+		PlayerState( Core::ObjectID _player );
+
 		virtual void OnBegin() override;
 		virtual void Draw(sf::RenderWindow& win) override;
 		virtual void MouseMoved(int deltaX, int deltaY, bool guiHandled) override;
 		virtual void MouseButtonPressed(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos,
 			bool guiHandled) override;
+		virtual void MouseButtonReleased(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos,
+			float time, bool guiHandled) override;
 		/// \brief Update gui elements + common state actions
 		virtual void MouseWheelMoved(sf::Event::MouseWheelEvent& wheel, bool guiHandled) override;
 		virtual void KeyPressed(sf::Event::KeyEvent& key, bool guiHandled) override;

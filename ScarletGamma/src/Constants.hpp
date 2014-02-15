@@ -31,6 +31,7 @@ static const std::string STR_ACT_WALKTO = std::string("Hierher gehen");
 static const std::string STR_ACT_SETJUMPPOINT = std::string("Als Sprungziel");
 static const std::string STR_ACT_USEJUMPPOINT = std::string("Betreten");
 static const std::string STR_ACT_USESWITCH = std::string("Betätigen");
+static const std::string STR_ACT_TAKEOBJECT = std::string("Nehmen");
 
 /************************************************************************/
 /* MESSAGES                                                             */
@@ -43,7 +44,9 @@ static const std::string STR_MSG_HIT_ARMOR_CLASS_NOT_BEAT = std::string("Rüstung
 static const std::string STR_MSG_CREATE_MAP_FIRST = std::string("Erstelle zunächst eine Map!");
 static const std::string STR_MSG_SELECT_TYPE_FIRST = std::string("Wähle einen Objekttypen! Dazu auf eines der Templates klicken.");
 static const std::string STR_MSG_LAYER_INVISIBLE = std::string("Die Ziel-Ebene ist ausgeblendet. Drücke ALT + Zahlentaste um umzuschalten.");
-static const std::string STR_PLAYER_NOT_ON_MAP = std::string("Der Spieler befindet sich nicht auf einer Karte.\nRespawn notwendig.");
+static const std::string STR_PLAYER_NOT_ON_MAP = std::string("Der Charakter befindet sich nicht auf\neiner Karte.\n\nRespawn notwendig.");
+static const std::string STR_AMBIGIOUS_DRAG = std::string("Objekte können nicht in eine Multiselektion verschoben werden.");
+static const std::string STR_AMBIGIOUS_DROP_TARGET = std::string("Ein Objekt muss auf eine Eigenschaft gezogen werden.");
 
 
 /************************************************************************/
@@ -62,6 +65,7 @@ static const std::string STR_PROP_PLAYER	= std::string("player");	///< Name of p
 static const std::string STR_PROP_OWNER		= std::string("Besitzer");	///< Name of owner property: flags the object as owned by a player
 static const std::string STR_PROP_SWITCH	= std::string("Schalter");
 static const std::string STR_PROP_JUMPPOINT	= std::string("Sprungziel");///< Name of portal property: The value is an id of the target object.
+static const std::string STR_PROP_ITEM		= std::string("Item");
 
 
 /************************************************************************/
@@ -109,6 +113,10 @@ static const std::string STR_PROP_EYECOLOR = std::string("Augenfarbe");
 static const std::string STR_PROP_EXPERIENCE = std::string("Erfahrung");
 static const std::string STR_PROP_LEVEL = std::string("Stufe");
 static const std::string STR_PROP_SPEED = std::string("Bewegungsrate");
+static const std::string STR_PROP_REFLEX = std::string("Reflex");
+static const std::string STR_PROP_WILL = std::string("Willen");
+static const std::string STR_PROP_RESILENCE = std::string("Zähigkeit");
+static const std::string STR_PROP_BASIC_ATTACK = std::string("Grundangriff");
 
 static const std::string STR_PROP_TALENTS = std::string("Fertigkeiten");
 static const std::string STR_PROP_ACROBATICS = std::string("Akrobatik");

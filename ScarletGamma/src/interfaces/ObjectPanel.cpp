@@ -52,7 +52,7 @@ void ObjectPanel::Init( float _x, float _y, float _w, float _h,
 	m_scrollBar->setLowValue(unsigned(Panel::getSize().y));
 	m_scrollBar->setSize(12.0f, Panel::getSize().y);
 	m_scrollBar->setMaximum(0);
-	m_scrollBar->setCallbackId(0xffffffff);
+	m_scrollBar->setCallbackId(INVALID_ID);
 	m_scrollBar->bindCallbackEx( &ObjectPanel::Scroll, this, tgui::Scrollbar::ValueChanged );
 
 	// The whole component can be minimized..

@@ -44,6 +44,7 @@ namespace UnitTest {
 		obj->Add( PROPERTY::OWNER ).SetValue("ICH");
 		obj->Add( PROPERTY::PLAYER ).SetValue("0");
 		obj->Add( PROPERTY::TARGET ).SetValue("0:3");
+		obj->Add( PROPERTY::INVENTORY );
 		auto& path = obj->Add( PROPERTY::PATH );
 		path.AddObject(map->GetObjectsAt(0,0)[0]);
 		path.AddObject(map->GetObjectsAt(9,9)[0]);

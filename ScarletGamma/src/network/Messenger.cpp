@@ -124,12 +124,6 @@ namespace Network {
 		packet << (Core::PlayerID)m_sockets.size();
 		_newClient->send( packet );
 
-		// Wait until new player is added or the dummy packet arrived.
-		_newClient->setBlocking( true );
-		if( _newClient->receive( packet ) == sf::Socket::Done )
-			g_msgInstance->HandleMessage(packet, m_sockets.size()-1);
-		_newClient->setBlocking( false );
-
 		// Sent whole world (in its latest state)
 		MsgLoadWorld( g_Game->GetWorld(), _newClient ).Send();
 	}

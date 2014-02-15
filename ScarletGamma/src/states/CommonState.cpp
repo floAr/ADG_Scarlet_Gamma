@@ -20,6 +20,8 @@ namespace States {
 CommonState::CommonState() :
 		m_zoom(Utils::Falloff::FT_QUADRATIC, 0.75f, 0.05f),
 		m_selectionChanged(false),
+		m_hiddenLayers(10, 0),
+		m_draggedContent(nullptr),
 		m_combat(0)
 {
 	// Tell the game about it's common state. Using Messenger::IsServer() you can take
@@ -34,6 +36,12 @@ CommonState::CommonState() :
 	enterTextEdit->bindCallbackEx( &CommonState::SubmitChat, this, tgui::EditBox::ReturnKeyPressed );
 
 	SetGui(&m_gui);
+}
+
+
+CommonState::~CommonState()
+{
+	delete m_draggedContent;
 }
 
 
@@ -260,5 +268,47 @@ void CommonState::EndCombat()
 	m_combat = 0;
 }
 
+
+int CommonState::AutoDetectLayer( Core::Object* _object )
+{
+	// Use previous layer
+	if( _object->HasProperty(STR_PROP_LAYER) )
+		return _object->GetLayer();
+
+	// Try to find a semantic
+	if( _object->HasProperty(STR_PROP_ITEM) )
+		return 3;
+	if( _object->HasProperty(STR_PROP_OBSTACLE) )
+		return 2;
+	if( _object->HasProperty(STR_PROP_PLAYER) )
+		return 5;
+	if( _object->HasProperty(STR_PROP_HEALTH) )	// No player but attackable
+		return 7;
+
+	// Search the topmost visible layer
+	for( int i = 9; i >= 0; --i )
+		if( IsLayerVisible(i) ) return i;
+
+	return 9;
+}
+
+
+Core::ObjectID CommonState::FindTopmostTile(int _x, int _y)
+{
+	auto& objectList = GetCurrentMap()->GetObjectsAt(_x, _y);
+	Core::ObjectID topmostObject = Core::INVALID_ID;
+	int maxLayer = -1000;
+	for (int i = objectList.Size()-1; i >= 0; --i)
+	{
+		// If object is not on hidden layer it is worth a closer look
+		int layer = g_Game->GetWorld()->GetObject(objectList[i])->GetLayer();
+		if( !m_hiddenLayers[layer] && layer > maxLayer )
+		{
+			topmostObject = objectList[i];
+			maxLayer = layer;
+		}
+	}
+	return topmostObject;
+}
 
 } // namespace States

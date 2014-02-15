@@ -265,7 +265,7 @@ void PropertyPanel::Remove( unsigned _line )
 
 	// First element is always the scrollbar
 	auto& widgets = m_listContainer->getWidgets();
-	Panel::unfocusWidgets();
+	m_listContainer->unfocusWidgets();
 	for( size_t i=1; i<widgets.size(); ++i )
 	{
 		// Search and destroy
@@ -666,7 +666,7 @@ void PropertyPanel::RefreshFilter()
 {
 	if(IsMinimized()) return;
 
-	Panel::unfocusWidgets();
+	m_listContainer->unfocusWidgets();
 	
 	if( m_objects.size() == 0 ) { Clear(); return; }
 
@@ -725,6 +725,10 @@ void PropertyPanel::RefreshFilter()
 			}
 		}
 	}
+
+	// Everything after the last element from the list must be outdated.
+	while( m_lines.size() > numAdded )
+		Remove(numAdded);
 }
 
 

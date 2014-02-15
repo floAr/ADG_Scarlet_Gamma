@@ -86,7 +86,7 @@ void States::PlayerState::Draw(sf::RenderWindow& win)
 
 void States::PlayerState::MouseMoved(int deltaX, int deltaY, bool guiHandled)
 {
-    // TODO: update default action!
+	// TODO: update default action!
 
 	// Don't react to any key if gui handled it
 	if (guiHandled)
@@ -210,6 +210,10 @@ void States::PlayerState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 	// Pre-GUI Tabbing to prevent loosing focus (focus tabbing of gui cannot be
 	// deactivated.
 	case sf::Keyboard::Tab: {
+		// not allowed in combat
+		if (m_combat)
+			break;
+
 		Core::Object* object;
 		if( sf::Keyboard::isKeyPressed( sf::Keyboard::LShift ) )
 			object = g_Game->GetWorld()->GetNextObservableObject(m_focus->ID(), -1);
@@ -222,7 +226,7 @@ void States::PlayerState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 			m_selection.Clear();
 			m_selection.Add( object->ID() );
 		}
-		return; }
+		return; } break;
 	}
 
 	// Don't react to any key if gui handled it
@@ -365,19 +369,27 @@ void States::PlayerState::SetHotkeyToObject(const int hotkey, Core::ObjectID obj
 	m_hotkeys[hotkey] = objectID;
 }
 
-void States::PlayerState::BeginCombat( Core::ObjectID _object )
+void States::PlayerState::CreateCombat( Core::ObjectID _object )
 {
-	// Find the object
-	Core::Object* object = g_Game->GetWorld()->GetObject(_object);
-
 	// Does this object belong to me?
-	if (object->HasProperty(STR_PROP_OWNER) && object->GetProperty(STR_PROP_OWNER).Value() == m_name)
+	if ( this->OwnsObject(_object) )
 	{
 		// Maybe create a new Combat object
-		if (!m_combat)
+		if ( !m_combat )
 			m_combat = new GameRules::Combat();
 
 		// Prompt for initiative roll
 		m_combat->PushInitiativePrompt(_object);
 	}
+}
+
+bool States::PlayerState::OwnsObject( Core::ObjectID _object )
+{
+	// Find the object
+	Core::Object* object = g_Game->GetWorld()->GetObject(_object);
+
+	// True only if the object is found, has an owner and that owner is me
+	return object != 0
+		&& object->HasProperty(STR_PROP_OWNER)
+		&& object->GetProperty(STR_PROP_OWNER).Value() == m_name;
 }

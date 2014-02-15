@@ -28,7 +28,11 @@ namespace States
 		/// \brief CommonState Update + Player view refreshed.
 		virtual void Update( float _dt ) override;
 
-		virtual void BeginCombat(Core::ObjectID _object) override;
+		/// \brief Starts combat for an object.
+		virtual void CreateCombat(Core::ObjectID _object) override;
+
+		/// \brief Checks whether an object is owned by the player.
+		virtual bool OwnsObject(Core::ObjectID _object) override;
 
 	private:
 		Core::PlayerID m_playerID;							///< The players id (set by socket index)

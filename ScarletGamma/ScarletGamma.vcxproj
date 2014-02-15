@@ -83,6 +83,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\actions\ActionPool.cpp" />
+    <ClCompile Include="src\actions\Actions.cpp" />
     <ClCompile Include="src\actions\Attack.cpp" />
     <ClCompile Include="src\actions\SetJumpPoint.cpp" />
     <ClCompile Include="src\actions\TakeObject.cpp" />

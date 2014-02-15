@@ -65,13 +65,22 @@ namespace States
 
 		//----------------------------------------------------------------------
 		// COMBAT STUFF
-        virtual void BeginCombat(Core::ObjectID _object) = 0;
+		virtual void CreateCombat(Core::ObjectID _object) = 0;
 		virtual void EndCombat();
 		GameRules::Combat* GetCombat()
 		{
 			return m_combat;
 		}
 
+		/// \brief Test whether we are currently in combat.
+		bool InCombat()
+		{
+			return m_combat != nullptr;
+		}
+
+
+		/// \brief Checks whether an object is owned by the CommonState's owner.
+		virtual bool OwnsObject(Core::ObjectID _object) = 0;
 
 	protected:
 		Utils::Falloff m_zoom;       ///< Zoom for the current map

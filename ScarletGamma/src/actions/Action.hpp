@@ -2,6 +2,7 @@
 
 #include "Prerequisites.hpp"
 #include "Game.hpp"
+#include "states/CommonState.hpp"
 #include "core/Object.hpp"
 #include "core/World.hpp"
 #include <vector>
@@ -16,7 +17,8 @@ namespace Actions
         MOVE_ACTION,     ///< Move up to your speed or perform an action that takes a similar amount of time
         FULL_ACTION,     ///< Consumes all your effort during a round
         FREE_ACTION,     ///< Consume a very small amount of time and effort
-        SWIFT_ACTION     ///< Consumes a very small amount of time, but more than a free action
+        SWIFT_ACTION,    ///< Consumes a very small amount of time, but more than a free action
+        NO_ACTION       ///< The action can always be used, even when it's not your turn
     };
 
     class Action
@@ -67,24 +69,7 @@ namespace Actions
 
         /// \brief Returns true if this action can be used right now. Overwrite to
         ///     define other conditions.
-        virtual bool CanUse(Core::ObjectList& _executors, Core::Object& _object)
-        {
-            // Get all requirements for target and loop through them
-            const std::vector<std::pair<std::string, bool>>& requirements = m_targetRequirements;
-            for (auto req = requirements.begin(); req != requirements.end(); ++req)
-                if (_object.HasProperty((*req).first) != (*req).second)
-                    return false;
-
-            // Get all requirements for executor and loop through them
-            const std::vector<std::pair<std::string, bool>>& sourceRequirements = m_sourceRequirements;
-            for (auto req = sourceRequirements.begin(); req != sourceRequirements.end(); ++req)
-                // Test all possible executors
-                for( int i=0; i<_executors.Size(); ++i )
-                    if( g_Game->GetWorld()->GetObject(_executors[i])->HasProperty((*req).first) != (*req).second )
-                        return false;
-
-            return true;
-        }
+        virtual bool CanUse(Core::ObjectList& _executors, Core::Object& _object);
 
         std::vector<std::pair<std::string, bool>> m_targetRequirements; ///< List of required properties in target
         std::vector<std::pair<std::string, bool>> m_sourceRequirements; ///< List of required properties in source (executor)

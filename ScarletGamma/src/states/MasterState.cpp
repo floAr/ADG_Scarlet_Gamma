@@ -430,12 +430,24 @@ namespace States {
 		case sf::Keyboard::Space:
 			if (sf::Keyboard::isKeyPressed((sf::Keyboard::LControl)))
 			{
-				m_combat = new GameRules::MasterCombat();
-                Core::World* world = g_Game->GetWorld();
-                for( int i=0; i<m_selection.Size(); ++i )
+                // TODO: proper keys for creating, starting and ending combat
+
+                if (!m_combat)
                 {
-                    // Add participant to combat
-                    static_cast<GameRules::MasterCombat*>(m_combat)->AddParticipant(m_selection[i]);
+                    // Create a combat and add participants
+                    m_combat = new GameRules::MasterCombat();
+                    Core::World* world = g_Game->GetWorld();
+                    for( int i=0; i<m_selection.Size(); ++i )
+                    {
+                        // Add participant to combat
+                        static_cast<GameRules::MasterCombat*>(m_combat)->AddParticipant(m_selection[i]);
+                    }
+                }
+                else
+                {
+                    // Set the first combattant's turn
+                    assert(dynamic_cast<GameRules::MasterCombat*>(m_combat));
+                    dynamic_cast<GameRules::MasterCombat*>(m_combat)->StartCombat();
                 }
 			}
 			break;
@@ -550,7 +562,7 @@ namespace States {
 		return g_Game->GetWorld()->GetMap(id);
 	}
 
-    void MasterState::BeginCombat( Core::ObjectID _object )
+    void MasterState::CreateCombat( Core::ObjectID _object )
     {
         // Find the object
         Core::Object* object = g_Game->GetWorld()->GetObject(_object);
@@ -565,6 +577,16 @@ namespace States {
             // Prompt for initiative roll
             m_combat->PushInitiativePrompt(_object);
         }
+    }
+
+    bool MasterState::OwnsObject( Core::ObjectID _object )
+    {
+        // Find the object
+        Core::Object* object = g_Game->GetWorld()->GetObject(_object);
+
+        // True only if the object is found and has no owner at all.
+        return object != 0
+            && object->HasProperty(STR_PROP_OWNER) == false;
     }
 
 }// namespace States

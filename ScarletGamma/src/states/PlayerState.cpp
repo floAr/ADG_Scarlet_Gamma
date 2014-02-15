@@ -57,8 +57,8 @@ void States::PlayerState::Draw(sf::RenderWindow& win)
 		using namespace std::placeholders;
 		std::function<float(Core::Map&,sf::Vector2i&)> visibilityFunc =
 			std::bind(&PlayerState::CheckTileVisibility, this, _1, _2, m_focus->GetPosition());
-		Graphics::TileRenderer::Render(win, *GetCurrentMap(),
-			visibilityFunc);
+		Graphics::TileRenderer::Render(win, *GetCurrentMap(), visibilityFunc,
+			(const bool*)(&m_hiddenLayers[0]));
 
 		// Draw the players path
 		DrawPathOverlay(win, m_focus);
@@ -141,6 +141,33 @@ void States::PlayerState::MouseButtonPressed(sf::Event::MouseButtonEvent& button
 			gs->SetTilePosition(tileX,tileY);
 		}
 		break; }
+	}
+}
+
+
+void States::PlayerState::MouseButtonReleased( sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos, float time, bool guiHandled)
+{
+	// Return if the GUI already handled it
+	if (guiHandled)
+		return;
+
+	// Handle drop-event of drag&drop action
+	if( m_draggedContent && GetCurrentMap())
+	{
+		if( m_draggedContent->from == Interfaces::DragContent::PROPERTY_PANEL )
+		{
+			if( m_draggedContent->object->HasProperty( STR_PROP_ITEM ) )
+			{
+				// Take away from the source object
+				m_draggedContent->prop->RemoveObject(m_draggedContent->object->ID());
+				// Insert into map
+				int x = (int)floor(tilePos.x);
+				int y = (int)floor(tilePos.y);
+				GetCurrentMap()->Add( m_draggedContent->object->ID(), x, y, AutoDetectLayer(m_draggedContent->object) );
+			}
+		}
+		delete m_draggedContent;
+		m_draggedContent = nullptr;
 	}
 }
 
@@ -228,7 +255,7 @@ void States::PlayerState::OnBegin()
 {
 	tgui::ChatBox::Ptr localOut = m_gui.get( "Messages" );
 	m_playerView->Init( 624.0f, 0.0f, 400.0f, localOut->getPosition().y, false, false,
-		m_playerID, nullptr );
+		m_playerID, &m_draggedContent );
 	m_playerView->Show( g_Game->GetWorld(), m_player );
 
 	// Auto select the player (he is the actor)

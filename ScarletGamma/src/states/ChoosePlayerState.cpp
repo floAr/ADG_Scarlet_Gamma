@@ -13,7 +13,7 @@ namespace States {
 ChoosePlayerState::ChoosePlayerState(Core::PlayerID _id) :
     GameState(),
 	m_playerID(_id),
-	m_newPlayer(0xffffffff)
+	m_newPlayer(Core::INVALID_ID)
 {
 	// The client is receiving the world after connecting
 	Network::Messenger::Poll( true );
@@ -76,7 +76,7 @@ void ChoosePlayerState::CreatePlayer()
 void ChoosePlayerState::OnResume()
 {
 	// Might be called if stack is cleaned up at the end
-	if( !m_finished && m_newPlayer!=0xffffffff )
+	if( !m_finished && m_newPlayer!=Core::INVALID_ID )
 	{
 		tgui::Callback callback;
 		callback.id = m_newPlayer;

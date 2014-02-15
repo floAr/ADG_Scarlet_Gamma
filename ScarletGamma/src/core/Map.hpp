@@ -57,7 +57,9 @@ namespace Core {
 		///		will be extended.
 		///		This method will send a network sync message.
 		/// \param [in] _layer Where to insert the object in the render order?
-		///		0 is the ground and objects with negative values are not drawn.
+		///		0 is the ground. Using a -1 is the layer 'auto detection'. If
+		///		the object has the property it will be used. Otherwise it is
+		///		added in layer 8 (custom 1).
 		void Add(ObjectID _object, int _x, int _y, int _layer);
 
 		/// \brief Remove an object from the map. The object itself is not deleted!

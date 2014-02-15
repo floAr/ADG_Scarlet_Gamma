@@ -301,7 +301,7 @@ CharacterState::CharacterState(Core::ObjectID* _saveID) :
 	m_talentTemplates->Show( g_Game->GetWorld(), g_Game->GetWorld()->GetObject(talentBase) );
 
 	// Load the player or create a new one
-	m_creatingNew = *_saveID == 0xffffffff;
+	m_creatingNew = *_saveID == Core::INVALID_ID;
 	if( m_creatingNew ) CreateNew();
 	else {
 		m_player = g_Game->GetWorld()->GetObject(*m_playerID);
@@ -334,7 +334,7 @@ void CharacterState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 			// Break creation -> delete the objects (incusive subobjects)
 			g_Game->GetWorld()->RemoveObject(m_player->GetProperty(STR_PROP_TALENTS).GetObjects()[0]);
 			g_Game->GetWorld()->RemoveObject(m_player->ID());
-			*m_playerID = 0xffffffff;
+			*m_playerID = Core::INVALID_ID;
 		}
 
         m_finished = true;
@@ -411,6 +411,8 @@ void CharacterState::CreateNew()
 	talentO->Add( Core::PROPERTY::SURVIVALING );
 	talentO->Add( Core::PROPERTY::MASQUERADING );
 	talentO->Add( Core::PROPERTY::PERCEPTION );
+
+	m_player->Add( Core::PROPERTY::INVENTORY );
 
 	ShowPlayer();
 }

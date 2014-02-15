@@ -139,7 +139,7 @@ void States::SelectionState::MouseButtonPressed(sf::Event::MouseButtonEvent& but
 		if(previousState->GetSelection()->Size() > 0)
 		{
 			Core::ObjectID id = m_menu.GetClickedItem((float)button.x, (float)button.y);
-			if( id != 0xffffffff )
+			if( id != Core::INVALID_ID )
 			{
 				ShowActionState( id, button.x, button.y );
 				return;

@@ -69,7 +69,7 @@ void PropertyPanel::Init( float _x, float _y, float _w, float _h,
 		m_basicScrollBar = tgui::Scrollbar::Ptr();
 		m_basicScrollBar->load("media/Black.conf");
 		m_basicScrollBar->setAutoHide(false);
-		m_basicScrollBar->setCallbackId(0xffffffff);
+		m_basicScrollBar->setCallbackId(Core::INVALID_ID);
 		m_basicScrollBar->setMaximum(0);
 
 		m_basicMiniMaxi = tgui::AnimatedPicture::Ptr();
@@ -265,7 +265,7 @@ void PropertyPanel::Remove( unsigned _line )
 
 	// First element is always the scrollbar
 	auto& widgets = m_listContainer->getWidgets();
-	Panel::unfocusWidgets();
+	m_listContainer->unfocusWidgets();
 	for( size_t i=1; i<widgets.size(); ++i )
 	{
 		// Search and destroy
@@ -440,7 +440,7 @@ void PropertyPanel::Resize( int _addLines, int _where )
 	{
 		// Just rescale the area
 		m_listContainer->setSize(Panel::getSize().x, float(m_numPixelLines));
-		Panel::setSize(Panel::getSize().x, float(m_numPixelLines+20) );
+		Panel::setSize(Panel::getSize().x, float(m_numPixelLines + (m_addAble ? 40.0f : 20.0f)) );
 
 		// If parent is another PropertyPanel it has to be resized too
 		PropertyPanel* parent = nullptr;
@@ -551,7 +551,7 @@ void PropertyPanel::HandleDropEvent(const tgui::Callback& _call)
 					addedSomething = true;
 				}
 			}
-		} else
+		} else	// Copy properties
 		for( size_t i=0; i<m_objects.size(); ++i )
 		{
 			// Check if the property is new and do not overwrite if it already exists.
@@ -580,6 +580,24 @@ void PropertyPanel::HandleDropEvent(const tgui::Callback& _call)
 				m_objects[i]->GetProperty( propName ).AddObject( id );
 				addedSomething = true;
 			}
+		}
+	} else if( (*m_dragNDropHandler)->from == DragContent::MAP )
+	{
+		if( m_objects.size() != 1 ) throw STR_AMBIGIOUS_DRAG;
+		int line = FindLine((float)_call.mouse.x, (float)_call.mouse.y);
+		if( line != -1 )
+		{
+			// Take away from the source map
+			Core::Map* map = g_Game->GetWorld()->GetMap( (*m_dragNDropHandler)->object->GetParentMap() );
+			map->Remove( (*m_dragNDropHandler)->object->ID() );
+
+			// Convert to an item
+			(*m_dragNDropHandler)->object->Add( Core::PROPERTY::ITEM );
+
+			// Insert
+			std::string propName = m_lines[line].left->getText();
+			m_objects[0]->GetProperty( propName ).AddObject( (*m_dragNDropHandler)->object->ID() );
+			addedSomething = true;
 		}
 	}
 	delete *m_dragNDropHandler;
@@ -666,7 +684,7 @@ void PropertyPanel::RefreshFilter()
 {
 	if(IsMinimized()) return;
 
-	Panel::unfocusWidgets();
+	m_listContainer->unfocusWidgets();
 	
 	if( m_objects.size() == 0 ) { Clear(); return; }
 
@@ -725,6 +743,10 @@ void PropertyPanel::RefreshFilter()
 			}
 		}
 	}
+
+	// Everything after the last element from the list must be outdated.
+	while( m_lines.size() > numAdded )
+		Remove(numAdded);
 }
 
 

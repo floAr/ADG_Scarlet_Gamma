@@ -389,6 +389,7 @@ namespace Core {
 		propertyO->Add( PROPERTY::JUMPPOINT );
 		propertyO->Add( PROPERTY::SWITCH );
 		propertyO->Add( PROPERTY::OWNER );
+		propertyO->Add( PROPERTY::ITEM );
 
 		propertyO->Add( PROPERTY::INVENTORY );
 		propertyO->Add( PROPERTY::STRENGTH );

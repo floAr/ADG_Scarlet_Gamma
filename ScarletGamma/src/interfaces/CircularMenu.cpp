@@ -73,7 +73,7 @@ namespace Interfaces {
 				return m_buttons[i]->getCallbackId();
 			}
 		}
-		return 0xffffffff;
+		return Core::INVALID_ID;
 	}
 
 

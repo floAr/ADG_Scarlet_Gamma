@@ -27,10 +27,8 @@ namespace States {
 		m_objectsPanel(nullptr),
 		m_selectionView(nullptr),
 		m_toolbar(nullptr),
-		m_hiddenLayers(10, 0),
 		m_worldFileName(_loadFile),
-		m_rectSelection(false),
-		m_draggedContent(nullptr)
+		m_rectSelection(false)
 	{
 		// Load the map
 		Jo::Files::HDDFile file(_loadFile);
@@ -74,10 +72,6 @@ namespace States {
 		Resize( sf::Vector2f( (float) size.x, (float) size.y ) );
 	}
 
-	MasterState::~MasterState()
-	{
-		delete m_draggedContent;
-	}
 
 	void MasterState::Update(float dt)
 	{
@@ -143,7 +137,7 @@ namespace States {
 			Graphics::TileRenderer::RenderRect( win, sf::Vector2i(mousePos.x-r0, mousePos.y-r0), sf::Vector2i(mousePos.x+r1, mousePos.y+r1) );
 		}
 
-		// Show the brush region
+		// Show the selection rect region
 		if( m_modeTool->GetMode() == Interfaces::ModeToolbox::SELECTION && m_rectSelection )
 		{
 			sf::Vector2i mousePos = Events::InputHandler::GetMouseTilePosition();
@@ -213,13 +207,22 @@ namespace States {
 					tileX, tileY,
 					m_modeTool->Brush()->GetLayer(),
 					m_modeTool->Brush()->GetMode() );
-			}
+			} else
 			if( m_modeTool->GetMode() == Interfaces::ModeToolbox::SELECTION )
 			{
 				// Start rect-selection
 				m_rectSelectionStart.x = tileX;
 				m_rectSelectionStart.y = tileY;
 				m_rectSelection = true;
+			} else {	// Mode ACTION
+				// Start drag&drop with the topmost visible tile
+				ObjectID topmostObject = FindTopmostTile(tileX, tileY);
+				if( topmostObject != INVALID_ID ) {
+					if( !m_draggedContent ) m_draggedContent = new Interfaces::DragContent();
+					m_draggedContent->from = Interfaces::DragContent::MAP;
+					m_draggedContent->object = g_Game->GetWorld()->GetObject(topmostObject);
+					m_draggedContent->prop = nullptr;
+				}
 			}
 			break; }
 		case sf::Mouse::Right: {
@@ -270,9 +273,8 @@ namespace States {
 						// Insert object copy to the map
 						ObjectID id = g_Game->GetWorld()->NewObject( m_draggedContent->object );
 
-						// Meaningful layer: on top
-						int l = GetCurrentMap()->GetObjectsAt(x,y).Size();
-						GetCurrentMap()->Add( id, x, y, l );
+						// Use auto detected layer - no knowledge
+						GetCurrentMap()->Add( id, x, y, AutoDetectLayer(g_Game->GetWorld()->GetObject(id)) );
 					} else if( m_draggedContent->from == Interfaces::DragContent::PLAYERS_LIST )
 					{
 						// Insert original to the map (player layer)
@@ -283,6 +285,19 @@ namespace States {
 							GetCurrentMap()->SetObjectPosition( object, tilePos );
 						}
 						object->ResetTarget();
+					} else if( m_draggedContent->from == Interfaces::DragContent::PROPERTY_PANEL )
+					{
+						if( m_draggedContent->object->HasProperty( STR_PROP_ITEM ) )
+						{
+							// Take away from the source object
+							m_draggedContent->prop->RemoveObject(m_draggedContent->object->ID());
+							// Insert into map
+							GetCurrentMap()->Add( m_draggedContent->object->ID(), x, y, AutoDetectLayer(m_draggedContent->object) );
+						}
+					} else if( m_draggedContent->from == Interfaces::DragContent::MAP )
+					{
+						// Insert into map
+						GetCurrentMap()->SetObjectPosition( m_draggedContent->object, sf::Vector2f((float)x,(float)y) );
 					}
 				}
 			}
@@ -298,24 +313,12 @@ namespace States {
 				m_selection.Clear();
 
 			sf::Vector2i tile((int)floor(tilePos.x), (int)floor(tilePos.y));
-			// The cursor did not leave the tile -> interpret asa click only it time was also short
+			// The cursor did not leave the tile -> interpret as a click only if time was also short
 			if( tile.x==m_rectSelectionStart.x && tile.y==m_rectSelectionStart.y && time < 0.4f)
 			{
 				// Take only the topmost visible tile
-				auto& objectList = GetCurrentMap()->GetObjectsAt((int)tilePos.x, (int)tilePos.y);
-				ObjectID topmostObject = 0xffffffff;
-				int maxLayer = -1000;
-				for (int i = objectList.Size()-1; i >= 0; --i)
-				{
-					// If object is not on hidden layer it is worth a closer look
-					int layer = g_Game->GetWorld()->GetObject(objectList[i])->GetLayer();
-					if( !m_hiddenLayers[layer] && layer > maxLayer )
-					{
-						topmostObject = objectList[i];
-						maxLayer = layer;
-					}
-				}
-				if( topmostObject != 0xffffffff )
+				ObjectID topmostObject = FindTopmostTile(tile.x, tile.y);
+				if( topmostObject != INVALID_ID )
 					AddToSelection(topmostObject);
 			} else {
 				int minX,minY,maxX,maxY;
@@ -563,9 +566,5 @@ namespace States {
             m_combat->PushInitiativePrompt(_object);
         }
     }
-
-	//void States::MasterState::TestButtonCallback(std::string feedback){
-	//	std::cout<<feedback;
-	//}
 
 }// namespace States

@@ -14,7 +14,8 @@ namespace Interfaces {
 			PROPERTY_PANEL,
 			MODULES_PANEL,
 			OBJECT_PANEL,
-			PLAYERS_LIST
+			PLAYERS_LIST,
+			MAP
 		};
 
 		Sources from;				///< How filled that object?

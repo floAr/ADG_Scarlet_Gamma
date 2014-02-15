@@ -18,7 +18,7 @@ namespace States
 		virtual void KeyPressed(sf::Event::KeyEvent& key, bool guiHandled) override;
 	private:
 		void Create();		///< Button create method (copies data)
-		void CreateNew();	///< Create a new empty player. Called if given ID = 0xffffffff
+		void CreateNew();	///< Create a new empty player. Called if given ID = INVALID_ID
 		void ShowPlayer();	///< Copy the values from the player to the GUI
 		void AttributeStrengthChanged();
 		void AttributeDexterityChanged();

@@ -171,7 +171,7 @@ namespace Core {
 		// Remove map-related properties from the object
 		obj->Remove(STR_PROP_X);
 		obj->Remove(STR_PROP_Y);
-		obj->Remove(STR_PROP_LAYER);
+		//Keep the layer for later obj->Remove(STR_PROP_LAYER);
 	}
 
 
@@ -430,6 +430,7 @@ namespace Core {
 			Map* from = m_parentWorld->GetMap( object->GetParentMap() );
 			if( from )
 				from->GetObjectsAt(_oldCell.x, _oldCell.y).Remove(_object);
+			Extend(std::max(m_minX-_newCell.x,0), std::max(_newCell.x-m_maxX,0), std::max(m_minY-_newCell.y,0), std::max(_newCell.y-m_maxY,0));
 			GetObjectsAt(_newCell.x, _newCell.y).Add(_object);
 		}
 	}

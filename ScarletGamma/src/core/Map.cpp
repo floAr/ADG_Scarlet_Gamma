@@ -171,7 +171,7 @@ namespace Core {
 		// Remove map-related properties from the object
 		obj->Remove(STR_PROP_X);
 		obj->Remove(STR_PROP_Y);
-		obj->Remove(STR_PROP_LAYER);
+		//Keep the layer for later obj->Remove(STR_PROP_LAYER);
 	}
 
 

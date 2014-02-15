@@ -551,7 +551,7 @@ void PropertyPanel::HandleDropEvent(const tgui::Callback& _call)
 					addedSomething = true;
 				}
 			}
-		} else
+		} else	// Copy properties
 		for( size_t i=0; i<m_objects.size(); ++i )
 		{
 			// Check if the property is new and do not overwrite if it already exists.

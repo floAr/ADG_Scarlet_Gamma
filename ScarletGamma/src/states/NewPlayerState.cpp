@@ -412,6 +412,8 @@ void CharacterState::CreateNew()
 	talentO->Add( Core::PROPERTY::MASQUERADING );
 	talentO->Add( Core::PROPERTY::PERCEPTION );
 
+	m_player->Add( Core::PROPERTY::INVENTORY );
+
 	ShowPlayer();
 }
 

@@ -110,9 +110,9 @@ namespace States {
 		}
 
 		// Update the viewed properties
-	/*	if( m_selectionView->isVisible() )
+		if( m_selectionView->isVisible() )
 			m_selectionView->Show( g_Game->GetWorld(), m_selection );
-		m_viewPanel->RefreshFilter();*/
+		m_viewPanel->RefreshFilter();
 	}
 
 	void MasterState::Draw(sf::RenderWindow& win)
@@ -270,9 +270,8 @@ namespace States {
 						// Insert object copy to the map
 						ObjectID id = g_Game->GetWorld()->NewObject( m_draggedContent->object );
 
-						// Meaningful layer: on top
-						int l = GetCurrentMap()->GetObjectsAt(x,y).Size();
-						GetCurrentMap()->Add( id, x, y, l );
+						// Use auto detected layer - no knowledge
+						GetCurrentMap()->Add( id, x, y, AutoDetectLayer(g_Game->GetWorld()->GetObject(id)) );
 					} else if( m_draggedContent->from == Interfaces::DragContent::PLAYERS_LIST )
 					{
 						// Insert original to the map (player layer)
@@ -283,6 +282,12 @@ namespace States {
 							GetCurrentMap()->SetObjectPosition( object, tilePos );
 						}
 						object->ResetTarget();
+					} else if( m_draggedContent->from == Interfaces::DragContent::PROPERTY_PANEL )
+					{
+						// Take away from the source object
+						m_draggedContent->prop->RemoveObject(m_draggedContent->object->ID());
+						// Insert into map
+						GetCurrentMap()->Add( m_draggedContent->object->ID(), x, y, AutoDetectLayer(m_draggedContent->object) );
 					}
 				}
 			}
@@ -564,8 +569,26 @@ namespace States {
         }
     }
 
-	//void States::MasterState::TestButtonCallback(std::string feedback){
-	//	std::cout<<feedback;
-	//}
+
+	int MasterState::AutoDetectLayer( Core::Object* _object )
+	{
+		// Use previous layer
+		if( _object->HasProperty(STR_PROP_LAYER) )
+			return _object->GetLayer();
+
+		// Try to find a semantic
+		if( _object->HasProperty(STR_PROP_ITEM) )
+			return 3;
+		if( _object->HasProperty(STR_PROP_OBSTACLE) )
+			return 2;
+		if( _object->HasProperty(STR_PROP_PLAYER) )
+			return 5;
+		if( _object->HasProperty(STR_PROP_HEALTH) )	// No player but attackable
+			return 7;
+
+		// Search the topmost visible layer
+		for( int i = 9; i >= 0; --i )
+			if( IsLayerVisible(i) ) return i;
+	}
 
 }// namespace States

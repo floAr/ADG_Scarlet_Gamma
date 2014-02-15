@@ -78,6 +78,7 @@ namespace States
 		bool m_firstLayerSelection;			///< bool to indicate if this is the first layer selected with alt (to hide the rest)
 		std::vector<char> m_hiddenLayers;	///< List of currently hidden layers
 
-		void TestButtonCallback(std::string feedback);
+		/// \brief Find the best fitting layer if an object is drawn to the map
+		int AutoDetectLayer( Core::Object* _object );
 	};
 }

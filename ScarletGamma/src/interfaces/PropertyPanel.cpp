@@ -581,6 +581,24 @@ void PropertyPanel::HandleDropEvent(const tgui::Callback& _call)
 				addedSomething = true;
 			}
 		}
+	} else if( (*m_dragNDropHandler)->from == DragContent::MAP )
+	{
+		if( m_objects.size() != 1 ) throw STR_AMBIGIOUS_DRAG;
+		int line = FindLine((float)_call.mouse.x, (float)_call.mouse.y);
+		if( line != -1 )
+		{
+			// Take away from the source map
+			Core::Map* map = g_Game->GetWorld()->GetMap( (*m_dragNDropHandler)->object->GetParentMap() );
+			map->Remove( (*m_dragNDropHandler)->object->ID() );
+
+			// Convert to an item
+			(*m_dragNDropHandler)->object->Add( Core::PROPERTY::ITEM );
+
+			// Insert
+			std::string propName = m_lines[line].left->getText();
+			m_objects[0]->GetProperty( propName ).AddObject( (*m_dragNDropHandler)->object->ID() );
+			addedSomething = true;
+		}
 	}
 	delete *m_dragNDropHandler;
 	*m_dragNDropHandler = nullptr;

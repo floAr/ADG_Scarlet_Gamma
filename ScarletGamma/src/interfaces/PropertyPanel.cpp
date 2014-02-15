@@ -440,7 +440,7 @@ void PropertyPanel::Resize( int _addLines, int _where )
 	{
 		// Just rescale the area
 		m_listContainer->setSize(Panel::getSize().x, float(m_numPixelLines));
-		Panel::setSize(Panel::getSize().x, float(m_numPixelLines+20) );
+		Panel::setSize(Panel::getSize().x, float(m_numPixelLines + (m_addAble ? 40.0f : 20.0f)) );
 
 		// If parent is another PropertyPanel it has to be resized too
 		PropertyPanel* parent = nullptr;

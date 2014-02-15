@@ -31,6 +31,7 @@ static const std::string STR_ACT_WALKTO = std::string("Hierher gehen");
 static const std::string STR_ACT_SETJUMPPOINT = std::string("Als Sprungziel");
 static const std::string STR_ACT_USEJUMPPOINT = std::string("Betreten");
 static const std::string STR_ACT_USESWITCH = std::string("Betätigen");
+static const std::string STR_ACT_TAKEOBJECT = std::string("Nehmen");
 
 /************************************************************************/
 /* MESSAGES                                                             */

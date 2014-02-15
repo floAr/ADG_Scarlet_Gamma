@@ -9,6 +9,7 @@
 #include "core/World.hpp"
 #include <iostream>
 #include "UseSwitch.hpp"
+#include "TakeObject.hpp"
 
 using namespace Actions;
 
@@ -24,6 +25,7 @@ ActionPool::ActionPool() :
 	m_actions.push_back(new SetJumpPoint());
 	m_actions.push_back(new UseJumpPoint());
 	m_actions.push_back(new UseSwitch());
+	m_actions.push_back(new TakeObject());
     //------------------------------//
     // TODO: add more actions here! //
     //------------------------------//

@@ -4,6 +4,7 @@
 #include "states/SelectionState.hpp"
 #include "utils/Falloff.hpp"
 #include "Prerequisites.hpp"
+#include "interfaces/DragNDrop.hpp"
 
 namespace States
 {
@@ -16,6 +17,8 @@ namespace States
 	public:
 		/// \brief Creates a Zoom object, The GUI for chats.
 		CommonState();
+
+		~CommonState();
 
 		/// \brief Close the network connection. (Initialization was state
 		///		dependent).
@@ -57,6 +60,9 @@ namespace States
 		///		on the mode.
 		virtual Core::Map* GetCurrentMap() = 0;
 
+		/// \brief Check if a layer is currently visible
+		bool IsLayerVisible( int _layer )	{ return m_hiddenLayers[_layer] != 0; }
+
 		//----------------------------------------------------------------------
 		// COMBAT STUFF
         virtual void BeginCombat(Core::ObjectID _object) = 0;
@@ -74,9 +80,14 @@ namespace States
 		sf::Color m_color;           ///< Color of the player in the chat
 		GameRules::Combat* m_combat; ///< Pointer to Combat in progress, 0 if none
 
+		std::vector<char> m_hiddenLayers;	///< List of currently hidden layers
+
+		/// \brief Some components fill this with content if mouse is pushed.
+		///		On release an according action should be done.
+		Interfaces::DragContent* m_draggedContent;
+
 		/// \brief Checks which actions where done and adjusts the zoom.
 		void ZoomView(float delta);
-
 
 		/// \param [in] _whosePath An object with the Target or Path property
 		///		whose path should be drawn.
@@ -85,5 +96,12 @@ namespace States
 		void SubmitChat(const tgui::Callback& _call);
 		Core::ObjectList m_selection;	///< List of currently selected objects
 		bool m_selectionChanged;		///< Update gui only if something changed.
+
+		/// \brief Find the best fitting layer if an object is drawn to the map
+		int AutoDetectLayer( Core::Object* _object );
+
+		/// \brief Search in all visible layers for an object.
+		/// \return An ObjectID or INVALID_ID if nothing could be found
+		Core::ObjectID FindTopmostTile(int _x, int _y);
 	};
 }

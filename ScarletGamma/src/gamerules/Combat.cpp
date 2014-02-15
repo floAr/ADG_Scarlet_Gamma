@@ -8,6 +8,8 @@
 #include "core/World.hpp"
 #include "utils/Exception.hpp"
 #include <jofilelib.hpp>
+#include "states/PlayerState.hpp"
+#include "network/Messenger.hpp"
 
 using namespace GameRules;
 
@@ -81,19 +83,27 @@ void GameRules::Combat::SetTurn( Core::ObjectID _object )
     m_moveActionRemaining = 9.0f;
     try
     {
-        m_moveActionRemaining = (float) object->GetProperty(STR_PROP_SPEED).Evaluate();
+        // Convert value to float, may raise an exception
+        m_moveActionRemaining = std::stof( object->GetProperty(STR_PROP_SPEED).Value().c_str() );
     }
     catch (Exception::NoSuchProperty)
     {
         // No such property? Write it to the chat for master
-        Network::ChatMsg(STR_PROP_SPEED + " von " + object->GetName() + " nicht gefunden. Setze 9 Meter.",
-            sf::Color::Red, true).Send();
+        if (Network::Messenger::IsServer())
+            g_Game->AppendToChatLog( Network::ChatMsg(STR_PROP_SPEED + " von " + object->GetName() +
+            " nicht gefunden. Setze 9 Meter.", sf::Color::Red) );
     }
-    catch (Exception::NotEvaluateable)
+    catch (...)
     {
         // False property? Write it to the chat for master
-        Network::ChatMsg(STR_PROP_SPEED + " von " + object->GetName() + " ist fehlerhaft: "
-            + object->GetProperty(STR_PROP_SPEED).Value() + ". Setze 9 Meter.", sf::Color::Red, true).Send();
+        if (Network::Messenger::IsServer())
+            g_Game->AppendToChatLog( Network::ChatMsg(STR_PROP_SPEED + " von " + object->GetName() +
+            " ist fehlerhaft: " + object->GetProperty(STR_PROP_SPEED).Value() + ". Setze 9 Meter.", sf::Color::Red) );
     }
+
+    // Set view to object if I am a player
+    States::PlayerState* player = dynamic_cast<States::PlayerState*>(g_Game->GetCommonState());
+    if (player)
+        player->SetViewToObject(object);
 
 }

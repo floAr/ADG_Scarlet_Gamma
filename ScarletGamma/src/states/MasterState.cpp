@@ -420,13 +420,6 @@ namespace States {
 				BlendLayer(9);
 			break;
 
-		case sf::Keyboard::C:
-			// If only one object is selected show the character screen. Even
-			// if it has no character properties. GM should know better...
-			if( m_selection.Size() == 1 )
-			g_Game->GetStateMachine()->PushGameState(new CharacterState(&m_selection[0]));
-			break;
-
 			// DEBUGGING COMBAT, TODO: remove
 		case sf::Keyboard::Space:
 			if (sf::Keyboard::isKeyPressed((sf::Keyboard::LControl)))
@@ -473,6 +466,13 @@ namespace States {
 		// This should work only if the GUI didn't handle before
 		switch(key.code)
 		{
+		case sf::Keyboard::C:
+			// If only one object is selected show the character screen. Even
+			// if it has no character properties. GM should know better...
+			if( m_selection.Size() == 1 )
+				g_Game->GetStateMachine()->PushGameState(new CharacterState(&m_selection[0]));
+			break;
+
 		case sf::Keyboard::Delete:
 			// Delete all selected objects from the map(s)
 			for( int i=0; i<m_selection.Size(); ++i )

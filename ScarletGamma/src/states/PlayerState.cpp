@@ -101,7 +101,7 @@ void States::PlayerState::MouseButtonPressed(sf::Event::MouseButtonEvent& button
 		return;
 
 	// Don't interact if focused object cannot be controlled
-	if( !m_focus->IsLocatedOnAMap() ||
+	if( !m_focus->IsLocatedOnAMap() || !m_focus->HasProperty( STR_PROP_OWNER ) ||
 		m_focus->GetProperty( STR_PROP_OWNER ).Value() != m_player->GetName() )
 		return;
 
@@ -219,13 +219,10 @@ void States::PlayerState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 			object = g_Game->GetWorld()->GetNextObservableObject(m_focus->ID(), -1);
 		else
 			object = g_Game->GetWorld()->GetNextObservableObject(m_focus->ID(), 1);
+
 		if(object != nullptr)
-		{
-			m_focus = object;
-			// Always have the current focused element in selection
-			m_selection.Clear();
-			m_selection.Add( object->ID() );
-		}
+			SetViewToObject(object);
+
 		return; } break;
 	}
 
@@ -239,10 +236,6 @@ void States::PlayerState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 	case sf::Keyboard::Numpad0:
 		// Refocus on player
 		m_focus = m_player;
-		break;
-	case sf::Keyboard::Space:
-		// TODO: use selection as target
-		Actions::ActionPool::Instance().StartLocalAction(0, m_player->ID(), 42);
 		break;
 	case sf::Keyboard::LAlt:
 		m_focus = m_player;
@@ -345,27 +338,24 @@ float States::PlayerState::CheckTileVisibility( Core::Map& _map, sf::Vector2i& _
 	return v;
 }
 
-void States::PlayerState::SetViewToHotkey(const int hotkey){
+void States::PlayerState::SetViewToHotkey(const int hotkey)
+{
 	if (m_hotkeys.find(hotkey) == m_hotkeys.end())//return if there is no hotkey
 		return;
 	SetViewToObject(g_Game->GetWorld()->GetObject(m_hotkeys[hotkey]));
 }
 
-void States::PlayerState::SetViewToObject(Core::Object* object){
-	m_focus=object;
-	if(Utils::IStringEqual(object->GetProperty(STR_PROP_OWNER).Value(),m_name))
-	{
-		m_selection.Clear();
-		AddToSelection(object->ID());
-	}
-	else
-	{
-		m_selection.Clear();
-		AddToSelection(m_player->ID());
-	}
+void States::PlayerState::SetViewToObject(Core::Object* object)
+{
+	m_focus = object;
+
+	// Always have the current focused element in selection
+	m_selection.Clear();
+	m_selection.Add( object->ID() );
 }
 
-void States::PlayerState::SetHotkeyToObject(const int hotkey, Core::ObjectID objectID){
+void States::PlayerState::SetHotkeyToObject(const int hotkey, Core::ObjectID objectID)
+{
 	m_hotkeys[hotkey] = objectID;
 }
 

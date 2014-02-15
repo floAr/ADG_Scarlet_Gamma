@@ -11,6 +11,8 @@
 \input{tex/tikzstyles}
 \input{tex/macros}
 
+\usepackage{pdfpages}
+
 %*********************************************************************%
 % META                                                                %
 %*********************************************************************%
@@ -150,6 +152,12 @@
 \bibliography{literature/literature}
 % in a paper, space is limited. use abreviations
 %\bibliography{../literature/IEEEabrv,../literature/MYabrv,../literature/literature}
+
+%*********************************************************************%
+% Dokumente                                                           %
+%*********************************************************************%
+\includepdf[pages=-]{../Fragebogen_A.pdf}
+\includepdf[pages=-]{../Fragebogen_B.pdf}
 
 %*********************************************************************%
 % ERKLÄRUNG                                                           %

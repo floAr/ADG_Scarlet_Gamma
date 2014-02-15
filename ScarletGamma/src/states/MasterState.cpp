@@ -213,13 +213,22 @@ namespace States {
 					tileX, tileY,
 					m_modeTool->Brush()->GetLayer(),
 					m_modeTool->Brush()->GetMode() );
-			}
+			} else
 			if( m_modeTool->GetMode() == Interfaces::ModeToolbox::SELECTION )
 			{
 				// Start rect-selection
 				m_rectSelectionStart.x = tileX;
 				m_rectSelectionStart.y = tileY;
 				m_rectSelection = true;
+			} else {	// Mode ACTION
+				// Start drag&drop with the topmost visible tile
+				ObjectID topmostObject = FindTopmostTile(tileX, tileY);
+				if( topmostObject != INVALID_ID ) {
+					if( !m_draggedContent ) m_draggedContent = new Interfaces::DragContent();
+					m_draggedContent->from = Interfaces::DragContent::MAP;
+					m_draggedContent->object = g_Game->GetWorld()->GetObject(topmostObject);
+					m_draggedContent->prop = nullptr;
+				}
 			}
 			break; }
 		case sf::Mouse::Right: {
@@ -288,6 +297,10 @@ namespace States {
 						m_draggedContent->prop->RemoveObject(m_draggedContent->object->ID());
 						// Insert into map
 						GetCurrentMap()->Add( m_draggedContent->object->ID(), x, y, AutoDetectLayer(m_draggedContent->object) );
+					} else if( m_draggedContent->from == Interfaces::DragContent::MAP )
+					{
+						// Insert into map
+						GetCurrentMap()->SetObjectPosition( m_draggedContent->object, sf::Vector2f((float)x,(float)y) );
 					}
 				}
 			}
@@ -303,24 +316,12 @@ namespace States {
 				m_selection.Clear();
 
 			sf::Vector2i tile((int)floor(tilePos.x), (int)floor(tilePos.y));
-			// The cursor did not leave the tile -> interpret asa click only it time was also short
+			// The cursor did not leave the tile -> interpret as a click only if time was also short
 			if( tile.x==m_rectSelectionStart.x && tile.y==m_rectSelectionStart.y && time < 0.4f)
 			{
 				// Take only the topmost visible tile
-				auto& objectList = GetCurrentMap()->GetObjectsAt((int)tilePos.x, (int)tilePos.y);
-				ObjectID topmostObject = 0xffffffff;
-				int maxLayer = -1000;
-				for (int i = objectList.Size()-1; i >= 0; --i)
-				{
-					// If object is not on hidden layer it is worth a closer look
-					int layer = g_Game->GetWorld()->GetObject(objectList[i])->GetLayer();
-					if( !m_hiddenLayers[layer] && layer > maxLayer )
-					{
-						topmostObject = objectList[i];
-						maxLayer = layer;
-					}
-				}
-				if( topmostObject != 0xffffffff )
+				ObjectID topmostObject = FindTopmostTile(tile.x, tile.y);
+				if( topmostObject != INVALID_ID )
 					AddToSelection(topmostObject);
 			} else {
 				int minX,minY,maxX,maxY;
@@ -589,6 +590,27 @@ namespace States {
 		// Search the topmost visible layer
 		for( int i = 9; i >= 0; --i )
 			if( IsLayerVisible(i) ) return i;
+
+		return 9;
+	}
+
+
+	Core::ObjectID MasterState::FindTopmostTile(int _x, int _y)
+	{
+		auto& objectList = GetCurrentMap()->GetObjectsAt(_x, _y);
+		ObjectID topmostObject = INVALID_ID;
+		int maxLayer = -1000;
+		for (int i = objectList.Size()-1; i >= 0; --i)
+		{
+			// If object is not on hidden layer it is worth a closer look
+			int layer = g_Game->GetWorld()->GetObject(objectList[i])->GetLayer();
+			if( !m_hiddenLayers[layer] && layer > maxLayer )
+			{
+				topmostObject = objectList[i];
+				maxLayer = layer;
+			}
+		}
+		return topmostObject;
 	}
 
 }// namespace States

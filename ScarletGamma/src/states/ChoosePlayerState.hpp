@@ -27,7 +27,7 @@ namespace States
 		tgui::Gui   m_gui;
 
 		/// \brief If a new player is created the object is stored otherwise
-		///		it is 0xffffffff.
+		///		it is INVALID_ID.
 		Core::ObjectID m_newPlayer;
 	};
 }

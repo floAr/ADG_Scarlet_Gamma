@@ -80,5 +80,9 @@ namespace States
 
 		/// \brief Find the best fitting layer if an object is drawn to the map
 		int AutoDetectLayer( Core::Object* _object );
+
+		/// \brief Search in all visible layers for an object.
+		/// \return An ObjectID or INVALID_ID if nothing could be found
+		Core::ObjectID FindTopmostTile(int _x, int _y);
 	};
 }

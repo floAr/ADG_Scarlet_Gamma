@@ -69,7 +69,7 @@ void PropertyPanel::Init( float _x, float _y, float _w, float _h,
 		m_basicScrollBar = tgui::Scrollbar::Ptr();
 		m_basicScrollBar->load("media/Black.conf");
 		m_basicScrollBar->setAutoHide(false);
-		m_basicScrollBar->setCallbackId(0xffffffff);
+		m_basicScrollBar->setCallbackId(Core::INVALID_ID);
 		m_basicScrollBar->setMaximum(0);
 
 		m_basicMiniMaxi = tgui::AnimatedPicture::Ptr();

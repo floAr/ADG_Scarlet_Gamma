@@ -30,7 +30,7 @@ namespace Interfaces {
 		void Show( const sf::Vector2f& _position, const std::vector<ObjInfo>& _objects );
 
 		/// \brief Find out if one of the buttons is below th position
-		/// \return 0xffffffff on failure otherwise the callback id given during creation.
+		/// \return INVALID_ID on failure otherwise the callback id given during creation.
 		Core::ObjectID GetClickedItem(float _x, float _y);
 	private:
 		/// \brief A list of the created buttons to remove them from gui.

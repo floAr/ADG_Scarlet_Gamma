@@ -7,6 +7,7 @@
 #include "LaunchPlayerState.hpp"
 #include "ActionState.hpp"
 #include "PromptState.hpp"
+#include "DismissableDialogState.hpp"
 
 States::StateMachine::StateMachine() :
     m_gameState(0)
@@ -82,6 +83,10 @@ States::GameState* States::StateMachine::PushGameState(States::GameStateType sta
         break;
     case GST_PROMPT:
         newState = new States::PromptState();
+		break;
+    case GST_DISMISS:
+        newState = new States::DismissableDialogState();
+		break;
     }
 
     assert(newState && "StateMachine::PushGameState returned 0, didn't you add your enum?");

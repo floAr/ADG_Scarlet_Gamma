@@ -215,6 +215,9 @@
     <ClCompile Include="src\actions\UseSwitch.cpp">
       <Filter>Quelldateien\actions</Filter>
     </ClCompile>
+    <ClCompile Include="src\states\DismissableDialogState.cpp">
+      <Filter>Quelldateien\states</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\core\Map.hpp">
@@ -396,6 +399,9 @@
     </ClInclude>
     <ClInclude Include="src\actions\UseSwitch.hpp">
       <Filter>Quelldateien\actions</Filter>
+    </ClInclude>
+    <ClInclude Include="src\states\DismissableDialogState.hpp">
+      <Filter>Quelldateien\states</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

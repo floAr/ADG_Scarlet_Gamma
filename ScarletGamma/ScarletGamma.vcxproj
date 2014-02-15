@@ -121,6 +121,7 @@
     <ClCompile Include="src\states\ActionState.cpp" />
     <ClCompile Include="src\states\ChoosePlayerState.cpp" />
     <ClCompile Include="src\states\CommonState.cpp" />
+    <ClCompile Include="src\states\DismissableDialogState.cpp" />
     <ClCompile Include="src\states\GameState.cpp" />
     <ClCompile Include="src\states\IntroState.cpp" />
     <ClCompile Include="src\states\LaunchMasterState.cpp" />
@@ -186,6 +187,7 @@
     <ClInclude Include="src\states\ActionState.hpp" />
     <ClInclude Include="src\states\ChoosePlayerState.hpp" />
     <ClInclude Include="src\states\CommonState.hpp" />
+    <ClInclude Include="src\states\DismissableDialogState.hpp" />
     <ClInclude Include="src\states\GameState.hpp" />
     <ClInclude Include="src\states\IntroState.hpp" />
     <ClInclude Include="src\states\LaunchMasterState.hpp" />

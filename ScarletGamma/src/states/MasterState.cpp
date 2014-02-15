@@ -16,6 +16,7 @@
 #include "GameRules/MasterCombat.hpp"
 #include "states/PromptState.hpp"
 #include "NewPlayerState.hpp"
+#include "DismissableDialogState.hpp"
 
 using namespace Core;
 
@@ -457,6 +458,10 @@ namespace States {
 			//	gs->ConfigurePromp("Das ist dein toller Text",false);
 			//	gs->AddButton("testbutton",std::bind(&MasterState::TestButtonCallback,this,std::placeholders::_1),sf::Vector2f(212,460));
 			//	break;
+
+		case sf::Keyboard::D:
+			DismissableDialogState* gs=dynamic_cast<DismissableDialogState*>(g_Game->GetStateMachine()->PushGameState(GST_DISMISS));
+			break;
 		}
 		// Return if the GUI already handled it
 		if (guiHandled)

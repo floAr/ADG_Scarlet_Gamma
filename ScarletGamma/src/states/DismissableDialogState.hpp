@@ -133,11 +133,19 @@ namespace States
 		}
 
 		virtual void Resize(const sf::Vector2f& _size);
+		/// \brief adds a new minimized Orb
+		static void AddOrb(sf::Sprite* _orb);
+
+		/// \brief removes a minimized orb
+		static void RemoveOrb(sf::Sprite* _orb);
 
 	private:
 		bool m_isMinimized;		///< Indicates wether the state is currently minimized
 		sf::Sprite m_minimize;	///< Sprite to start the minimize process
 		sf::Sprite m_orb;		///< Sprite shown when minimized
+		int m_orbID;			///< index of the minimized orb
+		static std::vector<sf::Sprite*> ms_orbs;	///< List of currently minimized orbs
 
+		static void RecalculateOrbPositions();
 	};
 }

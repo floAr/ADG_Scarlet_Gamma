@@ -2,11 +2,14 @@
 #include "utils/Content.hpp"
 #include "Game.hpp"
 #include "sfutils\View.hpp"
+#include <algorithm>
 
 namespace States{
 
+	std::vector<sf::Sprite*> DismissableDialogState::ms_orbs;
+
 	DismissableDialogState::DismissableDialogState():m_isMinimized(false),m_orb(Content::Instance()->LoadTexture("media/orb.png")),m_minimize(Content::Instance()->LoadTexture("media/orb_diceroll.png")){
-		auto vp  =g_Game->GetWindow().getView().getSize();			
+		auto vp = g_Game->GetWindow().getView().getSize();			
 		m_minimize.setPosition(sf::Vector2f(vp.x-m_minimize.getGlobalBounds().width,0));
 		m_minimize.setScale(sf::Vector2f(0.15f,0.15f));
 		m_orb.setScale(sf::Vector2f(0.25f,0.25f));
@@ -54,6 +57,10 @@ namespace States{
 				button.y < bounds.top+bounds.height) //click on sprite
 			{
 				m_isMinimized=!m_isMinimized;
+				if(m_isMinimized)
+					DismissableDialogState::AddOrb(&m_orb);
+				else
+					DismissableDialogState::RemoveOrb(&m_orb);
 			}
 			else //no orb was clicked -> pass click down
 				m_previousState->MouseButtonReleased(button,tilePos,time,guiHandled);
@@ -67,5 +74,23 @@ namespace States{
 		auto vp  =g_Game->GetWindow().getView().getSize();			
 		m_minimize.setPosition(sf::Vector2f(vp.x-m_minimize.getGlobalBounds().width,0));
 	}
+
+	void DismissableDialogState::AddOrb(sf::Sprite* _orb){
+		DismissableDialogState::ms_orbs.push_back(_orb);
+		DismissableDialogState::RecalculateOrbPositions();
+	}
+
+	void DismissableDialogState::RemoveOrb(sf::Sprite* _orb){
+
+		auto it=std::find(DismissableDialogState::ms_orbs.begin(),DismissableDialogState::ms_orbs.end(),_orb);
+		DismissableDialogState::ms_orbs.erase(it);
+		RecalculateOrbPositions();
+	}
+
+	void DismissableDialogState::RecalculateOrbPositions(){
+
+	}
+
+
 
 }

@@ -305,13 +305,18 @@ namespace Core {
 
 	Object* World::GetNextObservableObject(ObjectID _currentID, int _direction)
 	{
-		if( m_ownedObjects.empty() ) return nullptr;
+		if( m_ownedObjects.empty()) return nullptr;
 
 		assert( _direction == -1 || _direction == 1 );
 		size_t currentIndex = std::find(m_ownedObjects.begin(), m_ownedObjects.end(), _currentID) - m_ownedObjects.begin();
 		size_t next = currentIndex + _direction;
 		next = (next + m_ownedObjects.size()) % m_ownedObjects.size();
-		return GetObject( m_ownedObjects[next] );
+		auto o= GetObject( m_ownedObjects[next] );
+		if(o->IsLocatedOnAMap())
+			return o;
+		else
+			return nullptr;
+
 	}
 
 	void World::RegisterObject(Object* _object)

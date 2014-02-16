@@ -260,12 +260,13 @@ void PropertyPanel::RemoveBtn(const tgui::Callback& _call)
 	
 void PropertyPanel::Remove( unsigned _line )
 {
+	m_listContainer->unfocusWidgets();
+
 	int posY = (int)m_lines[_line].left->getPosition().y;
 	int minY = posY, maxY = posY + (int)m_lines[_line].left->getSize().y;
 
 	// First element is always the scrollbar
 	auto& widgets = m_listContainer->getWidgets();
-	m_listContainer->unfocusWidgets();
 	for( size_t i=1; i<widgets.size(); ++i )
 	{
 		// Search and destroy
@@ -672,6 +673,8 @@ void PropertyPanel::Show( Core::World* _world, const Core::ObjectList& _objects 
 
 void PropertyPanel::Clear()
 {
+	m_listContainer->unfocusWidgets();
+
 	if( m_scrollBar != nullptr )
 		m_listContainer->getWidgets().erase( m_listContainer->getWidgets().begin() + 1, m_listContainer->getWidgets().end() );
 	else m_listContainer->getWidgets().erase( m_listContainer->getWidgets().begin(), m_listContainer->getWidgets().end() );
@@ -684,8 +687,6 @@ void PropertyPanel::RefreshFilter()
 {
 	if(IsMinimized()) return;
 
-	m_listContainer->unfocusWidgets();
-	
 	if( m_objects.size() == 0 ) { Clear(); return; }
 
 	// Get all possible properties from the first object
@@ -752,6 +753,8 @@ void PropertyPanel::RefreshFilter()
 
 void PropertyPanel::AddLine( unsigned _line, const Core::Property* _property )
 {
+	m_listContainer->unfocusWidgets();
+
 	Add( _property->Name(), _property->CanChange(m_player),
 		_property->Value(), _property->CanEdit(m_player) );
 
@@ -797,6 +800,7 @@ void PropertyPanel::RefreshLine( unsigned _line, const Core::Property* _property
 						subNode->RefreshFilter();
 						tmpObjects.Remove( subNode->m_objects[0]->ID() );
 					} else { // Delete
+						m_listContainer->unfocusWidgets();
 						// Kick only the node - the line is still there.
 						Resize( -(int)widgets[i]->getSize().y, (int)widgets[i]->getPosition().y );
 						widgets.erase( widgets.begin() + i );

@@ -5,6 +5,7 @@
 #include "core/Object.hpp"
 #include "sfutils/View.hpp"
 #include "Game.hpp"
+#include "states/CommonState.hpp"
 #include "Constants.hpp"
 #include <cmath>
 #include <iostream>
@@ -107,17 +108,17 @@ void Graphics::TileRenderer::RenderPath( sf::RenderWindow& window, const std::ve
 	}
 }
 
-void Graphics::TileRenderer::RenderSelection( sf::RenderWindow& _window, const Core::ObjectList& _selection, bool _controllable )
+void Graphics::TileRenderer::RenderSelection( sf::RenderWindow& _window, const Core::ObjectList& _selection )
 {
 	const sf::Texture& tex = Content::Instance()->LoadTexture("media/selected.png");
 	sf::Sprite drawSprite(tex);
-	if (_controllable)
-		drawSprite.setColor(sf::Color::Yellow);
-	else
-		drawSprite.setColor(sf::Color(128, 128, 128, 255));
 	for( int i=0; i<_selection.Size(); ++i )
 	{
 		Core::Object* obj = g_Game->GetWorld()->GetObject( _selection[i] );
+		if (g_Game->GetCommonState()->OwnsObject(_selection[i]))
+			drawSprite.setColor(sf::Color::Yellow);
+		else
+			drawSprite.setColor(sf::Color(128, 128, 128, 255));
 		drawSprite.setPosition(obj->GetPosition() * float(TILESIZE));
 		drawSprite.setScale(float(TILESIZE)/tex.getSize().x, float(TILESIZE)/tex.getSize().y);
 		_window.draw(drawSprite);

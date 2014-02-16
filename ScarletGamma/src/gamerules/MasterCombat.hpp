@@ -28,6 +28,12 @@ namespace GameRules
         /// \brief Sets the object whose turn it is next.
         virtual void SetTurn(Core::ObjectID _object) override;
 
+        /// \brief Called when a request to end the current turn is received.
+        void ReceivedTurnEnded();
+
+        /// \brief Sets the next combattant's turn.
+        virtual void EndTurn() override;
+
     protected:
         /// \brief Keeps the initiative for each combat participant.
         std::unordered_map<Core::ObjectID, int> m_initiatives;

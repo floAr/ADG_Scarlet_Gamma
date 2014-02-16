@@ -79,6 +79,10 @@ size_t Network::HandleCombatMessage(const uint8_t* _data, size_t _size, uint8_t 
             g_Game->GetCommonState()->GetCombat()->SetTurn(object);
         } break;
 
+    case CombatMsgType::PL_END_TURN:
+        dynamic_cast<GameRules::MasterCombat*>(g_Game->GetCommonState()->GetCombat())->ReceivedTurnEnded();
+        break;
+
     case CombatMsgType::DM_COMBAT_END:
         g_Game->GetCommonState()->EndCombat();
         break;

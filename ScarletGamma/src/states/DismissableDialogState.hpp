@@ -41,7 +41,7 @@ namespace States
 
 
 		// pass everything else downward when minimized
-				virtual void TextEntered(char character, bool guiHandled){
+		virtual void TextEntered(char character, bool guiHandled){
 			if(m_isMinimized){
 				m_previousState->TextEntered(character,guiHandled);
 				return;
@@ -120,31 +120,15 @@ namespace States
 			}
 		}
 
-
-		/// \brief Handles all GUI callbacks that have occurred since the last frame-
-		void GuiHandleCallbacks(){
-			if(m_isMinimized){
-				m_previousState->GuiHandleCallbacks();
-				return;
-			}
-		}
-
-
 		/// \brief Forwards an event to the GUI to be handled.
 		/// \param [in] event  Event information from SFML.
 		/// \return false if the event was ignored.
-		bool GuiHandleEvent(sf::Event& event) {
-			if(m_isMinimized){
+		virtual bool GuiHandleEvent(sf::Event& event) override
+		{
+			if (m_isMinimized)
 				return m_previousState->GuiHandleEvent(event);
-			}
-		}
-
-		/// \brief Draws the current GUI.
-		void GuiDraw() {
-			if(m_isMinimized){
-				m_previousState->GuiDraw();				
-				return;
-			}
+			else
+				return GameState::GuiHandleEvent(event);
 		}
 
 		virtual void Resize(const sf::Vector2f& _size) {

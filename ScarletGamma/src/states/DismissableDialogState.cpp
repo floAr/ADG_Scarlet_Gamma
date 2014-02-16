@@ -19,8 +19,8 @@ namespace States{
 	}
 
 	void DismissableDialogState::Draw(sf::RenderWindow& win) {
+		m_previousState->Draw(win);// draw prev state
 		if(m_isMinimized){//break this chain if minimized
-			m_previousState->Draw(win);// draw prev state
 			win.draw(m_orb); //overlay orb
 			return;
 		}

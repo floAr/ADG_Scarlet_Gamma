@@ -143,7 +143,7 @@ namespace States
 		/// \brief Forwards an event to the GUI to be handled.
 		/// \param [in] event  Event information from SFML.
 		/// \return false if the event was ignored.
-		bool GuiHandleEvent(sf::Event& event);
+		virtual bool GuiHandleEvent(sf::Event& event);
 
 		/// \brief Draws the current GUI.
 		void GuiDraw();

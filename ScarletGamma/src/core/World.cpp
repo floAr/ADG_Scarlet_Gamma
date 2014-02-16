@@ -243,7 +243,7 @@ namespace Core {
 		return GetObject(m_players[_id]);
 	}
 
-	
+
 
 	std::vector<ObjectID> World::FilterObjectsByName( const std::string& _text ) const
 	{
@@ -255,7 +255,7 @@ namespace Core {
 			// Test if the name contains the correct part
 			if( Utils::IStringContains(it->second.GetName(), _text) )
 				// Add reference to output
-				results.push_back( it->second.ID() );
+					results.push_back( it->second.ID() );
 		}
 		return results;
 	}
@@ -306,16 +306,17 @@ namespace Core {
 	Object* World::GetNextObservableObject(ObjectID _currentID, int _direction)
 	{
 		if( m_ownedObjects.empty()) return nullptr;
-
 		assert( _direction == -1 || _direction == 1 );
 		size_t currentIndex = std::find(m_ownedObjects.begin(), m_ownedObjects.end(), _currentID) - m_ownedObjects.begin();
-		size_t next = currentIndex + _direction;
-		next = (next + m_ownedObjects.size()) % m_ownedObjects.size();
-		auto o= GetObject( m_ownedObjects[next] );
+			
+find_object:
+		currentIndex = currentIndex + _direction;
+		currentIndex = (currentIndex + m_ownedObjects.size()) % m_ownedObjects.size();
+		auto o= GetObject( m_ownedObjects[currentIndex] );
 		if(o->IsLocatedOnAMap())
 			return o;
 		else
-			return nullptr;
+			goto find_object;
 
 	}
 
@@ -334,7 +335,7 @@ namespace Core {
 						m_players.erase(it);
 						break;
 					}
-			m_players[id] = _object->ID();
+					m_players[id] = _object->ID();
 		}
 		// Test object if it has an owner and add it.
 		if( _object->HasProperty( STR_PROP_OWNER ) )
@@ -466,11 +467,11 @@ namespace Core {
 		Object* object;
 
 #		define NewModule(name)				\
-			OID = NewObject( STR_EMPTY );	\
-			m_moduleTemplates.Add( OID );	\
-			object = GetObject( OID );		\
-			object->Add( PROPERTY::NAME ).SetValue( name );	\
-			object->GetProperty( STR_PROP_SPRITE ).SetRights( Property::R_SYSTEMONLY );	// Hide the sprite property
+	OID = NewObject( STR_EMPTY );	\
+	m_moduleTemplates.Add( OID );	\
+	object = GetObject( OID );		\
+	object->Add( PROPERTY::NAME ).SetValue( name );	\
+	object->GetProperty( STR_PROP_SPRITE ).SetRights( Property::R_SYSTEMONLY );	// Hide the sprite property
 
 		NewModule( STR_ATTACKABLE );
 		object->Add( PROPERTY::HEALTH );

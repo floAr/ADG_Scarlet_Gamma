@@ -120,6 +120,7 @@ namespace States
 			}
 		}
 
+
 		/// \brief Forwards an event to the GUI to be handled.
 		/// \param [in] event  Event information from SFML.
 		/// \return false if the event was ignored.
@@ -131,14 +132,7 @@ namespace States
 				return GameState::GuiHandleEvent(event);
 		}
 
-		virtual void Resize(const sf::Vector2f& _size) {
-			if(m_isMinimized){
-				m_previousState->Resize(_size);
-				
-				return;
-			}
-		}
-
+		virtual void Resize(const sf::Vector2f& _size);
 
 	private:
 		bool m_isMinimized;		///< Indicates wether the state is currently minimized

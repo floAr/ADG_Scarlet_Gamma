@@ -54,6 +54,26 @@ void GameRules::MasterCombat::StartCombat()
         SetTurn(m_participants.front());
 }
 
+void GameRules::MasterCombat::ReceivedTurnEnded()
+{
+	// Get current object, and increment it
+	auto it = std::find(m_participants.begin(), m_participants.end(), m_currentObject);
+	it++;
+
+	if (it == m_participants.end())
+		it = m_participants.begin();
+
+	// Set it's turn, also notifies players
+	SetTurn(*it);
+}
+
+void GameRules::MasterCombat::EndTurn()
+{
+	// Call it locally
+	if ( g_Game->GetCommonState()->OwnsObject(m_currentObject) )
+		ReceivedTurnEnded();
+}
+
 void MasterCombat::ReceivedInitiative( Core::ObjectID _object, std::string& _initiative )
 {
     // Save initiative value

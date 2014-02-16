@@ -27,6 +27,9 @@ namespace GameRules
         /// \brief Is called when it is a combattant's turn.
         virtual void SetTurn( Core::ObjectID _object );
 
+        /// \brief I'm done, end my turn.
+        virtual void EndTurn();
+
         /// \brief Returns true if the action can still be used in this round.
         bool CanUse(Actions::Duration _duration) const;
 

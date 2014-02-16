@@ -124,6 +124,13 @@ void CommonState::KeyPressed( sf::Event::KeyEvent& key, bool guiHandled )
 	switch(key.code)
 	{
 	case sf::Keyboard::Return: {
+		// TODO: remove, only for combat testing
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) && m_combat)
+		{
+			m_combat->EndTurn();
+			break;
+		}
+
 		// Show message input field if not visible or submit message.
 		tgui::EditBox::Ptr enterTextEdit = m_gui.get( "EnterText" );
 		if( !enterTextEdit->isVisible() )

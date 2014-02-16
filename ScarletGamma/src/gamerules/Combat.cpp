@@ -74,6 +74,8 @@ void GameRules::Combat::SetTurn( Core::ObjectID _object )
     }
 
     m_currentObject = _object;
+    g_Game->AppendToChatLog( Network::ChatMsg(object->GetName() + " ist am Zug.", sf::Color::White) );
+
 
     // Reset combat round values
     m_fiveFootStepRemaining = true;
@@ -138,4 +140,11 @@ bool GameRules::Combat::CanUse( Actions::Duration _duration ) const
 float GameRules::Combat::GetRemainingSteps() const
 {
     return m_moveActionStepsLeft;
+}
+
+void GameRules::Combat::EndTurn()
+{
+    // Send message to the GM
+    if ( g_Game->GetCommonState()->OwnsObject(m_currentObject) )
+        Network::CombatMsg(Network::CombatMsgType::PL_END_TURN).Send();
 }

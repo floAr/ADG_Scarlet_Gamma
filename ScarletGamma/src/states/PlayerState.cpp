@@ -86,7 +86,7 @@ void States::PlayerState::Draw(sf::RenderWindow& win)
 
 void States::PlayerState::MouseMoved(int deltaX, int deltaY, bool guiHandled)
 {
-    // TODO: update default action!
+	// TODO: update default action!
 
 	// Don't react to any key if gui handled it
 	if (guiHandled)
@@ -101,7 +101,7 @@ void States::PlayerState::MouseButtonPressed(sf::Event::MouseButtonEvent& button
 		return;
 
 	// Don't interact if focused object cannot be controlled
-	if( !m_focus->IsLocatedOnAMap() ||
+	if( !m_focus->IsLocatedOnAMap() || !m_focus->HasProperty( STR_PROP_OWNER ) ||
 		m_focus->GetProperty( STR_PROP_OWNER ).Value() != m_player->GetName() )
 		return;
 
@@ -210,19 +210,20 @@ void States::PlayerState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 	// Pre-GUI Tabbing to prevent loosing focus (focus tabbing of gui cannot be
 	// deactivated.
 	case sf::Keyboard::Tab: {
+		// not allowed in combat
+		if (m_combat)
+			break;
+
 		Core::Object* object;
 		if( sf::Keyboard::isKeyPressed( sf::Keyboard::LShift ) )
 			object = g_Game->GetWorld()->GetNextObservableObject(m_focus->ID(), -1);
 		else
 			object = g_Game->GetWorld()->GetNextObservableObject(m_focus->ID(), 1);
+
 		if(object != nullptr)
-		{
-			m_focus = object;
-			// Always have the current focused element in selection
-			m_selection.Clear();
-			m_selection.Add( object->ID() );
-		}
-		return; }
+			SetViewToObject(object);
+
+		return; } break;
 	}
 
 	// Don't react to any key if gui handled it
@@ -235,10 +236,6 @@ void States::PlayerState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 	case sf::Keyboard::Numpad0:
 		// Refocus on player
 		m_focus = m_player;
-		break;
-	case sf::Keyboard::Space:
-		// TODO: use selection as target
-		Actions::ActionPool::Instance().StartLocalAction(0, m_player->ID(), 42);
 		break;
 	case sf::Keyboard::LAlt:
 		m_focus = m_player;
@@ -341,43 +338,48 @@ float States::PlayerState::CheckTileVisibility( Core::Map& _map, sf::Vector2i& _
 	return v;
 }
 
-void States::PlayerState::SetViewToHotkey(const int hotkey){
+void States::PlayerState::SetViewToHotkey(const int hotkey)
+{
 	if (m_hotkeys.find(hotkey) == m_hotkeys.end())//return if there is no hotkey
 		return;
 	SetViewToObject(g_Game->GetWorld()->GetObject(m_hotkeys[hotkey]));
 }
 
-void States::PlayerState::SetViewToObject(Core::Object* object){
-	m_focus=object;
-	if(Utils::IStringEqual(object->GetProperty(STR_PROP_OWNER).Value(),m_name))
-	{
-		m_selection.Clear();
-		AddToSelection(object->ID());
-	}
-	else
-	{
-		m_selection.Clear();
-		AddToSelection(m_player->ID());
-	}
+void States::PlayerState::SetViewToObject(Core::Object* object)
+{
+	m_focus = object;
+
+	// Always have the current focused element in selection
+	m_selection.Clear();
+	m_selection.Add( object->ID() );
 }
 
-void States::PlayerState::SetHotkeyToObject(const int hotkey, Core::ObjectID objectID){
+void States::PlayerState::SetHotkeyToObject(const int hotkey, Core::ObjectID objectID)
+{
 	m_hotkeys[hotkey] = objectID;
 }
 
-void States::PlayerState::BeginCombat( Core::ObjectID _object )
+void States::PlayerState::CreateCombat( Core::ObjectID _object )
 {
-	// Find the object
-	Core::Object* object = g_Game->GetWorld()->GetObject(_object);
-
 	// Does this object belong to me?
-	if (object->HasProperty(STR_PROP_OWNER) && object->GetProperty(STR_PROP_OWNER).Value() == m_name)
+	if ( this->OwnsObject(_object) )
 	{
 		// Maybe create a new Combat object
-		if (!m_combat)
+		if ( !m_combat )
 			m_combat = new GameRules::Combat();
 
 		// Prompt for initiative roll
 		m_combat->PushInitiativePrompt(_object);
 	}
+}
+
+bool States::PlayerState::OwnsObject( Core::ObjectID _object )
+{
+	// Find the object
+	Core::Object* object = g_Game->GetWorld()->GetObject(_object);
+
+	// True only if the object is found, has an owner and that owner is me
+	return object != 0
+		&& object->HasProperty(STR_PROP_OWNER)
+		&& object->GetProperty(STR_PROP_OWNER).Value() == m_name;
 }

@@ -16,7 +16,7 @@ namespace Actions
 		/// \brief The actual code which is doing something.
 		/// \details This method is public static because many other actions
 		///		require a WalkTo before being applied.
-		static void Perform(Core::ObjectID _executor, Core::ObjectID _target);
+		static void Perform(Core::ObjectID _executor, Core::ObjectID _target, bool _append = false);
 
 		/// \brief Immediately end this action
 		virtual bool Update() override { return true; }

@@ -107,11 +107,14 @@ void Graphics::TileRenderer::RenderPath( sf::RenderWindow& window, const std::ve
 	}
 }
 
-void Graphics::TileRenderer::RenderSelection( sf::RenderWindow& _window, const Core::ObjectList& _selection )
+void Graphics::TileRenderer::RenderSelection( sf::RenderWindow& _window, const Core::ObjectList& _selection, bool _controllable )
 {
 	const sf::Texture& tex = Content::Instance()->LoadTexture("media/selected.png");
 	sf::Sprite drawSprite(tex);
-	drawSprite.setColor(sf::Color(255, 255, 1, 255));
+	if (_controllable)
+		drawSprite.setColor(sf::Color::Yellow);
+	else
+		drawSprite.setColor(sf::Color(128, 128, 128, 255));
 	for( int i=0; i<_selection.Size(); ++i )
 	{
 		Core::Object* obj = g_Game->GetWorld()->GetObject( _selection[i] );

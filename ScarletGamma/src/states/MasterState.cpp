@@ -17,6 +17,7 @@
 #include "states/PromptState.hpp"
 #include "NewPlayerState.hpp"
 #include "DismissableDialogState.hpp"
+#include "actions/ActionPool.hpp"
 
 using namespace Core;
 
@@ -224,6 +225,19 @@ namespace States {
 					m_draggedContent->object = g_Game->GetWorld()->GetObject(topmostObject);
 					m_draggedContent->prop = nullptr;
 				}
+
+				// Default action
+				if (m_selection.Size() > 0)
+				{
+					auto& tiles = GetCurrentMap()->GetObjectsAt(tileX,tileY);
+					if( tiles.Size() > 0 )
+					{
+						Core::Object* object = g_Game->GetWorld()->GetObject(tiles[tiles.Size()-1]);
+						Actions::ActionPool::Instance().UpdateDefaultAction(m_selection, object);
+						for (int i=0; i < m_selection.Size(); ++i)
+							Actions::ActionPool::Instance().StartDefaultAction(m_selection[i], object->ID());
+					}
+				}
 			}
 			break; }
 		case sf::Mouse::Right: {
@@ -420,23 +434,28 @@ namespace States {
 				BlendLayer(9);
 			break;
 
-		case sf::Keyboard::C:
-			// If only one object is selected show the character screen. Even
-			// if it has no character properties. GM should know better...
-			if( m_selection.Size() == 1 )
-			g_Game->GetStateMachine()->PushGameState(new CharacterState(&m_selection[0]));
-			break;
-
 			// DEBUGGING COMBAT, TODO: remove
 		case sf::Keyboard::Space:
 			if (sf::Keyboard::isKeyPressed((sf::Keyboard::LControl)))
 			{
-				m_combat = new GameRules::MasterCombat();
-                Core::World* world = g_Game->GetWorld();
-                for( int i=0; i<m_selection.Size(); ++i )
+                // TODO: proper keys for creating, starting and ending combat
+
+                if (!m_combat)
                 {
-                    // Add participant to combat
-                    static_cast<GameRules::MasterCombat*>(m_combat)->AddParticipant(m_selection[i]);
+                    // Create a combat and add participants
+                    m_combat = new GameRules::MasterCombat();
+                    Core::World* world = g_Game->GetWorld();
+                    for( int i=0; i<m_selection.Size(); ++i )
+                    {
+                        // Add participant to combat
+                        static_cast<GameRules::MasterCombat*>(m_combat)->AddParticipant(m_selection[i]);
+                    }
+                }
+                else
+                {
+                    // Set the first combattant's turn
+                    assert(dynamic_cast<GameRules::MasterCombat*>(m_combat));
+                    dynamic_cast<GameRules::MasterCombat*>(m_combat)->StartCombat();
                 }
 			}
 			break;
@@ -461,6 +480,13 @@ namespace States {
 		// This should work only if the GUI didn't handle before
 		switch(key.code)
 		{
+		case sf::Keyboard::C:
+			// If only one object is selected show the character screen. Even
+			// if it has no character properties. GM should know better...
+			if( m_selection.Size() == 1 )
+				g_Game->GetStateMachine()->PushGameState(new CharacterState(&m_selection[0]));
+			break;
+
 		case sf::Keyboard::Delete:
 			// Delete all selected objects from the map(s)
 			for( int i=0; i<m_selection.Size(); ++i )
@@ -532,6 +558,10 @@ namespace States {
 	{
 		CommonState::MouseMoved(deltaX, deltaY, guiHandled);
 
+		// If not in action mode, reset the default action
+		if (m_modeTool->GetMode() != Interfaces::ModeToolbox::ACTION)
+			Actions::ActionPool::Instance().UpdateDefaultAction(m_selection, 0);
+
 		// Don't react to any key if gui handled it
 		if (guiHandled)
 			return;
@@ -555,7 +585,7 @@ namespace States {
 		return g_Game->GetWorld()->GetMap(id);
 	}
 
-    void MasterState::BeginCombat( Core::ObjectID _object )
+    void MasterState::CreateCombat( Core::ObjectID _object )
     {
         // Find the object
         Core::Object* object = g_Game->GetWorld()->GetObject(_object);
@@ -570,6 +600,16 @@ namespace States {
             // Prompt for initiative roll
             m_combat->PushInitiativePrompt(_object);
         }
+    }
+
+    bool MasterState::OwnsObject( Core::ObjectID _object )
+    {
+        // Find the object
+        Core::Object* object = g_Game->GetWorld()->GetObject(_object);
+
+        // True only if the object is found and has no owner at all.
+        return object != 0
+            && object->HasProperty(STR_PROP_OWNER) == false;
     }
 
 }// namespace States

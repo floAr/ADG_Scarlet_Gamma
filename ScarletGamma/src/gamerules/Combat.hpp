@@ -20,9 +20,10 @@ namespace GameRules
         ///     as reference object for property values.
         void PushInitiativePrompt(Core::ObjectID _object);
 
-        // \brief Is called when the initiative roll is accepted.
+        /// \brief Is called when the initiative roll is accepted.
         virtual void InitiativeRollPromptFinished(States::GameState* _ps, Core::ObjectID _object);
 
+        /// \brief Is called when it is a combattant's turn.
         virtual void SetTurn( Core::ObjectID _object );
 
     protected:
@@ -32,6 +33,17 @@ namespace GameRules
         /// \brief The object whose turn it currently is.
         Core::ObjectID m_currentObject;
 
+        /// \brief Counts the remaining steps of a move action.
+        /// \details Defaults to the object's base speed and is decreased with every step,
+        ///     or set to 0 if an action consumes the move action altogether.
+        float m_moveActionRemaining;
 
+        /// \brief Keeps whether the standard action is still available in this turn.
+        bool  m_standardActionRemaining;
+
+        /// \brief When you don't move any distance in a round, you can still take a 5-foot-
+        ///     step. You will hear me calling this thing "Gratis-Schritt".
+        /// \details Note that 0-distance move actions (e.g. load crossbow) don't prevent this.
+        bool m_fiveFootStepRemaining;
     };
 }

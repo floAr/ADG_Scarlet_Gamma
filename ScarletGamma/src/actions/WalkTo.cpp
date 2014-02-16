@@ -6,6 +6,7 @@
 #include "core/World.hpp"
 #include "core/PredefinedProperties.hpp"
 #include "core/Map.hpp"
+#include "network/Messenger.hpp"
 
 using namespace Actions;
 
@@ -19,10 +20,11 @@ WalkTo::WalkTo() : Action(STR_ACT_WALKTO, Duration::MOVE_ACTION, 100, Game::MC_W
 
 void WalkTo::Execute()
 {
-	Perform(m_executor, m_target);
+	Perform(m_executor, m_target, Network::Messenger::IsServer()
+		&& sf::Keyboard::isKeyPressed(sf::Keyboard::LControl));
 }
 
-void WalkTo::Perform(Core::ObjectID _executor, Core::ObjectID _target)
+void WalkTo::Perform(Core::ObjectID _executor, Core::ObjectID _target, bool _append)
 {
     Core::Object* executor = g_Game->GetWorld()->GetObject(_executor);
     assert(executor);
@@ -33,11 +35,16 @@ void WalkTo::Perform(Core::ObjectID _executor, Core::ObjectID _target)
     if (!executor->HasProperty(STR_PROP_PATH))
         executor->Add(Core::PROPERTY::PATH);
 
-    // Clear the target
-    executor->GetProperty(STR_PROP_TARGET).SetValue(STR_EMPTY);
-    Core::Property& path = executor->GetProperty(STR_PROP_PATH);
-    path.ClearObjects();
-    path.SetValue(STR_FALSE);
+    // Clear the target if not appending
+	if (!_append)
+	{
+		executor->GetProperty(STR_PROP_TARGET).SetValue(STR_EMPTY);
+		Core::Property& path = executor->GetProperty(STR_PROP_PATH);
+		path.ClearObjects();
+		path.SetValue(STR_FALSE);
+	}
+
+	// Append
     executor->AppendToPath( _target );
 
     // Reevaluate object to get it updated

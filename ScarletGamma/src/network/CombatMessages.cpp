@@ -28,7 +28,7 @@ size_t Network::HandleCombatMessage(const uint8_t* _data, size_t _size, uint8_t 
             readSize += sizeof(object);
         
             // Begin combat for this object
-            g_Game->GetCommonState()->BeginCombat(object);
+            g_Game->GetCommonState()->CreateCombat(object);
         } break;
 
     case CombatMsgType::PL_COMBAT_INITIATIVE:

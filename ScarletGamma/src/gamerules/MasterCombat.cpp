@@ -47,6 +47,13 @@ void GameRules::MasterCombat::SetTurn( Core::ObjectID _object )
     Network::CombatMsg(CombatMsgType::DM_COMBAT_SET_TURN).Send(&data);
 }
 
+void GameRules::MasterCombat::StartCombat()
+{
+    // Start with highest initiative
+    if (!m_participants.empty())
+        SetTurn(m_participants.front());
+}
+
 void MasterCombat::ReceivedInitiative( Core::ObjectID _object, std::string& _initiative )
 {
     // Save initiative value

@@ -28,7 +28,16 @@ namespace States
 		/// \brief CommonState Update + Player view refreshed.
 		virtual void Update( float _dt ) override;
 
-		virtual void BeginCombat(Core::ObjectID _object) override;
+		/// \brief Starts combat for an object.
+		virtual void CreateCombat(Core::ObjectID _object) override;
+
+		/// \brief Checks whether an object is owned by the player.
+		virtual bool OwnsObject(Core::ObjectID _object) override;
+
+		/// \brief Set the current view to another objects position
+		/// \details Try to append the current view onto another object, if player does not exist nothing happens
+		/// \param [in] object	object to view
+		void SetViewToObject(Core::Object* object );
 
 	private:
 		Core::PlayerID m_playerID;							///< The players id (set by socket index)
@@ -47,12 +56,6 @@ namespace States
 		/// \details Try to append the current view onto another object, if player does not exist nothing happens
 		/// \param [in] hotkey	pressed hotkey of the player
 		void SetViewToHotkey(const int hotkey);
-
-		/// \brief Set the current view to another objects position
-		/// \details Try to append the current view onto another object, if player does not exist nothing happens
-		/// \param [in] object	object to view
-		void SetViewToObject(Core::Object* object );
-
 
 
 		/// \brief Bind an object to the hotkey

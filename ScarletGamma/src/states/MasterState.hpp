@@ -32,7 +32,10 @@ namespace States
 
 		virtual Core::Map* GetCurrentMap() override;
 
-		virtual void BeginCombat(Core::ObjectID _object) override;
+		virtual void CreateCombat(Core::ObjectID _object) override;
+
+		/// \brief Checks whether an object is owned by the DM.
+		virtual bool OwnsObject(Core::ObjectID _object) override;
 
 	private:
 		const std::string m_worldFileName;	///< This is the name of the world which was loaded in constructor

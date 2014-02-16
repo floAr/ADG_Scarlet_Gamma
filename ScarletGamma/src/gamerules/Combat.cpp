@@ -152,6 +152,10 @@ void GameRules::Combat::UseStandardAction()
 {
 	// This one's easy ;)
 	m_standardActionRemaining = false;
+
+	// If we started to move before, we can't move afterwards!
+	if (!m_moveActionRemaining)
+		m_moveActionStepsLeft = 0;
 }
 
 void GameRules::Combat::UseMoveAction( float distance )

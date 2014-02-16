@@ -17,6 +17,7 @@
 #include "states/PromptState.hpp"
 #include "NewPlayerState.hpp"
 #include "DismissableDialogState.hpp"
+#include "actions/ActionPool.hpp"
 
 using namespace Core;
 
@@ -223,6 +224,19 @@ namespace States {
 					m_draggedContent->from = Interfaces::DragContent::MAP;
 					m_draggedContent->object = g_Game->GetWorld()->GetObject(topmostObject);
 					m_draggedContent->prop = nullptr;
+				}
+
+				// Default action
+				if (m_selection.Size() > 0)
+				{
+					auto& tiles = GetCurrentMap()->GetObjectsAt(tileX,tileY);
+					if( tiles.Size() > 0 )
+					{
+						Core::Object* object = g_Game->GetWorld()->GetObject(tiles[tiles.Size()-1]);
+						Actions::ActionPool::Instance().UpdateDefaultAction(m_selection, object);
+						for (int i=0; i < m_selection.Size(); ++i)
+							Actions::ActionPool::Instance().StartDefaultAction(m_selection[i], object->ID());
+					}
 				}
 			}
 			break; }
@@ -543,6 +557,10 @@ namespace States {
 	void MasterState::MouseMoved(int deltaX, int deltaY, bool guiHandled)
 	{
 		CommonState::MouseMoved(deltaX, deltaY, guiHandled);
+
+		// If not in action mode, reset the default action
+		if (m_modeTool->GetMode() != Interfaces::ModeToolbox::ACTION)
+			Actions::ActionPool::Instance().UpdateDefaultAction(m_selection, 0);
 
 		// Don't react to any key if gui handled it
 		if (guiHandled)

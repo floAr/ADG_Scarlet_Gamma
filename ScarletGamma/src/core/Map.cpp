@@ -4,9 +4,13 @@
 #include "utils/OrFibHeap.h"
 #include "network/MapMessages.hpp"
 #include "utils/MathUtil.hpp"
+#include "Game.hpp"
+#include "states/CommonState.hpp"
+#include "gamerules/Combat.hpp"
 
 #include <algorithm>
 #include <unordered_map>
+#include <cmath>
 #include "Constants.hpp"
 #include "PredefinedProperties.hpp"
 
@@ -201,9 +205,44 @@ namespace Core {
 			auto position = object->GetPosition();
 			if( HasReachedTarget(object, position) )
 			{
-				// If it reached the target choose a new one.
-				object->GetProperty(STR_PROP_TARGET).SetValue( sfUtils::to_string(FindNextTarget(object)) );
+				// If the object is currently in combat, we need to count the steps
+				if ( g_Game->GetCommonState()->InCombat() &&
+					 g_Game->GetCommonState()->GetCombat()->GetTurn() == object->ID() )
+				{
+
+					if (g_Game->GetCommonState()->GetCombat()->GetRemainingSteps() > 0)
+					{
+						// Back up old target
+						std::string old_target = object->GetProperty(STR_PROP_TARGET).Value();
+
+						// If it reached the target choose a new one.
+						sf::Vector2f new_target = FindNextTarget(object);
+						object->GetProperty(STR_PROP_TARGET).SetValue( sfUtils::to_string(new_target) );
+
+						// If the target changed, we need to count the step
+						if ( old_target != object->GetProperty(STR_PROP_TARGET).Value() )
+						{
+							sf::Vector2f dir = new_target - object->GetPosition();
+
+							// Count move for combat
+							g_Game->GetCommonState()->GetCombat()->UseMoveAction(1.5f,
+								abs((int) std::floor(dir.x + 0.5f)) + abs((int) std::floor(dir.y + 0.5f)) == 2);
+						}
+					}
+					else
+					{
+						// No steps remaining, stop it
+						object->GetProperty(STR_PROP_TARGET).SetValue( sfUtils::to_string(object->GetPosition()) );
+						object->GetProperty(STR_PROP_PATH).ClearObjects();
+					}
+				}
+				else
+				{
+					// Just update the target
+					object->GetProperty(STR_PROP_TARGET).SetValue( sfUtils::to_string(FindNextTarget(object)) );
+				}
 			}
+
 			auto targetDirection = sfUtils::to_vector(object->GetProperty(STR_PROP_TARGET).Value());
 			targetDirection -= position;	// Scaled direction
 

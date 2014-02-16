@@ -41,7 +41,10 @@ namespace GameRules
 
         /// \brief Sets the move action as used. If a distance is specifiedm, the
         ///     5-foot-step will also be disabled.
-        void UseMoveAction(float distance = 0);
+        void UseMoveAction(float _distance = 0, bool _diagonal = false);
+
+        /// \brief Returns the current object's ID.
+        Core::ObjectID GetTurn() const;
 
     protected:
         /// \brief Map of participants, sorted by their order of initiative
@@ -65,5 +68,9 @@ namespace GameRules
         ///     step. You will hear me calling this thing "Gratis-Schritt".
         /// \details Note that 0-distance move actions (e.g. load crossbow) don't prevent this.
         bool m_fiveFootStepRemaining;
+
+        /// \brief Counts the diagonal moves. Every second diagonal move counts as 3m step,
+        ///     so a bool is sufficient.
+        bool m_diagonalCounter;
     };
 }

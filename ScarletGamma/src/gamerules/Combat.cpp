@@ -77,11 +77,12 @@ void GameRules::Combat::SetTurn( Core::ObjectID _object )
     g_Game->AppendToChatLog( Network::ChatMsg(object->GetName() + " ist am Zug.", sf::Color::White) );
 
     // Reset combat round values
+    m_diagonalCounter = false;
     m_fiveFootStepRemaining = true;
     m_standardActionRemaining = true;
+    m_moveActionRemaining = true;
     
     // Set default speed of 9m and try to overwrite it
-    m_moveActionRemaining = true;
     m_moveActionStepsLeft = 9.0f;
     try
     {
@@ -158,29 +159,49 @@ void GameRules::Combat::UseStandardAction()
 		m_moveActionStepsLeft = 0;
 }
 
-void GameRules::Combat::UseMoveAction( float distance )
+void GameRules::Combat::UseMoveAction( float _distance, bool _diagonal )
 {
 	// Move-corresponding actions without a distance (e.g. load crossbow) prevent another
 	// move action and set the steps to 0. Real move action (e.g. walk) don't check whether
 	// the move action is available, but whether there are steps left. They disable the
 	// move action, so no other move action can be started, and decrement the steps left.
 	// In addition, they disable the 5-foot-step.
-	if (distance == 0)
+	if (_distance == 0)
 	{
 		m_moveActionRemaining = false;
 		m_moveActionStepsLeft = 0;
 	}
 	else
 	{
+		if (_diagonal)
+		{
+			// Double diagonal distance every second time
+			if (m_diagonalCounter)
+				_distance *= 2.0f;
+
+			// Flip counter
+			m_diagonalCounter = !m_diagonalCounter;
+		}
+
 		// Decrement the available distance
-		m_moveActionStepsLeft -= distance;
+		m_moveActionStepsLeft -= _distance;
 
 		// If I did more than a 5-foot-step, or my step was already used, move action is used
-		if (distance > 1.5f || !m_fiveFootStepRemaining)
+		if (_distance > 1.5f || !m_fiveFootStepRemaining)
 			m_moveActionRemaining = false;
 
 		// First step voids the 5-foot-step in any case
 		if (m_fiveFootStepRemaining)
 			m_fiveFootStepRemaining = false;
 	}
+
+#ifdef _DEBUG
+	std::cout << m_moveActionRemaining << ' ' << m_fiveFootStepRemaining << ' '
+		<< m_diagonalCounter << ' ' << m_moveActionStepsLeft << '\n';
+#endif
+}
+
+Core::ObjectID GameRules::Combat::GetTurn() const
+{
+	return m_currentObject;
 }

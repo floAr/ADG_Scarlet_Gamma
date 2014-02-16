@@ -361,12 +361,23 @@ void States::PlayerState::SetHotkeyToObject(const int hotkey, Core::ObjectID obj
 
 void States::PlayerState::CreateCombat( Core::ObjectID _object )
 {
+	// Find the object
+	Core::Object* object = g_Game->GetWorld()->GetObject(_object);
+
 	// Does this object belong to me?
 	if ( this->OwnsObject(_object) )
 	{
 		// Maybe create a new Combat object
 		if ( !m_combat )
 			m_combat = new GameRules::Combat();
+
+		// Stop object
+		if (object->HasProperty(STR_PROP_PATH))
+		{
+			Core::Property& path = object->GetProperty(STR_PROP_PATH);
+			path.ClearObjects();
+			path.SetValue(STR_FALSE);
+		}
 
 		// Prompt for initiative roll
 		m_combat->PushInitiativePrompt(_object);

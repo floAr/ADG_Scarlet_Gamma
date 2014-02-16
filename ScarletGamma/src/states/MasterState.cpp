@@ -443,12 +443,10 @@ namespace States {
                 if (!m_combat)
                 {
                     // Create a combat and add participants
-                    m_combat = new GameRules::MasterCombat();
-                    Core::World* world = g_Game->GetWorld();
                     for( int i=0; i<m_selection.Size(); ++i )
                     {
                         // Add participant to combat
-                        static_cast<GameRules::MasterCombat*>(m_combat)->AddParticipant(m_selection[i]);
+                        CreateCombat(m_selection[i]);
                     }
                 }
                 else
@@ -587,19 +585,17 @@ namespace States {
 
     void MasterState::CreateCombat( Core::ObjectID _object )
     {
-        // Find the object
-        Core::Object* object = g_Game->GetWorld()->GetObject(_object);
+        // Maybe create a new Combat object
+		if (!m_combat)
+			m_combat = new GameRules::MasterCombat();
 
-        // Does this object belong to me?
-        if (!object->HasProperty(STR_PROP_OWNER))
-        {
-            // Maybe create a new Combat object
-            if (!m_combat)
-                m_combat = new GameRules::MasterCombat();
+		// TODO: stop objects that are currently moving!
 
-            // Prompt for initiative roll
-            m_combat->PushInitiativePrompt(_object);
-        }
+		// Find the object
+		Core::Object* object = g_Game->GetWorld()->GetObject(_object);
+
+		// Prompt for initiative roll
+		static_cast<GameRules::MasterCombat*>(m_combat)->AddParticipant(_object);
     }
 
     bool MasterState::OwnsObject( Core::ObjectID _object )

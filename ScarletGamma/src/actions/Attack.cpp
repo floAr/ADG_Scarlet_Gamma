@@ -135,8 +135,13 @@ bool Attack::EvaluateAttackRoll(int _roll)
         std::cerr << "Tried to attack an object without AC: " << std::to_string(m_executor)
             << " -> " << std::to_string(m_target) << '\n';
     }
+	catch (Exception::NotEvaluateable)
+	{
+		std::cerr << "Tried to attack an object with invalid AC: " << std::to_string(m_executor)
+			<< " -> " << std::to_string(m_target) << '\n';
+	}
 
-    return false;
+    return true;
 }
 
 void Attack::AttackRollInfoReceived(const std::string& _message)

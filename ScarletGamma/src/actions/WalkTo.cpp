@@ -3,6 +3,8 @@
 #include "core/Object.hpp"
 #include "network/ActionMessages.hpp"
 #include "Game.hpp"
+#include "states/CommonState.hpp"
+#include "gamerules/Combat.hpp"
 #include "core/World.hpp"
 #include "core/PredefinedProperties.hpp"
 #include "core/Map.hpp"
@@ -10,8 +12,10 @@
 
 using namespace Actions;
 
-WalkTo::WalkTo() : Action(STR_ACT_WALKTO, Duration::MOVE_ACTION, 100, Game::MC_WALK)
+WalkTo::WalkTo() : Action(STR_ACT_WALKTO, Duration::FREE_ACTION, 100, Game::MC_WALK)
 {
+    // WalkTo can't be a Walk action, because it doesn't void the remaining steps. Sorry.
+
     // Set requirements
     m_targetRequirements.push_back(std::pair<std::string, bool>(STR_PROP_X, true));
     m_targetRequirements.push_back(std::pair<std::string, bool>(STR_PROP_Y, true));
@@ -63,4 +67,15 @@ Action* WalkTo::Clone(Core::ObjectID _executor, Core::ObjectID _target)
     result->m_target = _target;
 
     return dynamic_cast<Action*>(result);
+}
+
+bool Actions::WalkTo::CanUse( Core::ObjectList& _executors, Core::Object& _object )
+{
+	bool result = true;
+
+	// In combat, we can walk as long as we have remaining steps.
+	if (g_Game->GetCommonState()->InCombat())
+		result = (g_Game->GetCommonState()->GetCombat()->GetRemainingSteps() > 0);
+
+	return result && Action::CanUse(_executors, _object);
 }

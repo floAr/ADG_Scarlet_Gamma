@@ -20,6 +20,10 @@ namespace Actions
 
 		/// \brief Immediately end this action
 		virtual bool Update() override { return true; }
+
+		/// \brief Movement is actually a special case of move action: you can begin and end it,
+		///		until your remaining steps are used up.
+		virtual bool CanUse(Core::ObjectList& _executors, Core::Object& _object) override;
     private:
         /// \brief Clones an attack action.
         virtual Action* Clone(Core::ObjectID _executor, Core::ObjectID _target);

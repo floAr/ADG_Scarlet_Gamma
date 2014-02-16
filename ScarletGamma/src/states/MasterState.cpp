@@ -465,10 +465,6 @@ namespace States {
 			//	gs->ConfigurePromp("Das ist dein toller Text",false);
 			//	gs->AddButton("testbutton",std::bind(&MasterState::TestButtonCallback,this,std::placeholders::_1),sf::Vector2f(212,460));
 			//	break;
-
-		case sf::Keyboard::D:
-			DismissableDialogState* gs=dynamic_cast<DismissableDialogState*>(g_Game->GetStateMachine()->PushGameState(GST_DISMISS));
-			break;
 		}
 		// Return if the GUI already handled it
 		if (guiHandled)
@@ -480,6 +476,10 @@ namespace States {
 		// This should work only if the GUI didn't handle before
 		switch(key.code)
 		{
+		case sf::Keyboard::D: {
+			DismissableDialogState* gs=dynamic_cast<DismissableDialogState*>(g_Game->GetStateMachine()->PushGameState(GST_DISMISS));
+			} break;
+
 		case sf::Keyboard::C:
 			// If only one object is selected show the character screen. Even
 			// if it has no character properties. GM should know better...

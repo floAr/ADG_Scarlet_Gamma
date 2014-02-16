@@ -80,11 +80,12 @@ void GameRules::Combat::SetTurn( Core::ObjectID _object )
     m_standardActionRemaining = true;
     
     // Set default speed of 9m and try to overwrite it
-    m_moveActionRemaining = 9.0f;
+    m_moveActionRemaining = true;
+    m_moveActionStepsLeft = 9.0f;
     try
     {
         // Convert value to float, may raise an exception
-        m_moveActionRemaining = std::stof( object->GetProperty(STR_PROP_SPEED).Value().c_str() );
+        m_moveActionStepsLeft = std::stof( object->GetProperty(STR_PROP_SPEED).Value().c_str() );
     }
     catch (Exception::NoSuchProperty)
     {
@@ -106,4 +107,35 @@ void GameRules::Combat::SetTurn( Core::ObjectID _object )
     if (player)
         player->SetViewToObject(object);
 
+    // TODO: give the DM a hint whose turn it is :/
+}
+
+bool GameRules::Combat::CanUse( Actions::Duration _duration ) const
+{
+    switch (_duration)
+    {
+    // You can always use NO_ACTION, FREE_ACTION and SWIFT_ACTION
+    // TODO: only one swift action per round, but YAGNI for the prototype
+    case Actions::Duration::NO_ACTION:
+    case Actions::Duration::FREE_ACTION:
+    case Actions::Duration::SWIFT_ACTION:
+        return true;
+
+    case Actions::Duration::FULL_ACTION:
+        return m_moveActionRemaining && m_standardActionRemaining;
+
+    case Actions::Duration::STANDARD_ACTION:
+        return m_standardActionRemaining;
+
+    case Actions::Duration::MOVE_ACTION:
+        return m_moveActionRemaining;
+    }
+
+    // Unhandled, let's just use it
+    return true;
+}
+
+float GameRules::Combat::GetRemainingSteps() const
+{
+    return m_moveActionStepsLeft;
 }

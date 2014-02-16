@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Prerequisites.hpp"
+#include "actions/Action.hpp"
 #include <cstdint>
 #include <list>
 
@@ -26,6 +27,12 @@ namespace GameRules
         /// \brief Is called when it is a combattant's turn.
         virtual void SetTurn( Core::ObjectID _object );
 
+        /// \brief Returns true if the action can still be used in this round.
+        bool CanUse(Actions::Duration _duration) const;
+
+        /// \brief Returns the number of steps that can be used in this round.
+        float GetRemainingSteps() const;
+
     protected:
         /// \brief Map of participants, sorted by their order of initiative
         std::list<Core::ObjectID> m_participants;
@@ -33,10 +40,13 @@ namespace GameRules
         /// \brief The object whose turn it currently is.
         Core::ObjectID m_currentObject;
 
+        /// \brief Keeps whether the move action is still available in this turn.
+        bool m_moveActionRemaining;
+
         /// \brief Counts the remaining steps of a move action.
         /// \details Defaults to the object's base speed and is decreased with every step,
         ///     or set to 0 if an action consumes the move action altogether.
-        float m_moveActionRemaining;
+        float m_moveActionStepsLeft;
 
         /// \brief Keeps whether the standard action is still available in this turn.
         bool  m_standardActionRemaining;

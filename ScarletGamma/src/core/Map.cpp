@@ -396,6 +396,7 @@ namespace Core {
 					Object* pathPoint = m_parentWorld->GetObject(path[0]);
 					sf::Vector2f point = position;
 					try { // Maybe the target point was removed from the map?
+						if( !pathPoint ) throw 1;
 						point = pathPoint->GetPosition();
 					} catch(...) {
 						// Always remove from list - ignore loops

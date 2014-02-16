@@ -36,6 +36,13 @@ namespace GameRules
         /// \brief Returns the number of steps that can be used in this round.
         float GetRemainingSteps() const;
 
+        /// \brief Sets the standard action as used.
+        void UseStandardAction();
+
+        /// \brief Sets the move action as used. If a distance is specifiedm, the
+        ///     5-foot-step will also be disabled.
+        void UseMoveAction(float distance = 0);
+
     protected:
         /// \brief Map of participants, sorted by their order of initiative
         std::list<Core::ObjectID> m_participants;

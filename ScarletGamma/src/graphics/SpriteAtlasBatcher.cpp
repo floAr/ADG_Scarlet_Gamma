@@ -5,6 +5,7 @@
 using namespace Graphics;
 
 
+
 SpriteAtlasBatcher* SpriteAtlasBatcher::Instance()
 {
 	static SpriteAtlasBatcher Instance;
@@ -21,11 +22,15 @@ AtlasSprite& Graphics::SpriteAtlasBatcher::AddOrGetAtlasSprite( const std::strin
 {
 	if(m_atlas.count(_name))
 	{
-		return m_atlas.at(_name);
+		auto as= m_atlas.at(_name);
+		if(!as.IsDefault())
+			return as;
 	}
 
 	AtlasSprite result;
-	const sf::Texture& tex = Content::Instance()->LoadTexture(_name);
+	bool isDefault(false);
+	const sf::Texture& tex = Content::Instance()->LoadTexture(_name,&isDefault);
+	result.SetDefaultState(isDefault);
 	if(!(m_atlasBounds.x+tex.getSize().x<m_atlasTexture.getSize().x))//object is nolonger matching on x axsis
 	{
 		m_atlasBounds.x = 0;

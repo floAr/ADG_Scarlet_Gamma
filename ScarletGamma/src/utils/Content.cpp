@@ -46,6 +46,11 @@ const sf::Image& Content::LoadImage(const std::string& filename){
 }
 
 const sf::Texture& Content::LoadTexture(const std::string& filename){
+	bool isdefault(false);
+	return Content::Instance()->LoadTexture(filename,&isdefault);
+}
+
+const sf::Texture& Content::LoadTexture(const std::string& filename,bool* isDefault_out){
 	auto it = m_tex_cache.find(filename);
 	if(it != m_tex_cache.end())
 	{
@@ -60,6 +65,7 @@ const sf::Texture& Content::LoadTexture(const std::string& filename){
 		}
 		else
 		{
+			*isDefault_out=true;
 			return *(m_tex_cache.find(DEFAULT_TEXTURE))->second;
 		}
 	}	

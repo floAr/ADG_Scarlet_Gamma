@@ -52,6 +52,10 @@ public:
 	/// \brief Loads a new texture from file
 	/// \param [in] filename	The filename of the object relative to root folder
 	const sf::Texture& LoadTexture(const std::string& filename);
+	/// \brief Loads a new texture from file
+	/// \param [in] filename	The filename of the object relative to root folder
+	/// \param [in/out] isDefault	The filename of the object relative to root folder
+	const sf::Texture& LoadTexture(const std::string& filename, bool* _isDefault_out);
     /// \brief Loads a new font from file
 	/// \param [in] filename	The filename of the object relative to root folder
 	const sf::Font&  LoadFont(const std::string& filename);

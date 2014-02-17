@@ -13,6 +13,7 @@ namespace Graphics
 	class AtlasSprite: public sf::Sprite
 	{
 	public :
+		/// \brief TC0-TC3 return the corresponding texture coordinates in counter clockwise order
 		sf::Vector2f TC0()
 		{
 			return sf::Vector2f(m_TCbegin);
@@ -39,9 +40,19 @@ namespace Graphics
 			m_TCend = _tcEnd;
 		}
 
+		bool IsDefault()
+		{
+			return m_isDefault;
+		}
+		void SetDefaultState(bool _isDefault)
+		{
+			m_isDefault=_isDefault;
+		}
+
 	private:
-		sf::Vector2f m_TCbegin;
-		sf::Vector2f m_TCend;
+		sf::Vector2f m_TCbegin;	///< Top-Left TextureCoord
+		sf::Vector2f m_TCend;	///< Bottom-Right TextureCoord
+		bool m_isDefault;		///< Indicates if this used the dummy sprite
 	};
 
 	/// \brief Renders the currently visible section of a given map.

@@ -17,7 +17,7 @@ Window:
 		BackgroundColor = (0,0,0,0)
 		AutoSize = false
 	}
-	
+
 	EditBox: "FileName"
 	{
 		ConfigFile = "media/Black.conf"
@@ -41,7 +41,24 @@ Window:
 		SelectionPointWidth = 2
 		NumbersOnly = false
 	}
-	
+
+	Button: "Create"
+	{
+		ConfigFile = "media/Black.conf"
+		Left = 770
+		Top = 100
+		Width = 150
+		Height = 40
+		Visible = true
+		Enabled = true
+		Transparency = 255
+		Callback = LeftMouseClicked
+		CallbackId = 3
+		Text = "Erstellen"
+		TextColor = (200,200,200,255)
+		TextSize = 26
+	}
+
 	Label: "LanIPLabel"
 	{
 		ConfigFile = "media/Black.conf"
@@ -59,7 +76,7 @@ Window:
 		BackgroundColor = (0,0,0,0)
 		AutoSize = false
 	}
-	
+
 	EditBox: "LanIP"
 	{
 		ConfigFile = "media/Black.conf"
@@ -83,7 +100,7 @@ Window:
 		SelectionPointWidth = 2
 		NumbersOnly = false
 	}
-	
+
 	Label: "PubIPLabel"
 	{
 		ConfigFile = "media/Black.conf"
@@ -101,7 +118,7 @@ Window:
 		BackgroundColor = (0,0,0,0)
 		AutoSize = false
 	}
-	
+
 	EditBox: "PubIP"
 	{
 		ConfigFile = "media/Black.conf"
@@ -142,7 +159,7 @@ Window:
 		TextColor = (200,200,200,255)
 		TextSize = 26
 	}
-	
+
 	Label: "Error"
 	{
 		ConfigFile = "media/Black.conf"
@@ -160,7 +177,7 @@ Window:
 		BackgroundColor = (0,0,0,0)
 		AutoSize = false
 	}
-	
+
 	Button: "Back"
 	{
 		ConfigFile = "media/Black.conf"
@@ -177,4 +194,5 @@ Window:
 		TextColor = (200,200,200,255)
 		TextSize = 26
 	}
+
 }

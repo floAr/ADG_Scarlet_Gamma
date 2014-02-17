@@ -63,6 +63,7 @@ void Game::Run()
 
 		// Update and draw the GameState
 		m_stateMachine->Update(time);
+		if( !m_stateMachine->GetGameState() ) break;
 		m_stateMachine->Draw(m_window);
 
 		m_stateMachine->GetGameState()->SetGuiView();

@@ -67,6 +67,7 @@ namespace States {
 		m_playerTool->SetGoToMethod(gotoFunc);
 		m_toolbar->AddToolbox( m_gotoTool );
 		m_gotoTool->SetGoToMethod(gotoFunc);
+		m_toolbar->AddToolbox( m_combatTool );
 
 		// Set chat color...
 		m_color = sf::Color(80,80,250);

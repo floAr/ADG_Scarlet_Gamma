@@ -108,8 +108,6 @@ void GameRules::Combat::SetTurn( Core::ObjectID _object )
     States::PlayerState* player = dynamic_cast<States::PlayerState*>(g_Game->GetCommonState());
     if (player)
         player->FocusObject(object);
-
-    // TODO: give the DM a hint whose turn it is :/
 }
 
 bool GameRules::Combat::CanUse( Actions::Duration _duration ) const

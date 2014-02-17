@@ -181,6 +181,7 @@ static const std::string STR_BRUSH = std::string("Pinsel");
 static const std::string STR_PLAYER = std::string("Spieler");
 static const std::string STR_NPC = std::string("NSC");
 static const std::string STR_GOTO = std::string("Gehe zu");
+static const std::string STR_COMBAT = std::string("Kampf");
 static const std::string STR_ACTION = std::string("Aktion");
 static const std::string STR_DRAGNDROP = std::string("Drag & Drop");
 static const std::string STR_DIAMETER = std::string("Größe");

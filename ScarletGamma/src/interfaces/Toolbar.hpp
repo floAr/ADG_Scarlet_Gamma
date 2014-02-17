@@ -201,6 +201,21 @@ namespace Interfaces {
 		void GoToObject();
 	};
 
+	/// \brief Toolbox for combat management.
+	class CombatToolbox: public Toolbox
+	{
+	public:
+		typedef tgui::SharedWidgetPtr<CombatToolbox> Ptr;
+
+		// Create all elements in the map toolbox.
+		CombatToolbox();
+
+		virtual void Init() override;
+	private:
+		void ButtonClicked();
+		tgui::Button::Ptr m_combatButton;
+	};
+
 	/// \brief Toolbox for map selection and creation.
 	class NPCToolbox: public Toolbox
 	{

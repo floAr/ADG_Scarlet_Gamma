@@ -1,8 +1,9 @@
-#include "Toolbar.hpp"
+﻿#include "Toolbar.hpp"
 #include "SFML/System/Vector2.hpp"
 #include "Constants.hpp"
 #include "Game.hpp"
 #include "core/World.hpp"
+#include "states/CommonState.hpp"
 
 namespace Interfaces {
 
@@ -230,7 +231,9 @@ namespace Interfaces {
 	void MapToolbox::SetMap(Core::MapID _id)
 	{
 		// Find the map in the vector and store the index
-		m_selected = std::find(m_maps.begin(), m_maps.end(), _id) - m_maps.begin();
+		int selected = std::find(m_maps.begin(), m_maps.end(), _id) - m_maps.begin();
+		if( selected < (int)m_maps.size() )
+			m_selected = selected;
 	}
 
 
@@ -472,6 +475,86 @@ namespace Interfaces {
 		// Call the CommonState's GoTo
 		m_goto(player);
 	}
+
+
+
+
+
+
+	GoToToolbox::GoToToolbox() :
+		m_eX(nullptr),
+		m_eY(nullptr),
+		m_eID(nullptr)
+	{
+		Panel::setSize( 150.0f, 100.0f );
+		Panel::setBackgroundColor( sf::Color(50,50,50,150) );
+	}
+
+	void GoToToolbox::Init()
+	{
+		tgui::Button::Ptr heading( *this );
+		heading->load( "media/Black.conf" );
+		heading->setPosition( 0.0f, 0.0f );
+		heading->setText( STR_GOTO );
+		heading->setSize( 150.0f, 20.0f );
+		heading->disable();
+
+		// Enter x and y of a position
+		tgui::Label::Ptr lPosition( *this );
+		lPosition->setText("Position:");
+		lPosition->setPosition(3.0f, 23.0f);
+		lPosition->setTextSize(16);
+		lPosition->setTextColor( sf::Color(200,200,200) );
+		m_eX = tgui::EditBox::Ptr( *this );
+		m_eX->load( "media/Black.conf" );
+		m_eX->setPosition( 0.0f, 40.0f );
+		m_eX->setSize( 55.0f, 20.0f );
+		m_eX->setNumbersOnly( true );
+		m_eY = m_eX.clone();	this->add(m_eY);
+		m_eY->setPosition(55.0f, 40.0f);
+		tgui::Button::Ptr gobtn1( *this );
+		gobtn1->load( "media/Black.conf" );
+		gobtn1->setPosition( 110.0f, 40.0f );
+		gobtn1->setSize( 20.0f, 20.0f );
+		gobtn1->setText( "->" );
+
+		// Enter an object id
+		tgui::Label::Ptr lId( *this );
+		lId->setText("Objekt (ID):");
+		lId->setPosition(3.0f, 63.0f);
+		lId->setTextSize(16);
+		lId->setTextColor( sf::Color(200,200,200) );
+		m_eID = m_eX.clone();	this->add(m_eID);
+		m_eID->setPosition(0.0f, 80.0f);
+		m_eID->setSize( 110.0f, 20.0f );
+		tgui::Button::Ptr gobtn2 = gobtn1.clone(); this->add( gobtn2 );
+		gobtn2->setPosition( 110.0f, 80.0f );
+
+		// Bind all callbacks after cloning (otherwise elements could have multiple methods)
+		gobtn1->bindCallback( &GoToToolbox::GoToPosition, this, tgui::Button::LeftMouseClicked );
+		gobtn2->bindCallback( &GoToToolbox::GoToObject, this, tgui::Button::LeftMouseClicked );
+		m_eX->bindCallback( &GoToToolbox::GoToPosition, this, tgui::EditBox::ReturnKeyPressed );
+		m_eY->bindCallback( &GoToToolbox::GoToPosition, this, tgui::EditBox::ReturnKeyPressed );
+		m_eID->bindCallback( &GoToToolbox::GoToObject, this, tgui::EditBox::ReturnKeyPressed );
+	}
+
+	void GoToToolbox::GoToPosition()
+	{
+		int x = atoi(m_eX->getText().toAnsiString().c_str());
+		int y = atoi(m_eY->getText().toAnsiString().c_str());
+		g_Game->GetCommonState()->GetStateView().setCenter(sf::Vector2f(x * float(TILESIZE), y * float(TILESIZE)));
+	}
+
+	void GoToToolbox::GoToObject()
+	{
+		Core::ObjectID id = atoi(m_eID->getText().toAnsiString().c_str());
+		Core::Object* object =  g_Game->GetWorld()->GetObject( id );
+		if( object )
+			m_goto( object );
+		else
+			g_Game->AppendToChatLog( Network::ChatMsg(STR_WRONG_ID, sf::Color::Red) );
+	}
+
 
 
 

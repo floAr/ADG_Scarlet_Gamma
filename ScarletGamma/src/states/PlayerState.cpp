@@ -155,7 +155,7 @@ void States::PlayerState::MouseButtonReleased( sf::Event::MouseButtonEvent& butt
 	if( m_draggedContent && GetCurrentMap())
 	{
 		if( m_draggedContent->from == Interfaces::DragContent::PROPERTY_PANEL
-			&& m_draggedContent->object)
+			&& m_draggedContent->object )
 		{
 			if( m_draggedContent->object->HasProperty( STR_PROP_ITEM ) )
 			{
@@ -370,7 +370,7 @@ void States::PlayerState::ExamineObject(Core::ObjectID _object)
 	Core::Object* object = g_Game->GetWorld()->GetObject(_object);
 	if( sfUtils::LengthSq( object->GetPosition() - m_player->GetPosition() ) > 3.0f )
 	{
-		// TODO: Fehlermeldung: Zu weit weg
+		g_Game->AppendToChatLog( Network::ChatMsg(STR_TO_FAR_AWAY, sf::Color::Red) );
 	} else {
 		m_observerView->Show( g_Game->GetWorld(), object );
 		m_observerView->show();

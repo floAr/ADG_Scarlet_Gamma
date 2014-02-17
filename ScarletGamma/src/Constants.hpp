@@ -48,6 +48,9 @@ static const std::string STR_MSG_LAYER_INVISIBLE = std::string("Die Ziel-Ebene i
 static const std::string STR_PLAYER_NOT_ON_MAP = std::string("Der Charakter befindet sich nicht auf\neiner Karte.\n\nRespawn notwendig.");
 static const std::string STR_AMBIGIOUS_DRAG = std::string("Objekte können nicht in eine Multiselektion verschoben werden.");
 static const std::string STR_AMBIGIOUS_DROP_TARGET = std::string("Ein Objekt muss auf eine Eigenschaft gezogen werden.");
+static const std::string STR_TO_FAR_AWAY = std::string("Objekt zu weit entfernt.");
+static const std::string STR_WRONG_ID = std::string("Es gibt kein Objekt mit der gegebenen ID.");
+static const std::string STR_NO_POSITION = std::string("Das Objekt ist kein gültiges Ziel. Die Position fehlt.");
 
 
 /************************************************************************/
@@ -177,6 +180,7 @@ static const std::string STR_MODE = std::string("Modus");
 static const std::string STR_BRUSH = std::string("Pinsel");
 static const std::string STR_PLAYER = std::string("Spieler");
 static const std::string STR_NPC = std::string("NSC");
+static const std::string STR_GOTO = std::string("Gehe zu");
 static const std::string STR_ACTION = std::string("Aktion");
 static const std::string STR_DRAGNDROP = std::string("Drag & Drop");
 static const std::string STR_DIAMETER = std::string("Größe");

@@ -179,6 +179,29 @@ namespace Interfaces {
 	};
 
 	/// \brief Toolbox for map selection and creation.
+	class GoToToolbox: public Toolbox
+	{
+	public:
+		typedef tgui::SharedWidgetPtr<GoToToolbox> Ptr;
+
+		// Create all elements in the map toolbox.
+		GoToToolbox();
+
+		virtual void Init() override;
+
+		void SetGoToMethod( const std::function<void(const Core::Object*)>& _goto )	{ m_goto = _goto; }
+	private:
+		tgui::EditBox::Ptr m_eX;
+		tgui::EditBox::Ptr m_eY;
+		tgui::EditBox::Ptr m_eID;
+
+		std::function<void(const Core::Object*)> m_goto;	///< State access for view updates
+
+		void GoToPosition();
+		void GoToObject();
+	};
+
+	/// \brief Toolbox for map selection and creation.
 	class NPCToolbox: public Toolbox
 	{
 	public:

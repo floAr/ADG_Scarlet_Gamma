@@ -273,9 +273,13 @@ void CommonState::RemoveFromSelection( Core::ObjectID _id )
 void CommonState::GoTo( const Core::Object* _object )
 {
 	// Center the view at the object
-	sf::Vector2f pos = _object->GetPosition();
-	sf::Vector2f viewPos = pos * float(TILESIZE);
-	GetStateView().setCenter(viewPos);
+	try {
+		sf::Vector2f pos = _object->GetPosition();
+		sf::Vector2f viewPos = pos * float(TILESIZE);
+		GetStateView().setCenter(viewPos);
+	} catch(...) {
+		g_Game->AppendToChatLog( Network::ChatMsg( STR_NO_POSITION, sf::Color::Red) );
+	}
 }
 
 

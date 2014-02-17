@@ -65,7 +65,8 @@ namespace States {
 		m_playerTool->SetDragNDropHandler( &m_draggedContent );
 		std::function<void(const Object*)> gotoFunc = std::bind(&MasterState::GoTo, this, std::placeholders::_1);
 		m_playerTool->SetGoToMethod(gotoFunc);
-		m_toolbar->AddToolbox( Interfaces::NPCToolbox::Ptr() );
+		m_toolbar->AddToolbox( m_gotoTool );
+		m_gotoTool->SetGoToMethod(gotoFunc);
 
 		// Set chat color...
 		m_color = sf::Color(80,80,250);
@@ -571,14 +572,18 @@ namespace States {
 	{
 		if( !_object ) return;
 
-		CommonState::GoTo(_object);
+		if( _object->IsLocatedOnAMap() )
+		{
+			CommonState::GoTo(_object);
 
-		// Reset selection
-		m_selection.Clear();
-		AddToSelection(_object->ID());
+			// Reset selection
+			m_selection.Clear();
+			AddToSelection(_object->ID());
 
-		// Reset current map
-		m_mapTool->SetMap(_object->GetParentMap());
+			// Reset current map
+			m_mapTool->SetMap(_object->GetParentMap());
+		} else
+			g_Game->AppendToChatLog( Network::ChatMsg( STR_NO_POSITION, sf::Color::Red) );
 	}
 
     void MasterState::CreateCombat( Core::ObjectID _object )

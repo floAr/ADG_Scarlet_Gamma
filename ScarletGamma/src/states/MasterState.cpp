@@ -148,7 +148,6 @@ namespace States {
 			Graphics::TileRenderer::RenderRect( win, sf::Vector2i(minX,minY), sf::Vector2i(maxX,maxY) );
 		}
 
-
 		GameState::Draw(win);
 	}
 

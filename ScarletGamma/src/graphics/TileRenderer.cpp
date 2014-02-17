@@ -61,12 +61,14 @@ void Graphics::TileRenderer::Render(sf::RenderWindow& window, Core::Map& map, st
 						if (obj->HasProperty(STR_PROP_SPRITE))
 						{
 							// Draw the tile
-							auto& drawSprite = Graphics::SpriteAtlasBatcher::Instance()->AddOrGetAtlasSprite(obj->GetProperty(STR_PROP_SPRITE).Value());
+							const sf::Texture& tex = Content::Instance()->LoadTexture(obj->GetProperty(STR_PROP_SPRITE).Value());
+							sf::Sprite drawSprite(tex);
+							//auto& drawSprite = Graphics::SpriteAtlasBatcher::Instance()->AddOrGetAtlasSprite(obj->GetProperty(STR_PROP_SPRITE).Value());
 							drawSprite.setPosition(obj->GetPosition() * float(TILESIZE));
-					//		sf::Color color = obj->GetColor();
-					//		color.a = uint8_t(color.a * visibility);
 							drawSprite.setColor(obj->GetColor());
-							Graphics::SpriteAtlasBatcher::Instance()->Enque(drawSprite);
+							//Graphics::SpriteAtlasBatcher::Instance()->Enque(drawSprite);
+							drawSprite.setScale(float(TILESIZE)/tex.getSize().x, float(TILESIZE)/tex.getSize().y);
+							window.draw(drawSprite);
 						}
 					}
 				}

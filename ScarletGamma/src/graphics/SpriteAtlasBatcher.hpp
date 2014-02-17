@@ -10,7 +10,7 @@ namespace Graphics
 	// TODO: DOCUMENT THIS CODE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	// WHAT THE HELL IS TC ????
 	// USE BETTER NAMES + DESCRIBING DOC
-	class AtlasSprite:public sf::Sprite
+	class AtlasSprite: public sf::Sprite
 	{
 	public :
 		sf::Vector2f TC0()
@@ -33,10 +33,10 @@ namespace Graphics
 			return sf::Vector2f(m_TCend.x, m_TCbegin.y);
 		}
 
-		void SetTC(sf::Vector2f tcBegin,sf::Vector2f tcEnd)
+		void SetTC(sf::Vector2f _tcBegin,sf::Vector2f _tcEnd)
 		{
-			m_TCbegin=tcBegin;
-			m_TCend=tcEnd;
+			m_TCbegin = _tcBegin;
+			m_TCend = _tcEnd;
 		}
 
 	private:
@@ -45,11 +45,11 @@ namespace Graphics
 	};
 
 	/// \brief Renders the currently visible section of a given map.
-	class SpriteAtlasBatcher:public sf::Drawable
+	class SpriteAtlasBatcher: public sf::Drawable
 	{
 	public:
 		static SpriteAtlasBatcher* Instance();
-        AtlasSprite& AddOrGetAtlasSprite(const std::string& name);
+        AtlasSprite& AddOrGetAtlasSprite(const std::string& _name);
 		void Begin();
 		void Enque(AtlasSprite as);
 		void End();
@@ -59,10 +59,9 @@ namespace Graphics
 		bool m_textureDirty;
 		bool m_hasBegun;
 		float m_yOffset;
-		virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+		virtual void draw(sf::RenderTarget& _target, sf::RenderStates _states) const;
 		sf::VertexArray m_drawArray;
 		sf::Vector2f m_atlasBounds;
-		static SpriteAtlasBatcher *m_instance;
 		sf::RenderTexture m_atlasTexture;
 		std::unordered_map<std::string,AtlasSprite> m_atlas;
 	};

@@ -1,36 +1,31 @@
 #include "graphics/SpriteAtlasBatcher.hpp"
-
 #include "Constants.hpp"
+
 
 using namespace Graphics;
 
-SpriteAtlasBatcher* SpriteAtlasBatcher::m_instance = 0;
 
 SpriteAtlasBatcher* SpriteAtlasBatcher::Instance()
 {
-	if(m_instance == 0)
-	{
-		m_instance = new SpriteAtlasBatcher();
-
-	}
-	return m_instance;
+	static SpriteAtlasBatcher Instance;
+	return &Instance;
 }
 
-SpriteAtlasBatcher::SpriteAtlasBatcher():m_drawArray(sf::Quads), m_atlasBounds(0, 0), m_hasBegun(false), m_textureDirty(true), m_yOffset(0)
+SpriteAtlasBatcher::SpriteAtlasBatcher() : m_drawArray(sf::Quads), m_atlasBounds(0, 0), m_hasBegun(false), m_textureDirty(true), m_yOffset(0)
 {
 	m_atlasTexture.create(512, 512);
 }
 
 
-AtlasSprite& Graphics::SpriteAtlasBatcher::AddOrGetAtlasSprite( const std::string& name )
+AtlasSprite& Graphics::SpriteAtlasBatcher::AddOrGetAtlasSprite( const std::string& _name )
 {
-	if(m_atlas.count(name))
+	if(m_atlas.count(_name))
 	{
-		return m_atlas.at(name);
+		return m_atlas.at(_name);
 	}
-	AtlasSprite result;
 
-	auto tex = Content::Instance()->LoadTexture(name);
+	AtlasSprite result;
+	const sf::Texture& tex = Content::Instance()->LoadTexture(_name);
 	if(!(m_atlasBounds.x+tex.getSize().x<m_atlasTexture.getSize().x))//object is nolonger matching on x axsis
 	{
 		m_atlasBounds.x = 0;
@@ -39,29 +34,26 @@ AtlasSprite& Graphics::SpriteAtlasBatcher::AddOrGetAtlasSprite( const std::strin
 	}
 	result.setTexture(tex, true);
 	result.setPosition(m_atlasBounds);
-
 	result.setScale(float(TILESIZE)/tex.getSize().x, float(TILESIZE)/tex.getSize().y);
 
-
 	auto rBounds=result.getGlobalBounds();
-
 	result.SetTC(m_atlasBounds, m_atlasBounds+sf::Vector2f(rBounds.width,rBounds.height));
-
 
 	m_atlasTexture.draw(result);
 	m_atlasBounds.x += rBounds.width;
 	if(rBounds.height > m_yOffset)
 		m_yOffset = (float) rBounds.height;
 
-	m_atlas.emplace(std::make_pair(name, result));
-	return m_atlas.at(name);
+	m_textureDirty = true;
+
+	m_atlas.emplace(std::make_pair(_name, result));
+	return m_atlas.at(_name);
 }
 
 void SpriteAtlasBatcher::Begin()
 {
 	assert(!m_hasBegun);
 	m_drawArray.clear();
-	m_drawArray.setPrimitiveType(sf::PrimitiveType::Quads);
 	m_hasBegun = true;
 }
 
@@ -103,9 +95,12 @@ void SpriteAtlasBatcher::End()
 	m_hasBegun = false;
 }
 
-void SpriteAtlasBatcher::draw(sf::RenderTarget& target, sf::RenderStates states) const
+void SpriteAtlasBatcher::draw(sf::RenderTarget& _target, sf::RenderStates _states) const
 {
 	assert(!m_hasBegun);
-	states.texture = &m_atlasTexture.getTexture();
-	target.draw(m_drawArray, states);
+	if( m_drawArray.getVertexCount() > 0 )
+	{
+		_states.texture = &m_atlasTexture.getTexture();
+		_target.draw(m_drawArray, _states);
+	}
 }

@@ -81,6 +81,9 @@ namespace Interfaces {
 
 		/// \brief Which map is selected?
 		Core::MapID GetSelectedMap() const		{ return m_maps.size()>0 ? m_maps[m_selected] : 0; }
+
+		/// \brief Change the selected map
+		void SetMap(Core::MapID _id);
 	private:
 		/// \brief A mapping from list indices to map ids.
 		std::vector<Core::MapID> m_maps;

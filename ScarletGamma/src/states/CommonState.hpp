@@ -63,7 +63,7 @@ namespace States
 		/// \brief Check if a layer is currently visible
 		bool IsLayerVisible( int _layer )	{ return m_hiddenLayers[_layer] != 0; }
 
-		/// \brief Go to some object (switch map + selection + view)
+		/// \brief Go to some object (switch view)
 		void GoTo( const Core::Object* _object );
 
 		//----------------------------------------------------------------------

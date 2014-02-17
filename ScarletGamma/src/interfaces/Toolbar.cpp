@@ -227,6 +227,12 @@ namespace Interfaces {
 		}
 	}
 
+	void MapToolbox::SetMap(Core::MapID _id)
+	{
+		// Find the map in the vector and store the index
+		m_selected = std::find(m_maps.begin(), m_maps.end(), _id) - m_maps.begin();
+	}
+
 
 
 

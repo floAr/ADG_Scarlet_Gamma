@@ -63,7 +63,7 @@ namespace States {
 		m_toolbar->AddToolbox( m_modeTool );
 		m_toolbar->AddToolbox( m_playerTool );
 		m_playerTool->SetDragNDropHandler( &m_draggedContent );
-		std::function<void(const Object*)> gotoFunc = std::bind(&CommonState::GoTo, this, std::placeholders::_1);
+		std::function<void(const Object*)> gotoFunc = std::bind(&MasterState::GoTo, this, std::placeholders::_1);
 		m_playerTool->SetGoToMethod(gotoFunc);
 		m_toolbar->AddToolbox( Interfaces::NPCToolbox::Ptr() );
 
@@ -156,24 +156,6 @@ namespace States {
 
 	void MasterState::MouseButtonPressed(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos, bool guiHandled)
 	{
-		// Register right-click on Player-Toolbox ( tgui has no RMB support ).
-		/*if( button.button == sf::Mouse::Right )
-		{
-			float x = button.x - m_toolbar->getPosition().x;
-			float y = button.y - m_toolbar->getPosition().y;
-			if( m_playerTool->mouseOnWidget(x, y) )
-			{
-				// Set view to the player
-				Object* player = m_playerTool->GetPlayer(x, y);
-				sf::Vector2f pos = player->GetPosition();
-				sf::Vector2f viewPos = pos * float(TILESIZE);
-				sf::View newView = g_Game->GetWindow().getView();
-				newView.setCenter(viewPos);
-				g_Game->GetWindow().setView(newView);
-				//m_mapTool->setMap();
-			}
-		}*/
-
 		// Return if the GUI already handled it
 		if (guiHandled)
 			return;
@@ -585,16 +567,31 @@ namespace States {
 		return g_Game->GetWorld()->GetMap(id);
 	}
 
+	void MasterState::GoTo( const Core::Object* _object )
+	{
+		if( !_object ) return;
+
+		CommonState::GoTo(_object);
+
+		// Reset selection
+		m_selection.Clear();
+		AddToSelection(_object->ID());
+
+		// Reset current map
+		m_mapTool->SetMap(_object->GetParentMap());
+	}
+
     void MasterState::CreateCombat( Core::ObjectID _object )
     {
         // Maybe create a new Combat object
 		if (!m_combat)
 			m_combat = new GameRules::MasterCombat();
 
-		// TODO: stop objects that are currently moving!
-
 		// Find the object
 		Core::Object* object = g_Game->GetWorld()->GetObject(_object);
+		// Stop objects that are currently moving!
+		// TODO: Only this objects or more?
+		object->ResetTarget();
 
 		// Prompt for initiative roll
 		static_cast<GameRules::MasterCombat*>(m_combat)->AddParticipant(_object);

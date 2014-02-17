@@ -32,6 +32,9 @@ namespace States
 
 		virtual Core::Map* GetCurrentMap() override;
 
+		/// \brief Go to some object (switch map + selection + view)
+		void GoTo( const Core::Object* _object );
+
 		virtual void CreateCombat(Core::ObjectID _object) override;
 
 		/// \brief Checks whether an object is owned by the DM.

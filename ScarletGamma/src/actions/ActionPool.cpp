@@ -193,10 +193,13 @@ void ActionPool::UpdateExecution()
             // Create a copy of the new action
             m_localAction = toCopy->Clone(std::get<1>(newAction), std::get<2>(newAction));
 
-			if (m_localAction->m_duration == Duration::STANDARD_ACTION)
-				g_Game->GetCommonState()->GetCombat()->UseStandardAction();
-			else if (m_localAction->m_duration == Duration::MOVE_ACTION)
-				g_Game->GetCommonState()->GetCombat()->UseMoveAction();
+			if( g_Game->GetCommonState()->GetCombat() )
+			{
+				if (m_localAction->m_duration == Duration::STANDARD_ACTION)
+					g_Game->GetCommonState()->GetCombat()->UseStandardAction();
+				else if (m_localAction->m_duration == Duration::MOVE_ACTION)
+					g_Game->GetCommonState()->GetCombat()->UseMoveAction();
+			}
 
             m_localAction->Execute();
         }

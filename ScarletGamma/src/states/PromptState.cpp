@@ -35,7 +35,7 @@ void PromptState::Draw(sf::RenderWindow& win)
 	// Draw previous state and apply blur shader
 	// TODO: separate shader if the FPS get low here
 	m_previousState->Draw(win);
-	sf::View& backup = sfUtils::View::SetDefault(&win);
+	SetGuiView();
 	sf::Texture screenBuffer;
 	screenBuffer.create(win.getSize().x, win.getSize().y);
 	screenBuffer.update(win);
@@ -43,7 +43,7 @@ void PromptState::Draw(sf::RenderWindow& win)
 	m_shader.setParameter("blur_radius_x", 1.0f / (float) win.getSize().x);
 	m_shader.setParameter("blur_radius_y", 1.0f / (float) win.getSize().y);
 	win.draw(sf::Sprite(screenBuffer), &m_shader);
-	win.setView(backup);
+	SetStateView();
 
 	// Draw GUI
 	sf::Vector2u size = g_Game->GetWindow().getSize();

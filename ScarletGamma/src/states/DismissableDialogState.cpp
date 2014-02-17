@@ -9,7 +9,7 @@ namespace States{
 	std::vector<sf::Sprite*> DismissableDialogState::ms_orbs;
 
 	DismissableDialogState::DismissableDialogState():m_isMinimized(false),m_orb(Content::Instance()->LoadTexture("media/orb.png")),m_minimize(Content::Instance()->LoadTexture("media/orb_diceroll.png")){
-		auto vp = g_Game->GetWindow().getView().getSize();			
+		auto& vp = g_Game->GetWindow().getView().getSize();			
 		m_minimize.setPosition(sf::Vector2f(vp.x-m_minimize.getGlobalBounds().width,0));
 		m_minimize.setScale(sf::Vector2f(0.15f,0.15f));
 		m_orb.setScale(sf::Vector2f(0.25f,0.25f));
@@ -32,9 +32,9 @@ namespace States{
 			return;
 		}
 		GameState::Draw(win);
-		sf::View& backup=sfUtils::View::SetDefault(&win);
+		SetGuiView();
 		win.draw(m_minimize); //draw minimize on top
-		win.setView(backup);
+		SetStateView();
 	}
 
 	void DismissableDialogState::MouseButtonReleased(sf::Event::MouseButtonEvent& button,
@@ -71,7 +71,7 @@ namespace States{
 			m_previousState->Resize(_size);				
 			return;
 		}
-		auto vp  =g_Game->GetWindow().getView().getSize();			
+		auto& vp = g_Game->GetWindow().getView().getSize();			
 		m_minimize.setPosition(sf::Vector2f(vp.x-m_minimize.getGlobalBounds().width,0));
 	}
 

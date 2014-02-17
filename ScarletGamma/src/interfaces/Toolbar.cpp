@@ -409,6 +409,7 @@ namespace Interfaces {
 		
 		// WTF would like to bind list - not possible
 		bindCallbackEx( &PlayersToolbox::DragPlayer, this, tgui::Panel::LeftMousePressed );
+		bindCallbackEx( &PlayersToolbox::JumpToPlayer, this, tgui::Panel::LeftMouseClicked );
 	}
 
 	void PlayersToolbox::Update( float _dt )
@@ -454,6 +455,15 @@ namespace Interfaces {
 			delete *m_dragNDropHandler;
 			*m_dragNDropHandler = nullptr;
 		}
+	}
+
+	void PlayersToolbox::JumpToPlayer(const tgui::Callback& _caller)
+	{
+		// Get which player was clicked
+		Core::Object* player = GetPlayer( (float)_caller.mouse.x, (float)_caller.mouse.y );
+
+		// Call the CommonState's GoTo
+		m_goto(player);
 	}
 
 

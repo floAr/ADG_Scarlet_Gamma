@@ -66,19 +66,18 @@ void States::PlayerState::Draw(sf::RenderWindow& win)
 		Graphics::TileRenderer::RenderSelection( win, m_selection );
 	} else {
 		// The player is not on the map - bring that into attention
-		sf::View backup = sfUtils::View::SetDefault(&win);
+		SetGuiView();
 		sf::Text t(STR_PLAYER_NOT_ON_MAP, m_gui.getGlobalFont(), 30);
 		t.setPosition(30, 320);
 		win.draw(t);
-		win.setView(backup);
 	}
 
 	// Draw the current focused object's name
-	sf::View backup = sfUtils::View::SetDefault(&win);
+	SetGuiView();
 	sf::Text t(m_focus->GetName(), m_gui.getGlobalFont(), 24);
 	t.setPosition(20, 10);
 	win.draw(t);
-	win.setView(backup);
+	SetStateView();
 
 	GameState::Draw(win);
 }

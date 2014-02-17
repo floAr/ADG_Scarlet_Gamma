@@ -19,6 +19,6 @@ namespace sfUtils
 		/// \brief Sets a view which has exactly window size and (0,0) at the
 		///		top left corner.
 		///	\return The view which was set before.
-		static sf::View SetDefault(sf::RenderWindow* _window);
+		//static sf::View SetDefault(sf::RenderWindow* _window);
 	};
 }

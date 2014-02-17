@@ -63,6 +63,9 @@ namespace States
 		/// \brief Check if a layer is currently visible
 		bool IsLayerVisible( int _layer )	{ return m_hiddenLayers[_layer] != 0; }
 
+		/// \brief Go to some object (switch map + selection + view)
+		void GoTo( const Core::Object* _object );
+
 		//----------------------------------------------------------------------
 		// COMBAT STUFF
 		virtual void CreateCombat(Core::ObjectID _object) = 0;
@@ -77,7 +80,6 @@ namespace States
 		{
 			return m_combat != nullptr;
 		}
-
 
 		/// \brief Checks whether an object is owned by the CommonState's owner.
 		virtual bool OwnsObject(Core::ObjectID _object) = 0;

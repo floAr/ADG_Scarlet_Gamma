@@ -63,6 +63,8 @@ namespace States {
 		m_toolbar->AddToolbox( m_modeTool );
 		m_toolbar->AddToolbox( m_playerTool );
 		m_playerTool->SetDragNDropHandler( &m_draggedContent );
+		std::function<void(const Object*)> gotoFunc = std::bind(&CommonState::GoTo, this, std::placeholders::_1);
+		m_playerTool->SetGoToMethod(gotoFunc);
 		m_toolbar->AddToolbox( Interfaces::NPCToolbox::Ptr() );
 
 		// Set chat color...
@@ -155,7 +157,7 @@ namespace States {
 	void MasterState::MouseButtonPressed(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos, bool guiHandled)
 	{
 		// Register right-click on Player-Toolbox ( tgui has no RMB support ).
-		if( button.button == sf::Mouse::Right )
+		/*if( button.button == sf::Mouse::Right )
 		{
 			float x = button.x - m_toolbar->getPosition().x;
 			float y = button.y - m_toolbar->getPosition().y;
@@ -170,7 +172,7 @@ namespace States {
 				g_Game->GetWindow().setView(newView);
 				//m_mapTool->setMap();
 			}
-		}
+		}*/
 
 		// Return if the GUI already handled it
 		if (guiHandled)

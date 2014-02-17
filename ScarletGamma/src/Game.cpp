@@ -65,6 +65,7 @@ void Game::Run()
 		m_stateMachine->Update(time);
 		m_stateMachine->Draw(m_window);
 
+		m_stateMachine->GetGameState()->SetGuiView();
 #ifdef _FPS
 		m_dFpsTime += time;
 		m_dFpsCounter++;
@@ -74,18 +75,15 @@ void Game::Run()
 			m_dFpsTime = 0;
 			m_dFpsCounter = 0;
 		}
-		sf::View fpsViewBackup = sfUtils::View::SetDefault(&m_window);
 		sf::Text t(std::to_string(m_dFps), m_dFpsFont, 12);
 		if (m_dFps < 30)
 			t.setColor(sf::Color::Red);
 		t.setPosition(5, 5);
 		m_window.draw(t);
-		m_window.setView(fpsViewBackup);
 #endif
 		// Draw cursor with default view
-		sf::View mouseViewBackup = sfUtils::View::SetDefault(&m_window);
 		m_window.draw(m_cursorSprite);
-		m_window.setView(mouseViewBackup);
+		m_stateMachine->GetGameState()->SetStateView();
 
 		// Swap buffers
 		m_window.display();

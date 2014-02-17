@@ -158,6 +158,7 @@ namespace Interfaces {
 		virtual void Init() override;
 
 		void SetDragNDropHandler( DragContent** _dragNDropHandler )	{ m_dragNDropHandler = _dragNDropHandler; }
+		void SetGoToMethod( const std::function<void(const Core::Object*)>& _goto )	{ m_goto = _goto; }
 
 		/// \brief Refresh the list if new players are added or a player died
 		virtual void Update( float _dt ) override;
@@ -167,8 +168,10 @@ namespace Interfaces {
 		float m_lastUpdate;					///< Counter to avoid to many updates
 		tgui::ListBox::Ptr m_playerList;	///< List of players
 		DragContent** m_dragNDropHandler;	///< Access to the global drag&drop handler
+		std::function<void(const Core::Object*)> m_goto;	///< State access for view updates
 
 		void DragPlayer(const tgui::Callback& _caller);
+		void JumpToPlayer(const tgui::Callback& _caller);
 	};
 
 	/// \brief Toolbox for map selection and creation.

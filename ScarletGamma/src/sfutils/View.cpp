@@ -7,7 +7,7 @@ sf::FloatRect sfUtils::View::GetViewRect(const sf::View& view)
 	return sf::FloatRect(center.x - size.x / 2.f, center.y - size.y / 2.f, size.x, size.y);
 }
 
-sf::View sfUtils::View::SetDefault(sf::RenderWindow* _window)
+/*sf::View sfUtils::View::SetDefault(sf::RenderWindow* _window)
 {
 	sf::View backup = _window->getView();
 	sf::View guiView;
@@ -16,3 +16,4 @@ sf::View sfUtils::View::SetDefault(sf::RenderWindow* _window)
 	_window->setView(guiView);
 	return backup;
 }
+*/

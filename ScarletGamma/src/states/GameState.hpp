@@ -164,17 +164,26 @@ namespace States
 		///   to end. Should ONLY be called by the StateMachine!
 		void NotifyPopCallback();
 
+		/// \brief Switch the window view
+		void SetGuiView();
+		void SetStateView();
+
+		/// \brief Only the state view can be changed.
+		sf::View& GetStateView()	{return m_stateView;}
+
 	protected:
-		bool m_finished; ///< set to true if the GameState is finished
-		GameState* m_previousState; ///< Pointer to previous state or null
+		bool m_finished;			///< set to true if the GameState is finished
+		GameState* m_previousState;	///< Pointer to previous state or null
 		std::vector<std::function<void(GameState*)>> m_popCallbacks; ///< Functions to be notified before I'm gone
 
+		sf::View m_guiView;			///< A view without transformations
+		sf::View m_stateView;		///< A translated and zoomed view
 
 		/// \brief Sets the GUI to be rendered, updated and used to handle events.
 		/// \param [in] gui  Pointer to the GUI instance.
 		void SetGui(tgui::Gui* gui) { m_currentGui = gui ; }
 
 	private:
-		tgui::Gui* m_currentGui; ///< GUI to be rendered, updated and used to handle events.
+		tgui::Gui* m_currentGui;	///< GUI to be rendered, updated and used to handle events.
 	};
 }

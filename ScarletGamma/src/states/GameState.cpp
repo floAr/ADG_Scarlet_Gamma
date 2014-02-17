@@ -1,5 +1,6 @@
 #include "GameState.hpp"
 #include "sfutils\View.hpp"
+#include "Game.hpp"
 
 namespace States {
 
@@ -20,10 +21,9 @@ namespace States {
 		if (m_currentGui)
 		{
 			// Update HUD without zoom and move
-			sf::RenderWindow* win = m_currentGui->getWindow();
-			sf::View backup = sfUtils::View::SetDefault(win);
+			SetGuiView();
 			result = m_currentGui->handleEvent(event);
-			win->setView(backup);
+			SetStateView();
 		}
 		return result;
 	}
@@ -33,10 +33,9 @@ namespace States {
 		if (m_currentGui)
 		{
 			// Draw HUD without zoom and move
-			sf::RenderWindow* win = m_currentGui->getWindow();
-			sf::View backup = sfUtils::View::SetDefault(win);
+			SetGuiView();
 			m_currentGui->draw();
-			win->setView(backup);
+			SetStateView();
 		}
 	}
 
@@ -53,6 +52,20 @@ namespace States {
 			// Call callback function
 			(*it)(this);
 		}
+	}
+
+
+	void GameState::SetGuiView()
+	{
+		m_stateView = g_Game->GetWindow().getView();
+		m_guiView.setSize((float)g_Game->GetWindow().getSize().x, (float)g_Game->GetWindow().getSize().y);
+		m_guiView.setCenter(m_guiView.getSize() * 0.5f);
+		m_currentGui->getWindow()->setView(m_guiView);
+	}
+
+	void GameState::SetStateView()
+	{
+		m_currentGui->getWindow()->setView(m_stateView);
 	}
 
 } // namespace States

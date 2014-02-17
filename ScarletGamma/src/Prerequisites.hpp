@@ -91,6 +91,9 @@ namespace States
     class GameState;
     class PromptState;
     class CommonState;
+	class MasterState;
+	class PlayerState;
+	class CharacterState;
 }
 
 //------------------------------------------------------------------------------

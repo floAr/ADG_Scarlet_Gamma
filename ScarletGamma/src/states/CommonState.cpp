@@ -103,15 +103,15 @@ void CommonState::MouseMoved(int deltaX, int deltaY, bool guiHandled)
 		sf::RenderWindow& win = g_Game->GetWindow();
 
 		// Create a new view with its center shifted by the mouse position
-		sf::Vector2f center = win.getView().getCenter();
-		sf::View newView = win.getView();
+		sf::View& newView = GetStateView();
+		sf::Vector2f center = newView.getCenter();
 		sf::Vector2f scale(newView.getSize().x / win.getSize().x,
 			newView.getSize().y / win.getSize().y);
 		newView.setCenter(center.x - (deltaX * scale.x),
 			center.y - (deltaY * scale.y));
 
 		// Apply view to the window
-		win.setView(newView);
+		SetStateView();
 	}
 }
 
@@ -268,6 +268,16 @@ void CommonState::RemoveFromSelection( Core::ObjectID _id )
 	m_selection.Remove(_id);
 	m_selectionChanged = true;
 }
+
+
+void CommonState::GoTo( const Core::Object* _object )
+{
+	// Center the view at the object
+	sf::Vector2f pos = _object->GetPosition();
+	sf::Vector2f viewPos = pos * float(TILESIZE);
+	GetStateView().setCenter(viewPos);
+}
+
 
 void CommonState::EndCombat()
 {

@@ -32,7 +32,6 @@ public:
 protected:
 	Content();
 private:
-	static Content *m_instance;
 	~Content(void);
 
 	thor::MultiResourceCache m_res_cache;

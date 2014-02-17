@@ -52,6 +52,7 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>src;lib/TGUI-0.6-RC/include;lib/SFML-2.1/include;lib/JoFile/include;lib/Thor-VS11x32/include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>SFML_STATIC;_MBCS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -71,6 +72,7 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>src;lib/TGUI-0.6-RC/include;lib/SFML-2.1/include;lib/JoFile/include;lib/Thor-VS11x32/include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>SFML_STATIC;_MBCS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

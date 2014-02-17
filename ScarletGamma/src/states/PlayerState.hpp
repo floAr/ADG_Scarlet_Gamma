@@ -35,9 +35,12 @@ namespace States
 		virtual bool OwnsObject(Core::ObjectID _object) override;
 
 		/// \brief Set the current view to another objects position
-		/// \details Try to append the current view onto another object, if player does not exist nothing happens
+		/// \details Append the current view onto another object
 		/// \param [in] object	object to view
-		void SetViewToObject(Core::Object* object );
+		void FocusObject(Core::Object* _object);
+
+		/// \brief Show the examination gui for the given object.
+		void ExamineObject(Core::ObjectID _object);
 
 	private:
 		Core::PlayerID m_playerID;							///< The players id (set by socket index)
@@ -46,7 +49,8 @@ namespace States
 		Core::Object* m_focus;								///< The camera is tracking this object
 		std::unordered_map<int,Core::ObjectID> m_hotkeys;	///< Defined hotkeys of this client //TODO: maybe save hotkeys as properties
 
-		Interfaces::PropertyPanel::Ptr m_playerView;	///< Showing the player properties
+		Interfaces::PropertyPanel::Ptr m_playerView;		///< Showing the player properties
+		Interfaces::PropertyPanel::Ptr m_observerView;		///< Showing something the player is observing
 
 		/// \brief This method is given to the renderer to check the
 		///		visibility of a tile for the player

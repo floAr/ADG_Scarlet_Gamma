@@ -13,6 +13,7 @@
 #include "Game.hpp"
 #include "states/CommonState.hpp"
 #include "gamerules/Combat.hpp"
+#include "Examine.hpp"
 
 using namespace Actions;
 
@@ -29,6 +30,7 @@ ActionPool::ActionPool() :
 	m_actions.push_back(new UseJumpPoint());
 	m_actions.push_back(new UseSwitch());
 	m_actions.push_back(new TakeObject());
+	m_actions.push_back(new Examine());
     //------------------------------//
     // TODO: add more actions here! //
     //------------------------------//

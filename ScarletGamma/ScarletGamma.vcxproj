@@ -85,6 +85,7 @@
     <ClCompile Include="src\actions\ActionPool.cpp" />
     <ClCompile Include="src\actions\Actions.cpp" />
     <ClCompile Include="src\actions\Attack.cpp" />
+    <ClCompile Include="src\actions\Examine.cpp" />
     <ClCompile Include="src\actions\SetJumpPoint.cpp" />
     <ClCompile Include="src\actions\TakeObject.cpp" />
     <ClCompile Include="src\actions\UseJumpPoint.cpp" />
@@ -148,6 +149,7 @@
     <ClInclude Include="src\actions\Action.hpp" />
     <ClInclude Include="src\actions\ActionPool.hpp" />
     <ClInclude Include="src\actions\Attack.hpp" />
+    <ClInclude Include="src\actions\Examine.hpp" />
     <ClInclude Include="src\actions\SetJumpPoint.hpp" />
     <ClInclude Include="src\actions\TakeObject.hpp" />
     <ClInclude Include="src\actions\UseJumpPoint.hpp" />

@@ -68,5 +68,8 @@ namespace Actions
 
         /// \brief Saves the sender's socket ID
         uint8_t m_sender;
+
+		static std::unordered_map<Core::ObjectID, std::string> m_attackRollCache;
+		static std::unordered_map<Core::ObjectID, std::string> m_hitRollCache;
     };
 }

@@ -192,7 +192,7 @@ namespace States {
 			{
 				if( !GetCurrentMap() ) {
 					Network::ChatMsg(STR_MSG_CREATE_MAP_FIRST, sf::Color::Red).Send();
-					return;		
+					return;
 				}
 				if( !m_objectsPanel->GetSelected() ) {
 					Network::ChatMsg(STR_MSG_SELECT_TYPE_FIRST, sf::Color::Red).Send();

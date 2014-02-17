@@ -302,6 +302,7 @@ int CommonState::AutoDetectLayer( Core::Object* _object )
 
 Core::ObjectID CommonState::FindTopmostTile(int _x, int _y)
 {
+	if( !GetCurrentMap() ) return Core::INVALID_ID;
 	auto& objectList = GetCurrentMap()->GetObjectsAt(_x, _y);
 	Core::ObjectID topmostObject = Core::INVALID_ID;
 	int maxLayer = -1000;

@@ -63,7 +63,7 @@ namespace States {
 		m_toolbar->AddToolbox( m_modeTool );
 		m_toolbar->AddToolbox( m_playerTool );
 		m_playerTool->SetDragNDropHandler( &m_draggedContent );
-		std::function<void(const Object*)> gotoFunc = std::bind(&CommonState::GoTo, this, std::placeholders::_1);
+		std::function<void(const Object*)> gotoFunc = std::bind(&MasterState::GoTo, this, std::placeholders::_1);
 		m_playerTool->SetGoToMethod(gotoFunc);
 		m_toolbar->AddToolbox( Interfaces::NPCToolbox::Ptr() );
 
@@ -156,24 +156,6 @@ namespace States {
 
 	void MasterState::MouseButtonPressed(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos, bool guiHandled)
 	{
-		// Register right-click on Player-Toolbox ( tgui has no RMB support ).
-		/*if( button.button == sf::Mouse::Right )
-		{
-			float x = button.x - m_toolbar->getPosition().x;
-			float y = button.y - m_toolbar->getPosition().y;
-			if( m_playerTool->mouseOnWidget(x, y) )
-			{
-				// Set view to the player
-				Object* player = m_playerTool->GetPlayer(x, y);
-				sf::Vector2f pos = player->GetPosition();
-				sf::Vector2f viewPos = pos * float(TILESIZE);
-				sf::View newView = g_Game->GetWindow().getView();
-				newView.setCenter(viewPos);
-				g_Game->GetWindow().setView(newView);
-				//m_mapTool->setMap();
-			}
-		}*/
-
 		// Return if the GUI already handled it
 		if (guiHandled)
 			return;
@@ -218,16 +200,7 @@ namespace States {
 				m_rectSelectionStart.x = tileX;
 				m_rectSelectionStart.y = tileY;
 				m_rectSelection = true;
-			} else {	// Mode ACTION
-				// Start drag&drop with the topmost visible tile
-				ObjectID topmostObject = FindTopmostTile(tileX, tileY);
-				if( topmostObject != INVALID_ID ) {
-					if( !m_draggedContent ) m_draggedContent = new Interfaces::DragContent();
-					m_draggedContent->from = Interfaces::DragContent::MAP;
-					m_draggedContent->object = g_Game->GetWorld()->GetObject(topmostObject);
-					m_draggedContent->prop = nullptr;
-				}
-
+			} else if(m_modeTool->GetMode() == Interfaces::ModeToolbox::ACTION) {	// Mode ACTION
 				// Default action
 				if (m_selection.Size() > 0)
 				{
@@ -239,6 +212,15 @@ namespace States {
 						for (int i=0; i < m_selection.Size(); ++i)
 							Actions::ActionPool::Instance().StartDefaultAction(m_selection[i], object->ID());
 					}
+				}
+			} else {	// Mode Drag&Drop
+				// Start drag&drop with the topmost visible tile
+				ObjectID topmostObject = FindTopmostTile(tileX, tileY);
+				if( topmostObject != INVALID_ID ) {
+					if( !m_draggedContent ) m_draggedContent = new Interfaces::DragContent();
+					m_draggedContent->from = Interfaces::DragContent::MAP;
+					m_draggedContent->object = g_Game->GetWorld()->GetObject(topmostObject);
+					m_draggedContent->prop = nullptr;
 				}
 			}
 			break; }
@@ -585,16 +567,31 @@ namespace States {
 		return g_Game->GetWorld()->GetMap(id);
 	}
 
+	void MasterState::GoTo( const Core::Object* _object )
+	{
+		if( !_object ) return;
+
+		CommonState::GoTo(_object);
+
+		// Reset selection
+		m_selection.Clear();
+		AddToSelection(_object->ID());
+
+		// Reset current map
+		m_mapTool->SetMap(_object->GetParentMap());
+	}
+
     void MasterState::CreateCombat( Core::ObjectID _object )
     {
         // Maybe create a new Combat object
 		if (!m_combat)
 			m_combat = new GameRules::MasterCombat();
 
-		// TODO: stop objects that are currently moving!
-
 		// Find the object
 		Core::Object* object = g_Game->GetWorld()->GetObject(_object);
+		// Stop objects that are currently moving!
+		// TODO: Only this objects or more?
+		object->ResetTarget();
 
 		// Prompt for initiative roll
 		static_cast<GameRules::MasterCombat*>(m_combat)->AddParticipant(_object);

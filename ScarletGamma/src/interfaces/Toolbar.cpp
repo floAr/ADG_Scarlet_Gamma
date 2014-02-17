@@ -227,6 +227,12 @@ namespace Interfaces {
 		}
 	}
 
+	void MapToolbox::SetMap(Core::MapID _id)
+	{
+		// Find the map in the vector and store the index
+		m_selected = std::find(m_maps.begin(), m_maps.end(), _id) - m_maps.begin();
+	}
+
 
 
 
@@ -235,7 +241,7 @@ namespace Interfaces {
 	ModeToolbox::ModeToolbox() :
 		m_selected(0)
 	{
-		Panel::setSize( 74.0f, 100.0f );
+		Panel::setSize( 95.0f, 100.0f );
 		Panel::setBackgroundColor( sf::Color(50,50,50,150) );
 	}
 
@@ -245,12 +251,12 @@ namespace Interfaces {
 		heading->load( "media/Black.conf" );
 		heading->setPosition( 0.0f, 0.0f );
 		heading->setText( STR_MODE );
-		heading->setSize( 74.0f, 20.0f );
+		heading->setSize( getSize().x, 20.0f );
 		heading->disable();
 
 		m_actionList = tgui::ListBox::Ptr( *this );
 		m_actionList->load( "media/Black.conf" );
-		m_actionList->setSize( 74.0f, 80.0f );
+		m_actionList->setSize( getSize().x, 80.0f );
 		m_actionList->setPosition( 0.0f, 20.0f );
 		m_actionList->setItemHeight( 19 );
 		m_actionList->removeScrollbar();// getScrollbar()->setSize( 12.0f, m_mapList->getScrollbar()->getSize().y );
@@ -258,6 +264,7 @@ namespace Interfaces {
 		m_actionList->addItem( STR_SELECTION );
 		m_actionList->addItem( STR_BRUSH );
 		m_actionList->addItem( STR_ACTION );
+		m_actionList->addItem( STR_DRAGNDROP );
 		m_actionList->setSelectedItem( 0 );
 
 		// Add dependent boxes

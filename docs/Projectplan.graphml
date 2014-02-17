@@ -17,7 +17,7 @@
     <node id="n0">
       <data key="d6">
         <y:GenericNode configuration="com.yworks.flowchart.offPageReference">
-          <y:Geometry height="48.75" width="42.25" x="472.11645163636354" y="-174.38061818181825"/>
+          <y:Geometry height="48.75" width="42.25" x="619.1164516363635" y="-174.38061818181825"/>
           <y:Fill color="#FFFFFF" color2="#00CCFF" transparent="false"/>
           <y:BorderStyle color="#FFFFFF" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" borderDistance="0.0" fontFamily="Trebuchet MS" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="20.255859375" modelName="sides" modelPosition="n" textColor="#000000" visible="true" width="43.5458984375" x="-0.64794921875" y="-20.255859375">Today</y:NodeLabel>
@@ -2918,7 +2918,7 @@ Abschlusspräsentation</y:NodeLabel>
       <data key="d6">
         <y:GenericNode configuration="com.yworks.flowchart.process">
           <y:Geometry height="12.0" width="145.5" x="-817.7585483636365" y="-265.3153090909091"/>
-          <y:Fill color="#FFFFFF" color2="#B7C9E3" transparent="false"/>
+          <y:Fill color="#00FF00" color2="#B7C9E3" transparent="false"/>
           <y:BorderStyle color="#FFFFFF" type="line" width="1.0"/>
           <y:NodeLabel alignment="left" autoSizePolicy="content" borderDistance="0.0" fontFamily="Trebuchet MS" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.93359375" modelName="sides" modelPosition="n" textColor="#000000" visible="true" width="88.791015625" x="28.3544921875" y="-17.93359375">Flächenauswahl</y:NodeLabel>
           <y:StyleProperties>
@@ -2957,7 +2957,7 @@ Abschlusspräsentation</y:NodeLabel>
       <data key="d6">
         <y:GenericNode configuration="com.yworks.flowchart.process">
           <y:Geometry height="12.0" width="138.0" x="-681.2585483636365" y="-391.3153090909091"/>
-          <y:Fill color="#FFFFFF" color2="#B7C9E3" transparent="false"/>
+          <y:Fill color="#00FF00" color2="#B7C9E3" transparent="false"/>
           <y:BorderStyle color="#FFFFFF" type="line" width="1.0"/>
           <y:NodeLabel alignment="left" autoSizePolicy="content" borderDistance="0.0" fontFamily="Trebuchet MS" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.93359375" modelName="sides" modelPosition="n" textColor="#000000" visible="true" width="147.490234375" x="-4.7451171875" y="-17.93359375">Dynamisches Kontextmenü</y:NodeLabel>
           <y:StyleProperties>
@@ -3178,7 +3178,7 @@ Abschlusspräsentation</y:NodeLabel>
       <data key="d6">
         <y:GenericNode configuration="com.yworks.flowchart.process">
           <y:Geometry height="12.0" width="147.0" x="188.74145163636354" y="-223.23327272727283"/>
-          <y:Fill color="#FFFFFF" color2="#B7C9E3" transparent="false"/>
+          <y:Fill color="#00FF00" color2="#B7C9E3" transparent="false"/>
           <y:BorderStyle color="#FFFFFF" type="line" width="1.0"/>
           <y:NodeLabel alignment="left" autoSizePolicy="content" borderDistance="0.0" fontFamily="Trebuchet MS" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.93359375" modelName="sides" modelPosition="n" textColor="#000000" visible="true" width="62.060546875" x="42.4697265625" y="-17.93359375">Fog of War</y:NodeLabel>
           <y:StyleProperties>
@@ -3217,7 +3217,7 @@ Abschlusspräsentation</y:NodeLabel>
       <data key="d6">
         <y:GenericNode configuration="com.yworks.flowchart.process">
           <y:Geometry height="12.0" width="147.0" x="188.74145163636354" y="-307.3153090909091"/>
-          <y:Fill color="#FFFFFF" color2="#B7C9E3" transparent="false"/>
+          <y:Fill color="#00FF00" color2="#B7C9E3" transparent="false"/>
           <y:BorderStyle color="#FFFFFF" type="line" width="1.0"/>
           <y:NodeLabel alignment="left" autoSizePolicy="content" borderDistance="0.0" fontFamily="Trebuchet MS" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.93359375" modelName="sides" modelPosition="n" textColor="#000000" visible="true" width="99.73046875" x="23.634765625" y="-17.93359375">Beobachtermodus</y:NodeLabel>
           <y:StyleProperties>
@@ -3243,7 +3243,7 @@ Abschlusspräsentation</y:NodeLabel>
       <data key="d6">
         <y:GenericNode configuration="com.yworks.flowchart.process">
           <y:Geometry height="12.0" width="21.0" x="608.7414516363635" y="-223.23327272727283"/>
-          <y:Fill color="#FFFFFF" color2="#B7C9E3" transparent="false"/>
+          <y:Fill color="#00FF00" color2="#B7C9E3" transparent="false"/>
           <y:BorderStyle color="#FFFFFF" type="line" width="1.0"/>
           <y:NodeLabel alignment="left" autoSizePolicy="content" borderDistance="0.0" fontFamily="Trebuchet MS" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.93359375" modelName="sides" modelPosition="n" textColor="#000000" visible="true" width="41.44140625" x="-10.220703125" y="-17.93359375">1. Test</y:NodeLabel>
           <y:StyleProperties>
@@ -3438,7 +3438,7 @@ Abschlusspräsentation</y:NodeLabel>
       <data key="d6">
         <y:GenericNode configuration="com.yworks.flowchart.process">
           <y:Geometry height="12.0" width="63.0" x="104.74145163636354" y="-223.23327272727283"/>
-          <y:Fill color="#FFFFFF" color2="#B7C9E3" transparent="false"/>
+          <y:Fill color="#00FF00" color2="#B7C9E3" transparent="false"/>
           <y:BorderStyle color="#FFFFFF" type="line" width="1.0"/>
           <y:NodeLabel alignment="left" autoSizePolicy="content" borderDistance="0.0" fontFamily="Trebuchet MS" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.93359375" modelName="sides" modelPosition="n" textColor="#000000" visible="true" width="96.197265625" x="-16.5986328125" y="-17.93359375">New Player Menu</y:NodeLabel>
           <y:StyleProperties>

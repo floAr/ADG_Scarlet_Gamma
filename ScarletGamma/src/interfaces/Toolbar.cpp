@@ -430,7 +430,7 @@ namespace Interfaces {
 			m_lastUpdate = 0.0f;
 			m_playerList->removeAllItems();
 			// Test all possible player ids
-			auto players = g_Game->GetWorld()->GetAllPlayers();
+			auto& players = g_Game->GetWorld()->GetAllPlayers();
 			for( size_t i=0; i<players.size(); ++i )
 			{
 				Core::Object* player = g_Game->GetWorld()->GetObject( players[i] );

@@ -30,7 +30,7 @@ ChoosePlayerState::ChoosePlayerState(Core::PlayerID _id) :
 	createNew->setPosition( g_Game->GetWindow().getSize().x * 0.5f - 150.0f, 80.0f );
 	createNew->setText( "Neuer Spieler" );
 
-	auto players = g_Game->GetWorld()->GetAllPlayers();
+	auto& players = g_Game->GetWorld()->GetAllPlayers();
 	for( size_t i = 0; i < players.size(); ++i )
 	{
 		tgui::Button::Ptr button = createNew.clone();

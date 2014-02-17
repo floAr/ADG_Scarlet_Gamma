@@ -78,7 +78,7 @@ namespace Core {
 
         /// \brief If a player with that ID exists its object is returned.
         /// \return The player object or nullptr.
-        Object* FindPlayer( uint8_t _id );
+        Object* FindPlayer( Core::PlayerID _id );
 
         /// \brief Search all objects which have a certain text sequence in
         ///		their name.
@@ -90,7 +90,7 @@ namespace Core {
         std::vector<MapID> GetAllMaps() const;
 
 		/// \brief Get all existing player's object IDs.
-		std::vector<ObjectID> GetAllPlayers() const;
+		const std::vector<ObjectID>& GetAllPlayers() const;
 
         /// \brief Call the update of all maps (Simulate Game).
         /// \param [in] _dt Time since last update.
@@ -124,7 +124,7 @@ namespace Core {
 
         /// \brief A subset of the objects which is flagged with a player property.
         /// \details The objects are mapped to there names to search player by name.
-        std::unordered_map<Core::PlayerID, Core::ObjectID> m_players;
+        std::vector<Core::ObjectID> m_players;
 
 		/// \brief A subset of the objects which is flagged with the owner property.
         /// \details The objects are mapped to there names to search this objects by name.

@@ -17,6 +17,9 @@
 using namespace Actions;
 using namespace GameRules;
 
+std::unordered_map<Core::ObjectID, std::string> Attack::m_attackRollCache;
+std::unordered_map<Core::ObjectID, std::string> Attack::m_hitRollCache;
+
 Attack::Attack() : Action(STR_ACT_ATTACK, Duration::STANDARD_ACTION, 50, Game::MC_ATTACK)
 {
     // Set requirements
@@ -49,6 +52,17 @@ void Attack::Execute()
     States::PromptState* prompt = dynamic_cast<States::PromptState*>(
         g_Game->GetStateMachine()->PushGameState(States::GST_PROMPT));
     prompt->SetText("Angriffswurf eingeben:");
+
+	// Default attack roll
+	if ( m_attackRollCache.count(m_executor) != 0 )
+		prompt->SetDefaultValue(m_attackRollCache[m_executor]);
+	else if ( g_Game->GetWorld()->GetObject(m_executor)->HasProperty(STR_PROP_STRENGTH_MOD) )
+		prompt->SetDefaultValue("1W20 + '" + STR_PROP_STRENGTH_MOD + "'");
+	else if ( g_Game->GetWorld()->GetObject(m_executor)->HasProperty(STR_PROP_DEXTERITY_MOD) )
+		prompt->SetDefaultValue("1W20 + '" + STR_PROP_DEXTERITY_MOD + "'");
+	else
+		prompt->SetDefaultValue("1W20");
+
     prompt->AddPopCallback(std::bind(&Attack::AttackRollPromptFinished, this, std::placeholders::_1));
 }
 
@@ -109,6 +123,9 @@ void Attack::AttackRollPromptFinished(States::GameState* gs)
     }
     else
     {
+		// Cache the result
+		m_attackRollCache[m_executor] = result;
+
         if (Network::Messenger::IsServer() == false)
         {
             // Tell the server about the result
@@ -261,6 +278,13 @@ void Attack::AttackRollHit()
     // Prompt for damage
     States::PromptState* prompt = dynamic_cast<States::PromptState*>(g_Game->GetStateMachine()->PushGameState(States::GST_PROMPT));
     prompt->SetText("Schadenswurf eingeben:");
+
+	// Set default / cache values
+	if ( m_hitRollCache.count(m_executor) != 0 )
+		prompt->SetDefaultValue(m_hitRollCache[m_executor]);
+	else if ( g_Game->GetWorld()->GetObject(m_executor)->HasProperty(STR_PROP_STRENGTH_MOD) )
+		prompt->SetDefaultValue("'" + STR_PROP_STRENGTH_MOD + "'");
+
     prompt->AddPopCallback(std::bind(&Attack::HitRollPromptFinished, this, std::placeholders::_1));
 }
 
@@ -288,6 +312,9 @@ void Attack::HitRollPromptFinished(States::GameState* gs)
     }
     else
     {
+		// Cache value
+		m_hitRollCache[m_executor] = result;
+
         if (Network::Messenger::IsServer() == false)
         {
             // Tell the server that about the result

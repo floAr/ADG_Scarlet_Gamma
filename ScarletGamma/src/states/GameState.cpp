@@ -60,12 +60,12 @@ namespace States {
 		m_stateView = g_Game->GetWindow().getView();
 		m_guiView.setSize((float)g_Game->GetWindow().getSize().x, (float)g_Game->GetWindow().getSize().y);
 		m_guiView.setCenter(m_guiView.getSize() * 0.5f);
-		m_currentGui->getWindow()->setView(m_guiView);
+		g_Game->GetWindow().setView(m_guiView);
 	}
 
 	void GameState::SetStateView()
 	{
-		m_currentGui->getWindow()->setView(m_stateView);
+		g_Game->GetWindow().setView(m_stateView);
 	}
 
 } // namespace States

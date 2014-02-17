@@ -130,7 +130,8 @@ namespace Interfaces {
 		enum Mode {
 			SELECTION = 0,
 			BRUSH = 1,
-			ACTION = 2
+			ACTION = 2,
+			DRAGNDROP = 3
 		};
 
 		// Create all elements in the mode toolbox.

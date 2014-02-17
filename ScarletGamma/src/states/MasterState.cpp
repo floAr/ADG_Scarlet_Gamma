@@ -200,16 +200,7 @@ namespace States {
 				m_rectSelectionStart.x = tileX;
 				m_rectSelectionStart.y = tileY;
 				m_rectSelection = true;
-			} else {	// Mode ACTION
-				// Start drag&drop with the topmost visible tile
-				ObjectID topmostObject = FindTopmostTile(tileX, tileY);
-				if( topmostObject != INVALID_ID ) {
-					if( !m_draggedContent ) m_draggedContent = new Interfaces::DragContent();
-					m_draggedContent->from = Interfaces::DragContent::MAP;
-					m_draggedContent->object = g_Game->GetWorld()->GetObject(topmostObject);
-					m_draggedContent->prop = nullptr;
-				}
-
+			} else if(m_modeTool->GetMode() == Interfaces::ModeToolbox::ACTION) {	// Mode ACTION
 				// Default action
 				if (m_selection.Size() > 0)
 				{
@@ -221,6 +212,15 @@ namespace States {
 						for (int i=0; i < m_selection.Size(); ++i)
 							Actions::ActionPool::Instance().StartDefaultAction(m_selection[i], object->ID());
 					}
+				}
+			} else {	// Mode Drag&Drop
+				// Start drag&drop with the topmost visible tile
+				ObjectID topmostObject = FindTopmostTile(tileX, tileY);
+				if( topmostObject != INVALID_ID ) {
+					if( !m_draggedContent ) m_draggedContent = new Interfaces::DragContent();
+					m_draggedContent->from = Interfaces::DragContent::MAP;
+					m_draggedContent->object = g_Game->GetWorld()->GetObject(topmostObject);
+					m_draggedContent->prop = nullptr;
 				}
 			}
 			break; }

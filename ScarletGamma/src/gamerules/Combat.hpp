@@ -41,7 +41,7 @@ namespace GameRules
 
         /// \brief Sets the move action as used. If a distance is specifiedm, the
         ///     5-foot-step will also be disabled.
-        void UseMoveAction(float _distance = 0, bool _diagonal = false);
+        bool UseMoveAction(float _distance = 0, bool _diagonal = false);
 
         /// \brief Returns the current object's ID.
         Core::ObjectID GetTurn() const;

@@ -7,6 +7,8 @@
 #include "Game.hpp"
 #include "states/CommonState.hpp"
 #include "gamerules/Combat.hpp"
+#include "network/Messenger.hpp"
+#include "network/CombatMessages.hpp"
 
 #include <algorithm>
 #include <unordered_map>
@@ -217,16 +219,34 @@ namespace Core {
 
 						// If it reached the target choose a new one.
 						sf::Vector2f new_target = FindNextTarget(object);
-						object->GetProperty(STR_PROP_TARGET).SetValue( sfUtils::to_string(new_target) );
 
 						// If the target changed, we need to count the step
-						if ( old_target != object->GetProperty(STR_PROP_TARGET).Value() )
+						bool move_valid = true;
+						if ( old_target != sfUtils::to_string(new_target) )
 						{
 							sf::Vector2f dir = new_target - object->GetPosition();
+							float old_steps = g_Game->GetCommonState()->GetCombat()->GetRemainingSteps();
 
 							// Count move for combat
-							g_Game->GetCommonState()->GetCombat()->UseMoveAction(1.5f,
+							move_valid = g_Game->GetCommonState()->GetCombat()->UseMoveAction(1.5f,
 								abs((int) std::floor(dir.x + 0.5f)) + abs((int) std::floor(dir.y + 0.5f)) == 2);
+
+							// Send result to clients, because only server calculates it
+							if (move_valid && Network::Messenger::IsServer())
+							{
+								Jo::Files::MemFile data;
+								float steps = old_steps - g_Game->GetCommonState()->GetCombat()->GetRemainingSteps();
+								data.Write(&steps, sizeof(steps));
+								Network::CombatMsg(Network::CombatMsgType::DM_COMBAT_MOVE_STEPS_REMAINING).Send(&data);
+							}
+						}
+
+						if (move_valid)
+							object->GetProperty(STR_PROP_TARGET).SetValue( sfUtils::to_string(new_target) );
+						else
+						{
+							object->GetProperty(STR_PROP_TARGET).SetValue( sfUtils::to_string(object->GetPosition()) );
+							object->GetProperty(STR_PROP_PATH).ClearObjects();
 						}
 					}
 					else

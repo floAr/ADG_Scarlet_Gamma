@@ -8,13 +8,14 @@ namespace Network
 {
     enum struct CombatMsgType: uint8_t
     {
-        DM_COMBAT_BEGIN,               ///< DM begins combat
-        PL_COMBAT_INITIATIVE,          ///< Player provides initiative roll
-        DM_COMBAT_ADD_PARTICIPANT,     ///< DM tells player about participants, in order of initiative
-        DM_COMBAT_SET_TURN,            ///< DM tells everybody whose turn it is
-        PL_END_TURN,                   ///< Player tells DM that his turn is over
+        DM_COMBAT_BEGIN,                ///< DM begins combat
+        PL_COMBAT_INITIATIVE,           ///< Player provides initiative roll
+        DM_COMBAT_ADD_PARTICIPANT,      ///< DM tells player about participants, in order of initiative
+        DM_COMBAT_SET_TURN,             ///< DM tells everybody whose turn it is
+        PL_COMBAT_END_TURN,             ///< Player tells DM that his turn is over
+		DM_COMBAT_MOVE_STEPS_REMAINING, ///< DM tells players about the remaining steps of current object
         /* ... */
-        DM_COMBAT_END,                 ///< DM ends combat, void
+        DM_COMBAT_END,                  ///< DM ends combat, void
     };
 
     /// \brief A base class for all combat related messages.

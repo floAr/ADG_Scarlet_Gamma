@@ -144,7 +144,7 @@ void ActionPool::StartClientAction(Core::ActionID id, Core::ObjectID _executor,
         Action* newAction = toCopy->Clone(_executor, target);
         m_clientActions[index] = newAction;
 
-		if (g_Game->GetCommonState()->GetCombat()->GetTurn() == _executor)
+		if (g_Game->GetCommonState()->InCombat() && g_Game->GetCommonState()->GetCombat()->GetTurn() == _executor)
 		{
 			if (m_clientActions[index]->m_duration == Duration::STANDARD_ACTION)
 				g_Game->GetCommonState()->GetCombat()->UseStandardAction();
@@ -196,7 +196,7 @@ void ActionPool::UpdateExecution()
             // Create a copy of the new action
             m_localAction = toCopy->Clone(std::get<1>(newAction), std::get<2>(newAction));
 
-			if( g_Game->GetCommonState()->GetCombat() )
+			if( g_Game->GetCommonState()->InCombat() )
 			{
 				if (m_localAction->m_duration == Duration::STANDARD_ACTION)
 					g_Game->GetCommonState()->GetCombat()->UseStandardAction();

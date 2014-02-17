@@ -79,9 +79,17 @@ size_t Network::HandleCombatMessage(const uint8_t* _data, size_t _size, uint8_t 
             g_Game->GetCommonState()->GetCombat()->SetTurn(object);
         } break;
 
-    case CombatMsgType::PL_END_TURN:
+    case CombatMsgType::PL_COMBAT_END_TURN:
         dynamic_cast<GameRules::MasterCombat*>(g_Game->GetCommonState()->GetCombat())->ReceivedTurnEnded();
         break;
+
+	case CombatMsgType::DM_COMBAT_MOVE_STEPS_REMAINING:
+		{
+			// DM sent usage of steps, update locally
+			float steps = *reinterpret_cast<const float*>(_data + readSize);
+			readSize += sizeof(steps);
+			g_Game->GetCommonState()->GetCombat()->UseMoveAction(steps);
+		} break;
 
     case CombatMsgType::DM_COMBAT_END:
         g_Game->GetCommonState()->EndCombat();

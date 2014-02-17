@@ -146,7 +146,7 @@ void GameRules::Combat::EndTurn()
 {
     // Send message to the GM
     if ( g_Game->GetCommonState()->OwnsObject(m_currentObject) )
-        Network::CombatMsg(Network::CombatMsgType::PL_END_TURN).Send();
+        Network::CombatMsg(Network::CombatMsgType::PL_COMBAT_END_TURN).Send();
 }
 
 void GameRules::Combat::UseStandardAction()
@@ -159,7 +159,7 @@ void GameRules::Combat::UseStandardAction()
 		m_moveActionStepsLeft = 0;
 }
 
-void GameRules::Combat::UseMoveAction( float _distance, bool _diagonal )
+bool GameRules::Combat::UseMoveAction( float _distance, bool _diagonal )
 {
 	// Move-corresponding actions without a distance (e.g. load crossbow) prevent another
 	// move action and set the steps to 0. Real move action (e.g. walk) don't check whether
@@ -170,6 +170,7 @@ void GameRules::Combat::UseMoveAction( float _distance, bool _diagonal )
 	{
 		m_moveActionRemaining = false;
 		m_moveActionStepsLeft = 0;
+		return true;
 	}
 	else
 	{
@@ -183,9 +184,6 @@ void GameRules::Combat::UseMoveAction( float _distance, bool _diagonal )
 			m_diagonalCounter = !m_diagonalCounter;
 		}
 
-		// Decrement the available distance
-		m_moveActionStepsLeft -= _distance;
-
 		// If I did more than a 5-foot-step, or my step was already used, move action is used
 		if (_distance > 1.5f || !m_fiveFootStepRemaining)
 			m_moveActionRemaining = false;
@@ -193,6 +191,18 @@ void GameRules::Combat::UseMoveAction( float _distance, bool _diagonal )
 		// First step voids the 5-foot-step in any case
 		if (m_fiveFootStepRemaining)
 			m_fiveFootStepRemaining = false;
+
+		if (m_moveActionStepsLeft - _distance >= 0)
+		{
+			// Decrement the available distance
+			m_moveActionStepsLeft -= _distance;
+			return true;
+		}
+		else
+		{
+			// Move is not possible!
+			return false;
+		}
 	}
 
 #ifdef _DEBUG

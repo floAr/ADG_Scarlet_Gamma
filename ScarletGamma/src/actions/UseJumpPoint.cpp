@@ -9,6 +9,7 @@ namespace Actions {
 
 	UseJumpPoint::UseJumpPoint() : Action( STR_ACT_USEJUMPPOINT, Duration::MOVE_ACTION, -1 )
 	{
+		m_finished = false;
 		m_targetRequirements.push_back( std::pair<std::string, bool>(STR_PROP_JUMPPOINT, true) );
 	}
 
@@ -18,7 +19,7 @@ namespace Actions {
 		WalkTo::Perform(m_executor, m_target);
 	}
 
-	bool UseJumpPoint::Update()
+	void UseJumpPoint::Update()
 	{
 		// Are we close enough to the target?
 		Core::Object* jumpPointObj = g_Game->GetWorld()->GetObject( m_target );
@@ -36,11 +37,10 @@ namespace Actions {
 			execObj->ResetTarget();
 
 			// This action is finished
-			return true;
+			m_finished = true;
 		}
 
 		// Not ready yet
-		return false;
 	}
 
 	Action* UseJumpPoint::Clone( Core::ObjectID _executor, Core::ObjectID _target )

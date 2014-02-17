@@ -15,7 +15,7 @@ namespace Actions
 
 		/// \brief Check if we are close enough to do the jump.
 		/// \details This ends the action.
-		virtual bool Update() override;
+		virtual void Update() override;
 
 	private:
 		/// \brief Clones an set jump point action.

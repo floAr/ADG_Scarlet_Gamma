@@ -18,9 +18,6 @@ namespace Actions
 		///		require a WalkTo before being applied.
 		static void Perform(Core::ObjectID _executor, Core::ObjectID _target, bool _append = false);
 
-		/// \brief Immediately end this action
-		virtual bool Update() override { return true; }
-
 		/// \brief Movement is actually a special case of move action: you can begin and end it,
 		///		until your remaining steps are used up.
 		virtual bool CanUse(Core::ObjectList& _executors, Core::Object& _object) override;

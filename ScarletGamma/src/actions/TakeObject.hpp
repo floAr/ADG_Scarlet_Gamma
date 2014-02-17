@@ -13,8 +13,6 @@ namespace Actions
 		/// \brief Send a message that a player used a switch and switch it.
 		virtual void Execute();
 
-		/// \brief Immediately end this action
-		virtual bool Update() override { return true; }
 	private:
 		/// \brief Clones an set jump point action.
 		virtual Action* Clone(Core::ObjectID _executor, Core::ObjectID _target);

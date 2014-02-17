@@ -169,7 +169,7 @@ void ActionPool::EndClientAction(uint8_t _index)
 
 void ActionPool::UpdateExecution()
 {
-	if( m_localAction && (m_localAction->Update() || m_localAction->m_finished))
+	if( m_localAction && m_localAction->m_finished)
 	{
 		delete m_localAction;
 		m_localAction = 0;
@@ -207,7 +207,7 @@ void ActionPool::UpdateExecution()
 
 	for( int i=0; i<24; ++i )
 	{
-		if( m_clientActions[i] && (m_clientActions[i]->Update() || m_clientActions[i]->m_finished) )
+		if( m_clientActions[i] && m_clientActions[i]->m_finished )
 		{
 			delete m_clientActions[i];
 			m_clientActions[i] = 0;

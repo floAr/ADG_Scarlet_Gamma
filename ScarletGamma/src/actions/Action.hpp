@@ -56,8 +56,7 @@ namespace Actions
         virtual void Execute() = 0;
 
 		/// \brief Continue some active actions.
-		/// \return true if the action was performed and can be ended.
-		virtual bool Update() { return m_finished; }
+		virtual void Update() {}
 
         /// \brief Create a copy of the action. Needs to AT LEAST copy the
         ///   Action ID, executor and target, action type, priority and cursor.

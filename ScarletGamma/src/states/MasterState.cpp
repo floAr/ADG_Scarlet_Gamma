@@ -335,7 +335,7 @@ namespace States {
 				ObjectID topmostObject = FindTopmostTile(tile.x, tile.y);
 				if( topmostObject != INVALID_ID )
 					AddToSelection(topmostObject);
-			} else {
+			} else if( GetCurrentMap() ) {
 				int minX,minY,maxX,maxY;
 				ComputeSelectionRect( tile, minX, maxX, minY, maxY );
 				for(int sX = minX; sX < maxX; sX++)

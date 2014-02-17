@@ -15,14 +15,10 @@ Content::~Content(void)
 {
 }
 
-Content* Content::m_instance=0;
-Content* Content::Instance(){
-	if(m_instance==0)
-	{
-		m_instance=new Content();
 
-	}
-	return m_instance;
+Content* Content::Instance(){
+	static Content Instance;
+	return &Instance;
 }
 
 const sf::Image& Content::LoadImage(const std::string& filename){
@@ -47,7 +43,7 @@ const sf::Image& Content::LoadImage(const std::string& filename){
 
 const sf::Texture& Content::LoadTexture(const std::string& filename){
 	bool isdefault(false);
-	return Content::Instance()->LoadTexture(filename,&isdefault);
+	return LoadTexture(filename,&isdefault);
 }
 
 const sf::Texture& Content::LoadTexture(const std::string& filename,bool* isDefault_out){

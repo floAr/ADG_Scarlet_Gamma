@@ -58,12 +58,26 @@ void States::LaunchMasterState::GuiCallback(tgui::Callback& callback)
 		tgui::EditBox::Ptr nameEdit = m_gui.get( "FileName" );
 		std::string fileName = nameEdit->getText();
 		if( Jo::Files::Utils::Exists( fileName ) )
+		{
 			g_Game->GetStateMachine()->PushGameState(new States::MasterState(fileName));
-		else {
+			// Options are ok -> save
+			tgui::EditBox::Ptr(m_gui.get("LanIP"))->setText("");	// Do not save personal information
+			tgui::EditBox::Ptr(m_gui.get("PubIP"))->setText("");
+			m_gui.saveWidgetsToFile( "media/LaunchMaster.gui" );
+		} else {
 			tgui::Label::Ptr(m_gui.get("Error"))->setText("File not found!");
 			m_gui.focusWidget( m_gui.get( "FileName" ) );
 		}
 		} break;
+	case 3: {
+		// Create a new file for the map (if not existing)
+		tgui::EditBox::Ptr nameEdit = m_gui.get( "FileName" );
+		std::string fileName = nameEdit->getText();
+		std::string dir, file;
+		Jo::Files::Utils::SplitName(fileName, dir, file);
+		Jo::Files::Utils::MakeDir(dir);
+		fclose( fopen( fileName.c_str(), "wb" ) );
+		break; }
 	default:
 		// No such GUI element!
 		assert(false);

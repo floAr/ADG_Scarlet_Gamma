@@ -22,7 +22,7 @@ AtlasSprite& Graphics::SpriteAtlasBatcher::AddOrGetAtlasSprite( const std::strin
 {
 	if(m_atlas.count(_name))
 	{
-		auto as= m_atlas.at(_name);
+		auto& as = m_atlas.at(_name);
 		if(!as.IsDefault())
 			return as;
 	}

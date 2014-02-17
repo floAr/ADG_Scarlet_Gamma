@@ -66,6 +66,9 @@ void States::LaunchPlayerState::GuiCallback(tgui::Callback& callback)
 
 		// Connect to server
 		try {
+			// Options where ok -> save
+			m_gui.saveWidgetsToFile( "media/LaunchPlayer.gui" );
+
 			sf::IpAddress adress(ipEdit->getText());
 			Network::Messenger::Initialize(&adress);
 

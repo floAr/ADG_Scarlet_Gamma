@@ -168,6 +168,7 @@ namespace States {
 				sf::View newView = g_Game->GetWindow().getView();
 				newView.setCenter(viewPos);
 				g_Game->GetWindow().setView(newView);
+				//m_mapTool->setMap();
 			}
 		}
 

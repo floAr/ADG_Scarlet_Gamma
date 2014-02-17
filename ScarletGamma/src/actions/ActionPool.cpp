@@ -169,10 +169,14 @@ void ActionPool::EndClientAction(uint8_t _index)
 
 void ActionPool::UpdateExecution()
 {
-	if( m_localAction && m_localAction->m_finished)
+	if( m_localAction )
 	{
-		delete m_localAction;
-		m_localAction = 0;
+		m_localAction->Update();
+		if( m_localAction->m_finished)
+		{
+			delete m_localAction;
+			m_localAction = 0;
+		}
 	}
 
     // Push local action if none is active
@@ -187,8 +191,7 @@ void ActionPool::UpdateExecution()
         if (toCopy)
         {
             // The old action is stopped here
-            delete m_localAction;
-            m_localAction = 0;
+            //delete m_localAction; if (!m_localAction.... on top -> there is nothing
 
             // Create a copy of the new action
             m_localAction = toCopy->Clone(std::get<1>(newAction), std::get<2>(newAction));

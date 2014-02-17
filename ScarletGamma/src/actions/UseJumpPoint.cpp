@@ -32,7 +32,7 @@ namespace Actions {
 			// Remove object from old map and reinsert at new position
 			Core::ObjectID targetID = (Core::ObjectID)atoi(jp.Value().c_str());
 			Core::Object* targetObj = g_Game->GetWorld()->GetObject( targetID );
-			Core::Map* map = g_Game->GetWorld()->GetMap(execObj->GetParentMap());
+			Core::Map* map = g_Game->GetWorld()->GetMap(targetObj->GetParentMap());
 			map->SetObjectPosition( execObj, targetObj->GetPosition() );
 			execObj->ResetTarget();
 

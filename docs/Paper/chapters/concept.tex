@@ -5,7 +5,7 @@
 \section{Spielkonzept}
 \label{sec:Grobkonzept}
 %\emph{Beschreibung des generellen Prototypen. Auf keinen Fall technisch.}
-Der zur Beantwortung der Frage umgesetzte Prototyp benutzt eine abstrakte, zwei-dimensionale Darstellung um eine rudimentäre visuelle Repräsentation des Abenteuers bereit zu stellen. Diese abstrakte Darstellung wurde bewusst gewählt um die Spieler dazu anzuregen weiterhin eine eigenen Vorstellung der bespielten Welt zu pflegen. Mehrere Spieler (Clients) verbinden sich mit einer Spielleiter-Instanz (Server) über das Internet \todo{drin lassen?} oder ein lokales Netzwerk. Der Prototyp implementiert verschiedene Komponenten welche das durchführen einer PnP Spielrunde mit, dem analogen Original ählnicher, Stimmung und Spielfluss.
+Der zur Beantwortung der Frage umgesetzte Prototyp benutzt eine abstrakte, zwei-dimensionale Darstellung um eine rudimentäre visuelle Repräsentation des Abenteuers bereit zu stellen. Diese abstrakte Darstellung wurde bewusst gewählt um die Spieler dazu anzuregen weiterhin eine eigenen Vorstellung der bespielten Welt zu pflegen. Mehrere Spieler (Clients) verbinden sich mit einer Spielleiter-Instanz (Server) über das Internet \todo{drin lassen?} oder ein lokales Netzwerk. Der Prototyp implementiert verschiedene Komponenten welche das durchführen einer PnP Spielrunde mit, dem analogen Original ähnlicher, Stimmung und Spielfluss.
 
 
 
@@ -20,14 +20,7 @@ Der zur Beantwortung der Frage umgesetzte Prototyp benutzt eine abstrakte, zwei-
 	\item Objectsystem, Rechtesystem
 \end{itemize}
 
-\subsubsection{Darstellung}
-\label{sec:Darstellung}
-
- 
-Die Spielwelt des Abenteuers wird kachelbasiert und abstrakt dargestellt. 
-
-Wichtiger Bestandteil des Prototypen ist das Objektsystem. Alle Objekte im Spiel sind als eine Ansammlung von Eigenschaften definiert, welche vom Spielleiter jederzeit geändert werden können.
-
+Der Prototyp liefert in einer Anwendung eine Server und eine Client Sicht aus. Der Spielleiter kann die Serveransicht nutzen um vor der Spielrunde das Abenteuer zu erstellen und leitet aus dieser Sicht heraus auch den Spielverlauf. Sobald der Server aktiviert wurde können sich die Spieler mit ihm verbinden und starten damit die Client-Sicht. Um eine ähnlich flüssige Kommunikation wie bei analogen PnP Runden zu ermöglichen wir davon ausgegangen, dass ein Echtzeitkommunikationsmedium wie z.B. Teamspeak oder Skype genutzt wird.
 
 \section{Interaktive Systeme}
 \label{sec:InteraktiveSysteme}

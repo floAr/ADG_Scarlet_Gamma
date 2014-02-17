@@ -55,13 +55,26 @@ void Attack::Execute()
 
 	// Default attack roll
 	if ( m_attackRollCache.count(m_executor) != 0 )
+	{
 		prompt->SetDefaultValue(m_attackRollCache[m_executor]);
-	else if ( g_Game->GetWorld()->GetObject(m_executor)->HasProperty(STR_PROP_STRENGTH_MOD) )
-		prompt->SetDefaultValue("1W20 + '" + STR_PROP_STRENGTH_MOD + "'");
-	else if ( g_Game->GetWorld()->GetObject(m_executor)->HasProperty(STR_PROP_DEXTERITY_MOD) )
-		prompt->SetDefaultValue("1W20 + '" + STR_PROP_DEXTERITY_MOD + "'");
+	}
 	else
-		prompt->SetDefaultValue("1W20");
+	{
+		std::stringstream stream;
+		stream << "1W20";
+
+		// BASE ATTACK
+		if (g_Game->GetWorld()->GetObject(m_executor)->HasProperty(STR_PROP_BASIC_ATTACK) )
+			stream << " + '" << STR_PROP_BASIC_ATTACK << "'";
+
+		// STR / DEX Mod
+		if ( g_Game->GetWorld()->GetObject(m_executor)->HasProperty(STR_PROP_STRENGTH_MOD) )
+			stream << " + '" << STR_PROP_STRENGTH_MOD << "'";
+		else if ( g_Game->GetWorld()->GetObject(m_executor)->HasProperty(STR_PROP_DEXTERITY_MOD) )
+			stream << " + '" << STR_PROP_DEXTERITY_MOD << "'";
+
+		prompt->SetDefaultValue( stream.str() );
+	}
 
     prompt->AddPopCallback(std::bind(&Attack::AttackRollPromptFinished, this, std::placeholders::_1));
 }

@@ -163,6 +163,7 @@ void CommonState::Resize(const sf::Vector2f& _size)
 	tgui::EditBox::Ptr enterTextEdit = m_gui.get( "EnterText" );
 	localOut->setPosition( _size - localOut->getSize() - sf::Vector2f(0.0f, enterTextEdit->getSize().y) );
 	enterTextEdit->setPosition( _size - enterTextEdit->getSize() );
+	GetStateView().setSize(_size);
 }
 
 
@@ -173,29 +174,29 @@ void CommonState::ZoomView(float delta)
 
 	// Create a new view with its center shifted by the mouse position
 	sf::Vector2f center = win.getView().getCenter();
-	sf::View newView = win.getView();
+	sf::View& view = GetStateView();
 
-	newView.zoom(exp(delta * 0.1f));
+	view.zoom(exp(delta * 0.1f));
 
 	// Clamp scale so that one tile doesn't get smaller than 1 pixel
 	// This is required to avoid overdraw, which blocks GPU threads and
 	// leads to all pixels be drawn serially. Welcome, 1 fps!
 	static const float clampFactor = 0.25f; 
-	if (newView.getSize().x / win.getSize().x > clampFactor * TILESIZE ||
-		newView.getSize().y / win.getSize().y > clampFactor * TILESIZE)
+	if (view.getSize().x / win.getSize().x > clampFactor * TILESIZE ||
+		view.getSize().y / win.getSize().y > clampFactor * TILESIZE)
 	{
-		newView.setSize(win.getSize().x * TILESIZE * clampFactor,
+		view.setSize(win.getSize().x * TILESIZE * clampFactor,
 			win.getSize().y * TILESIZE * clampFactor);
 	}
 
-	if (newView.getSize().x / win.getSize().x < clampFactor || 
-		newView.getSize().y / win.getSize().y < clampFactor)
+	if (view.getSize().x / win.getSize().x < clampFactor || 
+		view.getSize().y / win.getSize().y < clampFactor)
 	{
-		newView.setSize(win.getSize().x * clampFactor, win.getSize().y * clampFactor);
+		view.setSize(win.getSize().x * clampFactor, win.getSize().y * clampFactor);
 	}
 
 	// Apply view to the window
-	win.setView(newView);
+	SetStateView();
 }
 
 
@@ -277,6 +278,7 @@ void CommonState::GoTo( const Core::Object* _object )
 		sf::Vector2f pos = _object->GetPosition();
 		sf::Vector2f viewPos = pos * float(TILESIZE);
 		GetStateView().setCenter(viewPos);
+		SetStateView();
 	} catch(...) {
 		g_Game->AppendToChatLog( Network::ChatMsg( STR_NO_POSITION, sf::Color::Red) );
 	}

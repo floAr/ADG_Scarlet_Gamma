@@ -258,6 +258,8 @@ void States::PlayerState::OnBegin()
 
 	// Auto select the player (he is the actor)
 	this->AddToSelection(m_player->ID());
+
+	GetStateView() = g_Game->GetWindow().getView();
 }
 
 

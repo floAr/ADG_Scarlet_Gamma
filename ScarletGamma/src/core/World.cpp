@@ -225,22 +225,32 @@ namespace Core {
 		m_objects.erase( _object );
 	}
 
+
 	Object* World::FindPlayer( std::string _name )
 	{
 		// The player must not exists
 		for ( auto& it = m_players.begin(); it != m_players.end(); ++it)
 		{
-			Object* result = GetObject( it->second );
-			// Using atoi is much faster than Evaluate
+			Object* result = GetObject( *it );
 			if( result->GetName() == _name )
 				return result;
 		}
 		return nullptr;
 	}
 
-	Object* World::FindPlayer( uint8_t _id )
+
+	Object* World::FindPlayer( Core::PlayerID _id )
 	{
-		return GetObject(m_players[_id]);
+		for ( auto& it = m_players.begin(); it != m_players.end(); ++it)
+		{
+			Object* result = GetObject( *it );
+			// Using atoi is much faster than Evaluate
+			Property& prop = result->GetProperty( STR_PROP_PLAYER );
+			Core::PlayerID id = atoi(prop.Value().c_str());
+			if( id == _id )
+				return result;
+		}
+		return nullptr;
 	}
 
 
@@ -271,13 +281,9 @@ namespace Core {
 	}
 
 
-	std::vector<ObjectID> World::GetAllPlayers() const
+	const std::vector<ObjectID>& World::GetAllPlayers() const
 	{
-		// Enumerate all and store the ids.
-		std::vector<ObjectID> results;
-		for( auto it=m_players.begin(); it!=m_players.end(); ++it )
-			results.push_back( it->second );
-		return results;
+		return m_players;
 	}
 
 
@@ -325,17 +331,15 @@ find_object:
 		// Test object if it is a player and add it.
 		if( _object->HasProperty( STR_PROP_PLAYER ) )
 		{
-			Property& prop = _object->GetProperty( STR_PROP_PLAYER );
-			Core::PlayerID id = atoi(prop.Value().c_str());
 			// Avoid having the same object twice
 			if( !m_players.empty() )
 				for( auto it = m_players.begin(); it != m_players.end(); ++it )
-					if( it->second == _object->ID() )
+					if( *it == _object->ID() )
 					{
 						m_players.erase(it);
 						break;
 					}
-					m_players[id] = _object->ID();
+			m_players.push_back(_object->ID());
 		}
 		// Test object if it has an owner and add it.
 		if( _object->HasProperty( STR_PROP_OWNER ) )
@@ -363,7 +367,7 @@ find_object:
 
 		// Remove from player map
 		if( GetObject(_object)->HasProperty(STR_PROP_PLAYER) )
-			m_players.erase( atoi(GetObject(_object)->GetProperty(STR_PROP_PLAYER).Value().c_str()) );
+			m_players.erase( std::find(m_players.begin(), m_players.end(), _object) );
 	}
 
 

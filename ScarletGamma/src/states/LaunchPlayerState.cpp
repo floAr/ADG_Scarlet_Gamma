@@ -22,6 +22,7 @@ States::LaunchPlayerState::LaunchPlayerState() :
 	if( !m_gui.loadWidgetsFromFile( "media/LaunchPlayer.gui" ) )
 		std::cout << "[LaunchPlayerState::LaunchPlayerState] Could not load GUI.\n";
     SetGui(&m_gui);
+	tgui::Label::Ptr(m_gui.get("Status"))->setText("");
 }
 
 

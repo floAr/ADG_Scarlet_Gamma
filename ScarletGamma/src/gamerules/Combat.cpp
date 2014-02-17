@@ -107,7 +107,7 @@ void GameRules::Combat::SetTurn( Core::ObjectID _object )
     // Set view to object if I am a player
     States::PlayerState* player = dynamic_cast<States::PlayerState*>(g_Game->GetCommonState());
     if (player)
-        player->SetViewToObject(object);
+        player->FocusObject(object);
 
     // TODO: give the DM a hint whose turn it is :/
 }

@@ -46,6 +46,9 @@ namespace Interfaces {
 		/// \brief Remove all lines and then show the once remaining after
 		///		filtering.
 		void RefreshFilter();
+
+		const std::vector<Core::Object*>& GetObjects() const	{ return m_objects; }
+
 	protected:
 		// A list of preloaded objects to increase creation time by a very large
 		// factor.

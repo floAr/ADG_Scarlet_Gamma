@@ -20,6 +20,7 @@
 States::PlayerState::PlayerState( Core::ObjectID _player ) :
 	m_player(nullptr),
 	m_playerView(nullptr),
+	m_observerView(nullptr),
 	m_focus(nullptr)
 {
 	m_playerObjectID = _player;
@@ -32,6 +33,11 @@ States::PlayerState::PlayerState( Core::ObjectID _player ) :
 	m_focus = m_player;
 
 	m_playerView = Interfaces::PropertyPanel::Ptr(m_gui);
+
+	m_observerView = Interfaces::PropertyPanel::Ptr(m_gui);
+	m_observerView->Init( 0.0f, 0.0f, 300.0f, (float)g_Game->GetWindow().getSize().y, false, false,
+		m_playerID, &m_draggedContent );
+	m_observerView->hide();
 }
 
 
@@ -46,12 +52,7 @@ void States::PlayerState::Draw(sf::RenderWindow& win)
 	// Focus on the player
 	if( m_focus->IsLocatedOnAMap() )
 	{
-		sf::Vector2f pos = m_focus->GetPosition();
-		sf::Vector2f viewPos = pos * float(TILESIZE);
-		viewPos.x += m_playerView->getSize().x * 0.5f;
-		sf::View newView = win.getView();
-		newView.setCenter(viewPos);
-		win.setView(newView);
+		GoTo( m_focus );
 
 		// Render
 		using namespace std::placeholders;
@@ -153,7 +154,8 @@ void States::PlayerState::MouseButtonReleased( sf::Event::MouseButtonEvent& butt
 	// Handle drop-event of drag&drop action
 	if( m_draggedContent && GetCurrentMap())
 	{
-		if( m_draggedContent->from == Interfaces::DragContent::PROPERTY_PANEL )
+		if( m_draggedContent->from == Interfaces::DragContent::PROPERTY_PANEL
+			&& m_draggedContent->object)
 		{
 			if( m_draggedContent->object->HasProperty( STR_PROP_ITEM ) )
 			{
@@ -220,7 +222,7 @@ void States::PlayerState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 			object = g_Game->GetWorld()->GetNextObservableObject(m_focus->ID(), 1);
 
 		if(object != nullptr)
-			SetViewToObject(object);
+			FocusObject(object);
 
 		return; } break;
 	}
@@ -265,6 +267,14 @@ void States::PlayerState::Update( float _dt )
 
 	// Go through player object and update all viewed properties
 	m_playerView->Show( g_Game->GetWorld(), m_player );
+
+	// Hide observer view if player is too far away
+	if( m_observerView->isVisible() )
+	{
+		if( sfUtils::LengthSq( m_observerView->GetObjects()[0]->GetPosition() - m_player->GetPosition() ) > 3.0f )
+			m_observerView->hide();
+		else m_observerView->RefreshFilter();
+	}
 }
 
 
@@ -278,6 +288,8 @@ void States::PlayerState::Resize(const sf::Vector2f& _size)
 	// Scale player view
 	m_playerView->setSize( m_playerView->getSize().x, localOut->getPosition().y );
 	m_playerView->setPosition( _size.x - m_playerView->getSize().x, 0.0f );
+
+	m_observerView->setSize( 300.0f, _size.y );
 }
 
 
@@ -341,16 +353,28 @@ void States::PlayerState::SetViewToHotkey(const int hotkey)
 {
 	if (m_hotkeys.find(hotkey) == m_hotkeys.end())//return if there is no hotkey
 		return;
-	SetViewToObject(g_Game->GetWorld()->GetObject(m_hotkeys[hotkey]));
+	FocusObject(g_Game->GetWorld()->GetObject(m_hotkeys[hotkey]));
 }
 
-void States::PlayerState::SetViewToObject(Core::Object* object)
+void States::PlayerState::FocusObject(Core::Object* _object)
 {
-	m_focus = object;
+	m_focus = _object;
 
 	// Always have the current focused element in selection
 	m_selection.Clear();
-	m_selection.Add( object->ID() );
+	m_selection.Add( _object->ID() );
+}
+
+void States::PlayerState::ExamineObject(Core::ObjectID _object)
+{
+	Core::Object* object = g_Game->GetWorld()->GetObject(_object);
+	if( sfUtils::LengthSq( object->GetPosition() - m_player->GetPosition() ) > 3.0f )
+	{
+		// TODO: Fehlermeldung: Zu weit weg
+	} else {
+		m_observerView->Show( g_Game->GetWorld(), object );
+		m_observerView->show();
+	}
 }
 
 void States::PlayerState::SetHotkeyToObject(const int hotkey, Core::ObjectID objectID)

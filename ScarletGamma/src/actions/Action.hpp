@@ -72,18 +72,13 @@ namespace Actions
 
         std::vector<std::pair<std::string, bool>> m_targetRequirements; ///< List of required properties in target
         std::vector<std::pair<std::string, bool>> m_sourceRequirements; ///< List of required properties in source (executor)
-        const std::string m_name; ///< Human readable name of the action
-        Duration m_duration; ///< Duration of the action, i.e. how long the action will take in combat
-        Core::ActionID m_id; ///< Action ID, i.e. index in the ActionPool's list
-        Core::ObjectID m_executor; ///< The object executing the action
-        Core::ObjectID m_target; ///< The object being targeted by the action
-        int m_priority; ///< The priority of the action, used for determining default actions
-        Game::MouseCursor m_cursor; ///< The cursor displayed when this action is the default action
-        bool m_finished; ///< Set to true when the action is finished.
-
-    private:
-
-        /// \brief Prevent copying.
-        Action(const Action& other) {}
+        const std::string m_name;		///< Human readable name of the action
+        Duration m_duration;			///< Duration of the action, i.e. how long the action will take in combat
+        Core::ActionID m_id;			///< Action ID, i.e. index in the ActionPool's list
+        Core::ObjectID m_executor;		///< The object executing the action
+        Core::ObjectID m_target;		///< The object being targeted by the action
+        int m_priority;					///< The priority of the action, used for determining default actions
+        Game::MouseCursor m_cursor;		///< The cursor displayed when this action is the default action
+        bool m_finished;				///< Set to true when the action is finished.
     };
 }

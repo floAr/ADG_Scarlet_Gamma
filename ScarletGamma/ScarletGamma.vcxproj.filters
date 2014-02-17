@@ -230,6 +230,9 @@
     <ClCompile Include="src\actions\Action.cpp">
       <Filter>Quelldateien\actions</Filter>
     </ClCompile>
+    <ClCompile Include="src\actions\Examine.cpp">
+      <Filter>Quelldateien\actions</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\core\Map.hpp">
@@ -422,6 +425,9 @@
       <Filter>Quelldateien\states</Filter>
     </ClInclude>
     <ClInclude Include="src\actions\TakeObject.hpp">
+      <Filter>Quelldateien\actions</Filter>
+    </ClInclude>
+    <ClInclude Include="src\actions\Examine.hpp">
       <Filter>Quelldateien\actions</Filter>
     </ClInclude>
   </ItemGroup>

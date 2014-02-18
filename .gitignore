@@ -53,5 +53,5 @@ Release/
 *.pdf
 
 #project stuff
-LaunchMaster.gui
-LaunchPlayer.gui
+/ScarletGamma/media/LaunchMaster.gui
+/ScarletGamma/media/LaunchPlayer.gui

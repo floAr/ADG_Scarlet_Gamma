@@ -193,6 +193,7 @@ static const std::string STR_DIAMETER = std::string("Größe");
 static const std::string STR_ADD = std::string("Hinzufügen");
 static const std::string STR_REPLACE = std::string("Ersetzen");
 static const std::string STR_REMOVE = std::string("Löschen");
+static const std::string STR_AUTOLAYER = std::string("Automatisch");
 static const std::string STR_LAYER1 = std::string("1: Boden");
 static const std::string STR_LAYER2 = std::string("2: Statisches I");
 static const std::string STR_LAYER3 = std::string("3: Statisches II");

@@ -244,7 +244,10 @@ namespace Core {
 		for ( auto& it = m_players.begin(); it != m_players.end(); ++it)
 		{
 			Object* result = GetObject( *it );
-			if( result->GetLayer() == _id )
+			// Using atoi is much faster than Evaluate
+			Property& prop = result->GetProperty( STR_PROP_PLAYER );
+			Core::PlayerID id = atoi(prop.Value().c_str());
+			if( id == _id )
 				return result;
 		}
 		return nullptr;

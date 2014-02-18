@@ -43,6 +43,7 @@ namespace Tools {
 		sf::Vector2i GetMinBoundary() const	{ return sf::Vector2i(m_Xmin, m_Ymin); }
 		sf::Vector2i GetMaxBoundary() const	{ return sf::Vector2i(m_Xmax, m_Ymax); }
 		int GetDiameter() const				{ return m_diameter; }
+		int GetLayer() const				{ return m_layer; }
 
 	private:
 		Core::Map* m_map;	///< The induced map on which operations take place

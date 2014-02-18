@@ -348,6 +348,7 @@ namespace Interfaces {
 		m_layer->load( "media/Black.conf" );
 		m_layer->setPosition( 60.0f, 40.0f );
 		m_layer->setSize( 90.0f, 20.0f );
+		m_layer->addItem( STR_AUTOLAYER );
 		m_layer->addItem( STR_LAYER1 );
 		m_layer->addItem( STR_LAYER2 );
 		m_layer->addItem( STR_LAYER3 );
@@ -381,7 +382,7 @@ namespace Interfaces {
 	
 	int BrushToolbox::GetLayer() const
 	{
-		return m_layer->getSelectedItemIndex() + 1;
+		return m_layer->getSelectedItemIndex();
 	}
 	
 	Tools::Brush::Mode BrushToolbox::GetMode() const

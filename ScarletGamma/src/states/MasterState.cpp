@@ -184,16 +184,19 @@ namespace States {
 					Network::ChatMsg(STR_MSG_SELECT_TYPE_FIRST, sf::Color::Red).Send();
 					return;
 				}
-				if( IsLayerVisible( m_modeTool->Brush()->GetLayer() ) ) {
+				// Paint new objects with the brush.
+				const Object* obj = m_objectsPanel->GetSelected();
+				int layer = m_modeTool->Brush()->GetLayer();
+				if( layer == 0 ) layer = AutoDetectLayer( obj );
+				if( IsLayerVisible( layer ) ) {
 					Network::ChatMsg(STR_MSG_LAYER_INVISIBLE, sf::Color::Red).Send();
 					return;
 				}
-				// Paint new objects with the brush.
 				m_brush.BeginPaint( *GetCurrentMap(),
-					m_objectsPanel->GetSelected(),
+					obj,
 					m_modeTool->Brush()->GetDiameter(),
 					tileX, tileY,
-					m_modeTool->Brush()->GetLayer(),
+					layer,
 					m_modeTool->Brush()->GetMode() );
 			} else
 			if( m_modeTool->GetMode() == Interfaces::ModeToolbox::SELECTION )

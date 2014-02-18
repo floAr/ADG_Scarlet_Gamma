@@ -292,7 +292,7 @@ void CommonState::EndCombat()
 }
 
 
-int CommonState::AutoDetectLayer( Core::Object* _object )
+int CommonState::AutoDetectLayer( const Core::Object* _object )
 {
 	// Use previous layer
 	if( _object->HasProperty(STR_PROP_LAYER) )

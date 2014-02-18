@@ -9,11 +9,10 @@ namespace States{
 	std::vector<sf::Sprite*> DismissableDialogState::ms_orbs;
 
 	DismissableDialogState::DismissableDialogState():m_isMinimized(false),m_orb(Content::Instance()->LoadTexture("media/orb.png")),m_minimize(Content::Instance()->LoadTexture("media/orb_diceroll.png")){
-		auto& vp = g_Game->GetWindow().getView().getSize();			
-		m_minimize.setPosition(sf::Vector2f(vp.x-m_minimize.getGlobalBounds().width,0));
 		m_minimize.setScale(sf::Vector2f(0.15f,0.15f));
 		float orbScale=DismissableDialogState::ORB_WIDTH/m_orb.getLocalBounds().width;
 		m_orb.setScale(sf::Vector2f(orbScale,orbScale));
+		Resize(g_Game->GetWindow().getView().getSize());
 	}
 
 	void DismissableDialogState::Update(float dt) {
@@ -29,7 +28,9 @@ namespace States{
 		//update sprite 
 		m_previousState->Draw(win);// draw prev state
 		if(m_isMinimized){//break this chain if minimized
+			SetGuiView();
 			win.draw(m_orb); //overlay orb
+			SetStateView();
 			return;
 		}
 		GameState::Draw(win);
@@ -72,8 +73,9 @@ namespace States{
 			m_previousState->Resize(_size);				
 			return;
 		}
-		auto& vp = g_Game->GetWindow().getView().getSize();			
+		auto& vp = g_Game->GetWindow().getSize();			
 		m_minimize.setPosition(sf::Vector2f(vp.x-m_minimize.getGlobalBounds().width,0));
+		RecalculateOrbPositions();
 	}
 
 	void DismissableDialogState::AddOrb(sf::Sprite* _orb){
@@ -91,8 +93,8 @@ namespace States{
 	void DismissableDialogState::RecalculateOrbPositions(){
 		int orbCount = DismissableDialogState::ms_orbs.size();
 		float widthPerOrb=DismissableDialogState::ORB_WIDTH+2;
-		float startPoint=g_Game->GetWindow().getView().getCenter().x-(widthPerOrb*orbCount/2);
-		float yPoint=g_Game->GetWindow().getView().getSize().y-DismissableDialogState::ORB_WIDTH;
+		float startPoint=g_Game->GetWindow().getSize().x/2-(widthPerOrb*orbCount/2);
+		float yPoint=(float)g_Game->GetWindow().getSize().y-DismissableDialogState::ORB_WIDTH;
 		int i;
 		for(i=0;i<orbCount;i++)
 		{

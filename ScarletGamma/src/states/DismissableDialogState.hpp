@@ -145,7 +145,7 @@ namespace States
 		sf::Sprite m_orb;		///< Sprite shown when minimized
 		int m_orbID;			///< index of the minimized orb
 
-		const static int ORB_WIDTH=20;	///< pixelsize of one Orb
+		const static int ORB_WIDTH=35;	///< pixelsize of one Orb
 
 		static std::vector<sf::Sprite*> ms_orbs;	///< List of currently minimized orbs
 

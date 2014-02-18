@@ -51,3 +51,7 @@ Release/
 /docs/Paper/literature/*.bak
 /docs/Paper/literature/*.doc
 *.pdf
+
+#project stuff
+LaunchMaster.gui
+LaunchPlayer.gui

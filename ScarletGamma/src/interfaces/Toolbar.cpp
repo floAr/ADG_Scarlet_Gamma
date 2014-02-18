@@ -348,7 +348,6 @@ namespace Interfaces {
 		m_layer->load( "media/Black.conf" );
 		m_layer->setPosition( 60.0f, 40.0f );
 		m_layer->setSize( 90.0f, 20.0f );
-		m_layer->addItem( STR_LAYER0 );
 		m_layer->addItem( STR_LAYER1 );
 		m_layer->addItem( STR_LAYER2 );
 		m_layer->addItem( STR_LAYER3 );
@@ -358,7 +357,7 @@ namespace Interfaces {
 		m_layer->addItem( STR_LAYER7 );
 		m_layer->addItem( STR_LAYER8 );
 		m_layer->addItem( STR_LAYER9 );
-	//	m_layer->addItem( STR_ONTOP );
+		m_layer->addItem( STR_LAYER10 );
 		m_layer->setSelectedItem( 0 );
 
 		tgui::Label::Ptr lDiameter( *this );
@@ -382,7 +381,7 @@ namespace Interfaces {
 	
 	int BrushToolbox::GetLayer() const
 	{
-		return m_layer->getSelectedItemIndex();
+		return m_layer->getSelectedItemIndex() + 1;
 	}
 	
 	Tools::Brush::Mode BrushToolbox::GetMode() const

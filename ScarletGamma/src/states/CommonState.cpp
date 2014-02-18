@@ -300,19 +300,19 @@ int CommonState::AutoDetectLayer( Core::Object* _object )
 
 	// Try to find a semantic
 	if( _object->HasProperty(STR_PROP_ITEM) )
-		return 3;
+		return 4;
 	if( _object->HasProperty(STR_PROP_OBSTACLE) )
-		return 2;
+		return 3;
 	if( _object->HasProperty(STR_PROP_PLAYER) )
-		return 5;
+		return 6;
 	if( _object->HasProperty(STR_PROP_HEALTH) )	// No player but attackable
-		return 7;
+		return 8;
 
 	// Search the topmost visible layer
 	for( int i = 9; i >= 0; --i )
-		if( IsLayerVisible(i) ) return i;
+		if( IsLayerVisible(i) ) return i + 1;
 
-	return 9;
+	return 10;
 }
 
 

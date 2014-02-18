@@ -281,7 +281,7 @@ namespace States {
 						// Insert original to the map (player layer)
 						Object* object = const_cast<Object*>(m_draggedContent->object);
 						if( !object->IsLocatedOnAMap() )
-							GetCurrentMap()->Add( object->ID(), x, y, 5 );
+							GetCurrentMap()->Add( object->ID(), x, y, 6 );
 						else {
 							GetCurrentMap()->SetObjectPosition( object, tilePos );
 						}

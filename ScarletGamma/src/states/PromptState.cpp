@@ -10,7 +10,9 @@ PromptState::PromptState()
 	m_defaultButton->load("lib/TGUI-0.6-RC/widgets/Black.conf");
 	// Load shader from file
 	//m_shader=Content::Instance()->LoadShader("media/Prompt.frag",sf::Shader::Type::Fragment);
-	m_shader.loadFromFile("media/Prompt.frag", sf::Shader::Fragment);
+	m_orb=sf::Sprite(Content::Instance()->LoadTexture("media/orb_prompt.png"));
+		float orbScale=DismissableDialogState::ORB_WIDTH/m_orb.getLocalBounds().width;
+		m_orb.setScale(sf::Vector2f(orbScale,orbScale));
 
 	// Create GUI
 	m_gui.setWindow(g_Game->GetWindow());
@@ -32,28 +34,22 @@ void PromptState::setMessage(std::string& message)
 
 void PromptState::Draw(sf::RenderWindow& win)
 {
+	DismissableDialogState::Draw(win);
+
 	// Draw previous state and apply blur shader
 	// TODO: separate shader if the FPS get low here
-	m_previousState->Draw(win);
-	SetGuiView();
-	sf::Texture screenBuffer;
-	screenBuffer.create(win.getSize().x, win.getSize().y);
-	screenBuffer.update(win);
-	m_shader.setParameter("texture", sf::Shader::CurrentTexture);
-	m_shader.setParameter("blur_radius_x", 1.0f / (float) win.getSize().x);
-	m_shader.setParameter("blur_radius_y", 1.0f / (float) win.getSize().y);
-	win.draw(sf::Sprite(screenBuffer), &m_shader);
-	SetStateView();
+//	m_previousState->Draw(win);
+	
 
 	// Draw GUI
 	sf::Vector2u size = g_Game->GetWindow().getSize();
 	Resize(sf::Vector2f((float) size.x, (float) size.y));
-	GameState::Draw(win);
+	//GameState::Draw(win);
 }
 
 void PromptState::Update(float dt)
 {
-	m_previousState->Update(dt);
+	DismissableDialogState::Update(dt);
 }
 
 void PromptState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
@@ -91,6 +87,7 @@ void PromptState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 
 void PromptState::Resize(const sf::Vector2f& _size)
 {
+	DismissableDialogState::Resize(_size);
 	// Adjust edit box size
 	auto editBoxPtr = m_editBox.get();
 	editBoxPtr->setSize(_size.x - 2 * editBoxPtr->getPosition().x, editBoxPtr->getSize().y);

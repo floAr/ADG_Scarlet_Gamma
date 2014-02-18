@@ -12,9 +12,15 @@ namespace States
 	///		implementation is stated by the method documentation.
 	class DismissableDialogState : public GameState
 	{
+	protected:
+		/// \brief Set the texture of the orb
+		//	void SetOrbTexture(sf::Texture _orbTexture);
+		sf::Sprite m_orb;		///< Sprite shown when minimized
+		const static int ORB_WIDTH=35;	///< pixelsize of one Orb
+
 	public:
 		/// \brief Creates a Zoom object, The GUI for chats.
-		DismissableDialogState();
+		DismissableDialogState();	
 
 		/// \brief Virtual function that is called when the GameLoop wants
 		///		to update the GameState.
@@ -30,7 +36,7 @@ namespace States
 		///		map, certain menus etc.
 		virtual void Draw(sf::RenderWindow& win);
 
-				/// \brief Gets called when a mouse button is released.
+		/// \brief Gets called when a mouse button is released.
 		/// \param [in] button      SFML button event that contains all required information.
 		/// \param [in] tilePos     In-game tile that the user clicked on. Cast to float if required.
 		/// \param [in] time        How long the button was pressed, in seconds.
@@ -94,10 +100,10 @@ namespace States
 		/// \param [in] guiHandled  Wether the GUI already used the event
 		virtual void MouseButtonPressed(sf::Event::MouseButtonEvent& button,
 			sf::Vector2f& tilePos, bool guiHandled){
-			if(m_isMinimized){
-				m_previousState->MouseButtonPressed(button,tilePos,guiHandled);
-				return;
-			}
+				if(m_isMinimized){
+					m_previousState->MouseButtonPressed(button,tilePos,guiHandled);
+					return;
+				}
 		}
 
 
@@ -142,10 +148,10 @@ namespace States
 	private:
 		bool m_isMinimized;		///< Indicates wether the state is currently minimized
 		sf::Sprite m_minimize;	///< Sprite to start the minimize process
-		sf::Sprite m_orb;		///< Sprite shown when minimized
-		int m_orbID;			///< index of the minimized orb
 
-		const static int ORB_WIDTH=35;	///< pixelsize of one Orb
+		int m_orbID;			///< index of the minimized orb
+		sf::Shader m_shader;	///< Shader for the blur effect
+
 
 		static std::vector<sf::Sprite*> ms_orbs;	///< List of currently minimized orbs
 

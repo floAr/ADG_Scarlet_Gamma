@@ -1,13 +1,14 @@
 #pragma once
 
 #include "states/GameState.hpp"
+#include "states/DismissableDialogState.hpp"
 #include <unordered_map>
 
 namespace States
 {
 	/// \brief Universal state for displaying a message and an editbox to the
 	///   user, prompting for a value.
-	class PromptState : public GameState
+	class PromptState : public DismissableDialogState
 	{
 		typedef void (*callback)(std::string);
 	public:
@@ -35,7 +36,7 @@ namespace States
 		tgui::Gui m_gui;
 		tgui::EditBox::Ptr m_editBox;
 		std::string m_result;
-		sf::Shader m_shader;
+
 
 		std::unordered_map<int,std::function<void(std::string)>> m_callbacks;
 	};

@@ -133,10 +133,9 @@ void CommonState::KeyPressed( sf::Event::KeyEvent& key, bool guiHandled )
 
 		// Show message input field if not visible or submit message.
 		tgui::EditBox::Ptr enterTextEdit = m_gui.get( "EnterText" );
-		if( !enterTextEdit->isVisible() )
+		if( !enterTextEdit->isFocused() )
 		{
-			enterTextEdit->show();
-			enterTextEdit->setText("");
+		//	enterTextEdit->setText("");
 			enterTextEdit->focus();
 		}
 		break; }
@@ -245,13 +244,14 @@ void CommonState::DrawPathOverlay(sf::RenderWindow& _window, Core::Object* _whos
 void CommonState::SubmitChat(const tgui::Callback& _call)
 {
 	tgui::EditBox* enterTextEdit = (tgui::EditBox*)_call.widget;
-	enterTextEdit->hide();
+	enterTextEdit->unfocus();
 	// Send Message
 	if( enterTextEdit->getText() != "" )
 	{
 		tgui::ChatBox::Ptr localOut = m_gui.get( "Messages" );
 		std::string text = '[' + m_name + "] " + enterTextEdit->getText().toAnsiString();
 		Network::ChatMsg(text, m_color).Send();
+		enterTextEdit->setText( STR_EMPTY );
 	}
 }
 

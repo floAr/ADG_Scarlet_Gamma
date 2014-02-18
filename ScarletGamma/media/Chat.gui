@@ -25,7 +25,7 @@ Window:
 		Top = 728
 		Width = 400
 		Height = 40
-		Visible = false
+		Visible = true
 		Enabled = true
 		Transparency = 255
 		CallbackId = 0

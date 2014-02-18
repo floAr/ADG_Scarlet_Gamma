@@ -1,6 +1,7 @@
 #pragma once
 
 #include "states/GameState.hpp"
+#include "Prerequisites.hpp"
 #include <unordered_map>
 
 namespace States
@@ -14,11 +15,10 @@ namespace States
 		/// \brief Creates an empty, unconfigured prompt state
 		PromptState();
 
-
-		void setMessage(std::string& message);
-		void SetText(const std::string& text);
-		void SetDefaultValue(const std::string& value);
-		const std::string& GetResult();
+		void SetText(const std::string& _text);
+		void SetDefaultValue(const std::string& _value);
+		void SetTextInputRequired(bool _value);
+		const std::string GetResult();
 
 		void OnBegin() override;
 		virtual void Draw(sf::RenderWindow& win) override;
@@ -28,15 +28,33 @@ namespace States
 
 		virtual void GuiCallback(tgui::Callback&  args) override;
 
-		void ConfigurePromp(const std::string _message,const bool _textInputRequired);
-		void AddButton(const std::string _buttonText,std::function<void(std::string)> _callback,const sf::Vector2f _position);
+		/// \brief Adds a button to the Prompt state.
+		/// \brief _buttonText  [in]  Caption of the button
+		/// \brief _callback    [in]  Function that is called when the button is pressed
+		/// \brief _evaluateObj [in]  Object used for evaluation check, or 0 for none
+		void AddButton(const std::string _buttonText, std::function<void(std::string)> _callback,
+			sf::Keyboard::Key _hotkey = sf::Keyboard::Unknown, Core::Object* _evaluateObj = 0);
 	private:
+
+		struct PromptButton
+		{
+			PromptButton(std::function<void(std::string)> _function, Core::Object* _evaluateObj = 0,
+				sf::Keyboard::Key _hotkey = sf::Keyboard::Unknown)
+				: function(_function), evaluateObj(_evaluateObj), hotkey(_hotkey) {}
+
+			tgui::Button::Ptr				 button;
+			std::function<void(std::string)> function;
+			Core::Object*					 evaluateObj;
+			sf::Keyboard::Key				 hotkey;
+		};
+
 		tgui::Button::Ptr m_defaultButton;	///< This is a preloaded button to increase RecalculateGUI performance by a height factor
 		tgui::Gui m_gui;
 		tgui::EditBox::Ptr m_editBox;
-		std::string m_result;
 		sf::Shader m_shader;
 
-		std::unordered_map<int,std::function<void(std::string)>> m_callbacks;
+		std::unordered_map<int, PromptButton> m_callbacks;
+
+		bool CheckEvaluate(Core::Object* _object) const;
 	};
 }

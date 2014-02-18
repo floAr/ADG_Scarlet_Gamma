@@ -35,7 +35,9 @@ namespace States
 		/// \brief Go to some object (switch map + selection + view)
 		void GoTo( const Core::Object* _object );
 
+		void CreateCombatPrompt();
 		virtual void CreateCombat(Core::ObjectID _object) override;
+		void CreateCombatFromSelection();
 
 		/// \brief Checks whether an object is owned by the DM.
 		virtual bool OwnsObject(Core::ObjectID _object) override;

@@ -4,6 +4,7 @@
 #include "Game.hpp"
 #include "core/World.hpp"
 #include "states/CommonState.hpp"
+#include "states/MasterState.hpp"
 
 namespace Interfaces {
 
@@ -605,7 +606,12 @@ namespace Interfaces {
 
 	void CombatToolbox::ButtonClicked()
 	{
-		// TODO: implement
+		static_cast<States::MasterState*>(g_Game->GetCommonState())->CreateCombatPrompt();
+	}
+
+	void CombatToolbox::Update( float _dt )
+	{
+		// TODO: check combat mode :)
 	}
 
 } // namespace Interfaces

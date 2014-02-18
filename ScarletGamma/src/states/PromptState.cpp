@@ -1,7 +1,9 @@
 #include "states/PromptState.hpp"
 #include "Game.hpp"
+#include "states/StateMachine.hpp"
 #include "utils/Content.hpp"
 #include "sfutils/View.hpp"
+#include "utils/ValueInterpreter.hpp"
 
 using namespace States;
 
@@ -24,10 +26,6 @@ void PromptState::OnBegin()
 {
 	m_editBox->setText("");
 	m_editBox->focus();
-}
-
-void PromptState::setMessage(std::string& message)
-{
 }
 
 void PromptState::Draw(sf::RenderWindow& win)
@@ -58,34 +56,33 @@ void PromptState::Update(float dt)
 
 void PromptState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 {
-	switch (key.code)
+	if (key.code == sf::Keyboard::Return && m_editBox->isVisible() && m_editBox->getText().isEmpty())
 	{
-	case sf::Keyboard::Return:
-		if (m_editBox->getText().isEmpty())
+		// Handle default Return, with priority
+		m_editBox->focus();
+	}
+	else if (key.code == sf::Keyboard::Return && m_callbacks.size() == 0)
+	{
+		m_finished = true;
+	}
+	else if (key.code == sf::Keyboard::Escape && m_callbacks.size() == 0)
+	{
+		m_editBox->setText("");
+		m_finished = true;
+	}
+	else if (key.code != sf::Keyboard::Unknown)
+	{
+		// Find callback if nothing was handled
+		for (size_t i = 0; i < m_callbacks.size(); ++i)
 		{
-			m_editBox->focus();
-		}
-		else
-		{
-			if(m_callbacks.size()==0){//Only finish on enter when there is no button 
-				m_result = m_editBox->getText();
-				m_finished = true;
+			if (key.code == m_callbacks.at(i).hotkey)
+			{
+				// Fake a TGUI callback, needs only the ID
+				tgui::Callback cb;
+				cb.id = i;
+				GuiCallback(cb);
 			}
 		}
-		break;
-
-	case sf::Keyboard::Escape:
-		if (m_editBox->isFocused())
-		{
-			// unfocus edit box
-			m_editBox->unfocus();
-		}
-		else
-		{
-			m_result = "";
-			m_finished = true;
-		}
-		break;
 	}
 }
 
@@ -96,57 +93,84 @@ void PromptState::Resize(const sf::Vector2f& _size)
 	editBoxPtr->setSize(_size.x - 2 * editBoxPtr->getPosition().x, editBoxPtr->getSize().y);
 }
 
-void PromptState::SetText(const std::string& text)
+void PromptState::SetText(const std::string& _text)
 {
 	tgui::Label::Ptr message = m_gui.get("Message");
-	message->setText(text);
+	message->setText(_text);
 }
 
-void PromptState::SetDefaultValue(const std::string& value)
+void PromptState::SetDefaultValue(const std::string& _value)
 {
-	m_editBox->setText(value);
+	m_editBox->setText(_value);
 }
 
-const std::string& PromptState::GetResult()
+void States::PromptState::SetTextInputRequired(bool _value)
 {
-	return m_result;
-}
-
-
-void PromptState::ConfigurePromp(const std::string _message,const bool _textInputRequired){
-	if(!_textInputRequired)
+	if(_value)
+		m_editBox->show();
+	else
 		m_editBox->hide();
-	tgui::Label::Ptr message = m_gui.get("Message");
-	message->setText(_message);
-
 }
 
-void PromptState::AddButton(const std::string _buttons,std::function<void(std::string)> _callback,const sf::Vector2f _position){
-	int bID=m_callbacks.size();
+bool States::PromptState::CheckEvaluate(Core::Object* _object) const
+{
+	try
+	{
+		Utils::EvaluateFormula(m_editBox->getText(), g_Game->RANDOM, _object);
+		return true;
+	}
+	catch (...)
+	{
+		return false;
+	}
+}
+
+const std::string PromptState::GetResult()
+{
+	return m_editBox->getText();
+}
+
+void PromptState::AddButton(const std::string _buttonText, std::function<void(std::string)> _callback,
+							sf::Keyboard::Key _hotkey, Core::Object* _evaluateObj)
+{
+	int bID = m_callbacks.size();
+
 	tgui::Button::Ptr button = m_defaultButton.clone();
 	m_gui.add(button);
-	button->setPosition(_position);
-	button->setText(_buttons);
+
+	button->setText(_buttonText);
 	button->setCallbackId(bID);
 	button->bindCallback(tgui::Button::LeftMouseClicked);
-	m_callbacks[bID]=_callback;
+	m_callbacks.emplace(bID, PromptButton(_callback, _evaluateObj, _hotkey));
 }
 
-
-void PromptState::GuiCallback(tgui::Callback&  args){
-	if(!m_callbacks.count(args.id))//no callback
+void PromptState::GuiCallback(tgui::Callback& args)
+{
+	if (!m_callbacks.count(args.id)) // no callback
 		return;
-	auto cb=(m_callbacks[args.id]);
-	if(m_editBox->isVisible()){
-		m_result=m_editBox->getText();
-		cb(m_result);
 
-	}
-	else{
-		m_result="";
-		cb("");
-	}
-	m_finished=true;
-	//	callback=(void*)m_callbacks[args.id];
+	auto cb = m_callbacks.at(args.id);
 
+	// Evaluation required, but failed?
+	if (cb.evaluateObj != 0 && !CheckEvaluate(cb.evaluateObj))
+	{
+		PromptState* prompt = static_cast<PromptState*>(g_Game->GetStateMachine()->PushGameState(GST_PROMPT));
+		prompt->SetText("Bitte überprüfe den eingegebenen Wert.\n");
+		prompt->SetTextInputRequired(false);
+	}
+	else
+	{
+		if (m_editBox->isVisible())
+		{
+			cb.function(m_editBox->getText());
+		}
+		else
+		{
+			m_editBox->setText(""); // Required if someone uses global PopCallback
+			cb.function("");
+		}
+
+		m_finished = true;
+	}
 }
+

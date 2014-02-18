@@ -503,4 +503,9 @@ namespace Core {
 		}
 	}
 
+	bool Map::IsActive( ObjectID _id ) const
+	{
+		return m_activeObjects->Contains(_id);
+	}
+
 } // namespace Core

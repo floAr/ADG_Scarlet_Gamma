@@ -55,7 +55,7 @@ void States::SelectionState::RecalculateGUI()
 	{
 		Core::Object* object = g_Game->GetWorld()->GetObject(m_objects[i]);
 		if(m_hiddenLayers) // if hidden layers have been set
-			if(m_hiddenLayers[atoi(object->GetProperty(Core::PROPERTY::LAYER.Name()).Value().c_str())]) // if object is on hidden layer
+			if(m_hiddenLayers[atoi(object->GetProperty(Core::PROPERTY::LAYER.Name()).Value().c_str())-1]) // if object is on hidden layer
 				continue;
 
 		items.push_back( Interfaces::CircularMenu::ObjInfo( m_objects[i],

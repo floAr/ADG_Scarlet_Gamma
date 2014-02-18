@@ -96,23 +96,6 @@ void CommonState::MouseMoved(int deltaX, int deltaY, bool guiHandled)
 				Actions::ActionPool::Instance().UpdateDefaultAction(m_selection, g_Game->GetWorld()->GetObject(targets[targets.Size() - 1]));
 		}
 	}
-
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Middle))
-	{
-		// Get the render window
-		sf::RenderWindow& win = g_Game->GetWindow();
-
-		// Create a new view with its center shifted by the mouse position
-		sf::View& newView = GetStateView();
-		sf::Vector2f center = newView.getCenter();
-		sf::Vector2f scale(newView.getSize().x / win.getSize().x,
-			newView.getSize().y / win.getSize().y);
-		newView.setCenter(center.x - (deltaX * scale.x),
-			center.y - (deltaY * scale.y));
-
-		// Apply view to the window
-		SetStateView();
-	}
 }
 
 void CommonState::KeyPressed( sf::Event::KeyEvent& key, bool guiHandled )
@@ -335,6 +318,17 @@ Core::ObjectID CommonState::FindTopmostTile(int _x, int _y)
 		}
 	}
 	return topmostObject;
+}
+
+void CommonState::OnResume()
+{
+	// Mouse moved already handles what we need
+	MouseMoved(0, 0, false);
+}
+
+void CommonState::OnPause()
+{
+	Actions::ActionPool::Instance().UpdateDefaultAction(Core::ObjectList(), 0);
 }
 
 } // namespace States

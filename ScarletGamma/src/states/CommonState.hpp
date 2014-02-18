@@ -20,6 +20,12 @@ namespace States
 
 		~CommonState();
 
+		/// \brief Sets correct mouse cursor.
+		virtual void OnResume() override;
+
+		/// \brief Sets default mouse cursor.
+		virtual void OnPause() override;
+
 		/// \brief Close the network connection. (Initialization was state
 		///		dependent).
 		virtual void OnEnd() override;

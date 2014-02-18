@@ -14,7 +14,6 @@ namespace States
 
 		virtual void OnBegin() override;
 		virtual void Draw(sf::RenderWindow& win) override;
-		virtual void MouseMoved(int deltaX, int deltaY, bool guiHandled) override;
 		virtual void MouseButtonPressed(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos,
 			bool guiHandled) override;
 		virtual void MouseButtonReleased(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos,

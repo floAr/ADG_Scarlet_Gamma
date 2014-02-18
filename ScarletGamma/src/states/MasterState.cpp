@@ -564,6 +564,23 @@ namespace States {
 				m_brush.Paint(mousePos.x, mousePos.y);
 			}
 		}
+
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Middle))
+		{
+			// Get the render window
+			sf::RenderWindow& win = g_Game->GetWindow();
+
+			// Create a new view with its center shifted by the mouse position
+			sf::View& newView = GetStateView();
+			sf::Vector2f center = newView.getCenter();
+			sf::Vector2f scale(newView.getSize().x / win.getSize().x,
+				newView.getSize().y / win.getSize().y);
+			newView.setCenter(center.x - (deltaX * scale.x),
+				center.y - (deltaY * scale.y));
+
+			// Apply view to the window
+			SetStateView();
+		}
 	}
 
 	Core::Map* MasterState::GetCurrentMap()

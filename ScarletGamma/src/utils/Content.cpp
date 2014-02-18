@@ -43,6 +43,7 @@ const sf::Image& Content::LoadImage(const std::string& filename){
 		}
 		else
 		{
+			std::cerr<<"Error loading file "<<filename<<" using default object";
 			return *(m_img_cache.find(DEFAULT_IMAGE))->second;
 		}
 	}	
@@ -72,6 +73,8 @@ const sf::Texture& Content::LoadTexture(const std::string& filename,bool* isDefa
 		}
 		else
 		{
+			
+			std::cerr<<"Error loading file "<<filename<<" using default object";
 			*isDefault_out=true;
 			return *(m_tex_cache.find(DEFAULT_TEXTURE))->second;
 		}
@@ -97,6 +100,8 @@ const sf::Font& Content::LoadFont(const std::string& filename){
 		}
 		else
 		{
+			
+			std::cerr<<"Error loading file "<<filename<<" using default object";
 			return *(m_fon_cache.find(DEFAULT_FONT))->second;
 		}
 	}	
@@ -120,6 +125,8 @@ const sf::Shader& Content::LoadShader(const std::string& filename,const sf::Shad
 		}
 		else
 		{
+			
+			std::cerr<<"Error loading file "<<filename<<" using default object";
 			return *(m_sha_cache.find(DEFAULT_SHADER))->second;
 		}
 	}	
@@ -144,6 +151,7 @@ const sf::SoundBuffer& Content::LoadSoundBuffer(const std::string& filename){
 		}
 		else
 		{
+			std::cerr<<"Error loading file "<<filename<<" using default object";
 			return *(m_sou_cache.find(DEFAULT_SOUNDBUFFER))->second;
 		}
 	}	

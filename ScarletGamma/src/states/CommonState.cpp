@@ -328,7 +328,7 @@ Core::ObjectID CommonState::FindTopmostTile(int _x, int _y)
 	{
 		// If object is not on hidden layer it is worth a closer look
 		int layer = g_Game->GetWorld()->GetObject(objectList[i])->GetLayer();
-		if( !m_hiddenLayers[layer] && layer > maxLayer )
+		if( !IsLayerVisible(layer) && layer > maxLayer )
 		{
 			topmostObject = objectList[i];
 			maxLayer = layer;

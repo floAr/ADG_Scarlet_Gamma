@@ -335,7 +335,7 @@ namespace States {
 						for (int i = 0; i < objectList.Size(); i++)
 						{
 							// if object is not on hidden layer add it
-							if(!m_hiddenLayers[g_Game->GetWorld()->GetObject(objectList[i])->GetLayer()])
+							if(!IsLayerVisible(g_Game->GetWorld()->GetObject(objectList[i])->GetLayer()))
 								AddToSelection(objectList[i]);
 						}
 					}

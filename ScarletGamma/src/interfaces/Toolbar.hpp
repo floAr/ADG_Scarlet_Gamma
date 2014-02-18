@@ -211,6 +211,8 @@ namespace Interfaces {
 		CombatToolbox();
 
 		virtual void Init() override;
+		virtual void Update(float _dt) override;
+
 	private:
 		void ButtonClicked();
 		tgui::Button::Ptr m_combatButton;

@@ -18,6 +18,7 @@
 #include "NewPlayerState.hpp"
 #include "DismissableDialogState.hpp"
 #include "actions/ActionPool.hpp"
+#include <functional>
 
 using namespace Core;
 
@@ -423,30 +424,6 @@ namespace States {
 				BlendLayer(9);
 			break;
 
-			// DEBUGGING COMBAT, TODO: remove
-		case sf::Keyboard::Space:
-			if (sf::Keyboard::isKeyPressed((sf::Keyboard::LControl)))
-			{
-                // TODO: proper keys for creating, starting and ending combat
-
-                if (!m_combat)
-                {
-                    // Create a combat and add participants
-                    for( int i=0; i<m_selection.Size(); ++i )
-                    {
-                        // Add participant to combat
-                        CreateCombat(m_selection[i]);
-                    }
-                }
-                else
-                {
-                    // Set the first combattant's turn
-                    assert(dynamic_cast<GameRules::MasterCombat*>(m_combat));
-                    dynamic_cast<GameRules::MasterCombat*>(m_combat)->StartCombat();
-                }
-			}
-			break;
-
 			//case sf::Keyboard::T:
 			//	PromptState* gs = dynamic_cast<PromptState*>(g_Game->GetStateMachine()->PushGameState(GST_PROMPT));
 			//	gs->ConfigurePromp("Das ist dein toller Text",false);
@@ -632,5 +609,23 @@ namespace States {
         return object != 0
             && object->HasProperty(STR_PROP_OWNER) == false;
     }
+
+	void MasterState::CreateCombatPrompt()
+	{
+		States::PromptState* prompt = static_cast<States::PromptState*>(g_Game->GetStateMachine()->PushGameState(GST_PROMPT));
+		prompt->SetText("Alle aktuell ausgewählten Objekte nehmen am Kampf teil. Kampf starten?\n");
+		prompt->SetTextInputRequired(false);
+
+		// TODO: button positioning
+		prompt->AddButton("Ja", std::bind(&MasterState::CreateCombatFromSelection, this), sf::Keyboard::Return);
+		prompt->AddButton("Nein", [](std::string keks) -> void { std::cout << "Nein: " << keks << std::endl; }, sf::Keyboard::Escape);
+	}
+
+	void MasterState::CreateCombatFromSelection()
+	{
+		// Add all combattants
+		for (int i = 0; i<m_selection.Size(); ++i)
+			CreateCombat(m_selection[i]);
+	}
 
 }// namespace States

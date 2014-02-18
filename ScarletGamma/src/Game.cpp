@@ -33,6 +33,10 @@ void Game::Init()
 										// If this has a bad effect on gameplay, we'll need to find a workaround.
 										//   ~Daerst
 
+	// Center mouse cursor initially
+	m_cursorSprite.setPosition(m_window.getSize().x / 2.0f - m_cursorSprite.getGlobalBounds().width / 2.0f,
+							   m_window.getSize().y / 2.0f - m_cursorSprite.getGlobalBounds().height / 2.0f);
+
 	// Create an event handler using the window
 	m_eventHandler = new Events::EventHandler(m_window, *m_stateMachine);
 

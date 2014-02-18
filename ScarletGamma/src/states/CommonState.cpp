@@ -213,7 +213,9 @@ void CommonState::DrawPathOverlay(sf::RenderWindow& _window, Core::Object* _whos
 			auto& wayPoints = pathProperty.GetObjects();
 			for( int i=0; i<wayPoints.Size(); ++i )
 			{
-				sf::Vector2i goal = sfUtils::Round(g_Game->GetWorld()->GetObject(wayPoints[i])->GetPosition());
+				Core::Object* object = g_Game->GetWorld()->GetObject(wayPoints[i]);
+				if( !object ) return;		// Path corrupted
+				sf::Vector2i goal = sfUtils::Round(object->GetPosition());
 				auto part = g_Game->GetWorld()->GetMap(_whosePath->GetParentMap())->FindPath(start, goal);
 				start = goal;
 				path.insert( path.end(), part.begin(), part.end() );

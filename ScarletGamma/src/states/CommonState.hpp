@@ -20,6 +20,12 @@ namespace States
 
 		~CommonState();
 
+		/// \brief Sets correct mouse cursor.
+		virtual void OnResume() override;
+
+		/// \brief Sets default mouse cursor.
+		virtual void OnPause() override;
+
 		/// \brief Close the network connection. (Initialization was state
 		///		dependent).
 		virtual void OnEnd() override;
@@ -61,7 +67,7 @@ namespace States
 		virtual Core::Map* GetCurrentMap() = 0;
 
 		/// \brief Check if a layer is currently visible
-		bool IsLayerVisible( int _layer )	{ return m_hiddenLayers[_layer] != 0; }
+		bool IsLayerVisible( int _layer )	{ return m_hiddenLayers[_layer-1] != 0; }
 
 		/// \brief Go to some object (switch view)
 		void GoTo( const Core::Object* _object );
@@ -109,7 +115,7 @@ namespace States
 		bool m_selectionChanged;		///< Update gui only if something changed.
 
 		/// \brief Find the best fitting layer if an object is drawn to the map
-		int AutoDetectLayer( Core::Object* _object );
+		int AutoDetectLayer( const Core::Object* _object );
 
 		/// \brief Search in all visible layers for an object.
 		/// \return An ObjectID or INVALID_ID if nothing could be found

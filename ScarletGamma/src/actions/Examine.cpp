@@ -3,6 +3,7 @@
 #include "Constants.hpp"
 #include "actions/ActionPool.hpp"
 #include "states/PlayerState.hpp"
+#include "network/Messenger.hpp"
 
 namespace Actions {
 
@@ -32,6 +33,11 @@ Action* Examine::Clone( Core::ObjectID _executor, Core::ObjectID _target )
 	result->m_target = _target;
 
 	return result;
+}
+
+bool Examine::CanUse( Core::ObjectList& _executors, Core::Object& _object )
+{
+	return !Network::Messenger::IsServer() && Action::CanUse(_executors, _object);
 }
 
 

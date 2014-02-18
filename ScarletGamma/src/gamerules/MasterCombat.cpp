@@ -7,6 +7,7 @@
 #include "network/CombatMessages.hpp"
 #include "states/PromptState.hpp"
 #include <iostream>
+#include "states/MasterState.hpp"
 
 using namespace GameRules;
 using namespace Network;
@@ -40,6 +41,15 @@ void GameRules::MasterCombat::SetTurn( Core::ObjectID _object )
 {
     // Do everything locally
     Combat::SetTurn(_object);
+
+	// Goto and select object if I'm the DM
+	States::MasterState* master = dynamic_cast<States::MasterState*>(g_Game->GetCommonState());
+	if (master)
+	{
+		master->GoTo( g_Game->GetWorld()->GetObject(_object) );
+		master->ClearSelection();
+		master->AddToSelection(_object);
+	}
 
     // Notify players
     Jo::Files::MemFile data;

@@ -14,6 +14,7 @@
 #include "states/CommonState.hpp"
 #include "gamerules/Combat.hpp"
 #include "Examine.hpp"
+#include "core/ObjectList.hpp"
 
 using namespace Actions;
 
@@ -70,8 +71,17 @@ std::vector<Core::ActionID> ActionPool::GetAllowedActions(Core::ObjectList& _exe
 
 void ActionPool::UpdateDefaultAction(Core::ObjectList& _executors, Core::Object* _object)
 {
+	// Remove non-active objects
+	Core::ObjectList active_objects;
+	for (int i = 0; i < _executors.Size(); ++i)
+	{
+		Core::Object* object = g_Game->GetWorld()->GetObject(_executors[i]);
+		if ( object->IsActive() )
+			active_objects.Add(_executors[i]);
+	}
+
     // Void default action if we have no target
-    if (_object == 0 || _executors.Size() == 0)
+    if (_object == 0 || active_objects.Size() == 0)
     {
         m_currentDefaultAction = 0;
         m_lastDefaultActionTarget = -1;
@@ -86,7 +96,7 @@ void ActionPool::UpdateDefaultAction(Core::ObjectList& _executors, Core::Object*
 
     // Remember last target and get sorted list of allowed actions
     m_lastDefaultActionTarget = _object->ID();
-    auto actions = GetAllowedActions(_executors, *_object);
+    auto actions = GetAllowedActions(active_objects, *_object);
 
     // Check whether we got a valid default action
     if (actions.size() == 0 || CanBeDefaultAction(actions.front()) == false)
@@ -103,8 +113,13 @@ void ActionPool::UpdateDefaultAction(Core::ObjectList& _executors, Core::Object*
 
 bool Actions::ActionPool::StartDefaultAction( Core::ObjectID _executor, Core::ObjectID _target )
 {
+	// No default action if none is defined
     if (m_currentDefaultAction == 0)
         return false;
+
+	// No default for inactive objects
+	if (!g_Game->GetWorld()->GetObject(_executor)->IsActive())
+		return false;
 
     StartLocalAction(m_currentDefaultAction->m_id, _executor, _target);
     return true;

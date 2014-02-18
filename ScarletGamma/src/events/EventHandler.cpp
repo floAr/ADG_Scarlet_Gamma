@@ -2,6 +2,7 @@
 #include "events/InputHandler.hpp"
 #include "states/StateMachine.hpp"
 #include "Game.hpp"
+#include <windows.h>
 
 Events::EventHandler::EventHandler(sf::Window& window, States::StateMachine& stateMachine)
 	: m_window(window)
@@ -78,6 +79,8 @@ void Events::EventHandler::Update(float dt)
 			break;
 
 		case sf::Event::MouseButtonPressed:
+			// SFML bugfix: Focus window
+			SetFocus(m_window.getSystemHandle());
 			m_inputHandler->MouseButtonPressed(event.mouseButton, guiHandled);
 			break;
 

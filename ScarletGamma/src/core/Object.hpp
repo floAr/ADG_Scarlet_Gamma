@@ -85,6 +85,9 @@ public:
 	MapID GetParentMap() const		{ return m_parent.map; }
 	void SetParentMap(MapID _map)	{ m_parent.map = _map; m_hasParent = true; }
 
+	/// \brief Is this object being updated?
+	bool IsActive() const;
+
 	/// \brief Clear the path and target of active objects.
 	void ResetTarget();
 private:

@@ -211,4 +211,12 @@ namespace Core {
 		}
 	}
 
+	bool Object::IsActive() const
+	{
+		if ( IsLocatedOnAMap() && g_Game->GetWorld()->GetMap(m_parent.map)->IsActive(m_id) )
+			return true;
+		else
+			return false;
+	}
+
 } // namespace Core

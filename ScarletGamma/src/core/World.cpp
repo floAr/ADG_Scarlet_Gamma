@@ -314,16 +314,10 @@ namespace Core {
 		if( m_ownedObjects.empty()) return nullptr;
 		assert( _direction == -1 || _direction == 1 );
 		size_t currentIndex = std::find(m_ownedObjects.begin(), m_ownedObjects.end(), _currentID) - m_ownedObjects.begin();
-			
-find_object:
+
 		currentIndex = currentIndex + _direction;
 		currentIndex = (currentIndex + m_ownedObjects.size()) % m_ownedObjects.size();
-		auto o= GetObject( m_ownedObjects[currentIndex] );
-		if(o->IsLocatedOnAMap())
-			return o;
-		else
-			goto find_object;
-
+		return GetObject( m_ownedObjects[currentIndex] );
 	}
 
 	void World::RegisterObject(Object* _object)
@@ -345,7 +339,8 @@ find_object:
 		if( _object->HasProperty( STR_PROP_OWNER ) )
 		{
 			Property& prop = _object->GetProperty( STR_PROP_OWNER );
-			// Filter the template objects (they should all have owner = ""
+			// Filter the template objects (they should all have owner = "")
+			// TODO: filter harder if templates get observed
 			if( !prop.Value().empty() )
 				m_ownedObjects.push_back(_object->ID());
 		}
@@ -400,6 +395,7 @@ find_object:
 		propertyO->Add( PROPERTY::SWITCH );
 		propertyO->Add( PROPERTY::OWNER );
 		propertyO->Add( PROPERTY::ITEM );
+		propertyO->Add( PROPERTY::LAYER );
 
 		propertyO->Add( PROPERTY::INVENTORY );
 		propertyO->Add( PROPERTY::STRENGTH );
@@ -495,34 +491,43 @@ find_object:
 		Network::MaskWorldMessage lock;
 		Object* object = GetObject( NewObjectTemplate( "media/gobbo.png" ) );
 		object->Add( PROPERTY::NAME ).SetValue( STR_GOBBO );
+		object->Add( PROPERTY::LAYER ).SetValue( STR_8 );
 
 		object = GetObject( NewObjectTemplate( "media/bar_hor.png" ) );
 		object->Add( PROPERTY::NAME ).SetValue( STR_WALLH );
 		object->Add( PROPERTY::OBSTACLE );
+		object->Add( PROPERTY::LAYER ).SetValue( STR_2 );
 		object = GetObject( NewObjectTemplate( "media/bar_vert.png" ) );
 		object->Add( PROPERTY::NAME ).SetValue( STR_WALLV );
 		object->Add( PROPERTY::OBSTACLE );
+		object->Add( PROPERTY::LAYER ).SetValue( STR_2 );
 		object = GetObject( NewObjectTemplate( "media/cross_big.png" ) );
 		object->Add( PROPERTY::NAME ).SetValue( STR_WALLC );
 		object->Add( PROPERTY::OBSTACLE );
+		object->Add( PROPERTY::LAYER ).SetValue( STR_2 );
 		object = GetObject( NewObjectTemplate( "media/stairs.png" ) );
 		object->Add( PROPERTY::NAME ).SetValue( STR_STAIRS );
 		object->Add( PROPERTY::JUMPPOINT );
+		object->Add( PROPERTY::LAYER ).SetValue( STR_2 );
 		object->Add( PROPERTY::COLOR ).SetValue( "777777ff" );
 		object = GetObject( NewObjectTemplate( "media/planks.png" ) );
 		object->Add( PROPERTY::NAME ).SetValue( STR_PLANKS );
 		object->Add( PROPERTY::COLOR ).SetValue( "99aa44ff" );
+		object->Add( PROPERTY::LAYER ).SetValue( STR_2 );
 
 		object = GetObject( NewObjectTemplate( "media/noise_2.png" ) );
 		object->Add( PROPERTY::NAME ).SetValue( STR_EARTH );
 		object->Add( PROPERTY::COLOR ).SetValue( "556622ff" );
+		object->Add( PROPERTY::LAYER ).SetValue( STR_1 );
 		object = GetObject( NewObjectTemplate( "media/noise_2.png" ) );
 		object->Add( PROPERTY::NAME ).SetValue( STR_GRASS );
 		object->Add( PROPERTY::COLOR ).SetValue( "44bb44ff" );
+		object->Add( PROPERTY::LAYER ).SetValue( STR_1 );
 		object = GetObject( NewObjectTemplate( "media/noise_1.png" ) );
 		object->Add( PROPERTY::NAME ).SetValue( STR_WATER );
 		object->Add( PROPERTY::OBSTACLE );
 		object->Add( PROPERTY::COLOR ).SetValue( "aaaaeeff" );
+		object->Add( PROPERTY::LAYER ).SetValue( STR_1 );
 
 	}
 

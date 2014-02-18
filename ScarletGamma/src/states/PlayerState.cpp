@@ -83,17 +83,6 @@ void States::PlayerState::Draw(sf::RenderWindow& win)
 	GameState::Draw(win);
 }
 
-
-void States::PlayerState::MouseMoved(int deltaX, int deltaY, bool guiHandled)
-{
-	// TODO: update default action!
-
-	// Don't react to any key if gui handled it
-	if (guiHandled)
-		return;
-}
-
-
 void States::PlayerState::MouseButtonPressed(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos, bool guiHandled)
 {
 	// Return if the GUI already handled it

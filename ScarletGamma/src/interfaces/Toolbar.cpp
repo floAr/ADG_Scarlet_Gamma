@@ -348,7 +348,7 @@ namespace Interfaces {
 		m_layer->load( "media/Black.conf" );
 		m_layer->setPosition( 60.0f, 40.0f );
 		m_layer->setSize( 90.0f, 20.0f );
-		m_layer->addItem( STR_LAYER0 );
+		m_layer->addItem( STR_AUTOLAYER );
 		m_layer->addItem( STR_LAYER1 );
 		m_layer->addItem( STR_LAYER2 );
 		m_layer->addItem( STR_LAYER3 );
@@ -358,7 +358,7 @@ namespace Interfaces {
 		m_layer->addItem( STR_LAYER7 );
 		m_layer->addItem( STR_LAYER8 );
 		m_layer->addItem( STR_LAYER9 );
-	//	m_layer->addItem( STR_ONTOP );
+		m_layer->addItem( STR_LAYER10 );
 		m_layer->setSelectedItem( 0 );
 
 		tgui::Label::Ptr lDiameter( *this );
@@ -574,6 +574,38 @@ namespace Interfaces {
 		heading->setText( STR_NPC );
 		heading->setSize( 150.0f, 20.0f );
 		heading->disable();
+	}
+
+
+	CombatToolbox::CombatToolbox()
+		: m_combatButton(nullptr)
+	{
+		Panel::setSize( 150.0f, 100.0f );
+		Panel::setBackgroundColor( sf::Color(50,50,50,150) );
+	}
+
+	void CombatToolbox::Init()
+	{
+		tgui::Button::Ptr heading( *this );
+		heading->load( "media/Black.conf" );
+		heading->setPosition( 0.0f, 0.0f );
+		heading->setText( STR_COMBAT );
+		heading->setSize( 150.0f, 20.0f );
+		heading->disable();
+
+		// Button
+		m_combatButton = tgui::Button::Ptr( *this );
+		m_combatButton->load( "media/Black.conf" );
+		m_combatButton->setPosition( 0.0f, 23.0f );
+		m_combatButton->setSize( 150.0f, 20.0f );
+		m_combatButton->setTextSize(16);
+		m_combatButton->setText( "Kampf beginnen" );
+		m_combatButton->bindCallback( &CombatToolbox::ButtonClicked, this, tgui::Button::LeftMouseClicked );
+	}
+
+	void CombatToolbox::ButtonClicked()
+	{
+		// TODO: implement
 	}
 
 } // namespace Interfaces

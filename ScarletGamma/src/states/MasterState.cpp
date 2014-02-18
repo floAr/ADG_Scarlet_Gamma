@@ -67,6 +67,7 @@ namespace States {
 		m_playerTool->SetGoToMethod(gotoFunc);
 		m_toolbar->AddToolbox( m_gotoTool );
 		m_gotoTool->SetGoToMethod(gotoFunc);
+		m_toolbar->AddToolbox( m_combatTool );
 
 		// Set chat color...
 		m_color = sf::Color(80,80,250);
@@ -183,16 +184,19 @@ namespace States {
 					Network::ChatMsg(STR_MSG_SELECT_TYPE_FIRST, sf::Color::Red).Send();
 					return;
 				}
-				if( IsLayerVisible( m_modeTool->Brush()->GetLayer() ) ) {
+				// Paint new objects with the brush.
+				const Object* obj = m_objectsPanel->GetSelected();
+				int layer = m_modeTool->Brush()->GetLayer();
+				if( layer == 0 ) layer = AutoDetectLayer( obj );
+				if( IsLayerVisible( layer ) ) {
 					Network::ChatMsg(STR_MSG_LAYER_INVISIBLE, sf::Color::Red).Send();
 					return;
 				}
-				// Paint new objects with the brush.
 				m_brush.BeginPaint( *GetCurrentMap(),
-					m_objectsPanel->GetSelected(),
+					obj,
 					m_modeTool->Brush()->GetDiameter(),
 					tileX, tileY,
-					m_modeTool->Brush()->GetLayer(),
+					layer,
 					m_modeTool->Brush()->GetMode() );
 			} else
 			if( m_modeTool->GetMode() == Interfaces::ModeToolbox::SELECTION )
@@ -280,7 +284,7 @@ namespace States {
 						// Insert original to the map (player layer)
 						Object* object = const_cast<Object*>(m_draggedContent->object);
 						if( !object->IsLocatedOnAMap() )
-							GetCurrentMap()->Add( object->ID(), x, y, 5 );
+							GetCurrentMap()->Add( object->ID(), x, y, 6 );
 						else {
 							GetCurrentMap()->SetObjectPosition( object, tilePos );
 						}
@@ -331,7 +335,7 @@ namespace States {
 						for (int i = 0; i < objectList.Size(); i++)
 						{
 							// if object is not on hidden layer add it
-							if(!m_hiddenLayers[g_Game->GetWorld()->GetObject(objectList[i])->GetLayer()])
+							if(!IsLayerVisible(g_Game->GetWorld()->GetObject(objectList[i])->GetLayer()))
 								AddToSelection(objectList[i]);
 						}
 					}
@@ -559,6 +563,23 @@ namespace States {
 			{
 				m_brush.Paint(mousePos.x, mousePos.y);
 			}
+		}
+
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Middle))
+		{
+			// Get the render window
+			sf::RenderWindow& win = g_Game->GetWindow();
+
+			// Create a new view with its center shifted by the mouse position
+			sf::View& newView = GetStateView();
+			sf::Vector2f center = newView.getCenter();
+			sf::Vector2f scale(newView.getSize().x / win.getSize().x,
+				newView.getSize().y / win.getSize().y);
+			newView.setCenter(center.x - (deltaX * scale.x),
+				center.y - (deltaY * scale.y));
+
+			// Apply view to the window
+			SetStateView();
 		}
 	}
 

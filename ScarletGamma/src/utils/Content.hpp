@@ -8,8 +8,8 @@
 #include <Thor/Resources.hpp>
 
 #include <iostream>
-
 #include <unordered_map>
+#include <unordered_set>
 
 /// \brief default image to use as fallback
 static const std::string DEFAULT_IMAGE="media/dummy.png";
@@ -42,8 +42,8 @@ private:
 	std::unordered_map<std::string,std::shared_ptr<sf::Shader>> m_sha_cache;
 	std::unordered_map<std::string,std::shared_ptr<sf::SoundBuffer>> m_sou_cache;
 
-	
-
+	/// \brief A list of files which are known to be synchronized
+	std::unordered_set<std::string> m_mediaFiles;
 public:
 	/// \brief Loads a new image from file
 	/// \param [in] filename	The filename of the object relative to root folder
@@ -65,5 +65,16 @@ public:
 	/// \param [in] filename	The filename of the object relative to root folder
 	const sf::SoundBuffer& LoadSoundBuffer(const std::string& filename);
 
+	/// \brief Make sure it can be synchronized later.
+	/// \throws STR_WRONG_PATH if the resource is not in the media directory.
+	void CheckSynchronizable(const std::string& _filename);
+
+	/// \brief Check if there are new files in media/ and send them
+	void Synchronize();
+	/// \brief Handle incomming list
+	void Synchronize(const std::vector<std::string>& _reference);
+
+	/// \brief Ask the network if somebody has this file.
+//	void RequestResource(const std::string& _filename);
 };
 

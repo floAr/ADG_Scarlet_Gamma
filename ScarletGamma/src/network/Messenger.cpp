@@ -9,6 +9,7 @@
 #include "Game.hpp"
 #include "ChatMessages.hpp"
 #include "ActionMessages.hpp"
+#include "ResourceMessages.hpp"
 
 namespace Network {
 
@@ -100,7 +101,7 @@ namespace Network {
 		}
 	}
 
-	void Messenger::Send( void* _data, size_t _size, sf::TcpSocket* _to )
+	void Messenger::Send( const void* _data, size_t _size, sf::TcpSocket* _to )
 	{
 		if( g_msgInstance )
 		{
@@ -171,7 +172,8 @@ namespace Network {
 			else
 				read += HandleCombatMessage( buffer + sizeof(MessageHeader), size, 0 );
 			break;
-
+		case Target::RESOURCES:
+			read += HandleResourceMessage( buffer + sizeof(MessageHeader), size );
 			break;
 		}
 

@@ -42,7 +42,7 @@ namespace Network {
 		///		clients that means they send the message to the server.
 		///		In case it is another socket the message is send to one client
 		///		only (relevant for server only).
-		static void Send( void* _data, size_t _size, sf::TcpSocket* _to = nullptr );
+		static void Send( const void* _data, size_t _size, sf::TcpSocket* _to = nullptr );
 
 		/// \brief Returns if this application is the server.
 		static bool IsServer();

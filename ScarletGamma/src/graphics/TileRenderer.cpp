@@ -27,10 +27,10 @@ void Graphics::TileRenderer::Render(sf::RenderWindow& window, Core::Map& map, st
 	Graphics::SpriteAtlasBatcher::Instance()->Begin();
 
 	// Search layer-wise
-	for (int layer = 0; layer <= map.GetMaxLayer(); layer++ )
+	for (int layer = 1; layer <= map.GetMaxLayer(); layer++ )
 	{
 		if(hiddenLayers!=nullptr){
-			if(hiddenLayers[layer])
+			if(hiddenLayers[layer-1])
 				continue;
 		}
 

@@ -1,4 +1,7 @@
 #include "Content.hpp"
+#include <jofilelib.hpp>
+#include "Constants.hpp"
+#include "network/ResourceMessages.hpp"
 
 /// \brief loads all the dummy items
 Content::Content(){
@@ -29,8 +32,12 @@ const sf::Image& Content::LoadImage(const std::string& filename){
 	}
 	else
 	{
-		std::shared_ptr<sf::Image> res_handle=m_res_cache.acquire(thor::Resources::fromFile<sf::Image>(filename));
-		if(res_handle){
+		std::shared_ptr<sf::Image> res_handle = nullptr;
+		if( Jo::Files::Utils::Exists( filename ) )
+			res_handle = m_res_cache.acquire(thor::Resources::fromFile<sf::Image>(filename));
+		if(res_handle)
+		{
+			CheckSynchronizable(filename);
 			m_img_cache.insert(std::make_pair(filename,res_handle));
 			return *res_handle;
 		}
@@ -54,8 +61,12 @@ const sf::Texture& Content::LoadTexture(const std::string& filename,bool* isDefa
 	}
 	else
 	{
-		std::shared_ptr<sf::Texture> res_handle=m_res_cache.acquire(thor::Resources::fromFile<sf::Texture>(filename));
-		if(res_handle){
+		std::shared_ptr<sf::Texture> res_handle = nullptr;
+		if( Jo::Files::Utils::Exists( filename ) )
+			res_handle = m_res_cache.acquire(thor::Resources::fromFile<sf::Texture>(filename));
+		if(res_handle)
+		{
+			CheckSynchronizable(filename);
 			m_tex_cache.insert(std::make_pair(filename,res_handle));
 			return *res_handle;
 		}
@@ -75,8 +86,12 @@ const sf::Font& Content::LoadFont(const std::string& filename){
 	}
 	else
 	{
-		std::shared_ptr<sf::Font> res_handle=m_res_cache.acquire(thor::Resources::fromFile<sf::Font>(filename));
-		if(res_handle){
+		std::shared_ptr<sf::Font> res_handle = nullptr;
+		if( Jo::Files::Utils::Exists( filename ) )
+			res_handle = m_res_cache.acquire(thor::Resources::fromFile<sf::Font>(filename));
+		if(res_handle)
+		{
+			CheckSynchronizable(filename);
 			m_fon_cache.insert(std::make_pair(filename,res_handle));
 			return *res_handle;
 		}
@@ -94,8 +109,12 @@ const sf::Shader& Content::LoadShader(const std::string& filename,const sf::Shad
 	}
 	else
 	{
-		std::shared_ptr<sf::Shader> res_handle=m_res_cache.acquire(thor::Resources::fromFile<sf::Shader>(filename,type));
-		if(res_handle){
+		std::shared_ptr<sf::Shader> res_handle = nullptr;
+		if( Jo::Files::Utils::Exists( filename ) )
+			res_handle = m_res_cache.acquire(thor::Resources::fromFile<sf::Shader>(filename,type));
+		if(res_handle)
+		{
+			CheckSynchronizable(filename);
 			m_sha_cache.insert(std::make_pair(filename,res_handle));
 			return *res_handle;
 		}
@@ -114,8 +133,12 @@ const sf::SoundBuffer& Content::LoadSoundBuffer(const std::string& filename){
 	}
 	else
 	{
-		std::shared_ptr<sf::SoundBuffer> res_handle=m_res_cache.acquire(thor::Resources::fromFile<sf::SoundBuffer>(filename));
-		if(res_handle){
+		std::shared_ptr<sf::SoundBuffer> res_handle = nullptr;
+		if( Jo::Files::Utils::Exists( filename ) )
+			res_handle = m_res_cache.acquire(thor::Resources::fromFile<sf::SoundBuffer>(filename));
+		if(res_handle)
+		{
+			CheckSynchronizable(filename);
 			m_sou_cache.insert(std::make_pair(filename,res_handle));
 			return *res_handle;
 		}
@@ -126,3 +149,54 @@ const sf::SoundBuffer& Content::LoadSoundBuffer(const std::string& filename){
 	}	
 }
 
+
+void Content::CheckSynchronizable(const std::string& _filename)
+{
+	// Find out if the resource is inside project directory
+	std::string dir = Jo::Files::Utils::GetDirectory( _filename );
+	if( !Jo::Files::Utils::IsEqual( dir, "media" ) )
+	{
+		throw STR_WRONG_PATH;
+	}
+}
+
+/*void Content::RequestResource(const std::string& _filename)
+{
+	std::string dir = Jo::Files::Utils::GetDirectory( _filename );
+	if( Jo::Files::Utils::IsEqual( dir, "media" ) )
+	{
+		// The resource could be existing in some other ones media directory.
+		Network::MsgRequestResource(_filename).Send();
+	} // else The given path cannot be synchronized.
+}*/
+
+void Content::Synchronize()
+{
+	// Go through the media directory and look for new files
+	Jo::Files::Utils::FileEnumerator media("media");
+	for( int i = 0; i < media.GetNumFiles(); ++i )
+	{
+		const std::string& name = media.GetFileName(i);
+		if( m_mediaFiles.count( name ) == 0 )
+		{
+			// Add to list of my files
+			m_mediaFiles.insert( name );
+		}
+	}
+
+	// Send to everybody which files I have
+	Network::MsgResourceList( m_mediaFiles ).Send();
+}
+
+void Content::Synchronize(const std::vector<std::string>& _reference)
+{
+	// Go through the reference list and look if there is something I do not have
+	for( size_t i = 0; i < _reference.size(); ++i )
+	{
+		if( m_mediaFiles.count( _reference[i] ) == 0 )
+		{
+			m_mediaFiles.insert( _reference[i] );
+			Network::MsgRequestResource( _reference[i] ).Send();
+		}
+	}
+}

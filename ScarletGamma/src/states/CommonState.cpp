@@ -133,10 +133,9 @@ void CommonState::KeyPressed( sf::Event::KeyEvent& key, bool guiHandled )
 
 		// Show message input field if not visible or submit message.
 		tgui::EditBox::Ptr enterTextEdit = m_gui.get( "EnterText" );
-		if( !enterTextEdit->isVisible() )
+		if( !enterTextEdit->isFocused() )
 		{
-			enterTextEdit->show();
-			enterTextEdit->setText("");
+		//	enterTextEdit->setText("");
 			enterTextEdit->focus();
 		}
 		break; }
@@ -213,7 +212,9 @@ void CommonState::DrawPathOverlay(sf::RenderWindow& _window, Core::Object* _whos
 			auto& wayPoints = pathProperty.GetObjects();
 			for( int i=0; i<wayPoints.Size(); ++i )
 			{
-				sf::Vector2i goal = sfUtils::Round(g_Game->GetWorld()->GetObject(wayPoints[i])->GetPosition());
+				Core::Object* object = g_Game->GetWorld()->GetObject(wayPoints[i]);
+				if( !object ) return;		// Path corrupted
+				sf::Vector2i goal = sfUtils::Round(object->GetPosition());
 				auto part = g_Game->GetWorld()->GetMap(_whosePath->GetParentMap())->FindPath(start, goal);
 				start = goal;
 				path.insert( path.end(), part.begin(), part.end() );
@@ -243,13 +244,14 @@ void CommonState::DrawPathOverlay(sf::RenderWindow& _window, Core::Object* _whos
 void CommonState::SubmitChat(const tgui::Callback& _call)
 {
 	tgui::EditBox* enterTextEdit = (tgui::EditBox*)_call.widget;
-	enterTextEdit->hide();
+	enterTextEdit->unfocus();
 	// Send Message
 	if( enterTextEdit->getText() != "" )
 	{
 		tgui::ChatBox::Ptr localOut = m_gui.get( "Messages" );
 		std::string text = '[' + m_name + "] " + enterTextEdit->getText().toAnsiString();
 		Network::ChatMsg(text, m_color).Send();
+		enterTextEdit->setText( STR_EMPTY );
 	}
 }
 
@@ -292,7 +294,7 @@ void CommonState::EndCombat()
 }
 
 
-int CommonState::AutoDetectLayer( Core::Object* _object )
+int CommonState::AutoDetectLayer( const Core::Object* _object )
 {
 	// Use previous layer
 	if( _object->HasProperty(STR_PROP_LAYER) )
@@ -300,19 +302,19 @@ int CommonState::AutoDetectLayer( Core::Object* _object )
 
 	// Try to find a semantic
 	if( _object->HasProperty(STR_PROP_ITEM) )
-		return 3;
+		return 4;
 	if( _object->HasProperty(STR_PROP_OBSTACLE) )
-		return 2;
+		return 3;
 	if( _object->HasProperty(STR_PROP_PLAYER) )
-		return 5;
+		return 6;
 	if( _object->HasProperty(STR_PROP_HEALTH) )	// No player but attackable
-		return 7;
+		return 8;
 
 	// Search the topmost visible layer
 	for( int i = 9; i >= 0; --i )
-		if( IsLayerVisible(i) ) return i;
+		if( IsLayerVisible(i) ) return i + 1;
 
-	return 9;
+	return 10;
 }
 
 

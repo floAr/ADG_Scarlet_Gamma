@@ -14,7 +14,9 @@ namespace Tools {
 		m_Xmax(19),
 		m_Ymin(0),
 		m_Ymax(19),
-		m_diameter(0)
+		m_diameter(0),
+		m_layer(10),
+		m_mode(REPLACE)
 	{
 		// Allocate space for a 20x20 painting
 		m_mask = new bool[400];
@@ -35,8 +37,16 @@ namespace Tools {
 		m_diameter = _diameter;
 		assert( _diameter > 0 );
 		m_mode = _mode;
-		m_layer = _layer;
 		m_obj = _obj;
+
+		// Take manual layer only if there is no one in the object
+		m_layer = _layer;
+		if( _layer == 0 )
+		{
+			if( _obj->HasProperty( STR_PROP_LAYER ) )
+				m_layer = _obj->GetLayer();
+			else m_layer = 10;
+		}
 
 		// Clear and center mask
 		int width = (m_Xmax-m_Xmin+1);

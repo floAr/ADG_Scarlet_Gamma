@@ -12,7 +12,8 @@ namespace States{
 		auto& vp = g_Game->GetWindow().getView().getSize();			
 		m_minimize.setPosition(sf::Vector2f(vp.x-m_minimize.getGlobalBounds().width,0));
 		m_minimize.setScale(sf::Vector2f(0.15f,0.15f));
-		m_orb.setScale(sf::Vector2f(0.25f,0.25f));
+		float orbScale=DismissableDialogState::ORB_WIDTH/m_orb.getLocalBounds().width;
+		m_orb.setScale(sf::Vector2f(orbScale,orbScale));
 	}
 
 	void DismissableDialogState::Update(float dt) {
@@ -88,7 +89,16 @@ namespace States{
 	}
 
 	void DismissableDialogState::RecalculateOrbPositions(){
-
+		int orbCount = DismissableDialogState::ms_orbs.size();
+		float widthPerOrb=DismissableDialogState::ORB_WIDTH+2;
+		float startPoint=g_Game->GetWindow().getView().getCenter().x-(widthPerOrb*orbCount/2);
+		float yPoint=g_Game->GetWindow().getView().getSize().y-DismissableDialogState::ORB_WIDTH;
+		int i;
+		for(i=0;i<orbCount;i++)
+		{
+			ms_orbs[i]->setPosition(startPoint,yPoint);
+			startPoint+=widthPerOrb;
+		}
 	}
 
 

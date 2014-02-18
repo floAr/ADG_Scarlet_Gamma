@@ -9,10 +9,12 @@
 #include "sfutils/View.hpp"
 #include "states/CommonState.hpp"
 #include <math.h>
+#include "utils/Content.hpp"
 
 Utils::Random* Game::RANDOM = new Utils::Random((uint32_t) time(0));
 
-Game::Game() : m_stateMachine(0), m_world(0), m_eventHandler(0), m_numNewChatMessages(0)
+Game::Game() : m_stateMachine(0), m_world(0), m_eventHandler(0), m_numNewChatMessages(0),
+	m_resourceSyncTime(0.0f)
 {
 	m_cursorSprite.setTexture(Content::Instance()->LoadTexture("media/cursors.png"));
 	SetMouseCursor(MC_DEFAULT);
@@ -57,6 +59,14 @@ void Game::Run()
 	{
 		// Get elapsed time and add it to total running time
 		float time = clock.restart().asSeconds();
+
+		// Synchronize resources all 10 seconds
+		m_resourceSyncTime += time;
+		if( m_resourceSyncTime > 10.0f )
+		{
+			Content::Instance()->Synchronize();
+			m_resourceSyncTime = 0.0f;
+		}
 
 		// Let the EventHandler handle all window events
 		m_eventHandler->Update(time);

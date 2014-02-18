@@ -56,6 +56,7 @@ static const std::string STR_AMBIGIOUS_DROP_TARGET = std::string("Ein Objekt mus
 static const std::string STR_TO_FAR_AWAY = std::string("Objekt zu weit entfernt.");
 static const std::string STR_WRONG_ID = std::string("Es gibt kein Objekt mit der gegebenen ID.");
 static const std::string STR_NO_POSITION = std::string("Das Objekt ist kein gültiges Ziel. Die Position fehlt.");
+static const std::string STR_WRONG_PATH = std::string("Resourcen müssen im 'media' Ordner liegen.");
 
 
 /************************************************************************/

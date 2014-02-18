@@ -99,6 +99,8 @@ private:
 	std::vector<Network::ChatMsg> m_chatMessages;
 	int m_numNewChatMessages;	///< Number of untreated incoming chat messages.
 
+	float m_resourceSyncTime;
+
 #ifdef _FPS
 	float    m_dFpsTime;
 	int      m_dFpsCounter;

@@ -8,6 +8,9 @@ namespace GameRules
     class MasterCombat : public Combat
     {
     public:
+		/// \brief Tells all clients about its deletion.
+		~MasterCombat();
+
         /// \brief Adds a combattant to the combat. May happen before or during
         ///     the combat.
         /// \details This requests an initiative roll from the specified object.
@@ -24,6 +27,9 @@ namespace GameRules
         /// \brief Called when the DM added the (initial) participants and wants
         ///     to start the combat.
         void StartCombat();
+
+		/// \brief Tells all players to end the combat.
+		void EndCombat();
 
         /// \brief Sets the object whose turn it is next.
         virtual void SetTurn(Core::ObjectID _object) override;

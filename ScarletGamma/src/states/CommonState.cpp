@@ -36,7 +36,12 @@ namespace States {
 		tgui::EditBox::Ptr enterTextEdit = m_gui.get( "EnterText" );
 		enterTextEdit->bindCallbackEx( &CommonState::SubmitChat, this, tgui::EditBox::ReturnKeyPressed );
 
-		SetGui(&m_gui);
+	// Add hidden combatant panel
+	m_combatantPanel = Interfaces::CombatantPanel::Ptr(m_gui);
+	m_combatantPanel->hide();
+
+	SetGui(&m_gui);
+}
 
 	}
 
@@ -275,11 +280,15 @@ namespace States {
 	}
 
 
-	void CommonState::EndCombat()
-	{
-		delete m_combat;
-		m_combat = 0;
-	}
+void CommonState::EndCombat()
+{
+	// Delete combat object, in case of DM he will spread the word
+	delete m_combat;
+	m_combat = 0;
+
+	// Hide the combatant display
+	m_combatantPanel->hide();
+}
 
 
 	int CommonState::AutoDetectLayer( const Core::Object* _object )

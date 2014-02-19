@@ -5,6 +5,8 @@
 #include "core/World.hpp"
 #include "states/CommonState.hpp"
 #include "states/MasterState.hpp"
+#include "gamerules/Combat.hpp"
+#include "gamerules/MasterCombat.hpp"
 
 namespace Interfaces {
 
@@ -579,7 +581,7 @@ namespace Interfaces {
 
 
 	CombatToolbox::CombatToolbox()
-		: m_combatButton(nullptr)
+		: m_createCombatBtn(nullptr)
 	{
 		Panel::setSize( 150.0f, 100.0f );
 		Panel::setBackgroundColor( sf::Color(50,50,50,150) );
@@ -594,24 +596,95 @@ namespace Interfaces {
 		heading->setSize( 150.0f, 20.0f );
 		heading->disable();
 
-		// Button
-		m_combatButton = tgui::Button::Ptr( *this );
-		m_combatButton->load( "media/Black.conf" );
-		m_combatButton->setPosition( 0.0f, 23.0f );
-		m_combatButton->setSize( 150.0f, 20.0f );
-		m_combatButton->setTextSize(16);
-		m_combatButton->setText( "Kampf beginnen" );
-		m_combatButton->bindCallback( &CombatToolbox::ButtonClicked, this, tgui::Button::LeftMouseClicked );
+		// Create combat button
+		m_createCombatBtn = tgui::Button::Ptr( *this );
+		m_createCombatBtn->load( "media/Black.conf" );
+		m_createCombatBtn->setPosition( 0.0f, 23.0f );
+		m_createCombatBtn->setSize( 150.0f, 20.0f );
+		m_createCombatBtn->setTextSize(16);
+		m_createCombatBtn->setText( "Kampf einleiten" );
+		m_createCombatBtn->bindCallback( &CombatToolbox::CreateCombatBtnClicked, this, tgui::Button::LeftMouseClicked );
+
+		// Add participant button, has exactly the same callback as the first button :D
+		m_addParticipantBtn = tgui::Button::Ptr( *this );
+		m_addParticipantBtn->load( "media/Black.conf" );
+		m_addParticipantBtn->setPosition( 0.0f, 43.0f );
+		m_addParticipantBtn->setSize( 150.0f, 20.0f );
+		m_addParticipantBtn->setTextSize(16);
+		m_addParticipantBtn->setText( "Teilnehmer hinzufügen" );
+		m_addParticipantBtn->bindCallback( &CombatToolbox::CreateCombatBtnClicked, this, tgui::Button::LeftMouseClicked );
+
+		m_startCombatBtn = tgui::Button::Ptr( *this );
+		m_startCombatBtn->load( "media/Black.conf" );
+		m_startCombatBtn->setPosition( 0.0f, 63.0f );
+		m_startCombatBtn->setSize( 150.0f, 20.0f );
+		m_startCombatBtn->setTextSize(16);
+		m_startCombatBtn->setText( "Kampf starten" );
+		m_startCombatBtn->bindCallback( &CombatToolbox::StartCombatBtnClicked, this, tgui::Button::LeftMouseClicked );
+
+		m_endCombatBtn = tgui::Button::Ptr( *this );
+		m_endCombatBtn->load( "media/Black.conf" );
+		m_endCombatBtn->setPosition( 0.0f, 83.0f );
+		m_endCombatBtn->setSize( 150.0f, 20.0f );
+		m_endCombatBtn->setTextSize(16);
+		m_endCombatBtn->setText( "Kampf beenden" );
+		m_endCombatBtn->bindCallback( &CombatToolbox::EndCombatBtnClicked, this, tgui::Button::LeftMouseClicked );
 	}
 
-	void CombatToolbox::ButtonClicked()
+	void CombatToolbox::CreateCombatBtnClicked()
 	{
 		static_cast<States::MasterState*>(g_Game->GetCommonState())->CreateCombatPrompt();
+	}
+
+	void CombatToolbox::StartCombatBtnClicked()
+	{
+		static_cast<GameRules::MasterCombat*>(g_Game->GetCommonState()->GetCombat())->StartCombat();
+	}
+
+	void CombatToolbox::EndCombatBtnClicked()
+	{
+		g_Game->GetCommonState()->EndCombat();
 	}
 
 	void CombatToolbox::Update( float _dt )
 	{
 		// TODO: check combat mode :)
+		if (!g_Game->GetCommonState()->InCombat())
+		{
+			// Not in combat
+			m_createCombatBtn->enable();
+			m_createCombatBtn->setTextColor(sf::Color::White);
+			m_addParticipantBtn->disable();
+			m_addParticipantBtn->setTextColor(sf::Color::Black);
+			m_startCombatBtn->disable();
+			m_startCombatBtn->setTextColor(sf::Color::Black);
+			m_endCombatBtn->disable();
+			m_endCombatBtn->setTextColor(sf::Color::Black);
+		}
+		else if(!g_Game->GetCommonState()->GetCombat()->HasStarted())
+		{
+			// Combat has not yet started
+			m_createCombatBtn->disable();
+			m_createCombatBtn->setTextColor(sf::Color::Black);
+			m_addParticipantBtn->enable();
+			m_addParticipantBtn->setTextColor(sf::Color::White);
+			m_startCombatBtn->enable();
+			m_startCombatBtn->setTextColor(sf::Color::White);
+			m_endCombatBtn->disable();
+			m_endCombatBtn->setTextColor(sf::Color::Black);
+		}
+		else
+		{
+			// Combat is in progress
+			m_createCombatBtn->disable();
+			m_createCombatBtn->setTextColor(sf::Color::Black);
+			m_addParticipantBtn->enable();
+			m_addParticipantBtn->setTextColor(sf::Color::White);
+			m_startCombatBtn->disable();
+			m_startCombatBtn->setTextColor(sf::Color::Black);
+			m_endCombatBtn->enable();
+			m_endCombatBtn->setTextColor(sf::Color::White);
+		}
 	}
 
 } // namespace Interfaces

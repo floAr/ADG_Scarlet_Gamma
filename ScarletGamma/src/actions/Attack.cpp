@@ -51,7 +51,7 @@ void Attack::Execute()
     // Open prompt for hit roll value
     States::PromptState* prompt = dynamic_cast<States::PromptState*>(
         g_Game->GetStateMachine()->PushGameState(States::GST_PROMPT));
-    prompt->SetText("Angriffswurf eingeben:");
+    prompt->SetText("Angriffswurf eingeben:\n");
 
 	// Default attack roll
 	if ( m_attackRollCache.count(m_executor) != 0 )
@@ -76,7 +76,8 @@ void Attack::Execute()
 		prompt->SetDefaultValue( stream.str() );
 	}
 
-    prompt->AddPopCallback(std::bind(&Attack::AttackRollPromptFinished, this, std::placeholders::_1));
+	prompt->AddButton("OK", std::bind(&Attack::AttackRollPromptFinished, this, std::placeholders::_1),
+		sf::Keyboard::Return, g_Game->GetWorld()->GetObject(m_executor));
 }
 
 void Attack::HandleActionInfo(uint8_t _messageType, const std::string& _message, uint8_t _sender)
@@ -118,14 +119,10 @@ void Attack::HandleActionInfoResponse(uint8_t _messageType, const std::string& _
     }
 }
 
-void Attack::AttackRollPromptFinished(States::GameState* gs)
+void Attack::AttackRollPromptFinished(std::string& _result)
 {
-    States::PromptState* ps = dynamic_cast<States::PromptState*>(gs);
-    assert(ps && "Expected a PromptState on the top of the stack, wtf?");
-
     // Prompt is finished, what was the result?
-    const std::string& result = ps->GetResult();
-    if (result.empty())
+    if (_result.empty())
     {
         // Tell the server that player canceled
         if (Network::Messenger::IsServer() == false)
@@ -137,25 +134,23 @@ void Attack::AttackRollPromptFinished(States::GameState* gs)
     else
     {
 		// Cache the result
-		m_attackRollCache[m_executor] = result;
+		m_attackRollCache[m_executor] = _result;
 
         if (Network::Messenger::IsServer() == false)
         {
             // Tell the server about the result
-            Network::MsgActionInfo(this->m_id, static_cast<uint8_t>(ActionMsgType::PL_ATTACK_ROLL_INFO), result).Send();
+            Network::MsgActionInfo(this->m_id, static_cast<uint8_t>(ActionMsgType::PL_ATTACK_ROLL_INFO), _result).Send();
         }
         else
         {
             // Tell myself about the result
-            AttackRollInfoLocal(result);
+            AttackRollInfoLocal(_result);
         }
     }
 }
 
 bool Attack::EvaluateAttackRoll(int _roll)
 {
-    // TODO implement properly :)
-
     try
     {
         return (_roll >= CombatRules::GetArmorClass(m_target));
@@ -208,7 +203,7 @@ void Attack::AttackRollInfoLocal(const std::string& _message)
     PushAttackRollDMPrompt(result, &Attack::AttackRollDMPromptFinishedLocal);
 }
 
-void Attack::PushAttackRollDMPrompt(int _result, void (Attack::* _callback)(States::GameState*))
+void Attack::PushAttackRollDMPrompt(int _result, void (Attack::* _callback)(std::string&))
 {
     // Open prompt for hit roll value
     States::PromptState* prompt = dynamic_cast<States::PromptState*>(
@@ -229,15 +224,13 @@ void Attack::PushAttackRollDMPrompt(int _result, void (Attack::* _callback)(Stat
 
     prompt->SetText(message.str());
     prompt->SetDefaultValue(resultStr);
-    prompt->AddPopCallback(std::bind(_callback, this, std::placeholders::_1));
+    prompt->AddButton("OK", std::bind(_callback, this, std::placeholders::_1), sf::Keyboard::Return,
+		g_Game->GetWorld()->GetObject(m_executor));
 }
 
-void Attack::AttackRollDMPromptFinished(States::GameState* _gs)
+void Attack::AttackRollDMPromptFinished(std::string& _result)
 {
-    States::PromptState* ps = dynamic_cast<States::PromptState*>(_gs);
-    assert(ps && "Expected a PromptState on the top of the stack, wtf?");
-
-    int result = atoi( ps->GetResult().c_str() );
+    int result = atoi( _result.c_str() );
 
     if (EvaluateAttackRoll(result))
     {
@@ -251,12 +244,9 @@ void Attack::AttackRollDMPromptFinished(States::GameState* _gs)
     }
 }
 
-void Attack::AttackRollDMPromptFinishedLocal(States::GameState* _gs)
+void Attack::AttackRollDMPromptFinishedLocal(std::string& _result)
 {
-    States::PromptState* ps = dynamic_cast<States::PromptState*>(_gs);
-    assert(ps && "Expected a PromptState on the top of the stack, wtf?");
-
-    int result = atoi( ps->GetResult().c_str() );
+    int result = atoi( _result.c_str() );
 
     if (EvaluateAttackRoll(result))
     {
@@ -290,7 +280,7 @@ void Attack::AttackRollHit()
 {
     // Prompt for damage
     States::PromptState* prompt = dynamic_cast<States::PromptState*>(g_Game->GetStateMachine()->PushGameState(States::GST_PROMPT));
-    prompt->SetText("Schadenswurf eingeben:");
+    prompt->SetText("Schadenswurf eingeben:\n");
 
 	// Set default / cache values
 	if ( m_hitRollCache.count(m_executor) != 0 )
@@ -298,7 +288,8 @@ void Attack::AttackRollHit()
 	else if ( g_Game->GetWorld()->GetObject(m_executor)->HasProperty(STR_PROP_STRENGTH_MOD) )
 		prompt->SetDefaultValue("'" + STR_PROP_STRENGTH_MOD + "'");
 
-    prompt->AddPopCallback(std::bind(&Attack::HitRollPromptFinished, this, std::placeholders::_1));
+	prompt->AddButton("OK", std::bind(&Attack::HitRollPromptFinished, this, std::placeholders::_1),
+		sf::Keyboard::Return, g_Game->GetWorld()->GetObject(m_executor));
 }
 
 void Attack::AttackRollMissed()
@@ -307,14 +298,10 @@ void Attack::AttackRollMissed()
     m_finished = true;
 }
 
-void Attack::HitRollPromptFinished(States::GameState* gs)
+void Attack::HitRollPromptFinished(std::string& _result)
 {
-    States::PromptState* ps = dynamic_cast<States::PromptState*>(gs);
-    assert(ps && "Expected a PromptState on the top of the stack, wtf?");
-
     // Prompt is finished, what was the result?
-    const std::string& result = ps->GetResult();
-    if (result.empty())
+    if (_result.empty())
     {
         // Tell the server that player canceled
         if (Network::Messenger::IsServer() == false)
@@ -326,17 +313,17 @@ void Attack::HitRollPromptFinished(States::GameState* gs)
     else
     {
 		// Cache value
-		m_hitRollCache[m_executor] = result;
+		m_hitRollCache[m_executor] = _result;
 
         if (Network::Messenger::IsServer() == false)
         {
             // Tell the server that about the result
-            Network::MsgActionInfo(this->m_id, static_cast<uint8_t>(ActionMsgType::PL_HIT_ROLL_INFO), result).Send();
+            Network::MsgActionInfo(this->m_id, static_cast<uint8_t>(ActionMsgType::PL_HIT_ROLL_INFO), _result).Send();
         }
         else
         {
             // Tell myself about the result
-            HitRollInfoLocal(result);
+            HitRollInfoLocal(_result);
         }
     }
 }
@@ -371,7 +358,7 @@ void Attack::HitRollInfoLocal(const std::string& _message)
     PushHitRollDMPrompt(result, &Attack::HitRollDMPromptFinishedLocal);
 }
 
-void Attack::PushHitRollDMPrompt(int _result, void (Attack::* _callback)(States::GameState*))
+void Attack::PushHitRollDMPrompt(int _result, void (Attack::* _callback)(std::string&))
 {
     // Open prompt for hit roll value
     States::PromptState* prompt = dynamic_cast<States::PromptState*>(
@@ -387,16 +374,15 @@ void Attack::PushHitRollDMPrompt(int _result, void (Attack::* _callback)(States:
 
     prompt->SetText(message.str());
     prompt->SetDefaultValue(resultStr);
-    prompt->AddPopCallback(std::bind(_callback, this, std::placeholders::_1));
+
+	prompt->AddButton("OK", std::bind(_callback, this, std::placeholders::_1),
+		sf::Keyboard::Return, g_Game->GetWorld()->GetObject(m_executor));
 }
 
-void Attack::HitRollDMPromptFinished(States::GameState* _gs)
+void Attack::HitRollDMPromptFinished(std::string& _result)
 {
-    States::PromptState* ps = dynamic_cast<States::PromptState*>(_gs);
-    assert(ps && "Expected a PromptState on the top of the stack, wtf?");
-
     // Apply damage
-    int result = atoi( ps->GetResult().c_str() );
+    int result = atoi( _result.c_str() );
     CombatRules::ApplyHitDamage(m_target, result);
     BroadcastDamageMessage(m_hitRoll, result);
 
@@ -405,13 +391,10 @@ void Attack::HitRollDMPromptFinished(States::GameState* _gs)
     Network::MsgActionEnd(m_id).Send(m_sender);
 }
 
-void Attack::HitRollDMPromptFinishedLocal(States::GameState* _gs)
+void Attack::HitRollDMPromptFinishedLocal(std::string& _result)
 {
-    States::PromptState* ps = dynamic_cast<States::PromptState*>(_gs);
-    assert(ps && "Expected a PromptState on the top of the stack, wtf?");
-
     // Apply damage
-    int result = atoi( ps->GetResult().c_str() );
+    int result = atoi( _result.c_str() );
     CombatRules::ApplyHitDamage(m_target, result);
     BroadcastDamageMessage(m_hitRoll, result);
 

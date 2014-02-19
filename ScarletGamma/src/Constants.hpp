@@ -1,6 +1,7 @@
 #pragma once
 
 static const unsigned int TILESIZE = 64;
+static const sf::Color MIGHTY_SLATE = sf::Color(85, 98, 112);
 
 // A pool of string objects to avoid creation and deletion of many strings
 #include <string>

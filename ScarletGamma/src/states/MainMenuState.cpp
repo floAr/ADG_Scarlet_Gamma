@@ -48,9 +48,7 @@ void States::MainMenuState::Update(float dt)
 
 void States::MainMenuState::Draw(sf::RenderWindow& win)
 {
-    // Set window color according to mouse position...
-	static sf::Color mightySlate(85, 98, 112);
-    win.clear(mightySlate);
+    win.clear(MIGHTY_SLATE);
     
     sf::Text t("Press 'm' to open MasterState\n"
                "or escape to quit.", m_menuFont, 24);

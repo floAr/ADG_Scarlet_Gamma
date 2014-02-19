@@ -315,8 +315,7 @@ CharacterState::CharacterState(Core::ObjectID* _saveID) :
 
 void CharacterState::Draw(sf::RenderWindow& win)
 {
-    // Set window color according to mouse position...
-    win.clear(sf::Color::Black);
+    win.clear(MIGHTY_SLATE);
 
 	GameState::Draw(win);
 }

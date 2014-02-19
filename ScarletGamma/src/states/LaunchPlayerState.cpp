@@ -30,8 +30,7 @@ States::LaunchPlayerState::LaunchPlayerState() :
 
 void States::LaunchPlayerState::Draw(sf::RenderWindow& win)
 {
-    // Set window color according to mouse position...
-    win.clear(sf::Color::Black);
+    win.clear(MIGHTY_SLATE);
 
 	GameState::Draw(win);
 }

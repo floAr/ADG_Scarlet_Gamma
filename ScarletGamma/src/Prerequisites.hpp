@@ -130,3 +130,5 @@ namespace UnitTest	{
 namespace sf {
     class TcpSocket;
 } // namespace sf
+
+#include <SFML/Graphics/Color.hpp>

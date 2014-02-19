@@ -62,7 +62,8 @@ namespace Interfaces {
 		tgui::EditBox::Ptr m_newValue;
 		tgui::Button::Ptr m_newAdd;
 		tgui::Scrollbar::Ptr m_scrollBar;
-		tgui::EditBox::Ptr m_titleBar;			///< Contains the object name in minimized state and is the searchbar if maximized
+		tgui::EditBox::Ptr m_titleBar;			///< Contains the object name
+		tgui::EditBox::Ptr m_searchBar;			///< The search bar for filtering if maximized
 		tgui::AnimatedPicture::Ptr m_miniMaxi;
 		tgui::Panel::Ptr m_listContainer;		///< The subcomponent containing all stuff.
 

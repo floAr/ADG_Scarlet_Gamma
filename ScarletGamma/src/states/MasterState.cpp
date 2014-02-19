@@ -418,8 +418,13 @@ namespace States {
 				std::string content=Utils::Clipboard::Instance()->GetClipboardText();
 				for (auto i = content.begin(); i != content.end(); ++i){
 					sf::Event kevent;
-					kevent.type=sf::Event::KeyPressed;
-					kevent.key.code=sf::Keyboard::A;
+					//trying with keypress event -> not working
+					//kevent.type=sf::Event::KeyPressed;
+					//kevent.key.code=sf::Keyboard::A;
+
+					//trying with textentered
+					kevent.type=sf::Event::TextEntered;
+					kevent.text.unicode=*i;
 					bool handeld=m_gui.handleEvent(kevent);
 					std::cout<<handeld;
 				}

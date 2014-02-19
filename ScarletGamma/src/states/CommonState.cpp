@@ -41,8 +41,6 @@ namespace States {
 	m_combatantPanel->hide();
 
 	SetGui(&m_gui);
-}
-
 	}
 
 

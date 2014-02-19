@@ -35,6 +35,10 @@ CommonState::CommonState() :
 	tgui::EditBox::Ptr enterTextEdit = m_gui.get( "EnterText" );
 	enterTextEdit->bindCallbackEx( &CommonState::SubmitChat, this, tgui::EditBox::ReturnKeyPressed );
 
+	// Add hidden combatant panel
+	m_combatantPanel = Interfaces::CombatantPanel::Ptr(m_gui);
+	m_combatantPanel->hide();
+
 	SetGui(&m_gui);
 }
 
@@ -275,8 +279,12 @@ void CommonState::GoTo( const Core::Object* _object )
 
 void CommonState::EndCombat()
 {
+	// Delete combat object, in case of DM he will spread the word
 	delete m_combat;
 	m_combat = 0;
+
+	// Hide the combatant display
+	m_combatantPanel->hide();
 }
 
 

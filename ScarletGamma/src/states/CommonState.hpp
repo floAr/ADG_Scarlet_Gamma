@@ -5,6 +5,7 @@
 #include "utils/Falloff.hpp"
 #include "Prerequisites.hpp"
 #include "interfaces/DragNDrop.hpp"
+#include "interfaces/CombatantPanel.hpp"
 
 namespace States
 {
@@ -90,6 +91,12 @@ namespace States
 		/// \brief Checks whether an object is owned by the CommonState's owner.
 		virtual bool OwnsObject(Core::ObjectID _object) = 0;
 
+		/// \brief Returns a pointer to the combatant panel, to be filled by the combat.
+		Interfaces::CombatantPanel::Ptr GetCombatantPanel()
+		{
+			return m_combatantPanel;
+		}
+
 	protected:
 		Utils::Falloff m_zoom;       ///< Zoom for the current map
 		tgui::Gui m_gui;             ///< A gui to show chat messages and everything else.
@@ -102,6 +109,9 @@ namespace States
 		/// \brief Some components fill this with content if mouse is pushed.
 		///		On release an according action should be done.
 		Interfaces::DragContent* m_draggedContent;
+
+		/// \brief Panel that shows the combatants.
+		Interfaces::CombatantPanel::Ptr m_combatantPanel;
 
 		/// \brief Checks which actions where done and adjusts the zoom.
 		void ZoomView(float delta);

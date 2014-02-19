@@ -57,6 +57,12 @@ namespace GameRules
 		/// \brief Checks whether the combat has started yet.
 		bool HasStarted() const;
 
+		/// \brief Updates the combatant panel.
+		void UpdateCombatantPanel();
+
+		/// \brief Updates the combatant panel.
+		void UpdateCombatantPanelTurn();
+
     protected:
         /// \brief Map of participants, sorted by their order of initiative
         std::list<Core::ObjectID> m_participants;

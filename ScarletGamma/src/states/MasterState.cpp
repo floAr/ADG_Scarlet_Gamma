@@ -613,6 +613,9 @@ namespace States {
 		if (!m_combat)
 			m_combat = new GameRules::MasterCombat();
 
+		// Show the combatant display
+		m_combatantPanel->show();
+
 		if (m_combat->HasParticipant(_object))
 			return;
 

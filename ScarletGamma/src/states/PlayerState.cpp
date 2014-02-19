@@ -397,6 +397,9 @@ void States::PlayerState::CreateCombat( Core::ObjectID _object )
 		if ( !m_combat )
 			m_combat = new GameRules::Combat();
 
+		// Show the combatant display
+		m_combatantPanel->show();
+
 		// Stop object
 		if (object->HasProperty(STR_PROP_PATH))
 		{

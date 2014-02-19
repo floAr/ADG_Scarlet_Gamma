@@ -27,8 +27,11 @@ void Combat::AddParticipantWithInitiative(Core::ObjectID _object, int8_t _positi
     auto it = m_participants.begin();
     for (uint8_t i = 0; i < size && it != m_participants.end(); ++it);
 
-    // insert object at position
+    // Insert object at position
     m_participants.insert( it, _object );
+
+	// Update combatant panel
+	UpdateCombatantPanel();
 }
 
 void GameRules::Combat::PushInitiativePrompt(Core::ObjectID _object)
@@ -107,6 +110,9 @@ void GameRules::Combat::SetTurn( Core::ObjectID _object )
     States::PlayerState* player = dynamic_cast<States::PlayerState*>(g_Game->GetCommonState());
     if (player)
         player->FocusObject(object);
+
+	// Update panel
+	UpdateCombatantPanelTurn();
 }
 
 bool GameRules::Combat::CanUse( Actions::Duration _duration ) const
@@ -224,4 +230,27 @@ bool GameRules::Combat::HasParticipant( Core::ObjectID _object ) const
 bool GameRules::Combat::HasStarted() const
 {
 	return m_currentObject != nullptr;
+}
+
+void GameRules::Combat::UpdateCombatantPanel()
+{
+	// Update list of combattants
+	g_Game->GetCommonState()->GetCombatantPanel()->UpdateCombatants(m_participants);
+
+	// Set current participant
+	UpdateCombatantPanelTurn();
+}
+
+void GameRules::Combat::UpdateCombatantPanelTurn()
+{
+	// No current object: return -1
+	int index = -1;
+
+	if (m_currentObject)
+	{
+		index = std::distance( m_participants.begin(), std::find( m_participants.begin(),
+			m_participants.end(), m_currentObject->ID() ) );
+	}
+
+	g_Game->GetCommonState()->GetCombatantPanel()->SetTurn(index);
 }

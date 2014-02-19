@@ -150,6 +150,9 @@ void MasterCombat::ReceivedInitiative( Core::ObjectID _object, std::string& _ini
     // Insert object before it
     m_participants.insert(it, _object);
 
+	// Update combatant panel
+	UpdateCombatantPanel();
+
 #ifdef _DEBUG
     std::cout << "Object " << _object << " rolled initiative " << iniEvaluated <<
         ", inserted at position " << std::to_string(position) << ".\n";

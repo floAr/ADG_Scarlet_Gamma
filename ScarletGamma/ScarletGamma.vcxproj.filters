@@ -239,6 +239,9 @@
     <ClCompile Include="src\utils\Clipboard.cpp">
       <Filter>Quelldateien\utils</Filter>
     </ClCompile>
+    <ClCompile Include="src\interfaces\CombatantPanel.cpp">
+      <Filter>Quelldateien\interfaces</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\core\Map.hpp">
@@ -441,6 +444,9 @@
     </ClInclude>
     <ClInclude Include="src\utils\Clipboard.hpp">
       <Filter>Quelldateien\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\interfaces\CombatantPanel.hpp">
+      <Filter>Quelldateien\interfaces</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

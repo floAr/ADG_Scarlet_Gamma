@@ -88,7 +88,7 @@ namespace States{
 	void DismissableDialogState::MouseButtonPressed(sf::Event::MouseButtonEvent& button,
 	sf::Vector2f& tilePos, bool guiHandled)
 	{ 
-		if(guiHandled ||(!m_isMinimizeable))
+		if(guiHandled)
 			return;
 		sf::FloatRect bounds;
 		if(m_isMinimized) //currently minimized
@@ -103,7 +103,8 @@ namespace States{
 		if(button.x > bounds.left && 
 			button.x < bounds.left+bounds.width && 
 			button.y > bounds.top && 
-			button.y < bounds.top+bounds.height) //click on sprite
+			button.y < bounds.top+bounds.height &&
+			m_isMinimizeable) //click on sprite
 		{
 			m_isMinimized=!m_isMinimized;
 			Resize(sf::Vector2f( (float) g_Game->GetWindow().getSize().x,
@@ -114,7 +115,8 @@ namespace States{
 				DismissableDialogState::RemoveOrb(&m_orb);
 		}
 		else //no orb was clicked -> pass click down
-			m_previousState->MouseButtonPressed(button,tilePos,guiHandled);
+			if(m_isMinimized)
+				m_previousState->MouseButtonPressed(button,tilePos,guiHandled);
 	}
 
 

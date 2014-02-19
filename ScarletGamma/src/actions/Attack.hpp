@@ -30,23 +30,23 @@ namespace Actions
         virtual void HandleActionInfoResponse(uint8_t messageType, const std::string& message) override;
 
     private:
-        void AttackRollPromptFinished(States::GameState* _gs);
+		void AttackRollPromptFinished(std::string& _result);
         bool EvaluateAttackRoll(int _roll);
         void AttackRollInfoReceived(const std::string& _message);
         void AttackRollInfoLocal(const std::string& _message);
-        void PushAttackRollDMPrompt(int _result, void (Attack::* _callback)(States::GameState*));
-        void AttackRollDMPromptFinished(States::GameState* _gs);
-        void AttackRollDMPromptFinishedLocal(States::GameState* _gs);
+		void PushAttackRollDMPrompt(int _result, void (Attack::* _callback)(std::string&));
+		void AttackRollDMPromptFinished(std::string& _result);
+		void AttackRollDMPromptFinishedLocal(std::string& _result);
         void SendAttackRollHit();
         void SendAttackRollMissed();
         void AttackRollHit();
         void AttackRollMissed();
-        void HitRollPromptFinished(States::GameState* _gs);
+		void HitRollPromptFinished(std::string& _result);
         void HitRollInfoReceived(const std::string& _message);
         void HitRollInfoLocal(const std::string& _message);
-        void PushHitRollDMPrompt(int _result, void (Attack::* _callback)(States::GameState*));
-        void HitRollDMPromptFinished(States::GameState* _gs);
-        void HitRollDMPromptFinishedLocal(States::GameState* _gs);
+		void PushHitRollDMPrompt(int _result, void (Attack::* _callback)(std::string&));
+		void HitRollDMPromptFinished(std::string& _result);
+		void HitRollDMPromptFinishedLocal(std::string& _result);
         void BroadcastMissMessage(const std::string& _dice, int _result);
         void BroadcastHitMessage(const std::string& _dice, int _result);
         void BroadcastDamageMessage(const std::string& _dice, int _result);

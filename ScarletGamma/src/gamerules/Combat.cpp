@@ -72,7 +72,7 @@ void GameRules::Combat::SetTurn( Core::ObjectID _object )
         return;
     }
 
-    m_currentObject = _object;
+    m_currentObject = object;
     g_Game->AppendToChatLog( Network::ChatMsg(object->GetName() + " ist am Zug.", sf::Color::White) );
 
     // Reset combat round values
@@ -142,7 +142,7 @@ float GameRules::Combat::GetRemainingSteps() const
 void GameRules::Combat::EndTurn()
 {
     // Send message to the GM
-    if ( g_Game->GetCommonState()->OwnsObject(m_currentObject) )
+    if ( g_Game->GetCommonState()->OwnsObject(m_currentObject->ID()) )
         Network::CombatMsg(Network::CombatMsgType::PL_COMBAT_END_TURN).Send();
 }
 
@@ -210,10 +210,18 @@ bool GameRules::Combat::UseMoveAction( float _distance, bool _diagonal )
 
 Core::ObjectID GameRules::Combat::GetTurn() const
 {
-	return m_currentObject;
+	if (m_currentObject != nullptr)
+		return m_currentObject->ID();
+	else
+		return -1;
 }
 
 bool GameRules::Combat::HasParticipant( Core::ObjectID _object ) const
 {
 	return std::find(m_participants.begin(), m_participants.end(), _object) != m_participants.end();
+}
+
+bool GameRules::Combat::HasStarted() const
+{
+	return m_currentObject != nullptr;
 }

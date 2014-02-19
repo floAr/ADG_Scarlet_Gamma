@@ -12,6 +12,12 @@
 using namespace GameRules;
 using namespace Network;
 
+GameRules::MasterCombat::~MasterCombat()
+{
+	// Tell all clients to end their combat
+	Network::CombatMsg(Network::CombatMsgType::DM_COMBAT_END).Send();
+}
+
 void GameRules::MasterCombat::AddParticipant( Core::ObjectID _object )
 {
     if (g_Game->GetWorld()->GetObject(_object)->HasProperty(STR_PROP_OWNER))
@@ -64,7 +70,7 @@ void GameRules::MasterCombat::StartCombat()
 void GameRules::MasterCombat::ReceivedTurnEnded()
 {
 	// Get current object, and increment it
-	auto it = std::find(m_participants.begin(), m_participants.end(), m_currentObject);
+	auto it = std::find(m_participants.begin(), m_participants.end(), m_currentObject->ID());
 	it++;
 
 	if (it == m_participants.end())
@@ -77,7 +83,7 @@ void GameRules::MasterCombat::ReceivedTurnEnded()
 void GameRules::MasterCombat::EndTurn()
 {
 	// Call it locally
-	if ( g_Game->GetCommonState()->OwnsObject(m_currentObject) )
+	if ( g_Game->GetCommonState()->OwnsObject(m_currentObject->ID()) )
 		ReceivedTurnEnded();
 }
 

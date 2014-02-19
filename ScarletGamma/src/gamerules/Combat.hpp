@@ -10,6 +10,11 @@ namespace GameRules
     class Combat
     {
     public:
+		/// \brief Sets default values
+		Combat() : m_currentObject(nullptr), m_diagonalCounter(false),
+			m_fiveFootStepRemaining(true), m_moveActionRemaining(true),
+			m_moveActionStepsLeft(9.0f), m_standardActionRemaining(true) {}
+
         /// \brief Adds a participant to the combat.
         /// \detail By default, this function adds a participant to the end of
         ///     the round. You can add a participant counting from the front
@@ -48,13 +53,16 @@ namespace GameRules
 
         /// \brief Returns the current object's ID.
         Core::ObjectID GetTurn() const;
+		
+		/// \brief Checks whether the combat has started yet.
+		bool HasStarted() const;
 
     protected:
         /// \brief Map of participants, sorted by their order of initiative
         std::list<Core::ObjectID> m_participants;
 
         /// \brief The object whose turn it currently is.
-        Core::ObjectID m_currentObject;
+        Core::Object* m_currentObject;
 
         /// \brief Keeps whether the move action is still available in this turn.
         bool m_moveActionRemaining;

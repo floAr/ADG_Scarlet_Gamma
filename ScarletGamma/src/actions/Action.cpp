@@ -28,10 +28,12 @@ bool Action::CanUse(Core::ObjectList& _executors, Core::Object& _object)
     // Get all requirements for executor and loop through them
     const std::vector<std::pair<std::string, bool>>& sourceRequirements = m_sourceRequirements;
     for (auto req = sourceRequirements.begin(); req != sourceRequirements.end(); ++req)
+	{
         // Test all possible executors
-            for( int i=0; i<_executors.Size(); ++i )
-                if( g_Game->GetWorld()->GetObject(_executors[i])->HasProperty((*req).first) != (*req).second )
-                    return false;
+		for( int i=0; i<_executors.Size(); ++i )
+			if( g_Game->GetWorld()->GetObject(_executors[i])->HasProperty((*req).first) != (*req).second )
+				return false;
+	}
 
     return true;
 }

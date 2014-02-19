@@ -214,8 +214,13 @@ namespace Interfaces {
 		virtual void Update(float _dt) override;
 
 	private:
-		void ButtonClicked();
-		tgui::Button::Ptr m_combatButton;
+		void CreateCombatBtnClicked();
+		void StartCombatBtnClicked();
+		void EndCombatBtnClicked();
+		tgui::Button::Ptr m_createCombatBtn;
+		tgui::Button::Ptr m_addParticipantBtn;
+		tgui::Button::Ptr m_startCombatBtn;
+		tgui::Button::Ptr m_endCombatBtn;
 	};
 
 	/// \brief Toolbox for map selection and creation.

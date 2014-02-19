@@ -637,18 +637,28 @@ namespace States {
 	}
 
 	void MasterState::CreateCombatPrompt()
-	{
-		States::PromptState* prompt = static_cast<States::PromptState*>(g_Game->GetStateMachine()->PushGameState(GST_PROMPT));
-		prompt->SetText("Alle aktuell ausgewählten Objekte nehmen am Kampf teil. Kampf starten?\n");
-		prompt->SetTextInputRequired(false);
-
-		// TODO: button positioning
-		prompt->AddButton("Ja", std::bind(&MasterState::CreateCombatFromSelection, this), sf::Keyboard::Return);
-		prompt->AddButton("Nein", [](std::string) -> void {}, sf::Keyboard::Escape);
+	{	
+		if (m_selection.Size() > 0)
+		{
+			States::PromptState* prompt = static_cast<States::PromptState*>(g_Game->GetStateMachine()->PushGameState(GST_PROMPT));
+			prompt->SetTextInputRequired(false);
+			prompt->SetText("Alle aktuell ausgewählten Objekte nehmen am Kampf teil. Weiter?\n");
+			prompt->AddButton("Ja", std::bind(&MasterState::CreateCombatFromSelection, this), sf::Keyboard::Return);
+			prompt->AddButton("Nein", [](std::string) -> void {}, sf::Keyboard::Escape);
+			prompt->DisableMinimize();
+		}
+		else
+		{
+			// Selection is empty, so this will just create a combat object
+			CreateCombatFromSelection();
+		}
 	}
 
 	void MasterState::CreateCombatFromSelection()
 	{
+		if (!m_combat)
+			m_combat = new GameRules::MasterCombat;
+
 		// Add all combattants
 		for (int i = 0; i<m_selection.Size(); ++i)
 			CreateCombat(m_selection[i]);

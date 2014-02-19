@@ -26,7 +26,7 @@ namespace States
 		virtual void MouseWheelMoved(sf::Event::MouseWheelEvent& wheel, bool guiHandled) override;
 		virtual void KeyPressed(sf::Event::KeyEvent& key, bool guiHandled) override;
 		virtual void Resize(const sf::Vector2f& _size) override;
-
+		virtual void CreateDiceRollState();
 		/// \brief CommonState::MouseMoved + action depending on the mode (select / paint)
 		virtual void MouseMoved(int deltaX, int deltaY, bool guiHandled) override;
 
@@ -78,5 +78,9 @@ namespace States
 		void ComputeSelectionRect( const sf::Vector2i& _position, int& _minX, int& _maxX, int& _minY, int& _maxY );
 
 		bool m_firstLayerSelection;			///< bool to indicate if this is the first layer selected with alt (to hide the rest)
+		
+		void RollSecretly(std::string& result);
+		
+		void RollOpen(std::string& result);
 	};
 }

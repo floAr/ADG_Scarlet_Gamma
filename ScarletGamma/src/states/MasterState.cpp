@@ -20,6 +20,7 @@
 #include "actions/ActionPool.hpp"
 #include <functional>
 #include "utils/Clipboard.hpp"
+#include "utils/ValueInterpreter.hpp"
 
 using namespace Core;
 
@@ -459,10 +460,6 @@ namespace States {
 		// This should work only if the GUI didn't handle before
 		switch(key.code)
 		{
-		case sf::Keyboard::D: {
-			DismissableDialogState* gs=dynamic_cast<DismissableDialogState*>(g_Game->GetStateMachine()->PushGameState(GST_DISMISS));
-							  } break;
-
 		case sf::Keyboard::C:
 			// If only one object is selected show the character screen. Even
 			// if it has no character properties. GM should know better...
@@ -508,6 +505,9 @@ namespace States {
 	{
 		// Init server
 		Network::Messenger::Initialize(nullptr);
+
+
+
 	}
 
 	void MasterState::OnEnd()
@@ -677,4 +677,33 @@ namespace States {
 			CreateCombat(m_selection[i]);
 	}
 
+	void MasterState::CreateDiceRollState(){
+		CommonState::CreateDiceRollState();
+		m_diceRollState->AddButton("Verdeckt würfeln",std::bind(&MasterState::RollSecretly,this,std::placeholders::_1));
+		m_diceRollState->AddButton("Offen würfeln",std::bind(&MasterState::RollOpen,this,std::placeholders::_1));
+	}
+
+	void MasterState::RollSecretly(std::string& result){
+		Core::Object* _object = nullptr; //by default roll without object
+		if(m_selection.Size()>0) //if object is selected
+			_object=g_Game->GetWorld()->GetObject(m_selection[0]); //roll over object
+		if(m_diceRollState->CheckEvaluate(_object)) // if everything makes sense
+		{
+			int x=Utils::EvaluateFormula(result,g_Game->RANDOM,_object);
+			g_Game->AppendToChatLog(Network::ChatMsg("[Master] - Würfelwurf: "+result+" = "+std::to_string(x),sf::Color::White)); //show it to the master
+
+		}
+	}
+
+	void MasterState::RollOpen(std::string& result){
+		Core::Object* _object = nullptr; //by default roll without object
+		if(m_selection.Size()>0) //if object is selected
+			_object=g_Game->GetWorld()->GetObject(m_selection[0]); //roll over object
+		if(m_diceRollState->CheckEvaluate(_object)) // if everything makes sense
+		{
+			int x=Utils::EvaluateFormula(result,g_Game->RANDOM,_object);
+			Network::ChatMsg msg("[Master] - Würfelwurf: "+result+" = "+std::to_string(x),sf::Color::White);
+			msg.Send();		
+		}
+	}
 }// namespace States

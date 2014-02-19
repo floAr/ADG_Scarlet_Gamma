@@ -17,6 +17,7 @@ States::MainMenuState::MainMenuState() :
     // TODO:: I want some way to report errors
 	m_menuFont=Content::Instance()->LoadFont("media/arial.ttf");
 
+	m_background=sf::Sprite(Content::Instance()->LoadTexture("media/main_bg.png"));
     //--------------------------------------
     // CREATE GUI
     // First, create a tgui::Gui object and load a font
@@ -49,11 +50,11 @@ void States::MainMenuState::Update(float dt)
 void States::MainMenuState::Draw(sf::RenderWindow& win)
 {
     win.clear(MIGHTY_SLATE);
-    
-    sf::Text t("Press 'm' to open MasterState\n"
+	win.draw(m_background);
+   /* sf::Text t("Press 'm' to open MasterState\n"
                "or escape to quit.", m_menuFont, 24);
     t.setPosition(30, 30);
-    win.draw(t);
+    win.draw(t);*/
 
 	GameState::Draw(win);
 }
@@ -66,10 +67,13 @@ void States::MainMenuState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled
 
     switch (key.code)
     {
+#ifdef _DEBUG
     // Master state with m
-    case sf::Keyboard::M:
-        g_Game->GetStateMachine()->PushGameState(new States::MasterState("saves/unittest.json"));
+    case sf::Keyboard::M:{
+       MasterState* ms=static_cast<MasterState*>( g_Game->GetStateMachine()->PushGameState(new States::MasterState("saves/unittest.json")));
+	   ms->CreateDiceRollState();}
         break;
+#endif
     // Quit with escape
     case sf::Keyboard::Escape:
         m_finished = true;

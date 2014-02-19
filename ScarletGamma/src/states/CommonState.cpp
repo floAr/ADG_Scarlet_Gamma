@@ -338,4 +338,13 @@ void CommonState::OnPause()
 	Actions::ActionPool::Instance().UpdateDefaultAction(Core::ObjectList(), 0);
 }
 
+void CommonState::CreateDiceRollState(){
+	//Create Dicerollstate
+	m_diceRollState = static_cast<PromptState*>(g_Game->GetStateMachine()->PushGameState(States::GST_PROMPT));
+	m_diceRollState->SetText("Zu evaluierende Formel eingeben");
+	m_diceRollState->SetTextInputRequired(true);
+	m_diceRollState->SetOrbSprite("media/orb_diceroll.png");
+	m_diceRollState->SetMinimized(true);
+}
+
 } // namespace States

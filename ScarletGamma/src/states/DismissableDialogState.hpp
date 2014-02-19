@@ -22,7 +22,8 @@ namespace States
 	public:
 		/// \brief Stops this state from beeing minimizeable
 		virtual void DisableMinimize();
-
+		virtual void SetMinimized(bool _value);
+		virtual void SetOrbSprite(const std::string& texture);
 
 		/// \brief Creates a Zoom object, The GUI for chats.
 		DismissableDialogState();	

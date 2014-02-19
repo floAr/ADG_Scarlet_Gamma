@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include "Prerequisites.hpp"
 
+
 namespace Interfaces {
 
 	/// \brief A container to show a list of editable values.

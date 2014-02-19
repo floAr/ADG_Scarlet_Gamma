@@ -410,18 +410,7 @@ namespace States {
 			break;
 		case sf::Keyboard::C:
 			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)){//ctrl+c -> copy
-				std::vector<tgui::Widget::Ptr> widgets = m_gui.getWidgets();
-				while(widgets.size()>1){
-
-				for(auto it = widgets.begin(); it != widgets.end(); ++it) {
-					/* std::cout << *it; ... */
-					if(it->get()->isFocused())
-					{
-					//	widgets=it->get()->get
-					}						
-				}
-				}
-
+				Utils::Clipboard::Instance()->SetClipboardText("Toll wenn es klappen würde");
 			}
 			break;
 		case sf::Keyboard::V:

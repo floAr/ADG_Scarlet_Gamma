@@ -29,12 +29,9 @@ void GameRules::MasterCombat::AddParticipant( Core::ObjectID _object )
     }
 }
 
-void GameRules::MasterCombat::InitiativeRollPromptFinished( States::GameState* _ps, Core::ObjectID _object )
+void GameRules::MasterCombat::InitiativeRollPromptFinished( std::string& _result, Core::Object* _object )
 {
-    States::PromptState* prompt = dynamic_cast<States::PromptState*>(_ps);
-    assert(prompt);
-
-    ReceivedInitiative(_object, std::string(prompt->GetResult()));
+	ReceivedInitiative(_object->ID(), _result);
 }
 
 void GameRules::MasterCombat::SetTurn( Core::ObjectID _object )

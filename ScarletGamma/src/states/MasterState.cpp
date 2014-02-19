@@ -613,6 +613,9 @@ namespace States {
 		if (!m_combat)
 			m_combat = new GameRules::MasterCombat();
 
+		if (m_combat->HasParticipant(_object))
+			return;
+
 		// Find the object
 		Core::Object* object = g_Game->GetWorld()->GetObject(_object);
 		// Stop objects that are currently moving!
@@ -641,7 +644,7 @@ namespace States {
 
 		// TODO: button positioning
 		prompt->AddButton("Ja", std::bind(&MasterState::CreateCombatFromSelection, this), sf::Keyboard::Return);
-		prompt->AddButton("Nein", [](std::string keks) -> void { std::cout << "Nein: " << keks << std::endl; }, sf::Keyboard::Escape);
+		prompt->AddButton("Nein", [](std::string) -> void {}, sf::Keyboard::Escape);
 	}
 
 	void MasterState::CreateCombatFromSelection()

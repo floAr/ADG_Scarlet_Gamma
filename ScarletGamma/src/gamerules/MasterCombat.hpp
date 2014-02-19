@@ -19,7 +19,7 @@ namespace GameRules
         void ReceivedInitiative(Core::ObjectID _object, std::string& _initiative);
 
         /// \brief Called when a DM ini prompt is done.
-        virtual void InitiativeRollPromptFinished( States::GameState* _ps, Core::ObjectID _object ) override;
+        virtual void InitiativeRollPromptFinished(std::string& _result, Core::Object* _object) override;
 
         /// \brief Called when the DM added the (initial) participants and wants
         ///     to start the combat.

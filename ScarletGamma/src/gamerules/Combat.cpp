@@ -37,29 +37,28 @@ void GameRules::Combat::PushInitiativePrompt(Core::ObjectID _object)
     States::PromptState* prompt = dynamic_cast<States::PromptState*>(
         g_Game->GetStateMachine()->PushGameState(States::GST_PROMPT));
     Core::Object* object = g_Game->GetWorld()->GetObject(_object);
-    prompt->SetText("Initiativewurf für " + object->GetName() + " eingeben:");
+    prompt->SetText("Initiativewurf für " + object->GetName() + " eingeben:\n");
 
     // Set the default value for the roll
     if (object->HasProperty(STR_PROP_INITIATIVE_MOD))
         prompt->SetDefaultValue("1W20 + '" + STR_PROP_INITIATIVE_MOD + "'");
-    else
+	else if (object->HasProperty(STR_PROP_DEXTERITY_MOD))
+		prompt->SetDefaultValue("1W20 + '" + STR_PROP_DEXTERITY_MOD + "'");
+	else
         prompt->SetDefaultValue("1W20");
 
     // Add callback function
-    prompt->AddPopCallback(std::bind(&Combat::InitiativeRollPromptFinished, this,
-        std::placeholders::_1, _object));
+	prompt->AddButton("OK", std::bind(&Combat::InitiativeRollPromptFinished, this,
+		std::placeholders::_1, object), sf::Keyboard::Return, object);
+	//prompt->AddButton("Abbrechen", std::bind(&Combat::EndCombat, this), sf::Keyboard::Escape);
 }
 
-void GameRules::Combat::InitiativeRollPromptFinished(States::GameState* _ps, Core::ObjectID _object)
+void GameRules::Combat::InitiativeRollPromptFinished( std::string& _result, Core::Object* _object )
 {
-    States::PromptState* prompt = dynamic_cast<States::PromptState*>(_ps);
-    assert(prompt);
-
     // Send initiative roll string to server
     Jo::Files::MemFile data;
-    const std::string& result = prompt->GetResult().c_str();
     data.Write(&_object, sizeof(_object));
-    data.Write(result.c_str(), result.length());
+    data.Write(_result.c_str(), _result.length());
     Network::CombatMsg(Network::CombatMsgType::PL_COMBAT_INITIATIVE).Send(&data);
 }
 
@@ -212,4 +211,9 @@ bool GameRules::Combat::UseMoveAction( float _distance, bool _diagonal )
 Core::ObjectID GameRules::Combat::GetTurn() const
 {
 	return m_currentObject;
+}
+
+bool GameRules::Combat::HasParticipant( Core::ObjectID _object ) const
+{
+	return std::find(m_participants.begin(), m_participants.end(), _object) != m_participants.end();
 }

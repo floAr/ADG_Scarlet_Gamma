@@ -17,12 +17,15 @@ namespace GameRules
         ///     list using negative values (-1 = after last, -2 = before last...)
         void AddParticipantWithInitiative(Core::ObjectID _object, int8_t _position = -1);
 
+		/// \brief Checks whether the object already is in combat.
+		bool HasParticipant(Core::ObjectID _object) const;
+
         /// \brief Creates an initiative prompt window, using the specified object
         ///     as reference object for property values.
         void PushInitiativePrompt(Core::ObjectID _object);
 
         /// \brief Is called when the initiative roll is accepted.
-        virtual void InitiativeRollPromptFinished(States::GameState* _ps, Core::ObjectID _object);
+		virtual void InitiativeRollPromptFinished(std::string& _result, Core::Object* _object);
 
         /// \brief Is called when it is a combattant's turn.
         virtual void SetTurn( Core::ObjectID _object );

@@ -97,6 +97,8 @@ namespace States
 		sf::Color m_color;           ///< Color of the player in the chat
 		GameRules::Combat* m_combat; ///< Pointer to Combat in progress, 0 if none
 
+		PromptState* diceRollState;	///< Pointer to the state to roll the dice
+
 		std::vector<char> m_hiddenLayers;	///< List of currently hidden layers
 
 		/// \brief Some components fill this with content if mouse is pushed.

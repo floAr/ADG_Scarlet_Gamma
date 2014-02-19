@@ -27,11 +27,13 @@ namespace States{
 		Resize(g_Game->GetWindow().getView().getSize());
 	}
 
-	/*void DismissableDialogState::SetOrbTexture(sf::Texture _orbTexture){
-		
-		float orbScale=DismissableDialogState::ORB_WIDTH/m_orb.getLocalBounds().width;
-		m_orb.setScale(sf::Vector2f(orbScale,orbScale));
-	}*/
+	void DismissableDialogState::SetMinimized(bool _value){
+		m_isMinimized = _value;
+	}
+
+	void DismissableDialogState::SetOrbSprite(const std::string& texture){
+		m_orb = sf::Sprite(Content::Instance()->LoadTexture(texture));
+	}
 
 	void DismissableDialogState::Update(float dt)
 	{

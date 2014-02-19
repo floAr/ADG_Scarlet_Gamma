@@ -188,6 +188,7 @@ void PromptState::GuiCallback(tgui::Callback& args)
 		PromptState* prompt = static_cast<PromptState*>(g_Game->GetStateMachine()->PushGameState(GST_PROMPT));
 		prompt->SetText("Bitte überprüfe den eingegebenen Wert.\n");
 		prompt->Resize((sf::Vector2f)g_Game->GetWindow().getSize());
+		prompt->DisableMinimize();
 		prompt->SetTextInputRequired(false);
 	}
 	else

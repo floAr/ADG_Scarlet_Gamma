@@ -76,7 +76,9 @@ namespace States{
 
 		// Draw the minimize button
 		SetGuiView();
-		win.draw(m_minimize); //draw minimize on top
+		if(m_isMinimizeable){
+			win.draw(m_minimize); //draw minimize on top
+		}
 
 		SetStateView();
 	}
@@ -86,7 +88,7 @@ namespace States{
 	void DismissableDialogState::MouseButtonPressed(sf::Event::MouseButtonEvent& button,
 	sf::Vector2f& tilePos, bool guiHandled)
 	{ 
-		if(guiHandled)
+		if(guiHandled ||(!m_isMinimizeable))
 			return;
 		sf::FloatRect bounds;
 		if(m_isMinimized) //currently minimized
@@ -156,6 +158,11 @@ namespace States{
 			ms_orbs[i]->setPosition(startPoint,yPoint);
 			startPoint+=widthPerOrb;
 		}
+	}
+
+	void DismissableDialogState::DisableMinimize(){
+		m_isMinimizeable = false;
+		m_isMinimized = false;
 	}
 
 

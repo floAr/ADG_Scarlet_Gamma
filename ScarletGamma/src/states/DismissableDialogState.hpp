@@ -17,8 +17,13 @@ namespace States
 		//	void SetOrbTexture(sf::Texture _orbTexture);
 		sf::Sprite m_orb;		///< Sprite shown when minimized
 		const static int ORB_WIDTH=35;	///< pixelsize of one Orb
+		bool m_isMinimizeable;	///< Bool indicating if the state can be minimized
 
 	public:
+		/// \brief Stops this state from beeing minimizeable
+		virtual void DisableMinimize();
+
+
 		/// \brief Creates a Zoom object, The GUI for chats.
 		DismissableDialogState();	
 

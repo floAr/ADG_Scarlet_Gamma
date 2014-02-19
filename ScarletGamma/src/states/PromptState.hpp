@@ -22,6 +22,7 @@ namespace States
 		const std::string GetResult();
 
 		void OnBegin() override;
+		void OnEnd() override;
 		virtual void Draw(sf::RenderWindow& win) override;
 		virtual void Update(float dt) override;
 		virtual void KeyPressed(sf::Event::KeyEvent& key, bool guiHandled) override;
@@ -52,8 +53,9 @@ namespace States
 		tgui::Button::Ptr m_defaultButton;	///< This is a preloaded button to increase RecalculateGUI performance by a height factor
 		tgui::Gui m_gui;
 		tgui::EditBox::Ptr m_editBox;
+		PromptButton* m_result;
 
-		std::unordered_map<int, PromptButton> m_callbacks;
+		std::unordered_map<int, PromptButton> m_buttons;
 
 		bool CheckEvaluate(Core::Object* _object) const;
 	};

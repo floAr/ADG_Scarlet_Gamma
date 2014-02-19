@@ -8,6 +8,7 @@
 using namespace States;
 
 PromptState::PromptState()
+	: m_result(nullptr)
 {
 	m_defaultButton->load("lib/TGUI-0.6-RC/widgets/Black.conf");
 	// Load shader from file
@@ -57,11 +58,11 @@ void PromptState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 		// Handle default Return, with priority
 		m_editBox->focus();
 	}
-	else if (key.code == sf::Keyboard::Return && m_callbacks.size() == 0)
+	else if (key.code == sf::Keyboard::Return && m_buttons.size() == 0)
 	{
 		m_finished = true;
 	}
-	else if (key.code == sf::Keyboard::Escape && m_callbacks.size() == 0)
+	else if (key.code == sf::Keyboard::Escape && m_buttons.size() == 0)
 	{
 		m_editBox->setText("");
 		m_finished = true;
@@ -69,9 +70,9 @@ void PromptState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 	else if (key.code != sf::Keyboard::Unknown)
 	{
 		// Find callback if nothing was handled
-		for (size_t i = 0; i < m_callbacks.size(); ++i)
+		for (size_t i = 0; i < m_buttons.size(); ++i)
 		{
-			if (key.code == m_callbacks.at(i).hotkey)
+			if (key.code == m_buttons.at(i).hotkey)
 			{
 				// Fake a TGUI callback, needs only the ID
 				tgui::Callback cb;
@@ -85,9 +86,37 @@ void PromptState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 void PromptState::Resize(const sf::Vector2f& _size)
 {
 	DismissableDialogState::Resize(_size);
+
+	// Adjust text position
+	tgui::Label::Ptr message = m_gui.get("Message");
+	message->setPosition(_size.x / 2.0f - message->getSize().x / 2.0f,
+		message->getPosition().y);
+
 	// Adjust edit box size
 	auto editBoxPtr = m_editBox.get();
-	editBoxPtr->setSize(_size.x - 2 * editBoxPtr->getPosition().x, editBoxPtr->getSize().y);
+	editBoxPtr->setSize(_size.x - 2 * editBoxPtr->getPosition().x,
+		editBoxPtr->getSize().y);
+
+	// Adjust button position
+	if (m_buttons.size() > 0)
+	{
+		float buttonTop = m_editBox->isVisible() ?
+			m_editBox->getPosition().y + m_editBox->getSize().y + 20 :
+			m_editBox->getPosition().y;
+
+		// Pre-calculations for button positions
+		float winWidth = _size.x;
+		int spacing = 10;
+		float totalBtnWidth = m_buttons.at(0).button->getSize().x *
+			m_buttons.size() + spacing * (m_buttons.size() - 1);
+
+		// Reposition all buttons
+		for (size_t i = 0; i < m_buttons.size(); ++i)
+		{
+			m_buttons.at(i).button->setPosition(winWidth / 2.0f - totalBtnWidth / 2.0f
+				+ m_buttons.at(0).button->getSize().x * i + spacing * i, buttonTop);
+		}
+	}
 }
 
 void PromptState::SetText(const std::string& _text)
@@ -122,6 +151,13 @@ bool States::PromptState::CheckEvaluate(Core::Object* _object) const
 	}
 }
 
+void States::PromptState::OnEnd()
+{
+	// Call callback if we have one
+	if (m_result != nullptr)
+		m_result->function(m_editBox->getText());
+}
+
 const std::string PromptState::GetResult()
 {
 	return m_editBox->getText();
@@ -130,34 +166,25 @@ const std::string PromptState::GetResult()
 void PromptState::AddButton(const std::string _buttonText, std::function<void(std::string)> _callback,
 							sf::Keyboard::Key _hotkey, Core::Object* _evaluateObj)
 {
-	int bID = m_callbacks.size();
+	int bID = m_buttons.size();
 
 	tgui::Button::Ptr button = m_defaultButton.clone();
 	m_gui.add(button);
 	button->setText(_buttonText);
 	button->setCallbackId(bID);
 	button->bindCallback(tgui::Button::LeftMouseClicked);
-	m_callbacks.emplace(bID, PromptButton(button, _callback, _evaluateObj, _hotkey));
+	m_buttons.emplace(bID, PromptButton(button, _callback, _evaluateObj, _hotkey));
 
-	// Pre-calculations for button positions
-	int winWidth = g_Game->GetWindow().getSize().x;
-	int spacing = 10;
-	float totalBtnWidth = button->getSize().x * m_callbacks.size() + spacing * (m_callbacks.size() - 1);
-
-	// Reposition all buttons
-	for (size_t i = 0; i < m_callbacks.size(); ++i)
-	{
-		m_callbacks.at(i).button->setPosition(winWidth / 2.0f - totalBtnWidth
-			+ button->getSize().x * (i + 1) + spacing * i, 400);
-	}
+	Resize(sf::Vector2f((float) g_Game->GetWindow().getSize().x,
+		                (float) g_Game->GetWindow().getSize().y));
 }
 
 void PromptState::GuiCallback(tgui::Callback& args)
 {
-	if (!m_callbacks.count(args.id)) // no callback
+	if (!m_buttons.count(args.id)) // no callback
 		return;
 
-	auto cb = m_callbacks.at(args.id);
+	auto cb = m_buttons.at(args.id);
 
 	// Evaluation required, but failed?
 	if (cb.evaluateObj != 0 && !CheckEvaluate(cb.evaluateObj))
@@ -168,15 +195,11 @@ void PromptState::GuiCallback(tgui::Callback& args)
 	}
 	else
 	{
-		if (m_editBox->isVisible())
-		{
-			cb.function(m_editBox->getText());
-		}
-		else
-		{
+		// Set result to callback, so OnEnd can handle it
+		m_result = &m_buttons.at(args.id);
+
+		if (!m_editBox->isVisible())
 			m_editBox->setText(""); // Required if someone uses global PopCallback
-			cb.function("");
-		}
 
 		m_finished = true;
 	}

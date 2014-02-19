@@ -625,7 +625,7 @@ namespace States {
 
 		// TODO: button positioning
 		prompt->AddButton("Ja", std::bind(&MasterState::CreateCombatFromSelection, this), sf::Keyboard::Return);
-		prompt->AddButton("Nein", [](std::string keks) -> void { std::cout << "Nein: " << keks << std::endl; }, sf::Keyboard::Escape);
+		prompt->AddButton("Nein", [](std::string) -> void {}, sf::Keyboard::Escape);
 	}
 
 	void MasterState::CreateCombatFromSelection()

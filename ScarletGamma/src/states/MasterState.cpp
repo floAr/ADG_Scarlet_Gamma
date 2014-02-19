@@ -509,12 +509,8 @@ namespace States {
 		// Init server
 		Network::Messenger::Initialize(nullptr);
 
-		//push a diceroll state
-		PromptState* diceRollState = dynamic_cast<PromptState*>(g_Game->GetStateMachine()->PushGameState(States::GST_PROMPT));
-		diceRollState->SetText("Zu evaluierende Formel eingeben");
-		diceRollState->SetTextInputRequired(true);
-		diceRollState->SetOrbSprite("media/orb_diceroll.png");
-		diceRollState->SetMinimized(true);
+
+
 	}
 
 	void MasterState::OnEnd()
@@ -661,4 +657,7 @@ namespace States {
 			CreateCombat(m_selection[i]);
 	}
 
+	void MasterState::CreateDiceRollState(){
+		CommonState::CreateDiceRollState();
+	}
 }// namespace States

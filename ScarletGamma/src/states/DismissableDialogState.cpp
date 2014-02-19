@@ -29,10 +29,19 @@ namespace States{
 
 	void DismissableDialogState::SetMinimized(bool _value){
 		m_isMinimized = _value;
+		if(m_isMinimized)
+			DismissableDialogState::AddOrb(&m_orb);
+		else
+			DismissableDialogState::RemoveOrb(&m_orb);
 	}
 
 	void DismissableDialogState::SetOrbSprite(const std::string& texture){
+		auto tempPos=m_orb.getPosition();
 		m_orb = sf::Sprite(Content::Instance()->LoadTexture(texture));
+		float orbScale=DismissableDialogState::ORB_WIDTH/m_orb.getLocalBounds().width;
+		m_orb.setScale(sf::Vector2f(orbScale,orbScale));
+		m_orb.setPosition(tempPos);
+
 	}
 
 	void DismissableDialogState::Update(float dt)
@@ -85,10 +94,10 @@ namespace States{
 		SetStateView();
 	}
 
-	
+
 
 	void DismissableDialogState::MouseButtonPressed(sf::Event::MouseButtonEvent& button,
-	sf::Vector2f& tilePos, bool guiHandled)
+		sf::Vector2f& tilePos, bool guiHandled)
 	{ 
 		if(guiHandled)
 			return;
@@ -110,7 +119,7 @@ namespace States{
 		{
 			m_isMinimized=!m_isMinimized;
 			Resize(sf::Vector2f( (float) g_Game->GetWindow().getSize().x,
-								 (float) g_Game->GetWindow().getSize().y));
+				(float) g_Game->GetWindow().getSize().y));
 			if(m_isMinimized)
 				DismissableDialogState::AddOrb(&m_orb);
 			else

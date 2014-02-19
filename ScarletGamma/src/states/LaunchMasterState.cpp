@@ -58,7 +58,8 @@ void States::LaunchMasterState::GuiCallback(tgui::Callback& callback)
 		std::string fileName = nameEdit->getText();
 		if( Jo::Files::Utils::Exists( fileName ) )
 		{
-			g_Game->GetStateMachine()->PushGameState(new States::MasterState(fileName));
+			MasterState* ms=static_cast<MasterState*>(g_Game->GetStateMachine()->PushGameState(new States::MasterState(fileName)));
+			ms->CreateDiceRollState();
 			// Options are ok -> save
 			tgui::EditBox::Ptr(m_gui.get("LanIP"))->setText("");	// Do not save personal information
 			tgui::EditBox::Ptr(m_gui.get("PubIP"))->setText("");

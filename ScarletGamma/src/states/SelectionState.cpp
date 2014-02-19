@@ -33,7 +33,7 @@ void States::SelectionState::OnBegin()
 
 void States::SelectionState::SetTilePosition(int x, int y,const bool* hiddenLayers)
 {
-	CommonState* previousState = dynamic_cast<CommonState*>(m_previousState);
+	CommonState* previousState = g_Game->GetCommonState();
 	m_objects = previousState->GetCurrentMap()->GetObjectsAt(x,y);
 	sf::Vector2i pos = g_Game->GetWindow().mapCoordsToPixel(sf::Vector2f((x + 0.5f) * TILESIZE, (y + 0.5f) * TILESIZE));
 	m_screenX = pos.x;
@@ -48,7 +48,7 @@ void States::SelectionState::RecalculateGUI()
 	std::vector<Interfaces::CircularMenu::ObjInfo> items;
 
 	// Get current selection to make buttons transparent when they not selected
-	CommonState* previousState = dynamic_cast<CommonState*>(m_previousState);
+	CommonState* previousState = g_Game->GetCommonState();
 	const Core::ObjectList* alreadySelected = previousState->GetSelection();
 
 	for( int i = 0; i < m_objects.Size(); ++i )
@@ -96,7 +96,7 @@ void States::SelectionState::GuiCallback(tgui::Callback& args)
 		sf::Vector2i mousePos = sf::Mouse::getPosition(g_Game->GetWindow());
 		ShowActionState( args.id, mousePos.x, mousePos.y );
 	} else {
-		CommonState* previousState = dynamic_cast<CommonState*>(m_previousState);
+		CommonState* previousState = g_Game->GetCommonState();
 		// The parent is not set or not of type CommonState, but it should be!
 		assert(previousState);
 
@@ -130,7 +130,7 @@ void States::SelectionState::MouseButtonPressed(sf::Event::MouseButtonEvent& but
 	if (guiHandled)
 		return;
 
-	CommonState* previousState = dynamic_cast<CommonState*>(m_previousState);
+	CommonState* previousState = g_Game->GetCommonState();
 	// The parent is not set or not of type CommonState, but it should be!
 	assert(previousState);
 
@@ -164,7 +164,7 @@ void States::SelectionState::ShowActionState(Core::ObjectID _targetObject, int _
 {
 	auto action = dynamic_cast<ActionState*>( g_Game->GetStateMachine()->PushGameState(States::GST_ACTION) );
 	action->SetTargetObject(_targetObject);
-	const Core::ObjectList* selection = dynamic_cast<CommonState*>(m_previousState)->GetSelection();
+	const Core::ObjectList* selection =g_Game->GetCommonState()->GetSelection();
 	//TODO: Forschleife mit mehreren aktionen für alle objekte in der selektion
 	action->SetSourceObject((*selection)[0]);
 	action->SetPosition(_x, _y);

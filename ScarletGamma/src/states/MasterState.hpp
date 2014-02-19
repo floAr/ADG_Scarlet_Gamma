@@ -78,5 +78,9 @@ namespace States
 		void ComputeSelectionRect( const sf::Vector2i& _position, int& _minX, int& _maxX, int& _minY, int& _maxY );
 
 		bool m_firstLayerSelection;			///< bool to indicate if this is the first layer selected with alt (to hide the rest)
+		
+		void RollSecretly(std::string& result);
+		
+		void RollOpen(std::string& result);
 	};
 }

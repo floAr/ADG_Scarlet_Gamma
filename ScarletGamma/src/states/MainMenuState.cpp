@@ -67,10 +67,13 @@ void States::MainMenuState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled
 
     switch (key.code)
     {
+#ifdef _DEBUG
     // Master state with m
-    case sf::Keyboard::M:
-        g_Game->GetStateMachine()->PushGameState(new States::MasterState("saves/unittest.json"));
+    case sf::Keyboard::M:{
+       MasterState* ms=static_cast<MasterState*>( g_Game->GetStateMachine()->PushGameState(new States::MasterState("saves/unittest.json")));
+	   ms->CreateDiceRollState();}
         break;
+#endif
     // Quit with escape
     case sf::Keyboard::Escape:
         m_finished = true;

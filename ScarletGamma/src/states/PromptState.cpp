@@ -35,14 +35,9 @@ void PromptState::Draw(sf::RenderWindow& win)
 {
 	DismissableDialogState::Draw(win);
 
-	// Draw previous state and apply blur shader
-	// TODO: separate shader if the FPS get low here
-//	m_previousState->Draw(win);
-	
-
 	// Draw GUI
-	sf::Vector2u size = g_Game->GetWindow().getSize();
-	Resize(sf::Vector2f((float) size.x, (float) size.y));
+	//sf::Vector2u size = g_Game->GetWindow().getSize();
+	//Resize(sf::Vector2f((float) size.x, (float) size.y));
 	//GameState::Draw(win);
 }
 
@@ -92,10 +87,10 @@ void PromptState::Resize(const sf::Vector2f& _size)
 	message->setPosition(_size.x / 2.0f - message->getSize().x / 2.0f,
 		message->getPosition().y);
 
-	// Adjust edit box size
+	// Adjust edit box size and position
 	auto editBoxPtr = m_editBox.get();
-	editBoxPtr->setSize(_size.x - 2 * editBoxPtr->getPosition().x,
-		editBoxPtr->getSize().y);
+	editBoxPtr->setSize(std::min(920.f, _size.x - 20), editBoxPtr->getSize().y);
+	editBoxPtr->setPosition(_size.x / 2.0f - editBoxPtr->getSize().x / 2.0f, editBoxPtr->getPosition().y);
 
 	// Adjust button position
 	if (m_buttons.size() > 0)
@@ -122,6 +117,7 @@ void PromptState::Resize(const sf::Vector2f& _size)
 void PromptState::SetText(const std::string& _text)
 {
 	tgui::Label::Ptr message = m_gui.get("Message");
+	message->setAutoSize(true);
 	message->setText(_text);
 }
 

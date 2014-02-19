@@ -25,6 +25,7 @@ static const std::string STR_8 = std::string("8");
 static const std::string STR_9 = std::string("9");
 static const std::string STR_FFFFFFFF = std::string("ffffffff");
 static const std::string STR_MULTISELECTION = std::string("<Mehrfachauswahl>");
+static const std::string STR_PAUSE = std::string("Spiel pausiert");
 
 
 
@@ -77,6 +78,7 @@ static const std::string STR_PROP_OWNER		= std::string("Besitzer");	///< Name of
 static const std::string STR_PROP_SWITCH	= std::string("Schalter");
 static const std::string STR_PROP_JUMPPOINT	= std::string("Sprungziel");///< Name of portal property: The value is an id of the target object.
 static const std::string STR_PROP_ITEM		= std::string("Item");
+static const std::string STR_PROP_PAUSE		= std::string("__GAME_PAUSED__");
 
 
 /************************************************************************/

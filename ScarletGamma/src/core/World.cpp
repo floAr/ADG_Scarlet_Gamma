@@ -289,8 +289,12 @@ namespace Core {
 
 	void World::Update( float _dt )
 	{
-		for( auto it=m_maps.begin(); it!=m_maps.end(); ++it )
-			it->second.Update( _dt );
+		if( !IsPaused() )
+		{
+			// Continue simulation of all maps (active identities)
+			for( auto it=m_maps.begin(); it!=m_maps.end(); ++it )
+				it->second.Update( _dt );
+		}
 	}
 
 
@@ -366,6 +370,23 @@ namespace Core {
 	}
 
 
+	bool World::IsPaused()
+	{
+		// Use a hidden property (which is synchronized automatically) to
+		// communicate the pause.
+		return GetPropertyBaseObject()->GetProperty(STR_PROP_PAUSE).Value() == STR_TRUE;
+	}
+	
+	void World::SetPause( bool _pause )
+	{
+		// Use a hidden property (which is synchronized automatically) to
+		// communicate the pause.
+		if( _pause )
+			GetPropertyBaseObject()->GetProperty(STR_PROP_PAUSE).SetValue( STR_TRUE );
+		else GetPropertyBaseObject()->GetProperty(STR_PROP_PAUSE).SetValue( STR_FALSE );
+	}
+
+
 
 
 
@@ -396,6 +417,7 @@ namespace Core {
 		propertyO->Add( PROPERTY::OWNER );
 		propertyO->Add( PROPERTY::ITEM );
 		propertyO->Add( PROPERTY::LAYER );
+		propertyO->Add( PROPERTY::PAUSE );
 
 		propertyO->Add( PROPERTY::INVENTORY );
 		propertyO->Add( PROPERTY::STRENGTH );

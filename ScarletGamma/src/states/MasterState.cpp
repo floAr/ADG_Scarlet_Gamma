@@ -463,6 +463,10 @@ namespace States {
 			m_selection.Clear();
 			m_selectionView->hide();
 			break;
+		case sf::Keyboard::Pause:
+		case sf::Keyboard::P:
+			g_Game->GetWorld()->SetPause( !g_Game->GetWorld()->IsPaused() );
+			break;
 		}
 	}
 

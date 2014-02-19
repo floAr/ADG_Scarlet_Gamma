@@ -20,7 +20,6 @@
 #include "actions/ActionPool.hpp"
 #include <functional>
 #include "utils/Clipboard.hpp"
-#include "Thor/Events/InputNames.hpp"
 
 using namespace Core;
 
@@ -418,23 +417,12 @@ namespace States {
 				std::string content=Utils::Clipboard::Instance()->GetClipboardText();
 				for (auto i = content.begin(); i != content.end(); ++i){
 					sf::Event kevent;
-					//trying with keypress event -> not working
-					//kevent.type=sf::Event::KeyPressed;
-					//kevent.key.code=sf::Keyboard::A;
 
 					//trying with textentered
 					kevent.type=sf::Event::TextEntered;
 					kevent.text.unicode=*i;
-					bool handeld=m_gui.handleEvent(kevent);
-					std::cout<<handeld;
+					m_gui.handleEvent(kevent);
 				}
-				/*char * c = NULL;
-				for (c = content; *c != '\0'; c++) {
-				char* letter=*c+'\0';
-				sf::Event kevent;
-				kevent.key.code=sf::Keyboard::A;
-				m_gui.handleEvent(kevent);
-				}*/
 			}
 			break;
 			//for each key add the mask, as long as alt is pressed (maybe cache this in local field)

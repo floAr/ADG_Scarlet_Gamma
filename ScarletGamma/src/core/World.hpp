@@ -117,6 +117,11 @@ namespace Core {
 		/// \brief Remove an object from all lists
 		/// \param [in] _object ID of the object which should be checked.
 		void UnregisterObject(ObjectID _object);
+
+		/// \brief Checks the special pause-object-property if it is set to true.
+		bool IsPaused();
+		/// \brief Freeze or continue game.
+		void SetPause( bool _pause );
     private:
         /// \brief All real existing objects.
         std::unordered_map<ObjectID, Object> m_objects;

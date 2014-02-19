@@ -49,28 +49,36 @@ void States::PlayerState::Draw(sf::RenderWindow& win)
 	static sf::Color c(20, 26, 36);
 	win.clear(c);
 
-	// Focus on the player
-	if( m_focus->IsLocatedOnAMap() )
+	if( g_Game->GetWorld()->IsPaused() )
 	{
-		GoTo( m_focus );
-
-		// Render
-		using namespace std::placeholders;
-		std::function<float(Core::Map&,sf::Vector2i&)> visibilityFunc =
-			std::bind(&PlayerState::CheckTileVisibility, this, _1, _2, m_focus->GetPosition());
-		Graphics::TileRenderer::Render(win, *GetCurrentMap(), visibilityFunc,
-			(const bool*)(&m_hiddenLayers[0]));
-
-		// Draw the players path
-		DrawPathOverlay(win, m_focus);
-
-		Graphics::TileRenderer::RenderSelection( win, m_selection );
-	} else {
-		// The player is not on the map - bring that into attention
 		SetGuiView();
-		sf::Text t(STR_PLAYER_NOT_ON_MAP, m_gui.getGlobalFont(), 30);
+		sf::Text t(STR_PAUSE, m_gui.getGlobalFont(), 30);
 		t.setPosition(30, 320);
 		win.draw(t);
+	} else {
+		// Focus on the player
+		if( m_focus->IsLocatedOnAMap() )
+		{
+			GoTo( m_focus );
+
+			// Render
+			using namespace std::placeholders;
+			std::function<float(Core::Map&,sf::Vector2i&)> visibilityFunc =
+				std::bind(&PlayerState::CheckTileVisibility, this, _1, _2, m_focus->GetPosition());
+			Graphics::TileRenderer::Render(win, *GetCurrentMap(), visibilityFunc,
+				(const bool*)(&m_hiddenLayers[0]));
+
+			// Draw the players path
+			DrawPathOverlay(win, m_focus);
+
+			Graphics::TileRenderer::RenderSelection( win, m_selection );
+		} else {
+			// The player is not on the map - bring that into attention
+			SetGuiView();
+			sf::Text t(STR_PLAYER_NOT_ON_MAP, m_gui.getGlobalFont(), 30);
+			t.setPosition(30, 320);
+			win.draw(t);
+		}
 	}
 
 	// Draw the current focused object's name
@@ -93,6 +101,7 @@ void States::PlayerState::MouseButtonPressed(sf::Event::MouseButtonEvent& button
 	if( !m_focus->IsLocatedOnAMap() || !m_focus->HasProperty( STR_PROP_OWNER ) ||
 		m_focus->GetProperty( STR_PROP_OWNER ).Value() != m_player->GetName() )
 		return;
+	if( g_Game->GetWorld()->IsPaused() ) return;
 
 	int tileX = (int)tilePos.x;
 	int tileY = (int)tilePos.y;
@@ -140,6 +149,8 @@ void States::PlayerState::MouseButtonReleased( sf::Event::MouseButtonEvent& butt
 	if (guiHandled)
 		return;
 
+	if( g_Game->GetWorld()->IsPaused() ) return;
+
 	// Handle drop-event of drag&drop action
 	if( m_draggedContent && GetCurrentMap())
 	{
@@ -170,6 +181,7 @@ void States::PlayerState::MouseWheelMoved(sf::Event::MouseWheelEvent& wheel, boo
 	// The scroll call has an effect only if the mouse is on the respective
 	// element. So calling it for everybody is just fine.
 	m_playerView->Scroll(wheel.delta);
+	m_observerView->Scroll(wheel.delta);
 }
 
 

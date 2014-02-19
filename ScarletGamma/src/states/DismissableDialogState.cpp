@@ -77,8 +77,10 @@ namespace States{
 		//SetStateView();
 	}
 
-	void DismissableDialogState::MouseButtonReleased(sf::Event::MouseButtonEvent& button,
-		sf::Vector2f& tilePos, float time, bool guiHandled) { 
+	
+
+		void DismissableDialogState::MouseButtonPressed(sf::Event::MouseButtonEvent& button,
+		sf::Vector2f& tilePos, bool guiHandled) { 
 			if(guiHandled)
 				return;
 			sf::FloatRect bounds;
@@ -103,8 +105,9 @@ namespace States{
 					DismissableDialogState::RemoveOrb(&m_orb);
 			}
 			else //no orb was clicked -> pass click down
-				m_previousState->MouseButtonReleased(button,tilePos,time,guiHandled);
+				m_previousState->MouseButtonPressed(button,tilePos,guiHandled);
 	}
+
 
 	void DismissableDialogState::Resize(const sf::Vector2f& _size) {
 		if(m_isMinimized){

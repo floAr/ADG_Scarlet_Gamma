@@ -24,6 +24,7 @@ PropertyPanel::PropertyPanel() :
 	m_newAdd(nullptr),
 	m_scrollBar(nullptr),
 	m_titleBar(nullptr),
+	m_searchBar(nullptr),
 	m_miniMaxi(nullptr),
 	m_listContainer(nullptr),
 	m_addAble(false),
@@ -89,10 +90,10 @@ void PropertyPanel::Init( float _x, float _y, float _w, float _h,
 	Panel::setCallbackId(_pid);
 
 	m_listContainer = tgui::Panel::Ptr( *this );
-	m_listContainer->setPosition(0.0f, 20.0f);
+	m_listContainer->setPosition(0.0f, 40.0f);
 	if( _autoSize )
 		m_listContainer->setSize(_w, 0.0f);
-	else m_listContainer->setSize(_w, _h - (m_addAble ? 40.0f : 20.0f));
+	else m_listContainer->setSize(_w, _h - (m_addAble ? 60.0f : 40.0f));
 	m_listContainer->setBackgroundColor( sf::Color(50,50,50,150) );
 	if(m_dragNDropHandler)
 	{
@@ -116,12 +117,18 @@ void PropertyPanel::Init( float _x, float _y, float _w, float _h,
 	m_titleBar->setSize(_w, 20.0f);
 	m_titleBar->setPosition(0.0f, 0.0f);
 	m_titleBar->setCallbackId(_pid);
-	m_titleBar->bindCallback( &PropertyPanel::RefreshFilter, this, tgui::EditBox::TextChanged );
+	m_titleBar->disable();
 	m_miniMaxi = m_basicMiniMaxi.clone();
 	this->add(m_miniMaxi);
 	m_miniMaxi->setPosition(_w-16.0f, 4.0f);
 	m_miniMaxi->setCallbackId(_pid);
 	m_miniMaxi->bindCallback(&PropertyPanel::MiniMaxi, this, tgui::AnimatedPicture::LeftMouseClicked);
+	m_searchBar = m_basicEdit.clone();
+	this->add(m_searchBar);
+	m_searchBar->setSize(_w, 20.0f);
+	m_searchBar->setPosition(0.0f, 20.0f);
+	m_searchBar->setCallbackId(_pid);
+	m_searchBar->bindCallback( &PropertyPanel::RefreshFilter, this, tgui::EditBox::TextChanged );
 
 	// Add an edit which creates a new line if changed.
 	if( m_addAble )
@@ -130,18 +137,18 @@ void PropertyPanel::Init( float _x, float _y, float _w, float _h,
 		m_newName = m_basicEdit.clone();
 		this->add(m_newName);
 		m_newName->setSize(w, 20.0f);
-		m_newName->setPosition(0.0f, m_listContainer->getSize().y+20.0f);
+		m_newName->setPosition(0.0f, m_listContainer->getSize().y+40.0f);
 		m_newName->setCallbackId(_pid);
 		m_newName->bindCallbackEx(&PropertyPanel::AddBtn, this, tgui::EditBox::ReturnKeyPressed);
 		m_newValue = m_basicEdit.clone();
 		this->add(m_newValue);
 		m_newValue->setSize(w, 20.0f);
-		m_newValue->setPosition(w, m_listContainer->getSize().y+20.0f);
+		m_newValue->setPosition(w, m_listContainer->getSize().y+40.0f);
 		m_newValue->setCallbackId(_pid);
 		m_newValue->bindCallbackEx(&PropertyPanel::AddBtn, this, tgui::EditBox::ReturnKeyPressed);
 		m_newAdd = m_basicAddButton.clone();
 		this->add(m_newAdd);
-		m_newAdd->setPosition(m_listContainer->getSize().x - 40.0f, m_listContainer->getSize().y+20.0f);
+		m_newAdd->setPosition(m_listContainer->getSize().x - 40.0f, m_listContainer->getSize().y+40.0f);
 		m_newAdd->bindCallbackEx(&PropertyPanel::AddBtn, this, tgui::Button::LeftMouseClicked);
 		m_newAdd->setCallbackId(_pid);
 	}
@@ -230,7 +237,7 @@ PropertyPanel::Ptr PropertyPanel::AddNode( EntryLine& _parent )
 {
 	// Determine y coordinate where to insert inside panel.
 	float y = _parent.left->getPosition().y + _parent.left->getSize().y;
-	Resize(m_addAble ? 40 : 20, (int)y);
+	Resize(m_addAble ? 60 : 40, (int)y);
 
 	// Level in hierarchy (indention)
 	float x = 12.0f + (IsScrollbarVisible() ? 12.0f : 0.0f);
@@ -329,7 +336,10 @@ void PropertyPanel::MiniMaxi()
 	// If it was the title bar toggle whole components on/of.
 	if( hide )
 	{
-		if( m_autoSize ) Panel::setSize(Panel::getSize().x, 20.0f );
+		// Use m_numPixelLines to store old size to restore proper on maximize
+		if( !m_autoSize )
+			m_numPixelLines = (int)Panel::getSize().y - (m_addAble ? 60 : 40);
+		Panel::setSize(Panel::getSize().x, 20.0f );
 		m_listContainer->hide();
 		if(m_newName != nullptr) m_newName->hide();
 		if(m_newValue != nullptr) m_newValue->hide();
@@ -337,20 +347,22 @@ void PropertyPanel::MiniMaxi()
 		PropertyPanel* parent = nullptr;
 		if( m_Parent ) parent = dynamic_cast<PropertyPanel*>(m_Parent->getParent());
 		if( parent )
-			parent->Resize( -(m_numPixelLines + (m_addAble?20:0)), (int)Panel::getPosition().y+1 );
+			parent->Resize( -(m_numPixelLines + (m_addAble?40:20)), (int)Panel::getPosition().y+1 );
 
 		// If minimized show component name in the title bar
 		if( m_objects.size()==1 )
 			m_titleBar->setText( m_objects[0]->GetName() );
 		else if( m_objects.size()>1 )
 			m_titleBar->setText( STR_MULTISELECTION );
-		m_titleBar->disable();
+	//	m_titleBar->disable();
 	} else {
-		if( m_autoSize ) Panel::setSize(Panel::getSize().x, float(m_numPixelLines + (m_addAble ? 40.0f : 20.0f)) );
+		Panel::setSize(Panel::getSize().x, float(m_numPixelLines + (m_addAble ? 60.0f : 40.0f)) );
+		if( !m_autoSize )
+			m_numPixelLines = 20 * m_lines.size();
 		PropertyPanel* parent = nullptr;
 		if( m_Parent ) parent = dynamic_cast<PropertyPanel*>(m_Parent->getParent());
 		if( parent )
-			parent->Resize( m_numPixelLines + (m_addAble?20:0), (int)Panel::getPosition().y+1 );
+			parent->Resize( m_numPixelLines + (m_addAble?40:20), (int)Panel::getPosition().y+1 );
 		m_listContainer->show();
 
 		if(m_newName != nullptr)	m_newName->show();
@@ -358,8 +370,8 @@ void PropertyPanel::MiniMaxi()
 		if(m_newAdd != nullptr) 	m_newAdd->show();
 
 		// Use as filter
-		m_titleBar->enable();
-		m_titleBar->setText( "" );
+//		m_titleBar->enable();
+//		m_titleBar->setText( "" );
 	}
 }
 
@@ -441,13 +453,13 @@ void PropertyPanel::Resize( int _addLines, int _where )
 	{
 		// Just rescale the area
 		m_listContainer->setSize(Panel::getSize().x, float(m_numPixelLines));
-		Panel::setSize(Panel::getSize().x, float(m_numPixelLines + (m_addAble ? 40.0f : 20.0f)) );
+		Panel::setSize(Panel::getSize().x, float(m_numPixelLines + (m_addAble ? 60.0f : 40.0f)) );
 
 		// If parent is another PropertyPanel it has to be resized too
 		PropertyPanel* parent = nullptr;
 		if( m_Parent ) parent = dynamic_cast<PropertyPanel*>(m_Parent->getParent());
 		if( parent )
-			parent->Resize( _addLines, (int)Panel::getPosition().y + m_numPixelLines - _addLines + 20 );
+			parent->Resize( _addLines, (int)Panel::getPosition().y + m_numPixelLines - _addLines + 40 );
 
 		// Move the 3 things below
 		if( m_addAble )
@@ -471,23 +483,24 @@ bool PropertyPanel::IsScrollbarVisible()
 
 float PropertyPanel::GetHeight() const
 {
-	return m_listContainer->getSize().y + (m_addAble ? 40.0f : 20.0f);
+	return m_listContainer->getSize().y + (m_addAble ? 60.0f : 40.0f);
 }
 
 void PropertyPanel::setSize( float _width, float _height )
 {
 	Panel::setSize(_width, _height);
-	m_listContainer->setSize(_width, ceil(std::max(0.0f, _height - (m_addAble ? 40.0f : 20.0f))));
+	m_listContainer->setSize(_width, ceil(std::max(0.0f, _height - (m_addAble ? 60.0f : 40.0f))));
 	m_titleBar->setSize( _width, 20.0f );
+	m_searchBar->setSize( _width, 20.0f );
 	float w = ceil(_width * 0.5f - 20.0f);
 	if( m_addAble )
 	{
 		m_newName->setSize(w, 20.0f);
-		m_newName->setPosition(0.0f, ceil(20.0f + m_listContainer->getSize().y));
+		m_newName->setPosition(0.0f, ceil(40.0f + m_listContainer->getSize().y));
 		m_newValue->setSize(w, 20.0f);
-		m_newValue->setPosition(w, ceil(20.0f + m_listContainer->getSize().y));
+		m_newValue->setPosition(w, ceil(40.0f + m_listContainer->getSize().y));
 		m_newAdd->setPosition(ceil(m_listContainer->getSize().x - 40.0f),
-			ceil(20.0f + m_listContainer->getSize().y));
+			ceil(40.0f + m_listContainer->getSize().y));
 	}
 	m_scrollBar->setLowValue( (unsigned)m_listContainer->getSize().y );
 	m_scrollBar->setSize( 12.0f, m_listContainer->getSize().y );
@@ -632,9 +645,9 @@ void PropertyPanel::Show( Core::World* _world, Core::Object* _object )
 	m_objects.clear();
 	m_objects.push_back(_object);
 
-	// Use the name property in title bar in minimized mode.
+	// Use the name property in title bar.
+	m_titleBar->setText( _object->GetName() );
 	if( !IsMinimized() ) RefreshFilter();
-	else m_titleBar->setText( _object->GetName() );
 }
 
 
@@ -661,13 +674,11 @@ void PropertyPanel::Show( Core::World* _world, const Core::ObjectList& _objects 
 	for( int i=0; i<_objects.Size(); ++i )
 		m_objects.push_back( _world->GetObject(_objects[i]) );
 
+	// Use placeholder title for multiple objects.
+	if( _objects.Size() == 1 )
+		m_titleBar->setText( _world->GetObject(_objects[0])->GetName() );
+	else m_titleBar->setText( STR_MULTISELECTION );
 	if( !IsMinimized() ) RefreshFilter();
-	else {
-		// Use placeholder title for multiple objects.
-		if( _objects.Size() == 1 )
-			m_titleBar->setText( _world->GetObject(_objects[0])->GetName() );
-		else m_titleBar->setText( STR_MULTISELECTION );
-	}
 }
 
 
@@ -690,7 +701,7 @@ void PropertyPanel::RefreshFilter()
 	if( m_objects.size() == 0 ) { Clear(); return; }
 
 	// Get all possible properties from the first object
-	auto allProperties = m_objects[0]->FilterByName( m_titleBar->getText() );
+	auto allProperties = m_objects[0]->FilterByName( m_searchBar->getText() );
 
 	// Sort by name
 	std::sort( allProperties.begin(), allProperties.end(),

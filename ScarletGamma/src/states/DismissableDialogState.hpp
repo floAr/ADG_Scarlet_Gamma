@@ -36,14 +36,13 @@ namespace States
 		///		map, certain menus etc.
 		virtual void Draw(sf::RenderWindow& win);
 
-		/// \brief Gets called when a mouse button is released.
+				/// \brief Gets called when a mouse button is pressed.
+		/// \details Has the same internal logic as KeyPressed.
 		/// \param [in] button      SFML button event that contains all required information.
 		/// \param [in] tilePos     In-game tile that the user clicked on. Cast to float if required.
-		/// \param [in] time        How long the button was pressed, in seconds.
 		/// \param [in] guiHandled  Wether the GUI already used the event
-		virtual void MouseButtonReleased(sf::Event::MouseButtonEvent& button,
-			sf::Vector2f& tilePos, float time, bool guiHandled);
-
+		virtual void MouseButtonPressed(sf::Event::MouseButtonEvent& button,
+			sf::Vector2f& tilePos, bool guiHandled);
 
 
 		// pass everything else downward when minimized
@@ -93,15 +92,17 @@ namespace States
 		}
 
 
-		/// \brief Gets called when a mouse button is pressed.
-		/// \details Has the same internal logic as KeyPressed.
+
+		/// \brief Gets called when a mouse button is released.
 		/// \param [in] button      SFML button event that contains all required information.
 		/// \param [in] tilePos     In-game tile that the user clicked on. Cast to float if required.
+		/// \param [in] time        How long the button was pressed, in seconds.
 		/// \param [in] guiHandled  Wether the GUI already used the event
-		virtual void MouseButtonPressed(sf::Event::MouseButtonEvent& button,
-			sf::Vector2f& tilePos, bool guiHandled){
+
+		virtual void MouseButtonReleased(sf::Event::MouseButtonEvent& button,
+			sf::Vector2f& tilePos,float time, bool guiHandled){
 				if(m_isMinimized){
-					m_previousState->MouseButtonPressed(button,tilePos,guiHandled);
+					m_previousState->MouseButtonReleased(button,tilePos,time,guiHandled);
 					return;
 				}
 		}

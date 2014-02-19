@@ -1,5 +1,5 @@
 Window:
-{	
+{
 	Label: "IPLabel"
 	{
 		ConfigFile = "media/Black.conf"
@@ -17,7 +17,7 @@ Window:
 		BackgroundColor = (0,0,0,0)
 		AutoSize = false
 	}
-	
+
 	EditBox: "ServerIP"
 	{
 		ConfigFile = "media/Black.conf"
@@ -58,7 +58,7 @@ Window:
 		TextColor = (200,200,200,255)
 		TextSize = 26
 	}
-	
+
 	Label: "Status"
 	{
 		ConfigFile = "media/Black.conf"
@@ -70,13 +70,13 @@ Window:
 		Enabled = true
 		Transparency = 255
 		CallbackId = 0
-		Text = ""
+		Text = "Connecting to server ..."
 		TextColor = (200,200,200,255)
 		TextSize = 26
 		BackgroundColor = (0,0,0,0)
 		AutoSize = false
 	}
-	
+
 	Button: "Back"
 	{
 		ConfigFile = "media/Black.conf"
@@ -93,4 +93,5 @@ Window:
 		TextColor = (200,200,200,255)
 		TextSize = 26
 	}
+
 }

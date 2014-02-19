@@ -72,8 +72,11 @@ void CommonState::Update( float dt )
 		localOut->m_FullTextHeight += localOut->getLineAmount() == 1 ? 10.0f : 5.0f;
 	}
 
-	// Update continuous actions
-	Actions::ActionPool::Instance().UpdateExecution();
+	if( !g_Game->GetWorld()->IsPaused() )
+	{
+		// Update continuous actions
+		Actions::ActionPool::Instance().UpdateExecution();
+	}
 }
 
 

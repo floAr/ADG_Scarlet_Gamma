@@ -11,9 +11,8 @@ namespace GameRules
     {
     public:
 		/// \brief Sets default values
-		Combat() : m_currentObject(nullptr), m_diagonalCounter(false),
-			m_fiveFootStepRemaining(true), m_moveActionRemaining(true),
-			m_moveActionStepsLeft(9.0f), m_standardActionRemaining(true) {}
+		Combat();
+		virtual ~Combat() {}
 
         /// \brief Adds a participant to the combat.
         /// \detail By default, this function adds a participant to the end of
@@ -30,7 +29,7 @@ namespace GameRules
         void PushInitiativePrompt(Core::ObjectID _object);
 
         /// \brief Is called when the initiative roll is accepted.
-		virtual void InitiativeRollPromptFinished(std::string& _result, Core::Object* _object);
+		virtual void InitiativeRollPromptFinished(std::string& _result, Core::ObjectID _object);
 
         /// \brief Is called when it is a combattant's turn.
         virtual void SetTurn( Core::ObjectID _object );

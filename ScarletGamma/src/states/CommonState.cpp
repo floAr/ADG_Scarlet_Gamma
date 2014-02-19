@@ -114,13 +114,6 @@ void CommonState::KeyPressed( sf::Event::KeyEvent& key, bool guiHandled )
 	switch(key.code)
 	{
 	case sf::Keyboard::Return: {
-		// TODO: remove, only for combat testing
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) && m_combat)
-		{
-			m_combat->EndTurn();
-			break;
-		}
-
 		// Show message input field if not visible or submit message.
 		tgui::EditBox::Ptr enterTextEdit = m_gui.get( "EnterText" );
 		if( !enterTextEdit->isFocused() )
@@ -152,6 +145,7 @@ void CommonState::Resize(const sf::Vector2f& _size)
 	tgui::EditBox::Ptr enterTextEdit = m_gui.get( "EnterText" );
 	localOut->setPosition( _size - localOut->getSize() - sf::Vector2f(0.0f, enterTextEdit->getSize().y) );
 	enterTextEdit->setPosition( _size - enterTextEdit->getSize() );
+	m_combatantPanel->Resize(_size, 200);
 	GetStateView().setSize(_size);
 }
 
@@ -285,6 +279,8 @@ void CommonState::EndCombat()
 
 	// Hide the combatant display
 	m_combatantPanel->hide();
+	Resize(sf::Vector2f((float) g_Game->GetWindow().getSize().x,
+		(float) g_Game->GetWindow().getSize().y));
 }
 
 

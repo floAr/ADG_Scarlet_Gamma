@@ -13,6 +13,8 @@ namespace Interfaces {
 		typedef tgui::SharedWidgetPtr<CombatantPanel> Ptr;
 
 		CombatantPanel();
+		void Resize( sf::Vector2f _size, float _width = 0);
+
 		void UpdateCombatants( std::list<Core::ObjectID>& m_participants );
 		void SetTurn( int _id );
 	protected:

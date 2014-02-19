@@ -9,7 +9,7 @@ namespace GameRules
     {
     public:
 		/// \brief Tells all clients about its deletion.
-		~MasterCombat();
+		virtual ~MasterCombat();
 
         /// \brief Adds a combattant to the combat. May happen before or during
         ///     the combat.
@@ -22,7 +22,7 @@ namespace GameRules
         void ReceivedInitiative(Core::ObjectID _object, std::string& _initiative);
 
         /// \brief Called when a DM ini prompt is done.
-        virtual void InitiativeRollPromptFinished(std::string& _result, Core::Object* _object) override;
+        virtual void InitiativeRollPromptFinished(std::string& _result, Core::ObjectID _object) override;
 
         /// \brief Called when the DM added the (initial) participants and wants
         ///     to start the combat.

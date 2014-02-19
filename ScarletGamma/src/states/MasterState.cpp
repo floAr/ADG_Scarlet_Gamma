@@ -525,19 +525,22 @@ namespace States {
 		// Scale chat too
 		CommonState::Resize( _size );
 
-		// Scale editor sidebar
-		m_objectsPanel->setSize( m_objectsPanel->getSize().x, _size.y * 0.5f );
-		m_modulePanel->setSize( m_modulePanel->getSize().x, _size.y * 0.5f );
-		m_modulePanel->setPosition( 0.0f, _size.y * 0.5f );
-		m_propertyPanel->setSize( m_propertyPanel->getSize().x, _size.y * 0.5f );
-		m_viewPanel->setSize( m_viewPanel->getSize().x, _size.y * 0.5f );
-		m_viewPanel->setPosition( m_modulePanel->getSize().x, _size.y * 0.5f );
-
 		tgui::ChatBox::Ptr localOut = m_gui.get( "Messages" );
 		m_selectionView->setSize( m_selectionView->getSize().x, localOut->getPosition().y - 100.0f );
 		m_selectionView->setPosition( _size.x - m_selectionView->getSize().x, 100.0f );
-
 		m_toolbar->setSize( _size.x - m_objectsPanel->getSize().x*2, 100.0f );
+
+		// Resize combatant liste, provide width of toolbar
+		m_combatantPanel->Resize(_size, m_propertyPanel->getSize().x + m_viewPanel->getSize().x);
+
+		// Scale editor sidebar
+		float height = InCombat() ? _size.y - m_combatantPanel->getSize().y : _size.y;
+		m_objectsPanel->setSize( m_objectsPanel->getSize().x, height * 0.5f );
+		m_modulePanel->setSize( m_modulePanel->getSize().x, height * 0.5f );
+		m_modulePanel->setPosition( 0.0f, height * 0.5f );
+		m_propertyPanel->setSize( m_propertyPanel->getSize().x, height * 0.5f );
+		m_viewPanel->setSize( m_viewPanel->getSize().x, height * 0.5f );
+		m_viewPanel->setPosition( m_modulePanel->getSize().x, height * 0.5f );
 	}
 
 
@@ -615,6 +618,8 @@ namespace States {
 
 		// Show the combatant display
 		m_combatantPanel->show();
+		Resize(sf::Vector2f((float) g_Game->GetWindow().getSize().x,
+							(float) g_Game->GetWindow().getSize().y));
 
 		if (m_combat->HasParticipant(_object))
 			return;
@@ -661,6 +666,11 @@ namespace States {
 	{
 		if (!m_combat)
 			m_combat = new GameRules::MasterCombat;
+
+		// Resize to show combat panel
+		m_combatantPanel->show();
+		Resize(sf::Vector2f((float) g_Game->GetWindow().getSize().x,
+							(float) g_Game->GetWindow().getSize().y));
 
 		// Add all combattants
 		for (int i = 0; i<m_selection.Size(); ++i)

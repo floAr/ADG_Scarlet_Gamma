@@ -35,9 +35,9 @@ void GameRules::MasterCombat::AddParticipant( Core::ObjectID _object )
     }
 }
 
-void GameRules::MasterCombat::InitiativeRollPromptFinished( std::string& _result, Core::Object* _object )
+void GameRules::MasterCombat::InitiativeRollPromptFinished( std::string& _result, Core::ObjectID _object )
 {
-	ReceivedInitiative(_object->ID(), _result);
+	ReceivedInitiative(_object, _result);
 }
 
 void GameRules::MasterCombat::SetTurn( Core::ObjectID _object )
@@ -150,12 +150,12 @@ void MasterCombat::ReceivedInitiative( Core::ObjectID _object, std::string& _ini
     // Insert object before it
     m_participants.insert(it, _object);
 
-	// Update combatant panel
-	UpdateCombatantPanel();
-
 #ifdef _DEBUG
     std::cout << "Object " << _object << " rolled initiative " << iniEvaluated <<
         ", inserted at position " << std::to_string(position) << ".\n";
 #endif
+
+	// Update combatant panel
+	UpdateCombatantPanel();
 }
 

@@ -292,7 +292,15 @@ void States::PlayerState::Resize(const sf::Vector2f& _size)
 	m_playerView->setSize( m_playerView->getSize().x, localOut->getPosition().y );
 	m_playerView->setPosition( _size.x - m_playerView->getSize().x, 0.0f );
 
-	m_observerView->setSize( 300.0f, _size.y );
+	if (InCombat())
+	{
+		m_observerView->setSize( 300.0f, _size.y - m_combatantPanel->getSize().y);
+		m_combatantPanel->Resize(_size, m_observerView->getSize().x);
+	}
+	else
+	{
+		m_observerView->setSize( 300.0f, _size.y );
+	}
 }
 
 
@@ -399,6 +407,8 @@ void States::PlayerState::CreateCombat( Core::ObjectID _object )
 
 		// Show the combatant display
 		m_combatantPanel->show();
+		Resize(sf::Vector2f((float) g_Game->GetWindow().getSize().x,
+			(float) g_Game->GetWindow().getSize().y));
 
 		// Stop object
 		if (object->HasProperty(STR_PROP_PATH))

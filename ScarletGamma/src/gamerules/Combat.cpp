@@ -13,6 +13,13 @@
 
 using namespace GameRules;
 
+GameRules::Combat::Combat() : m_currentObject(nullptr), m_diagonalCounter(false),
+	m_fiveFootStepRemaining(false), m_moveActionRemaining(false),
+	m_moveActionStepsLeft(0.0f), m_standardActionRemaining(false)
+{
+	UpdateCombatantPanel();
+}
+
 void Combat::AddParticipantWithInitiative(Core::ObjectID _object, int8_t _position)
 {
     // Use user-defined index: negative values count backwards from the end
@@ -25,7 +32,8 @@ void Combat::AddParticipantWithInitiative(Core::ObjectID _object, int8_t _positi
 
     // Iterate to position
     auto it = m_participants.begin();
-    for (uint8_t i = 0; i < size && it != m_participants.end(); ++it);
+    for (uint8_t i = 0; i < size && it != m_participants.end(); ++i)
+		++it;
 
     // Insert object at position
     m_participants.insert( it, _object );
@@ -52,11 +60,11 @@ void GameRules::Combat::PushInitiativePrompt(Core::ObjectID _object)
 
     // Add callback function
 	prompt->AddButton("OK", std::bind(&Combat::InitiativeRollPromptFinished, this,
-		std::placeholders::_1, object), sf::Keyboard::Return, object);
+		std::placeholders::_1, object->ID()), sf::Keyboard::Return, object);
 	//prompt->AddButton("Abbrechen", std::bind(&Combat::EndCombat, this), sf::Keyboard::Escape);
 }
 
-void GameRules::Combat::InitiativeRollPromptFinished( std::string& _result, Core::Object* _object )
+void GameRules::Combat::InitiativeRollPromptFinished( std::string& _result, Core::ObjectID _object )
 {
     // Send initiative roll string to server
     Jo::Files::MemFile data;

@@ -39,9 +39,9 @@ namespace States
 
 		struct PromptButton
 		{
-			PromptButton(std::function<void(std::string)> _function, Core::Object* _evaluateObj = 0,
-				sf::Keyboard::Key _hotkey = sf::Keyboard::Unknown)
-				: function(_function), evaluateObj(_evaluateObj), hotkey(_hotkey) {}
+			PromptButton(tgui::Button::Ptr _button, std::function<void(std::string)> _function,
+				Core::Object* _evaluateObj = 0, sf::Keyboard::Key _hotkey = sf::Keyboard::Unknown)
+				: button(_button), function(_function), evaluateObj(_evaluateObj), hotkey(_hotkey) {}
 
 			tgui::Button::Ptr				 button;
 			std::function<void(std::string)> function;

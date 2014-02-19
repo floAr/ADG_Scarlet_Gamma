@@ -134,11 +134,22 @@ void PromptState::AddButton(const std::string _buttonText, std::function<void(st
 
 	tgui::Button::Ptr button = m_defaultButton.clone();
 	m_gui.add(button);
-
 	button->setText(_buttonText);
 	button->setCallbackId(bID);
 	button->bindCallback(tgui::Button::LeftMouseClicked);
-	m_callbacks.emplace(bID, PromptButton(_callback, _evaluateObj, _hotkey));
+	m_callbacks.emplace(bID, PromptButton(button, _callback, _evaluateObj, _hotkey));
+
+	// Pre-calculations for button positions
+	int winWidth = g_Game->GetWindow().getSize().x;
+	int spacing = 10;
+	float totalBtnWidth = button->getSize().x * m_callbacks.size() + spacing * (m_callbacks.size() - 1);
+
+	// Reposition all buttons
+	for (size_t i = 0; i < m_callbacks.size(); ++i)
+	{
+		m_callbacks.at(i).button->setPosition(winWidth / 2.0f - totalBtnWidth
+			+ button->getSize().x * (i + 1) + spacing * i, 400);
+	}
 }
 
 void PromptState::GuiCallback(tgui::Callback& args)

@@ -17,6 +17,9 @@ namespace GameRules
         ///     list using negative values (-1 = after last, -2 = before last...)
         void AddParticipantWithInitiative(Core::ObjectID _object, int8_t _position = -1);
 
+		/// \brief Checks whether the object already is in combat.
+		bool HasParticipant(Core::ObjectID _object) const;
+
         /// \brief Creates an initiative prompt window, using the specified object
         ///     as reference object for property values.
         void PushInitiativePrompt(Core::ObjectID _object);

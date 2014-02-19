@@ -213,3 +213,8 @@ Core::ObjectID GameRules::Combat::GetTurn() const
 {
 	return m_currentObject;
 }
+
+bool GameRules::Combat::HasParticipant( Core::ObjectID _object ) const
+{
+	return std::find(m_participants.begin(), m_participants.end(), _object) != m_participants.end();
+}

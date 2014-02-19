@@ -590,6 +590,9 @@ namespace States {
 		if (!m_combat)
 			m_combat = new GameRules::MasterCombat();
 
+		if (m_combat->HasParticipant(_object))
+			return;
+
 		// Find the object
 		Core::Object* object = g_Game->GetWorld()->GetObject(_object);
 		// Stop objects that are currently moving!

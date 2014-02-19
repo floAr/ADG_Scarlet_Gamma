@@ -19,6 +19,8 @@
 #include "DismissableDialogState.hpp"
 #include "actions/ActionPool.hpp"
 #include <functional>
+#include "utils/Clipboard.hpp"
+#include "Thor/Events/InputNames.hpp"
 
 using namespace Core;
 
@@ -200,36 +202,36 @@ namespace States {
 					layer,
 					m_modeTool->Brush()->GetMode() );
 			} else
-			if( m_modeTool->GetMode() == Interfaces::ModeToolbox::SELECTION )
-			{
-				// Start rect-selection
-				m_rectSelectionStart.x = tileX;
-				m_rectSelectionStart.y = tileY;
-				m_rectSelection = true;
-			} else if(m_modeTool->GetMode() == Interfaces::ModeToolbox::ACTION) {	// Mode ACTION
-				// Default action
-				if (m_selection.Size() > 0)
+				if( m_modeTool->GetMode() == Interfaces::ModeToolbox::SELECTION )
 				{
-					auto& tiles = GetCurrentMap()->GetObjectsAt(tileX,tileY);
-					if( tiles.Size() > 0 )
+					// Start rect-selection
+					m_rectSelectionStart.x = tileX;
+					m_rectSelectionStart.y = tileY;
+					m_rectSelection = true;
+				} else if(m_modeTool->GetMode() == Interfaces::ModeToolbox::ACTION) {	// Mode ACTION
+					// Default action
+					if (m_selection.Size() > 0)
 					{
-						Core::Object* object = g_Game->GetWorld()->GetObject(tiles[tiles.Size()-1]);
-						Actions::ActionPool::Instance().UpdateDefaultAction(m_selection, object);
-						for (int i=0; i < m_selection.Size(); ++i)
-							Actions::ActionPool::Instance().StartDefaultAction(m_selection[i], object->ID());
+						auto& tiles = GetCurrentMap()->GetObjectsAt(tileX,tileY);
+						if( tiles.Size() > 0 )
+						{
+							Core::Object* object = g_Game->GetWorld()->GetObject(tiles[tiles.Size()-1]);
+							Actions::ActionPool::Instance().UpdateDefaultAction(m_selection, object);
+							for (int i=0; i < m_selection.Size(); ++i)
+								Actions::ActionPool::Instance().StartDefaultAction(m_selection[i], object->ID());
+						}
+					}
+				} else {	// Mode Drag&Drop
+					// Start drag&drop with the topmost visible tile
+					ObjectID topmostObject = FindTopmostTile(tileX, tileY);
+					if( topmostObject != INVALID_ID ) {
+						if( !m_draggedContent ) m_draggedContent = new Interfaces::DragContent();
+						m_draggedContent->from = Interfaces::DragContent::MAP;
+						m_draggedContent->object = g_Game->GetWorld()->GetObject(topmostObject);
+						m_draggedContent->prop = nullptr;
 					}
 				}
-			} else {	// Mode Drag&Drop
-				// Start drag&drop with the topmost visible tile
-				ObjectID topmostObject = FindTopmostTile(tileX, tileY);
-				if( topmostObject != INVALID_ID ) {
-					if( !m_draggedContent ) m_draggedContent = new Interfaces::DragContent();
-					m_draggedContent->from = Interfaces::DragContent::MAP;
-					m_draggedContent->object = g_Game->GetWorld()->GetObject(topmostObject);
-					m_draggedContent->prop = nullptr;
-				}
-			}
-			break; }
+				break; }
 		case sf::Mouse::Right: {
 			if( GetCurrentMap()->GetObjectsAt(tileX, tileY).Size() > 0 )
 			{
@@ -393,6 +395,7 @@ namespace States {
 
 	void MasterState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 	{
+
 		// This should work ALWAYS, even if GUI is focused:
 		switch (key.code)
 		{
@@ -405,7 +408,41 @@ namespace States {
 			}
 			m_firstLayerSelection=true;
 			break;
+		case sf::Keyboard::C:
+			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)){//ctrl+c -> copy
+				std::vector<tgui::Widget::Ptr> widgets = m_gui.getWidgets();
+				while(widgets.size()>1){
 
+				for(auto it = widgets.begin(); it != widgets.end(); ++it) {
+					/* std::cout << *it; ... */
+					if(it->get()->isFocused())
+					{
+					//	widgets=it->get()->get
+					}						
+				}
+				}
+
+			}
+			break;
+		case sf::Keyboard::V:
+			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)){//ctrl+c -> copy
+				std::string content=Utils::Clipboard::Instance()->GetClipboardText();
+				for (auto i = content.begin(); i != content.end(); ++i){
+					sf::Event kevent;
+					kevent.type=sf::Event::KeyPressed;
+					kevent.key.code=sf::Keyboard::A;
+					bool handeld=m_gui.handleEvent(kevent);
+					std::cout<<handeld;
+				}
+				/*char * c = NULL;
+				for (c = content; *c != '\0'; c++) {
+				char* letter=*c+'\0';
+				sf::Event kevent;
+				kevent.key.code=sf::Keyboard::A;
+				m_gui.handleEvent(kevent);
+				}*/
+			}
+			break;
 			//for each key add the mask, as long as alt is pressed (maybe cache this in local field)
 		case sf::Keyboard::Num1:
 		case sf::Keyboard::Num2:
@@ -442,7 +479,7 @@ namespace States {
 		{
 		case sf::Keyboard::D: {
 			DismissableDialogState* gs=dynamic_cast<DismissableDialogState*>(g_Game->GetStateMachine()->PushGameState(GST_DISMISS));
-			} break;
+							  } break;
 
 		case sf::Keyboard::C:
 			// If only one object is selected show the character screen. Even
@@ -588,9 +625,9 @@ namespace States {
 			g_Game->AppendToChatLog( Network::ChatMsg( STR_NO_POSITION, sf::Color::Red) );
 	}
 
-    void MasterState::CreateCombat( Core::ObjectID _object )
-    {
-        // Maybe create a new Combat object
+	void MasterState::CreateCombat( Core::ObjectID _object )
+	{
+		// Maybe create a new Combat object
 		if (!m_combat)
 			m_combat = new GameRules::MasterCombat();
 
@@ -602,17 +639,17 @@ namespace States {
 
 		// Prompt for initiative roll
 		static_cast<GameRules::MasterCombat*>(m_combat)->AddParticipant(_object);
-    }
+	}
 
-    bool MasterState::OwnsObject( Core::ObjectID _object )
-    {
-        // Find the object
-        Core::Object* object = g_Game->GetWorld()->GetObject(_object);
+	bool MasterState::OwnsObject( Core::ObjectID _object )
+	{
+		// Find the object
+		Core::Object* object = g_Game->GetWorld()->GetObject(_object);
 
-        // True only if the object is found and has no owner at all.
-        return object != 0
-            && object->HasProperty(STR_PROP_OWNER) == false;
-    }
+		// True only if the object is found and has no owner at all.
+		return object != 0
+			&& object->HasProperty(STR_PROP_OWNER) == false;
+	}
 
 	void MasterState::CreateCombatPrompt()
 	{

@@ -236,6 +236,9 @@
     <ClCompile Include="src\network\ResourceMessages.cpp">
       <Filter>Quelldateien\network</Filter>
     </ClCompile>
+    <ClCompile Include="src\utils\Clipboard.cpp">
+      <Filter>Quelldateien\utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\core\Map.hpp">
@@ -435,6 +438,9 @@
     </ClInclude>
     <ClInclude Include="src\network\ResourceMessages.hpp">
       <Filter>Quelldateien\network</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utils\Clipboard.hpp">
+      <Filter>Quelldateien\utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

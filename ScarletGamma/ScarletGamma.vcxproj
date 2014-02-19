@@ -142,6 +142,7 @@
     <ClCompile Include="src\unittest\UTMap.cpp" />
     <ClCompile Include="src\unittest\UTObject.cpp" />
     <ClCompile Include="src\unittest\UnitTest.cpp" />
+    <ClCompile Include="src\utils\Clipboard.cpp" />
     <ClCompile Include="src\utils\Content.cpp" />
     <ClCompile Include="src\utils\Falloff.cpp" />
     <ClCompile Include="src\utils\Random.cpp" />
@@ -207,6 +208,7 @@
     <ClInclude Include="src\states\StateMachine.hpp" />
     <ClInclude Include="src\tools\Brush.hpp" />
     <ClInclude Include="src\unittest\UnitTests.hpp" />
+    <ClInclude Include="src\utils\Clipboard.hpp" />
     <ClInclude Include="src\utils\Content.hpp" />
     <ClInclude Include="src\utils\Exception.hpp" />
     <ClInclude Include="src\utils\Falloff.hpp" />

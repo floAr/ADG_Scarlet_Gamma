@@ -55,12 +55,20 @@ void PromptState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 	}
 	else if (key.code == sf::Keyboard::Return && m_buttons.size() == 0)
 	{
-		m_finished = true;
+		if(!m_forceKeepAlive)
+			m_finished = true;
+		else
+			if(m_isMinimizeable)
+				SetMinimized(true);
 	}
 	else if (key.code == sf::Keyboard::Escape && m_buttons.size() == 0)
 	{
 		m_editBox->setText("");
-		m_finished = true;
+		if(!m_forceKeepAlive)
+			m_finished = true;
+		else
+			if(m_isMinimizeable)
+				SetMinimized(true);
 	}
 	else if (key.code != sf::Keyboard::Unknown)
 	{
@@ -198,8 +206,11 @@ void PromptState::GuiCallback(tgui::Callback& args)
 
 		if (!m_editBox->isVisible())
 			m_editBox->setText(""); // Required if someone uses global PopCallback
-
-		m_finished = true;
+		if(!m_forceKeepAlive)
+			m_finished = true;
+		else
+			if(m_isMinimizeable)
+				SetMinimized(true);
 	}
 }
 

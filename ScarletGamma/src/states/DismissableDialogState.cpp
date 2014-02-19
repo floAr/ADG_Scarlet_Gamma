@@ -11,7 +11,8 @@ namespace States{
 	DismissableDialogState::DismissableDialogState() : 
 		m_isMinimized(false), m_orb(Content::Instance()->LoadTexture("media/orb.png")),
 		m_minimize(Content::Instance()->LoadTexture("media/orb_minimize.png")),
-		m_background(Content::Instance()->LoadTexture("media/prompt.jpg"))
+		m_background(Content::Instance()->LoadTexture("media/prompt.jpg")),
+		m_forceKeepAlive(false)
 	{
 		m_shader.loadFromFile("media/Prompt.frag", sf::Shader::Fragment);
 

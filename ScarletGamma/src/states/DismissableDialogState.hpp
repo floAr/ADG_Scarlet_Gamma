@@ -153,6 +153,7 @@ namespace States
 		int m_orbID;			///< index of the minimized orb
 		sf::Shader m_shader;	///< Shader for the blur effect
 
+		sf::Sprite m_background; ///< Background image
 
 		static std::vector<sf::Sprite*> ms_orbs;	///< List of currently minimized orbs
 

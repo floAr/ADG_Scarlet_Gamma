@@ -261,11 +261,29 @@ namespace States {
 							}	
 						}
 						else
-							sendText = "Bitte syntax beachten: /e TEXT";
+							sendText = "Bitte Syntax beachten: /e TEXT";
 					}
 					else
 					{
-						sendText = "Unbekanntes Kommando";
+						if(Utils::IStringEqual(arguments[0],"/npc")) // text as emote
+						{
+							if(arguments.size()>2){
+								textColor = sf::Color(135, 206, 235);
+								auto it =arguments.begin();
+								it++; //skip command
+								sendText = '[' + *it + "] "; //put in name
+								it++;
+								for (it;it!=arguments.end();it++){ //parse in text
+									sendText += " " + *it ;
+								}	
+							}
+							else
+								sendText = "Bitte syntax beachten: /npc NAME TEXT";
+						}
+						else
+						{
+							sendText = "Unbekanntes Kommando";
+						}
 					}
 				}
 			}

@@ -14,8 +14,8 @@ PromptState::PromptState()
 	// Load shader from file
 	//m_shader=Content::Instance()->LoadShader("media/Prompt.frag",sf::Shader::Type::Fragment);
 	m_orb=sf::Sprite(Content::Instance()->LoadTexture("media/orb_prompt.png"));
-		float orbScale=DismissableDialogState::ORB_WIDTH/m_orb.getLocalBounds().width;
-		m_orb.setScale(sf::Vector2f(orbScale,orbScale));
+	float orbScale=DismissableDialogState::ORB_WIDTH/m_orb.getLocalBounds().width;
+	m_orb.setScale(sf::Vector2f(orbScale,orbScale));
 
 	// Create GUI
 	m_gui.setWindow(g_Game->GetWindow());
@@ -180,7 +180,7 @@ void PromptState::AddButton(const std::string _buttonText, std::function<void(st
 	m_buttons.emplace(bID, PromptButton(button, _callback, _evaluateObj, _hotkey));
 
 	Resize(sf::Vector2f((float) g_Game->GetWindow().getSize().x,
-		                (float) g_Game->GetWindow().getSize().y));
+		(float) g_Game->GetWindow().getSize().y));
 }
 
 void PromptState::GuiCallback(tgui::Callback& args)
@@ -209,8 +209,12 @@ void PromptState::GuiCallback(tgui::Callback& args)
 		if(!m_forceKeepAlive)
 			m_finished = true;
 		else
+		{
+			if (m_result != nullptr) // also handle button here to emit event
+				m_result->function(m_editBox->getText());
 			if(m_isMinimizeable)
 				SetMinimized(true);
+		}
 	}
 }
 

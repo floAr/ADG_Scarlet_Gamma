@@ -28,7 +28,8 @@ namespace States{
 		Resize(g_Game->GetWindow().getView().getSize());
 	}
 
-	void DismissableDialogState::SetMinimized(bool _value){
+	void DismissableDialogState::SetMinimized(bool _value)
+    {
 		m_isMinimized = _value;
 		if(m_isMinimized)
 			DismissableDialogState::AddOrb(&m_orb);
@@ -36,18 +37,23 @@ namespace States{
 			DismissableDialogState::RemoveOrb(&m_orb);
 	}
 
-	void DismissableDialogState::SetOrbSprite(const std::string& texture){
-		auto tempPos=m_orb.getPosition();
-		m_orb = sf::Sprite(Content::Instance()->LoadTexture(texture));
-		float orbScale=DismissableDialogState::ORB_WIDTH/m_orb.getLocalBounds().width;
-		m_orb.setScale(sf::Vector2f(orbScale,orbScale));
+	void DismissableDialogState::SetOrbSprite(const std::string& texture)
+    {
+		sf::Vector2f tempPos = m_orb.getPosition();
+        m_orbTexture = sf::Texture(Content::Instance()->LoadTexture(texture));
+        m_orbTexture.setSmooth(true);
+		m_orb = sf::Sprite(m_orbTexture);
+		float orbScale = (float) DismissableDialogState::ORB_WIDTH / m_orb.getLocalBounds().width;
+		m_orb.setScale(sf::Vector2f(orbScale, orbScale));
 		m_orb.setPosition(tempPos);
-
 	}
 
 	void DismissableDialogState::Update(float dt)
 	{
-		m_previousState->Update(dt);
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+            m_orbTexture.setSmooth(!m_orbTexture.isSmooth());
+		
+        m_previousState->Update(dt);
 		if(m_isMinimized){//break this chain if minimized			
 			return;
 		}

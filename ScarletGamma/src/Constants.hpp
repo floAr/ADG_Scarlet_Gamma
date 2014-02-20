@@ -116,6 +116,12 @@ static const std::string STR_PROP_FOLK = std::string("Volk");
 static const std::string STR_PROP_HOME = std::string("Heimat");
 static const std::string STR_PROP_FAITH = std::string("Gottheit");
 static const std::string STR_PROP_SIZE = std::string("Größe");
+static const std::string STR_ATT_SIZE_XS = std::string("Sehr klein");
+static const std::string STR_ATT_SIZE_S = std::string("Klein");
+static const std::string STR_ATT_SIZE_M = std::string("Normal");
+static const std::string STR_ATT_SIZE_L = std::string("Groß");
+static const std::string STR_ATT_SIZE_XL = std::string("Riesig");
+static const std::string STR_ATT_SIZE_XXL = std::string("Gigantisch");
 static const std::string STR_PROP_AGE = std::string("Alter");
 static const std::string STR_PROP_SEX = std::string("Geschlecht");
 static const std::string STR_SEX_M = std::string("M");
@@ -170,7 +176,11 @@ static const std::string STR_JUMPPOINT = std::string("Spungmarke");
 /************************************************************************/
 /* TEMPLATES		                                                    */
 /************************************************************************/
-static const std::string STR_GOBBO = std::string("Gobbo");
+static const std::string STR_GOBLIN_NAME = std::string("Goblin");
+static const std::string STR_HOBGOBLIN_NAME = std::string("Hobgoblin");
+static const std::string STR_GNOLL_NAME = std::string("Gnoll");
+static const std::string STR_KOBOLD_NAME = std::string("Kobold");
+static const std::string STR_LIZARDFOLK_NAME = std::string("Echsenfolk");
 static const std::string STR_WALLH = std::string("Wand_H");
 static const std::string STR_WALLV = std::string("Wand_V");
 static const std::string STR_WALLC = std::string("Wand_K");

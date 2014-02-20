@@ -511,9 +511,153 @@ namespace Core {
 	void World::CreateDefaultTemplateBase()
 	{
 		Network::MaskWorldMessage lock;
-		Object* object = GetObject( NewObjectTemplate( "media/gobbo.png" ) );
-		object->Add( PROPERTY::NAME ).SetValue( STR_GOBBO );
-		object->Add( PROPERTY::LAYER ).SetValue( STR_8 );
+
+        //////////////////////////////////////////////////////////////////////////
+        // TEMPLATES
+        Object* object = nullptr;
+
+        // Goblin
+		object = GetObject( NewObjectTemplate( "media/enemy_feral.png" ) );
+		object->Add( PROPERTY::NAME ).SetValue( STR_GOBLIN_NAME );
+        object->Add( PROPERTY::FOLK ).SetValue( STR_GOBLIN_NAME );
+        object->Add( PROPERTY::EXPERIENCE ).SetValue( "135" );
+        object->Add( PROPERTY::LAYER ).SetValue( STR_8 );
+        object->Add( PROPERTY::COLOR ).SetValue( "33CC33ff" );
+        object->Add( PROPERTY::SIZE ).SetValue( STR_ATT_SIZE_S );
+        object->Add( PROPERTY::SPEED ).SetValue( "9" );
+        object->Add( PROPERTY::PERCEPTION ).SetValue( "-1" );
+        object->Add( PROPERTY::STRENGTH ).SetValue(      "11" );
+        object->Add( PROPERTY::DEXTERITY ).SetValue(     "15" );
+        object->Add( PROPERTY::CONSTITUTION ).SetValue(  "12" );
+        object->Add( PROPERTY::INTELLIGENCE ).SetValue(  "10" );
+        object->Add( PROPERTY::WISDOM ).SetValue(        "9" );
+        object->Add( PROPERTY::CHARISMA ).SetValue(      "6" );
+        object->Add( PROPERTY::STRENGTH_MOD );
+        object->Add( PROPERTY::DEXTERITY_MOD );
+        object->Add( PROPERTY::CONSTITUTION_MOD );
+        object->Add( PROPERTY::INTELLIGENCE_MOD );
+        object->Add( PROPERTY::WISDOM_MOD );
+        object->Add( PROPERTY::CHARISMA_MOD );
+        object->Add( PROPERTY::BASIC_ATTACK ).SetValue( "1" );
+        object->Add( PROPERTY::RIDING ).SetValue( "14" );
+        object->Add( PROPERTY::STEALTH ).SetValue( "14" );
+        object->Add( PROPERTY::SWIMMING ).SetValue( "4" );
+        object->Add( PROPERTY::ARMORCLASS ).SetValue( "2 + '" + STR_PROP_DEXTERITY_MOD + "' + 1 + 1");
+        object->Add( PROPERTY::INITIATIVE_MOD ).SetValue( "'" + STR_PROP_DEXTERITY_MOD + "' + 4" );
+        object->Add( PROPERTY::HEALTH ).SetValue( "1W10 + 1" );
+
+        // Hobgoblin
+        object = GetObject( NewObjectTemplate( "media/enemy_feral.png" ) );
+        object->Add( PROPERTY::NAME ).SetValue( STR_HOBGOBLIN_NAME );
+        object->Add( PROPERTY::FOLK ).SetValue( STR_HOBGOBLIN_NAME );
+        object->Add( PROPERTY::EXPERIENCE ).SetValue( "200" );
+        object->Add( PROPERTY::LAYER ).SetValue( STR_8 );
+        object->Add( PROPERTY::COLOR ).SetValue( "118822ff" );
+        object->Add( PROPERTY::SIZE ).SetValue( STR_ATT_SIZE_M );
+        object->Add( PROPERTY::SPEED ).SetValue( "9" );
+        object->Add( PROPERTY::PERCEPTION ).SetValue( "2" );
+        object->Add( PROPERTY::STRENGTH ).SetValue(      "15" );
+        object->Add( PROPERTY::DEXTERITY ).SetValue(     "15" );
+        object->Add( PROPERTY::CONSTITUTION ).SetValue(  "16" );
+        object->Add( PROPERTY::INTELLIGENCE ).SetValue(  "10" );
+        object->Add( PROPERTY::WISDOM ).SetValue(        "12" );
+        object->Add( PROPERTY::CHARISMA ).SetValue(      "8" );
+        object->Add( PROPERTY::STRENGTH_MOD );
+        object->Add( PROPERTY::DEXTERITY_MOD );
+        object->Add( PROPERTY::CONSTITUTION_MOD );
+        object->Add( PROPERTY::INTELLIGENCE_MOD );
+        object->Add( PROPERTY::WISDOM_MOD );
+        object->Add( PROPERTY::CHARISMA_MOD );
+        object->Add( PROPERTY::BASIC_ATTACK ).SetValue( "1" );
+        object->Add( PROPERTY::STEALTH ).SetValue( "9" );
+        object->Add( PROPERTY::ARMORCLASS ).SetValue( "3 + '" + STR_PROP_DEXTERITY_MOD + "' + 1");
+        object->Add( PROPERTY::INITIATIVE_MOD ).SetValue( "'" + STR_PROP_DEXTERITY_MOD + "'" );
+        object->Add( PROPERTY::HEALTH ).SetValue( "1W10 + 7" );
+
+        // Gnoll
+        object = GetObject( NewObjectTemplate( "media/enemy_feral.png" ) );
+        object->Add( PROPERTY::NAME ).SetValue( STR_GNOLL_NAME );
+        object->Add( PROPERTY::FOLK ).SetValue( STR_GNOLL_NAME );
+        object->Add( PROPERTY::EXPERIENCE ).SetValue( "400" );
+        object->Add( PROPERTY::LAYER ).SetValue( STR_8 );
+        object->Add( PROPERTY::COLOR ).SetValue( "443311ff" );
+        object->Add( PROPERTY::SIZE ).SetValue( STR_ATT_SIZE_M );
+        object->Add( PROPERTY::SPEED ).SetValue( "9" );
+        object->Add( PROPERTY::PERCEPTION ).SetValue( "2" );
+        object->Add( PROPERTY::STRENGTH ).SetValue(      "15" );
+        object->Add( PROPERTY::DEXTERITY ).SetValue(     "10" );
+        object->Add( PROPERTY::CONSTITUTION ).SetValue(  "13" );
+        object->Add( PROPERTY::INTELLIGENCE ).SetValue(  "8" );
+        object->Add( PROPERTY::WISDOM ).SetValue(        "11" );
+        object->Add( PROPERTY::CHARISMA ).SetValue(      "8" );
+        object->Add( PROPERTY::STRENGTH_MOD );
+        object->Add( PROPERTY::DEXTERITY_MOD );
+        object->Add( PROPERTY::CONSTITUTION_MOD );
+        object->Add( PROPERTY::INTELLIGENCE_MOD );
+        object->Add( PROPERTY::WISDOM_MOD );
+        object->Add( PROPERTY::CHARISMA_MOD );
+        object->Add( PROPERTY::BASIC_ATTACK ).SetValue( "1" );
+        object->Add( PROPERTY::ARMORCLASS ).SetValue( "2 + '" + STR_PROP_DEXTERITY_MOD + "' + 1 + 2");
+        object->Add( PROPERTY::INITIATIVE_MOD ).SetValue( "'" + STR_PROP_DEXTERITY_MOD + "'" );
+        object->Add( PROPERTY::HEALTH ).SetValue( "2W8 + 2" );
+
+        // Kobold
+        object = GetObject( NewObjectTemplate( "media/enemy_feral.png" ) );
+        object->Add( PROPERTY::NAME ).SetValue( STR_KOBOLD_NAME );
+        object->Add( PROPERTY::FOLK ).SetValue( STR_KOBOLD_NAME );
+        object->Add( PROPERTY::EXPERIENCE ).SetValue( "100" );
+        object->Add( PROPERTY::LAYER ).SetValue( STR_8 );
+        object->Add( PROPERTY::COLOR ).SetValue( "446655ff" );
+        object->Add( PROPERTY::SIZE ).SetValue( STR_ATT_SIZE_S );
+        object->Add( PROPERTY::SPEED ).SetValue( "9" );
+        object->Add( PROPERTY::PERCEPTION ).SetValue( "5" );
+        object->Add( PROPERTY::STRENGTH ).SetValue(      "9" );
+        object->Add( PROPERTY::DEXTERITY ).SetValue(     "13" );
+        object->Add( PROPERTY::CONSTITUTION ).SetValue(  "10" );
+        object->Add( PROPERTY::INTELLIGENCE ).SetValue(  "10" );
+        object->Add( PROPERTY::WISDOM ).SetValue(        "9" );
+        object->Add( PROPERTY::CHARISMA ).SetValue(      "8" );
+        object->Add( PROPERTY::STRENGTH_MOD );
+        object->Add( PROPERTY::DEXTERITY_MOD );
+        object->Add( PROPERTY::CONSTITUTION_MOD );
+        object->Add( PROPERTY::INTELLIGENCE_MOD );
+        object->Add( PROPERTY::WISDOM_MOD );
+        object->Add( PROPERTY::CHARISMA_MOD );
+        object->Add( PROPERTY::BASIC_ATTACK ).SetValue( "1" );
+        object->Add( PROPERTY::CRAFT).SetValue( "Fallenstellen, 6" );
+        object->Add( PROPERTY::STEALTH).SetValue( "5" );
+        object->Add( PROPERTY::ARMORCLASS ).SetValue( "2 + '" + STR_PROP_DEXTERITY_MOD + "' + 1 + 1");
+        object->Add( PROPERTY::INITIATIVE_MOD ).SetValue( "'" + STR_PROP_DEXTERITY_MOD + "'" );
+        object->Add( PROPERTY::HEALTH ).SetValue( "1W10" );
+
+        // Lizardfolk
+        object = GetObject( NewObjectTemplate( "media/enemy_feral.png" ) );
+        object->Add( PROPERTY::NAME ).SetValue( STR_LIZARDFOLK_NAME );
+        object->Add( PROPERTY::FOLK ).SetValue( STR_LIZARDFOLK_NAME );
+        object->Add( PROPERTY::EXPERIENCE ).SetValue( "400" );
+        object->Add( PROPERTY::LAYER ).SetValue( STR_8 );
+        object->Add( PROPERTY::COLOR ).SetValue( "119977ff" );
+        object->Add( PROPERTY::SIZE ).SetValue( STR_ATT_SIZE_M );
+        object->Add( PROPERTY::SPEED ).SetValue( "9" );
+        object->Add( PROPERTY::PERCEPTION ).SetValue( "1" );
+        object->Add( PROPERTY::STRENGTH ).SetValue(      "13" );
+        object->Add( PROPERTY::DEXTERITY ).SetValue(     "10" );
+        object->Add( PROPERTY::CONSTITUTION ).SetValue(  "13" );
+        object->Add( PROPERTY::INTELLIGENCE ).SetValue(  "9" );
+        object->Add( PROPERTY::WISDOM ).SetValue(        "10" );
+        object->Add( PROPERTY::CHARISMA ).SetValue(      "10" );
+        object->Add( PROPERTY::STRENGTH_MOD );
+        object->Add( PROPERTY::DEXTERITY_MOD );
+        object->Add( PROPERTY::CONSTITUTION_MOD );
+        object->Add( PROPERTY::INTELLIGENCE_MOD );
+        object->Add( PROPERTY::WISDOM_MOD );
+        object->Add( PROPERTY::CHARISMA_MOD );
+        object->Add( PROPERTY::BASIC_ATTACK ).SetValue( "1" );
+        object->Add( PROPERTY::ACROBATICS).SetValue( "6" );
+        object->Add( PROPERTY::SWIMMING).SetValue( "8" );
+        object->Add( PROPERTY::ARMORCLASS ).SetValue( "5 + '" + STR_PROP_DEXTERITY_MOD + "' + 2");
+        object->Add( PROPERTY::INITIATIVE_MOD ).SetValue( "'" + STR_PROP_DEXTERITY_MOD + "'" );
+        object->Add( PROPERTY::HEALTH ).SetValue( "2W8 + 2" );
 
 		object = GetObject( NewObjectTemplate( "media/bar_hor.png" ) );
 		object->Add( PROPERTY::NAME ).SetValue( STR_WALLH );

@@ -12,7 +12,7 @@ Window:
 		Transparency = 255
 		Callback = LeftMouseClicked
 		CallbackId = 2
-		Text = "Launch (Master Modus)"
+		Text = "Spiel leiten"
 		TextColor = (200,200,200,255)
 		TextSize = 26
 	}

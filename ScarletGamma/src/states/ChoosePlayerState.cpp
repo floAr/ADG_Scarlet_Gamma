@@ -42,14 +42,16 @@ ChoosePlayerState::ChoosePlayerState(Core::PlayerID _id) :
 	}
 
 	createNew->bindCallback( &ChoosePlayerState::CreatePlayer, this, tgui::Button::LeftMouseClicked );
+
+	m_background = sf::Sprite(Content::Instance()->LoadTexture("media/main_bg.png"));
 }
 
 
 
 void ChoosePlayerState::Draw(sf::RenderWindow& win)
 {
-    // Set window color according to mouse position...
-    win.clear(sf::Color::Black);
+    //win.clear(sf::Color::Black);
+	win.draw(m_background);
 
 	GameState::Draw(win);
 }
@@ -62,7 +64,8 @@ void ChoosePlayerState::ChoosePlayer(const tgui::Callback& _callback)
 	player->GetProperty(STR_PROP_PLAYER).SetValue( std::to_string(m_playerID) );
 
 	// The player mode can be created
-	g_Game->GetStateMachine()->PushGameState(new PlayerState(_callback.id));
+	PlayerState* ps = static_cast<PlayerState*>(g_Game->GetStateMachine()->PushGameState(new PlayerState(_callback.id)));
+	ps->CreateDiceRollState();
 	m_finished = true;
 }
 

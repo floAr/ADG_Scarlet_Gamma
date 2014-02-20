@@ -18,11 +18,13 @@ namespace States
 		sf::Sprite m_orb;		///< Sprite shown when minimized
 		const static int ORB_WIDTH=35;	///< pixelsize of one Orb
 		bool m_isMinimizeable;	///< Bool indicating if the state can be minimized
+		bool m_forceKeepAlive;	///< does not close the State after pressing a button, but minimizing it
 
 	public:
 		/// \brief Stops this state from beeing minimizeable
 		virtual void DisableMinimize();
 		virtual void SetMinimized(bool _value);
+		virtual void SetKeepAlive(bool _value);
 		virtual void SetOrbSprite(const std::string& texture);
 
 		/// \brief Creates a Zoom object, The GUI for chats.

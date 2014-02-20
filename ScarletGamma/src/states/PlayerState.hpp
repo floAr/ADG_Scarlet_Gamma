@@ -23,6 +23,7 @@ namespace States
 		virtual void KeyPressed(sf::Event::KeyEvent& key, bool guiHandled) override;
 		virtual void Resize(const sf::Vector2f& _size) override;
 		virtual Core::Map* GetCurrentMap() override;
+		virtual void CreateDiceRollState();
 
 		/// \brief CommonState Update + Player view refreshed.
 		virtual void Update( float _dt ) override;
@@ -66,5 +67,7 @@ namespace States
 		/// \param [in] hotkey	pressed hotkey of the player
 		/// \param [in] objectID	object to remember
 		void SetHotkeyToObject(const int hotkey, Core::ObjectID objectID);
+
+		void RollDice(std::string& _value);
 	};
 }

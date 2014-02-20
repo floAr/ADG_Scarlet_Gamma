@@ -15,6 +15,7 @@
 #include "gamerules/Combat.hpp"
 #include "Examine.hpp"
 #include "core/ObjectList.hpp"
+#include "FreeTextAction.hpp"
 
 using namespace Actions;
 
@@ -32,6 +33,7 @@ ActionPool::ActionPool() :
 	m_actions.push_back(new UseSwitch());
 	m_actions.push_back(new TakeObject());
 	m_actions.push_back(new Examine());
+    m_actions.push_back(new FreeTextAction());
     //------------------------------//
     // TODO: add more actions here! //
     //------------------------------//

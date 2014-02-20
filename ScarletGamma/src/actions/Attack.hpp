@@ -10,10 +10,9 @@ namespace Actions
         friend class ActionPool;
 
     private:
-        /// \brief asdasd
-        enum struct ActionMsgType: uint8_t
+        /// \brief Messages that can be sent/received during an attack action
+        enum struct AttackMsgType: uint8_t
         {
-            PL_TARGET, 
             PL_ATTACK_ROLL_INFO,
             DM_ATTACK_ROLL_MISS,
             DM_ATTACK_ROLL_HIT,

@@ -86,12 +86,12 @@ void Attack::HandleActionInfo(uint8_t _messageType, const std::string& _message,
     assert(Network::Messenger::IsServer());
     m_sender = _sender;
 
-    switch (static_cast<ActionMsgType>(_messageType))
+    switch (static_cast<AttackMsgType>(_messageType))
     {
-    case ActionMsgType::PL_ATTACK_ROLL_INFO:
+    case AttackMsgType::PL_ATTACK_ROLL_INFO:
         AttackRollInfoReceived(_message);
         break;
-    case ActionMsgType::PL_HIT_ROLL_INFO:
+    case AttackMsgType::PL_HIT_ROLL_INFO:
         HitRollInfoReceived(_message);
         break;
     default:
@@ -104,15 +104,15 @@ void Attack::HandleActionInfoResponse(uint8_t _messageType, const std::string& _
     // I am a player. This function handles DM's responses.
     assert(Network::Messenger::IsServer() == false);
 
-    switch (static_cast<ActionMsgType>(_messageType))
+    switch (static_cast<AttackMsgType>(_messageType))
     {
-     case ActionMsgType::DM_ATTACK_ROLL_MISS:
+     case AttackMsgType::DM_ATTACK_ROLL_MISS:
         AttackRollMissed();
         break;
-    case ActionMsgType::DM_ATTACK_ROLL_HIT:
+    case AttackMsgType::DM_ATTACK_ROLL_HIT:
         AttackRollHit();
         break;
-    case ActionMsgType::DM_ATTACK_ROLL_CRIT:
+    case AttackMsgType::DM_ATTACK_ROLL_CRIT:
         // TODO: implement
         assert(false && "DM_ATTACK_ROLL_CRIT not implemented yet!");
         break;
@@ -139,7 +139,7 @@ void Attack::AttackRollPromptFinished(std::string& _result)
         if (Network::Messenger::IsServer() == false)
         {
             // Tell the server about the result
-            Network::MsgActionInfo(this->m_id, static_cast<uint8_t>(ActionMsgType::PL_ATTACK_ROLL_INFO), _result).Send();
+            Network::MsgActionInfo(this->m_id, static_cast<uint8_t>(AttackMsgType::PL_ATTACK_ROLL_INFO), _result).Send();
         }
         else
         {
@@ -267,14 +267,14 @@ void Attack::AttackRollDMPromptFinishedLocal(std::string& _result)
 void Attack::SendAttackRollHit()
 {
     // Tell client that he hit
-    Network::MsgActionInfo(this->m_id, static_cast<uint8_t>(ActionMsgType::DM_ATTACK_ROLL_HIT),
+    Network::MsgActionInfo(this->m_id, static_cast<uint8_t>(AttackMsgType::DM_ATTACK_ROLL_HIT),
         STR_EMPTY).Send(m_sender);
 }
 
 void Attack::SendAttackRollMissed()
 {
     // Tell client that he missed and end client action
-    Network::MsgActionInfo(this->m_id, static_cast<uint8_t>(ActionMsgType::DM_ATTACK_ROLL_MISS),
+    Network::MsgActionInfo(this->m_id, static_cast<uint8_t>(AttackMsgType::DM_ATTACK_ROLL_MISS),
         STR_EMPTY).Send(m_sender);
     Actions::ActionPool::Instance().EndClientAction(m_sender);
     // ACTION IS DONE
@@ -322,7 +322,7 @@ void Attack::HitRollPromptFinished(std::string& _result)
         if (Network::Messenger::IsServer() == false)
         {
             // Tell the server that about the result
-            Network::MsgActionInfo(this->m_id, static_cast<uint8_t>(ActionMsgType::PL_HIT_ROLL_INFO), _result).Send();
+            Network::MsgActionInfo(this->m_id, static_cast<uint8_t>(AttackMsgType::PL_HIT_ROLL_INFO), _result).Send();
         }
         else
         {

@@ -41,7 +41,7 @@ namespace Actions
             return m_name;
         }
 
-        /// \brief Client-side: handle an action message in whatever way is appropriate.
+        /// \brief Server-side: handle an action message in whatever way is appropriate.
         /// \detail You only need to overwrite this if the action to be implemented
         ///   requires some form of action-specific network communication.
         virtual void HandleActionInfo(uint8_t messageType, const std::string& message, uint8_t sender) {}

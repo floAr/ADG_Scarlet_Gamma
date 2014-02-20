@@ -242,6 +242,9 @@
     <ClCompile Include="src\interfaces\CombatantPanel.cpp">
       <Filter>Quelldateien\interfaces</Filter>
     </ClCompile>
+    <ClCompile Include="src\actions\FreeTextAction.cpp">
+      <Filter>Quelldateien\actions</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\core\Map.hpp">
@@ -447,6 +450,9 @@
     </ClInclude>
     <ClInclude Include="src\interfaces\CombatantPanel.hpp">
       <Filter>Quelldateien\interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="src\actions\FreeTextAction.hpp">
+      <Filter>Quelldateien\actions</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -44,7 +44,19 @@ namespace States
 		///		map, certain menus etc.
 		virtual void Draw(sf::RenderWindow& win);
 
-				/// \brief Gets called when a mouse button is pressed.
+        /// \brief Forwards pause, required for mouse cursor setting.
+        virtual void OnPause() override
+        {
+            m_previousState->OnPause();
+        }
+
+        /// \brief Forwards resume, required for mouse cursor setting.
+        virtual void OnResume() override
+        {
+            m_previousState->OnResume();
+        }
+
+		/// \brief Gets called when a mouse button is pressed.
 		/// \details Has the same internal logic as KeyPressed.
 		/// \param [in] button      SFML button event that contains all required information.
 		/// \param [in] tilePos     In-game tile that the user clicked on. Cast to float if required.

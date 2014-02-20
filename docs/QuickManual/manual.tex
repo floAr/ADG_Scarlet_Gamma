@@ -38,14 +38,62 @@
 			Anschließend wird die Welt übertragen und eine Liste mit existierenden Spielern darin angezeigt. Wird eine Abenteuer fortgesetzt reicht ein Klick. In einer neuen Welt oder wenn ein neuer Charakter hinzukommt kann dieser über 'Neuer Spieler' erstellt werden.
 		
 	\section{Komponentenbasiertes Objektsystem}
-		Alles in der Welt folgt dem gleichen Schema um ein größtmögliche Kombinationsvielfalt zu ermöglichen.
+		Alles in der Welt folgt dem gleichen Schema um ein größtmögliche Kombinationsvielfalt zu ermöglichen. Jedes Objekt kann eine beliebige Anzahl an Eigenschaften enthalten. Eine Eigenschaft besteht aus einem Namen, einem Wert und kann Objekte enthalten.
 		
-		- Erklärung PropertyPanel
+		Ein Wert kann im Prinzip beliebig gesetzt werden. In einigen Fällen erwartet das System allerdings Zahlen oder Formeln. Beispiel $('IN'-10)/2$: $'IN'$ referenziert dabei die gleichnamige Eigenschaft im selben Objekt, welche zuerst ausgewertet wird. Die Division rundet immer ab. Endlosschleifen werden nicht detektiert.
+		
+		Die folgende GUI wird verwendet um Objekte und Eigenschaften zu bearbeiten.
+		
+		\begin{minipage}{0.5\linewidth}
+		\begin{picture}(0,130)
+			\put(0,0){\includegraphics[width=\linewidth]{img/propertygui}}
+			\put(10,120){\colorbox[rgb]{1.0, 1.0, 0.9}{\tiny 1}}
+			\put(55,42){\colorbox[rgb]{1.0, 1.0, 0.9}{\tiny 1}}
+			\put(55,75){\colorbox[rgb]{1.0, 1.0, 0.9}{\tiny 2}}
+			\put(110,75){\colorbox[rgb]{1.0, 1.0, 0.9}{\tiny 3}}
+			\put(55,110){\colorbox[rgb]{1.0, 1.0, 0.9}{\tiny 4}}
+			\put(55,5){\colorbox[rgb]{1.0, 1.0, 0.9}{\tiny 5}}
+		\end{picture}
+		\end{minipage}
+		\begin{minipage}{0.49\linewidth}
+		\footnotesize
+		\begin{description}
+			\item[1] Name des Objekts sofern die Eigenschaft existiert.
+			\item[2] Eig.: Name + Wert
+			\item[3] Eig. aus Objekt löschen.
+			\item[4] Filter: Alle Eig., die Eingabe enthalten werden gezeigt.
+			\item[5] Neue Eig. hinzufügen. Der Wert kann später noch geändert werden, der Name nur durch Löschen und Neueinfügen.
+		\end{description}
+		\end{minipage}
+		
+		Generell gilt, das nicht jeder alles darf. Je nach Rechten sind einige der Optionen nicht verfügbar.
 	
 		\subsection{Besondere Eigenschaften}
+			Manche der Eigenschaften erlauben besondere Tätigkeiten auf dem Objekt, wenn es im Spiel platziert ist. Diese sind in Modulen zusammengefasst um Objekte schneller bauen zu können.\\
+			
+			\begin{tabular}{p{0.275\linewidth}|p{0.62\linewidth}}
+				\textbf{Angreifbar}      & Ein Objekt das 'TP' (Trefferpunkte) und 'RK' (Rüstungsklasse) enthält kann angegriffen werden. \\\hline
+				\textbf{Schalter}        & Kann umgeschaltet werden, was eine Meldung beim Spielleiter zur folge hat. Der Wert ist 'true' oder 'false'\\\hline
+				\textbf{Sprungmarke}     & Spielleiter kann ein Objekt als Sprungziel wählen (auch auf einer anderen Karte). Später können Spieler diese als Teleport/Treppe/... verwenden.
+			\end{tabular}
 	
 	\section{Editor}
-		- Erklärung der ganzen Master Tools
+		\begin{picture}(0,120)
+			\put(0,0){\includegraphics[width=\linewidth]{img/master}}
+			\put(10,90){\colorbox[rgb]{1.0, 1.0, 0.9}{\tiny 1}}
+			\put(10,42){\colorbox[rgb]{1.0, 1.0, 0.9}{\tiny 2}}
+			\put(40,90){\colorbox[rgb]{1.0, 1.0, 0.9}{\tiny 3}}
+			\put(40,42){\colorbox[rgb]{1.0, 1.0, 0.9}{\tiny 4}}
+			\put(80,115){\colorbox[rgb]{1.0, 1.0, 0.9}{\tiny 5}}
+			\put(207,90){\colorbox[rgb]{1.0, 1.0, 0.9}{\tiny 6}}
+			\put(207,10){\colorbox[rgb]{1.0, 1.0, 0.9}{\tiny 7}}
+		\end{picture}
+		
+		\begin{description}
+			\item[1] Liste aller verfügbaren Eigenschaften. Der Spielleiter kann sich auch beliebige weitere Eigenschaften ausdenken. Eigenschaften können per Drag\&Drop nach \textbf{4} und \textbf{6} kopiert werden.
+			\item[2] Liste der Module. Ein klick zeigt alle Eigenschaften des Moduls in \textbf{4}. Module können editiert und weitere hinzugefügt werden um Eigenschaften zu gruppieren. Module können per Drag\&Drop nach \textbf{4} und \textbf{6} kopiert werden.
+			\item[3] Liste der Objekt-Templates. Diese sollte die Menge aller möglichen Objekte in der Welt beinhalten. Ein Objekt (Kopie) kann per Drag\&Drop in der Welt oder in einer Property platziert werden. Außerdem kann das selektierte Objekt mit dem Pinsel hinzugefügt werden. Das Selektieren zeigt den Inhalt in \textbf{4} an.
+		\end{description}
 	
 	\section{Der Spielfluss}
 	
@@ -54,15 +102,17 @@
 			\subsubsection{Subsub}
 			
 	\section{Shortcuts}
-		Im folgenden ist die Tastaturbelegung aufgelistet. [M] bedeutet, dass die Aktion im Master-Modus, also dem Spielleiter zur Verfügung steht. [S] bedeutet entsprechend, dass der Spieler die Aktion ausführen kann.
-		\begin{description}
-			\item[C] [M,S] öffnet den Charakterbildschirm für das ausgewählte Objekt (M) oder den Spieler.
-			\item[Alt+1 ... Alt+0] [M] Ändere Sichtbarkeit der Layer 1 - 10
-			\item[Alt] [M] Blende alle Layer wieder ein.
-			\item[Alt] [S] Setze Fokus zurück auf den Spieler.
-			\item[Pause, P] [M] Halte Spieler an oder setze fort
-			\item[Entf] [M] Lösche alle selektierten Objekte (dauerhaft)
-		\end{description}
+		Im folgenden ist die Tastaturbelegung aufgelistet. [M] bedeutet, dass die Aktion im Master-Modus, also dem Spielleiter zur Verfügung steht. [S] bedeutet entsprechend, dass der Spieler die Aktion ausführen kann.\\
+		
+		\begin{tabular}{p{0.15\linewidth}|p{0.075\linewidth}|p{0.62\linewidth}}
+%								     & Wer & Keyboard\\\hline
+			\textbf{C}               & M,S & Öffnet den Charakterbildschirm für das ausgewählte Objekt (M) oder den Spieler. \\\hline
+			\textbf{Alt+1 ... Alt+0} & M & Ändere Sichtbarkeit der Layer 1 bis 10. \\\hline
+			\textbf{Alt}             & M & Blende alle Layer wieder ein.\\
+			                         & S & Setze Fokus auf den Spieler.\\\hline
+			\textbf{Pause, P}		 & M & Halte Spiel an oder setze fort.\\\hline
+			\textbf{Entf}			 & M & Lösche alle selektierten Objekte.
+		\end{tabular}
 	
 	
 \end{document}

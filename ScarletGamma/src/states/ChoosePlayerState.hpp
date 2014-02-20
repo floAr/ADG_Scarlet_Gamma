@@ -25,6 +25,7 @@ namespace States
 		void CreatePlayer();
 
 		tgui::Gui   m_gui;
+		sf::Sprite	m_background;
 
 		/// \brief If a new player is created the object is stored otherwise
 		///		it is INVALID_ID.

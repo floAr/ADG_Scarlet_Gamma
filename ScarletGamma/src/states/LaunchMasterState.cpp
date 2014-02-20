@@ -23,6 +23,8 @@ States::LaunchMasterState::LaunchMasterState() :
 	ipEdit = m_gui.get( "PubIP" );
 	ipEdit->setText(sf::IpAddress::getPublicAddress().toString());
     SetGui(&m_gui);
+
+	m_background = sf::Sprite(Content::Instance()->LoadTexture("media/main_bg.png"));
 }
 
 
@@ -30,7 +32,8 @@ States::LaunchMasterState::LaunchMasterState() :
 
 void States::LaunchMasterState::Draw(sf::RenderWindow& win)
 {
-    win.clear(MIGHTY_SLATE);
+  //  win.clear(MIGHTY_SLATE);
+	win.draw(m_background);
 
 	GameState::Draw(win);
 }

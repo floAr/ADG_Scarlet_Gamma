@@ -23,6 +23,8 @@ States::LaunchPlayerState::LaunchPlayerState() :
 		std::cout << "[LaunchPlayerState::LaunchPlayerState] Could not load GUI.\n";
     SetGui(&m_gui);
 	tgui::Label::Ptr(m_gui.get("Status"))->setText("");
+
+	m_background = sf::Sprite(Content::Instance()->LoadTexture("media/main_bg.png"));
 }
 
 
@@ -30,7 +32,8 @@ States::LaunchPlayerState::LaunchPlayerState() :
 
 void States::LaunchPlayerState::Draw(sf::RenderWindow& win)
 {
-    win.clear(MIGHTY_SLATE);
+  //  win.clear(MIGHTY_SLATE);
+	win.draw(m_background);
 
 	GameState::Draw(win);
 }

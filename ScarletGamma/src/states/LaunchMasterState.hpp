@@ -15,5 +15,6 @@ namespace States
 	private:
 		sf::Font	m_menuFont;
 		tgui::Gui   m_gui;
+		sf::Sprite	m_background;
 	};
 }

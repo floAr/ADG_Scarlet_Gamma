@@ -17,7 +17,7 @@ States::MainMenuState::MainMenuState() :
     // TODO:: I want some way to report errors
 	m_menuFont=Content::Instance()->LoadFont("media/arial.ttf");
 
-	m_background=sf::Sprite(Content::Instance()->LoadTexture("media/main_bg.png"));
+	m_background = sf::Sprite(Content::Instance()->LoadTexture("media/main_bg.png"));
     //--------------------------------------
     // CREATE GUI
     // First, create a tgui::Gui object and load a font
@@ -49,7 +49,7 @@ void States::MainMenuState::Update(float dt)
 
 void States::MainMenuState::Draw(sf::RenderWindow& win)
 {
-    win.clear(MIGHTY_SLATE);
+   // win.clear(MIGHTY_SLATE);
 	win.draw(m_background);
    /* sf::Text t("Press 'm' to open MasterState\n"
                "or escape to quit.", m_menuFont, 24);

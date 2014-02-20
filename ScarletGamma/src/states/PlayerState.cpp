@@ -16,6 +16,7 @@
 #include "states/PromptState.hpp"
 #include "NewPlayerState.hpp"
 #include "utils/ValueInterpreter.hpp"
+#include "utils/Exception.hpp"
 
 
 States::PlayerState::PlayerState( Core::ObjectID _player ) :
@@ -441,12 +442,13 @@ bool States::PlayerState::OwnsObject( Core::ObjectID _object )
 	}
 
 	
-	void States::PlayerState::RollDice(std::string& result){
-		Core::Object* _object = m_focus; //by default roll without object
-		if(m_diceRollState->CheckEvaluate(_object)) // if everything makes sense
-		{
-			int x=Utils::EvaluateFormula(result,g_Game->RANDOM,_object);
-			Network::ChatMsg msg(_object->GetName()+" - Würfelwurf: "+result+" = "+std::to_string(x),m_color);
-			msg.Send();		
+	void States::PlayerState::RollDice(std::string& _result)
+	{
+		try {
+			int x = Utils::EvaluateFormula(_result, g_Game->RANDOM, m_focus);
+			// Output for all
+			Network::ChatMsg("["+m_focus->GetName()+"] - Würfelwurf: "+_result+" = "+std::to_string(x), m_color).Send();
+		} catch( Exception::InvalidFormula _e ) {
+			g_Game->AppendToChatLog(Network::ChatMsg(_e.to_string(), sf::Color::Red));
 		}
 	}

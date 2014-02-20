@@ -62,7 +62,8 @@ void ChoosePlayerState::ChoosePlayer(const tgui::Callback& _callback)
 	player->GetProperty(STR_PROP_PLAYER).SetValue( std::to_string(m_playerID) );
 
 	// The player mode can be created
-	g_Game->GetStateMachine()->PushGameState(new PlayerState(_callback.id));
+	PlayerState* ps = static_cast<PlayerState*>(g_Game->GetStateMachine()->PushGameState(new PlayerState(_callback.id)));
+	ps->CreateDiceRollState();
 	m_finished = true;
 }
 

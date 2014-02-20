@@ -15,6 +15,7 @@
 #include "gamerules/Combat.hpp"
 #include "states/PromptState.hpp"
 #include "NewPlayerState.hpp"
+#include "utils/ValueInterpreter.hpp"
 
 
 States::PlayerState::PlayerState( Core::ObjectID _player ) :
@@ -433,3 +434,19 @@ bool States::PlayerState::OwnsObject( Core::ObjectID _object )
 		&& object->HasProperty(STR_PROP_OWNER)
 		&& object->GetProperty(STR_PROP_OWNER).Value() == m_name;
 }
+
+	void States::PlayerState::CreateDiceRollState(){
+		CommonState::CreateDiceRollState();
+		m_diceRollState->AddButton("Würfeln",std::bind(&PlayerState::RollDice,this,std::placeholders::_1));
+	}
+
+	
+	void States::PlayerState::RollDice(std::string& result){
+		Core::Object* _object = m_focus; //by default roll without object
+		if(m_diceRollState->CheckEvaluate(_object)) // if everything makes sense
+		{
+			int x=Utils::EvaluateFormula(result,g_Game->RANDOM,_object);
+			Network::ChatMsg msg(_object->GetName()+" - Würfelwurf: "+result+" = "+std::to_string(x),sf::Color::White);
+			msg.Send();		
+		}
+	}

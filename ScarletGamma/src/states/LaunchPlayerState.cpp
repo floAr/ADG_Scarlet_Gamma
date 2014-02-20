@@ -80,6 +80,7 @@ void States::LaunchPlayerState::GuiCallback(tgui::Callback& callback)
 
 			// Then the player mode can be created
 			g_Game->GetStateMachine()->PushGameState(new ChoosePlayerState(id));
+
 		} catch(std::string _msg) {
 			status->setTextColor( sf::Color(255, 55, 25, 255) );
 			status->setText(_msg);

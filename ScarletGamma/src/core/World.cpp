@@ -517,7 +517,7 @@ namespace Core {
         Object* object = nullptr;
 
         // Goblin
-		object = GetObject( NewObjectTemplate( "media/enemy_feral.png" ) );
+		object = GetObject( NewObjectTemplate( "media/enemy3.png" ) );
 		object->Add( PROPERTY::NAME ).SetValue( STR_GOBLIN_NAME );
         object->Add( PROPERTY::FOLK ).SetValue( STR_GOBLIN_NAME );
         object->Add( PROPERTY::EXPERIENCE ).SetValue( "135" );
@@ -547,7 +547,7 @@ namespace Core {
         object->Add( PROPERTY::HEALTH ).SetValue( "1W10 + 1" );
 
         // Hobgoblin
-        object = GetObject( NewObjectTemplate( "media/enemy_feral.png" ) );
+        object = GetObject( NewObjectTemplate( "media/enemy1.png" ) );
         object->Add( PROPERTY::NAME ).SetValue( STR_HOBGOBLIN_NAME );
         object->Add( PROPERTY::FOLK ).SetValue( STR_HOBGOBLIN_NAME );
         object->Add( PROPERTY::EXPERIENCE ).SetValue( "200" );
@@ -575,7 +575,7 @@ namespace Core {
         object->Add( PROPERTY::HEALTH ).SetValue( "1W10 + 7" );
 
         // Gnoll
-        object = GetObject( NewObjectTemplate( "media/enemy_feral.png" ) );
+        object = GetObject( NewObjectTemplate( "media/enemy1.png" ) );
         object->Add( PROPERTY::NAME ).SetValue( STR_GNOLL_NAME );
         object->Add( PROPERTY::FOLK ).SetValue( STR_GNOLL_NAME );
         object->Add( PROPERTY::EXPERIENCE ).SetValue( "400" );
@@ -602,7 +602,7 @@ namespace Core {
         object->Add( PROPERTY::HEALTH ).SetValue( "2W8 + 2" );
 
         // Kobold
-        object = GetObject( NewObjectTemplate( "media/enemy_feral.png" ) );
+        object = GetObject( NewObjectTemplate( "media/enemy1.png" ) );
         object->Add( PROPERTY::NAME ).SetValue( STR_KOBOLD_NAME );
         object->Add( PROPERTY::FOLK ).SetValue( STR_KOBOLD_NAME );
         object->Add( PROPERTY::EXPERIENCE ).SetValue( "100" );
@@ -631,7 +631,7 @@ namespace Core {
         object->Add( PROPERTY::HEALTH ).SetValue( "1W10" );
 
         // Lizardfolk
-        object = GetObject( NewObjectTemplate( "media/enemy_feral.png" ) );
+        object = GetObject( NewObjectTemplate( "media/enemy1.png" ) );
         object->Add( PROPERTY::NAME ).SetValue( STR_LIZARDFOLK_NAME );
         object->Add( PROPERTY::FOLK ).SetValue( STR_LIZARDFOLK_NAME );
         object->Add( PROPERTY::EXPERIENCE ).SetValue( "400" );
@@ -658,6 +658,29 @@ namespace Core {
         object->Add( PROPERTY::ARMORCLASS ).SetValue( "5 + '" + STR_PROP_DEXTERITY_MOD + "' + 2");
         object->Add( PROPERTY::INITIATIVE_MOD ).SetValue( "'" + STR_PROP_DEXTERITY_MOD + "'" );
         object->Add( PROPERTY::HEALTH ).SetValue( "2W8 + 2" );
+
+        // Skeleton
+        object = GetObject( NewObjectTemplate( "media/enemy2.png" ) );
+        object->Add( PROPERTY::NAME ).SetValue( STR_SKELETON_NAME );
+        object->Add( PROPERTY::FOLK ).SetValue( STR_SKELETON_NAME );
+        object->Add( PROPERTY::EXPERIENCE ).SetValue( "135" );
+        object->Add( PROPERTY::LAYER ).SetValue( STR_8 );
+        object->Add( PROPERTY::COLOR ).SetValue( "888899ff" );
+        object->Add( PROPERTY::SIZE ).SetValue( STR_ATT_SIZE_M );
+        object->Add( PROPERTY::SPEED ).SetValue( "9" );
+        object->Add( PROPERTY::PERCEPTION ).SetValue( "1" );
+        object->Add( PROPERTY::STRENGTH ).SetValue(      "15" );
+        object->Add( PROPERTY::DEXTERITY ).SetValue(     "14" );
+        object->Add( PROPERTY::WISDOM ).SetValue(        "10" );
+        object->Add( PROPERTY::CHARISMA ).SetValue(      "10" );
+        object->Add( PROPERTY::STRENGTH_MOD );
+        object->Add( PROPERTY::DEXTERITY_MOD );
+        object->Add( PROPERTY::WISDOM_MOD );
+        object->Add( PROPERTY::CHARISMA_MOD );
+        object->Add( PROPERTY::BASIC_ATTACK ).SetValue( "0" );
+        object->Add( PROPERTY::ARMORCLASS ).SetValue( "2 + '" + STR_PROP_DEXTERITY_MOD + "' + 2");
+        object->Add( PROPERTY::INITIATIVE_MOD ).SetValue( "4 + '" + STR_PROP_DEXTERITY_MOD + "'" );
+        object->Add( PROPERTY::HEALTH ).SetValue( "1W8" );
 
         // Treasure chest
         object = GetObject( NewObjectTemplate( "media/chest.png" ) );

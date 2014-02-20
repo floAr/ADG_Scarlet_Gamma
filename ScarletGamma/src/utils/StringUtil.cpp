@@ -1,6 +1,7 @@
 #include "StringUtil.hpp"
 
 #include <algorithm>
+#include <sstream>
 
 namespace Utils {
 
@@ -47,5 +48,22 @@ namespace Utils {
 		std::transform(string.begin(), string.end(), string.begin(), ::tolower);
 		return string.find(pattern) != std::string::npos;
 	}
+
+
+	std::vector<std::string> &ISplitString(const std::string &s, char delim, std::vector<std::string> &elems) {
+    std::stringstream ss(s);
+    std::string item;
+    while (std::getline(ss, item, delim)) {
+        elems.push_back(item);
+    }
+    return elems;
+}
+
+
+std::vector<std::string> ISplitString(const std::string &s, char delim) {
+    std::vector<std::string> elems;
+    ISplitString(s, delim, elems);
+    return elems;
+}
 
 } // namespace Utils

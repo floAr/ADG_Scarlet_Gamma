@@ -93,7 +93,48 @@
 			\item[1] Liste aller verfügbaren Eigenschaften. Der Spielleiter kann sich auch beliebige weitere Eigenschaften ausdenken. Eigenschaften können per Drag\&Drop nach \textbf{4} und \textbf{6} kopiert werden.
 			\item[2] Liste der Module. Ein klick zeigt alle Eigenschaften des Moduls in \textbf{4}. Module können editiert und weitere hinzugefügt werden um Eigenschaften zu gruppieren. Module können per Drag\&Drop nach \textbf{4} und \textbf{6} kopiert werden.
 			\item[3] Liste der Objekt-Templates. Diese sollte die Menge aller möglichen Objekte in der Welt beinhalten. Ein Objekt (Kopie) kann per Drag\&Drop in der Welt oder in einer Property platziert werden. Außerdem kann das selektierte Objekt mit dem Pinsel hinzugefügt werden. Das Selektieren zeigt den Inhalt in \textbf{4} an.
+			\item[4] Anzeige für selektiertes Modul oder Objekt.
+			\item[5] Toolbar
+			\item[6] Anzeige für selektierte Objekte auf der Karte. Es werden immer nur die Eigenschaften gezeigt, die in allen Objekten enthalten sind. Aktionen und Änderungen beziehen sich immer auf alle Objekte.
 		\end{description}
+		
+		\subsection{Toolbar}
+		\vspace{-12pt}\subsubsection*{Map}
+			Eine Liste mit allen Karten der geladenen Welt. Es kann per Klick zwischen den Karten gesprungen werden und neue Karten erstellt werden.
+		\subsubsection*{Modus}
+			Verschiedene Spielsituationen können unterschiedliche Anforderungen stellen. Die Modi unterscheiden möglichst sinnvolle Aktionen der Maus. Der Rechtsklick ist immer gleich belegt: Er öffnet ein Kreismenü mit allen Objekten des Feldes. Ein Rechtsklick auf das Objekt zeigt Aktionsmöglichkeiten. Der Spieler kann die Aktionen auch mit einem Linksklick ansehen, im Falle des Spielleiters wird das Objekt selektiert. Dieser kann mit \textbf{Strg} auf diese Weise auch mehrere Objekte auswählen.
+			
+			\textbf{Selektion}: Linksklick selektiert oberstes sichtbares Objekt. Links+ziehen eines Rechtecks markiert alle sichtbaren Objekte.
+			
+			\textbf{Pinsel}: Blendet das Pinsel-tool ein. Linksklicks/Moves verändern entsprechend die Map.
+			
+			\textbf{Aktion}: Linksklick lässt alle markierten Objekte eine Standardaktion ausführen. Neuselektion kann nach wie vor durch den Rechtsklick vorgenommen werden.
+			
+			\textbf{Drag \& Drop}: Objekte können auf der Karte verschoben werden.
+						
+		\subsubsection*{Pinsel}
+			\begin{minipage}{0.49\linewidth}
+			\textbf{Ersetzen} wird alle Objekte des Ziel-Layers löschen und das Objekt aus der Template-Liste einfügen.
+			
+			\textbf{Hinzufügen} Wird ausschließlich Objekt erzeugen und keine löschen.
+			
+			\end{minipage}\hspace{1em}
+			\begin{minipage}{0.45\linewidth}
+				\includegraphics[width=1.0\linewidth]{img/brush}
+			\end{minipage}
+			
+			\textbf{Löschen} Löscht Objekte mit gleichem Namen, wie das gewählte Objekt.
+
+			\textbf{Layer} Es gibt 10 Schichten, in die Objekte eingefügt werden. Diese sind vor allem für die Anzeige wichtig. Automatisch wird im Objekt nach einer Layer-Eigenschaft suchen. Kann diese nicht gefunden werden wird das Objekt in Schicht 10 (Eigenes II) eingefügt.
+			
+			\textbf{Größe} Größe des Pinsels. Dieser ist quadratisch, da sich so besser Gebäude bauen lassen.
+		
+		\subsubsection*{Spieler}
+			Enthält eine Liste mit allen Spielern. Ein Klick selektiert den Spieler und setzt die Ansicht auf den Spieler. Der Spieler kann per Drag\&Drop auf die Karte gesetzt bzw. versetzt werden.
+		\subsubsection*{Gehe zu}
+			Tool zur Erleichterung der Navigation. Es kann entweder zu einer Tile-Position oder zu einem Objekt gesprungen werden. Für zweiteres benötigt man die Objekt-ID, welche zb. in der Sprungziel Eigenschaft steht.
+		\subsubsection*{Kampf}
+			TODO
 		
 	\section{Chat}
 		In der Chat-Zeile können neue Nachrichten für alle angegeben werden. Eine Möglichkeit Spieler direkt anzuschreiben existiert derzeit nicht.

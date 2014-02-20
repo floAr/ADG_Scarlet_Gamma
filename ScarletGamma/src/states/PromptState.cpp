@@ -48,6 +48,8 @@ void PromptState::Update(float dt)
 
 void PromptState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 {
+	DismissableDialogState::KeyPressed(key,guiHandled);
+
 	if (key.code == sf::Keyboard::Return && m_editBox->isVisible() && m_editBox->getText().isEmpty())
 	{
 		// Handle default Return, with priority

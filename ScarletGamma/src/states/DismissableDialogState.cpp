@@ -179,6 +179,10 @@ namespace States{
 		m_isMinimized = false;
 	}
 
+	void DismissableDialogState::SetKeepAlive(bool _value){
+		m_forceKeepAlive = _value;
+	}
+
 
 
 }

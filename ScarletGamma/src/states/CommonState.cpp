@@ -345,6 +345,7 @@ void CommonState::CreateDiceRollState(){
 	m_diceRollState->SetTextInputRequired(true);
 	m_diceRollState->SetOrbSprite("media/orb_diceroll.png");
 	m_diceRollState->SetMinimized(true);
+	m_diceRollState->SetKeepAlive(true);
 }
 
 } // namespace States

@@ -179,36 +179,41 @@ void PromptState::GuiCallback(tgui::Callback& args)
 	if (!m_buttons.count(args.id)) // no callback
 		return;
 
-	auto cb = m_buttons.at(args.id);
+	PromptButton& cb = m_buttons.at(args.id);
 
 	// Evaluation required, but failed?
 	if (cb.evaluateObj != 0)
 	{
-		try { Utils::EvaluateFormula(m_editBox->getText(), g_Game->RANDOM, cb.evaluateObj); }
-		catch( Exception::InvalidFormula _e ) {
+		try
+        {
+            Utils::EvaluateFormula(m_editBox->getText(), g_Game->RANDOM, cb.evaluateObj);
+        }
+		catch( Exception::InvalidFormula _e )
+        {
 			PromptState* prompt = static_cast<PromptState*>(g_Game->GetStateMachine()->PushGameState(GST_PROMPT));
 			prompt->SetText("Bitte überprüfe den eingegebenen Wert.\nFehler: " + _e.to_string());
 			prompt->Resize((sf::Vector2f)g_Game->GetWindow().getSize());
 			prompt->DisableMinimize();
 			prompt->SetTextInputRequired(false);
+            return;
 		}
 	}
+
+    // If formula evaluation failed, the function will have returned by now
+
+	// Set result to callback, so OnEnd can handle it
+	m_result = &m_buttons.at(args.id);
+
+	if (!m_editBox->isVisible())
+		m_editBox->setText(""); // Required if someone uses global PopCallback
+	if(!m_forceKeepAlive)
+		m_finished = true;
 	else
 	{
-		// Set result to callback, so OnEnd can handle it
-		m_result = &m_buttons.at(args.id);
-
-		if (!m_editBox->isVisible())
-			m_editBox->setText(""); // Required if someone uses global PopCallback
-		if(!m_forceKeepAlive)
-			m_finished = true;
-		else
-		{
-			if (m_result != nullptr) // also handle button here to emit event
-				m_result->function(m_editBox->getText());
-			if(m_isMinimizeable)
-				SetMinimized(true);
-		}
+		if (m_result != nullptr) // also handle button here to emit event
+			m_result->function(m_editBox->getText());
+		if(m_isMinimizeable)
+			SetMinimized(true);
 	}
 }
 

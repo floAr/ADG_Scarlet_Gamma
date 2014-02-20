@@ -5,7 +5,7 @@
 #include <windows.h>
 
 Events::EventHandler::EventHandler(sf::Window& window, States::StateMachine& stateMachine)
-	: m_window(window)
+	: m_window(window), m_fullscreen(false), m_windowStyle(0)
 {
 	m_inputHandler = new InputHandler(stateMachine);
 }
@@ -64,6 +64,34 @@ void Events::EventHandler::Update(float dt)
 			break;
 
 		case sf::Event::KeyPressed:
+            if (event.key.alt && event.key.code == sf::Keyboard::Return)
+            {
+                if (!m_fullscreen)
+                {
+                    // Save state
+                    m_windowStyle = GetWindowLong(m_window.getSystemHandle(), GWL_STYLE);
+                    m_windowSize = m_window.getSize();
+                    m_windowPos = m_window.getPosition();
+
+                    // Set to fullscreen
+                    RECT desktop;
+                    GetWindowRect(GetDesktopWindow(), &desktop);
+                    SetWindowLong(m_window.getSystemHandle(), GWL_STYLE, 0);
+                    ShowWindow(m_window.getSystemHandle(), SW_SHOW);
+                    m_window.setPosition(sf::Vector2i(0, 0));
+                    m_window.setSize(sf::Vector2u(desktop.right, desktop.bottom));
+                }
+                else
+                {
+                    // Restore windowed mode
+                    SetWindowLong(m_window.getSystemHandle(), GWL_STYLE, m_windowStyle);
+                    m_window.setSize(m_windowSize);
+                    m_window.setPosition(m_windowPos);
+                }
+
+                // Toggle fullscreen variable
+                m_fullscreen = !m_fullscreen;
+            }
 			m_inputHandler->KeyPressed(event.key, guiHandled);
 			break;
 

@@ -13,5 +13,9 @@ namespace Events
 	private:
 		sf::Window& m_window;
 		InputHandler* m_inputHandler;
+        bool m_fullscreen;
+        long m_windowStyle;
+        sf::Vector2u m_windowSize;
+        sf::Vector2i m_windowPos;
 	};
 }

@@ -690,7 +690,7 @@ namespace States {
 		if(m_diceRollState->CheckEvaluate(_object)) // if everything makes sense
 		{
 			int x=Utils::EvaluateFormula(result,g_Game->RANDOM,_object);
-			g_Game->AppendToChatLog(Network::ChatMsg("[Master] - Würfelwurf: "+result+" = "+std::to_string(x),sf::Color::White)); //show it to the master
+			g_Game->AppendToChatLog(Network::ChatMsg("[Master] - Würfelwurf: "+result+" = "+std::to_string(x),m_color)); //show it to the master
 
 		}
 	}
@@ -702,7 +702,7 @@ namespace States {
 		if(m_diceRollState->CheckEvaluate(_object)) // if everything makes sense
 		{
 			int x=Utils::EvaluateFormula(result,g_Game->RANDOM,_object);
-			Network::ChatMsg msg("[Master] - Würfelwurf: "+result+" = "+std::to_string(x),sf::Color::White);
+			Network::ChatMsg msg("[Master] - Würfelwurf: "+result+" = "+std::to_string(x),m_color);
 			msg.Send();		
 		}
 	}

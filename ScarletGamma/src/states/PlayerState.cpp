@@ -446,7 +446,7 @@ bool States::PlayerState::OwnsObject( Core::ObjectID _object )
 		if(m_diceRollState->CheckEvaluate(_object)) // if everything makes sense
 		{
 			int x=Utils::EvaluateFormula(result,g_Game->RANDOM,_object);
-			Network::ChatMsg msg(_object->GetName()+" - Würfelwurf: "+result+" = "+std::to_string(x),sf::Color::White);
+			Network::ChatMsg msg(_object->GetName()+" - Würfelwurf: "+result+" = "+std::to_string(x),m_color);
 			msg.Send();		
 		}
 	}

@@ -16,11 +16,11 @@
 #include "GameRules/MasterCombat.hpp"
 #include "states/PromptState.hpp"
 #include "NewPlayerState.hpp"
-#include "DismissableDialogState.hpp"
 #include "actions/ActionPool.hpp"
 #include <functional>
 #include "utils/Clipboard.hpp"
 #include "utils/ValueInterpreter.hpp"
+#include "utils/Exception.hpp"
 
 using namespace Core;
 
@@ -683,27 +683,47 @@ namespace States {
 		m_diceRollState->AddButton("Offen würfeln",std::bind(&MasterState::RollOpen,this,std::placeholders::_1));
 	}
 
-	void MasterState::RollSecretly(std::string& result){
-		Core::Object* _object = nullptr; //by default roll without object
-		if(m_selection.Size()>0) //if object is selected
-			_object=g_Game->GetWorld()->GetObject(m_selection[0]); //roll over object
-		if(m_diceRollState->CheckEvaluate(_object)) // if everything makes sense
-		{
-			int x=Utils::EvaluateFormula(result,g_Game->RANDOM,_object);
-			g_Game->AppendToChatLog(Network::ChatMsg("[Master] - Würfelwurf: "+result+" = "+std::to_string(x),m_color)); //show it to the master
-
+	void MasterState::RollSecretly(std::string& _result)
+	{
+		try {
+			if( m_selection.Size() == 0 )
+			{
+				int x = Utils::EvaluateFormula(_result, g_Game->RANDOM, nullptr);
+				g_Game->AppendToChatLog(Network::ChatMsg("[Master] - Würfelwurf: "+_result+" = "+std::to_string(x),m_color));
+			}
+			for( int i = 0; i < m_selection.Size(); ++i )
+			{
+				// Once for each object
+				Core::Object* object = g_Game->GetWorld()->GetObject(m_selection[0]);
+				int x = Utils::EvaluateFormula(_result, g_Game->RANDOM, object);
+				// Master output only
+				g_Game->AppendToChatLog(Network::ChatMsg("["+object->GetName()+"] - Würfelwurf: "+_result+" = "+std::to_string(x),m_color));
+			}
+		} catch( Exception::InvalidFormula _e ) {
+			// If one object fails the others are likely to do the same
+			g_Game->AppendToChatLog(Network::ChatMsg(_e.to_string(), sf::Color::Red));
 		}
 	}
 
-	void MasterState::RollOpen(std::string& result){
-		Core::Object* _object = nullptr; //by default roll without object
-		if(m_selection.Size()>0) //if object is selected
-			_object=g_Game->GetWorld()->GetObject(m_selection[0]); //roll over object
-		if(m_diceRollState->CheckEvaluate(_object)) // if everything makes sense
-		{
-			int x=Utils::EvaluateFormula(result,g_Game->RANDOM,_object);
-			Network::ChatMsg msg("[Master] - Würfelwurf: "+result+" = "+std::to_string(x),m_color);
-			msg.Send();		
+	void MasterState::RollOpen(std::string& _result)
+	{
+		try {
+			if( m_selection.Size() == 0 )
+			{
+				int x = Utils::EvaluateFormula(_result, g_Game->RANDOM, nullptr);
+				Network::ChatMsg("[Master] - Würfelwurf: "+_result+" = "+std::to_string(x), m_color).Send();
+			}
+			for( int i = 0; i < m_selection.Size(); ++i )
+			{
+				// Once for each object
+				Core::Object* object = g_Game->GetWorld()->GetObject(m_selection[0]);
+				int x = Utils::EvaluateFormula(_result, g_Game->RANDOM, object);
+				// Output for all
+				Network::ChatMsg("["+object->GetName()+"] - Würfelwurf: "+_result+" = "+std::to_string(x), m_color).Send();
+			}
+		} catch( Exception::InvalidFormula _e ) {
+			// If one object fails the others are likely to do the same
+			g_Game->AppendToChatLog(Network::ChatMsg(_e.to_string(), sf::Color::Red));
 		}
 	}
 }// namespace States

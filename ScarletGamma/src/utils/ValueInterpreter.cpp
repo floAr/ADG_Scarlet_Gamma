@@ -61,8 +61,8 @@ namespace Utils {
 		if( _value.find_last_not_of( "0123456789wW" ) != std::string::npos )
 		{
 			// It is a property - use recursive evaluation
-			if( !_object ) throw Exception::InvalidFormula("Formula references a property but no object is given.");
-			if( !_object->HasProperty(_value) ) throw Exception::InvalidFormula("Formula references " + _value + " which is not part of the given object.");
+			if( !_object ) throw Exception::InvalidFormula("Formel referenziert eine Eigenschaft, aber kein Objekt gegeben.");
+			if( !_object->HasProperty(_value) ) throw Exception::InvalidFormula("Formuel referenziert die Eigenschaft" + _value + ", welche nicht Teil des Objektes " + _object->GetName() + " ist.");
 			return Token( _object->GetProperty( _value ).Evaluate(_object), true );
 		}
 
@@ -80,7 +80,7 @@ namespace Utils {
 				return Token( mult * _generator->Uniform(1,dice), true );
 			}
 		} catch( ... ) {
-			throw Exception::InvalidFormula( "Invalid character in value: " + _value );
+			throw Exception::InvalidFormula( "Falsches Zeichen in Wert: " + _value );
 		}
 	}
 
@@ -125,7 +125,7 @@ namespace Utils {
 						Calculate( valueStack, operatorStack.back() );
 						operatorStack.pop_back();
 					}
-					if(operatorStack.empty()) throw Exception::InvalidFormula( "Wrong parentheses. Found more closing than opening." );
+					if(operatorStack.empty()) throw Exception::InvalidFormula( "Mehr schließende als öffnende Klammern gefunden." );
 					operatorStack.pop_back();
 					awaitsOperator = true;
 				} else if( IsOperator(it->value) ) {
@@ -133,7 +133,7 @@ namespace Utils {
 					{
 						if( it->value != '+' )	// In case of additional + just skip
 						{
-							if( it->value != '-' ) throw Exception::InvalidFormula( "Expected unary - or + but found: " + it->value );
+							if( it->value != '-' ) throw Exception::InvalidFormula( "Vorzeichen - oder + erwartet, gefunden: " + it->value );
 							// Current operator is unary minus
 							operatorStack.push_back('n');
 						}
@@ -148,14 +148,14 @@ namespace Utils {
 						operatorStack.push_back(it->value);
 					}
 					awaitsOperator = false;
-				} else throw Exception::InvalidFormula( "Unexpected character found: " + it->value );
+				} else throw Exception::InvalidFormula( "Unerwartetes Zeichen gefunden: " + it->value );
 			}
 		}
 
 		// Evaluate last things on stack.
 		while( !operatorStack.empty() )
 		{
-			if( operatorStack.back() == '(' ) throw Exception::InvalidFormula( "Wrong parentheses. Found more opening than closing." );
+			if( operatorStack.back() == '(' ) throw Exception::InvalidFormula( "Mehr öffnende als schließende Klammern gefunden." );
 			Calculate( valueStack, operatorStack.back() );
 			operatorStack.pop_back();
 		}
@@ -200,7 +200,7 @@ namespace Utils {
 		if(!buffer.empty()) tokens.push_back( EvaluateValue(buffer, _generator, _object) );
 	 
 		// Validate
-		if( tokens.empty() ) throw Exception::InvalidFormula( "Formula is empty" );
+		if( tokens.empty() ) throw Exception::InvalidFormula( "Formel ist leer." );
 
 		// Call recursive
 		return EvaluateFormula( tokens );

@@ -50,7 +50,8 @@
 \RequirePackage{titletoc}
 \titlecontents{chapter}[0.5em]{\addvspace{1pc}\bfseries}{\contentslabel{0.5em}}{}{\titlerule*[0.3pc]{.}\contentspage}
 \titlecontents{section}[1.5em]{\addvspace{4pt}}{\bf\contentslabel{1.0em}}{}{\titlerule*[0.3pc]{.}\contentspage}
-\titlecontents{subsection}[3.0em]{}{\contentslabel{1.5em}}{}{\titlerule*[0.3pc]{.}\contentspage} \titlecontents{subsubsection}[5.1em]{}{\contentslabel{2.1em}}{}{\titlerule*[0.3pc]{.}\contentspage}
+\titlecontents{subsection}[3.0em]{}{\contentslabel{1.5em}}{}{\titlerule*[0.3pc]{.}\contentspage}
+\titlecontents{subsubsection}[5.1em]{}{\contentslabel{2.3em}}{}{\titlerule*[0.3pc]{.}\contentspage}
 \titlecontents{paragraph}[7.8em]{}{\contentslabel{2.7em}}{}{\titlerule*[0.3pc]{.}\contentspage}
 
 % include hyperref as last one (recommended)

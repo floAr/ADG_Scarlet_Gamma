@@ -213,11 +213,15 @@ void Attack::PushAttackRollDMPrompt(int _result, void (Attack::* _callback)(std:
     std::stringstream message;
     message << "Angriffswurf von " << g_Game->GetWorld()->GetObject(m_executor)->GetName()
             << " auf " << g_Game->GetWorld()->GetObject(m_target)->GetName() << '\n';
-    message << m_attackRoll << " = " << resultStr << ", ";
+    message << m_attackRoll << " = " << resultStr << ". ";
     if (EvaluateAttackRoll(_result))
         message << "getroffen.\n";
     else
         message << "nicht getroffen.\n";
+
+    // Applying 0 damage evaluates the hit points if it was a formula before
+    CombatRules::ApplyHitDamage(m_target, 0);
+
     message << "Der Wert kann angepasst werden. Das Ziel hat RK "
         << CombatRules::GetArmorClass(m_target) << " und "
         << CombatRules::GetHitPoints(m_target) << "TP.\n";

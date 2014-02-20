@@ -36,7 +36,7 @@ namespace States
 		/// \brief _evaluateObj [in]  Object used for evaluation check, or 0 for none
 		void AddButton(const std::string _buttonText, std::function<void(std::string)> _callback,
 			sf::Keyboard::Key _hotkey = sf::Keyboard::Unknown, Core::Object* _evaluateObj = 0);
-		bool CheckEvaluate(Core::Object* _object) const;
+
 	private:
 
 		struct PromptButton

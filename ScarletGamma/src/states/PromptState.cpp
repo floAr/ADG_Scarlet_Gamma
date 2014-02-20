@@ -4,6 +4,7 @@
 #include "utils/Content.hpp"
 #include "sfutils/View.hpp"
 #include "utils/ValueInterpreter.hpp"
+#include "utils/Exception.hpp"
 
 using namespace States;
 
@@ -144,18 +145,6 @@ void States::PromptState::SetTextInputRequired(bool _value)
 		m_editBox->hide();
 }
 
-bool States::PromptState::CheckEvaluate(Core::Object* _object) const
-{
-	try
-	{
-		Utils::EvaluateFormula(m_editBox->getText(), g_Game->RANDOM, _object);
-		return true;
-	}
-	catch (...)
-	{
-		return false;
-	}
-}
 
 void States::PromptState::OnEnd()
 {
@@ -193,13 +182,16 @@ void PromptState::GuiCallback(tgui::Callback& args)
 	auto cb = m_buttons.at(args.id);
 
 	// Evaluation required, but failed?
-	if (cb.evaluateObj != 0 && !CheckEvaluate(cb.evaluateObj))
+	if (cb.evaluateObj != 0)
 	{
-		PromptState* prompt = static_cast<PromptState*>(g_Game->GetStateMachine()->PushGameState(GST_PROMPT));
-		prompt->SetText("Bitte überprüfe den eingegebenen Wert.\n");
-		prompt->Resize((sf::Vector2f)g_Game->GetWindow().getSize());
-		prompt->DisableMinimize();
-		prompt->SetTextInputRequired(false);
+		try { Utils::EvaluateFormula(m_editBox->getText(), g_Game->RANDOM, cb.evaluateObj); }
+		catch( Exception::InvalidFormula _e ) {
+			PromptState* prompt = static_cast<PromptState*>(g_Game->GetStateMachine()->PushGameState(GST_PROMPT));
+			prompt->SetText("Bitte überprüfe den eingegebenen Wert.\nFehler: " + _e.to_string());
+			prompt->Resize((sf::Vector2f)g_Game->GetWindow().getSize());
+			prompt->DisableMinimize();
+			prompt->SetTextInputRequired(false);
+		}
 	}
 	else
 	{

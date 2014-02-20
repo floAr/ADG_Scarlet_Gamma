@@ -360,8 +360,8 @@ namespace States {
 			return 8;
 
 		// Search the topmost visible layer
-		for( int i = 9; i >= 0; --i )
-			if( IsLayerVisible(i) ) return i + 1;
+		for( int i = 10; i >= 1; --i )
+			if( IsLayerVisible(i) ) return i;
 
 		return 10;
 	}

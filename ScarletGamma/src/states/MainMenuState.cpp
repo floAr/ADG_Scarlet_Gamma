@@ -50,6 +50,7 @@ void States::MainMenuState::Update(float dt)
 void States::MainMenuState::Draw(sf::RenderWindow& win)
 {
    // win.clear(MIGHTY_SLATE);
+	//m_background->setScale(m_background.);
 	win.draw(m_background);
    /* sf::Text t("Press 'm' to open MasterState\n"
                "or escape to quit.", m_menuFont, 24);

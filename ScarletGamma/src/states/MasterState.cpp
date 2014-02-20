@@ -686,6 +686,11 @@ namespace States {
 	void MasterState::RollSecretly(std::string& _result)
 	{
 		try {
+			if( m_selection.Size() == 0 )
+			{
+				int x = Utils::EvaluateFormula(_result, g_Game->RANDOM, nullptr);
+				g_Game->AppendToChatLog(Network::ChatMsg("[Master] - Würfelwurf: "+_result+" = "+std::to_string(x),m_color));
+			}
 			for( int i = 0; i < m_selection.Size(); ++i )
 			{
 				// Once for each object
@@ -703,6 +708,11 @@ namespace States {
 	void MasterState::RollOpen(std::string& _result)
 	{
 		try {
+			if( m_selection.Size() == 0 )
+			{
+				int x = Utils::EvaluateFormula(_result, g_Game->RANDOM, nullptr);
+				Network::ChatMsg("[Master] - Würfelwurf: "+_result+" = "+std::to_string(x), m_color).Send();
+			}
 			for( int i = 0; i < m_selection.Size(); ++i )
 			{
 				// Once for each object

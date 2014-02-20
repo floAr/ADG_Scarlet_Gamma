@@ -664,6 +664,7 @@ namespace Core {
         object->Add( PROPERTY::NAME ).SetValue( STR_CHEST_NAME );
         object->Add( PROPERTY::COLOR ).SetValue( "684f2bff");
         object->Add( PROPERTY::OBSTACLE );
+		object->Add( PROPERTY::INVENTORY );
 
 
 		object = GetObject( NewObjectTemplate( "media/bar_hor.png" ) );

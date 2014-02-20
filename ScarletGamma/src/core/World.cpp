@@ -659,6 +659,13 @@ namespace Core {
         object->Add( PROPERTY::INITIATIVE_MOD ).SetValue( "'" + STR_PROP_DEXTERITY_MOD + "'" );
         object->Add( PROPERTY::HEALTH ).SetValue( "2W8 + 2" );
 
+        // Treasure chest
+        object = GetObject( NewObjectTemplate( "media/chest.png" ) );
+        object->Add( PROPERTY::NAME ).SetValue( STR_CHEST_NAME );
+        object->Add( PROPERTY::COLOR ).SetValue( "684f2bff");
+        object->Add( PROPERTY::OBSTACLE );
+
+
 		object = GetObject( NewObjectTemplate( "media/bar_hor.png" ) );
 		object->Add( PROPERTY::NAME ).SetValue( STR_WALLH );
 		object->Add( PROPERTY::OBSTACLE );

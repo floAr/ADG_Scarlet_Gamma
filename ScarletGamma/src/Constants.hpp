@@ -181,6 +181,7 @@ static const std::string STR_HOBGOBLIN_NAME = std::string("Hobgoblin");
 static const std::string STR_GNOLL_NAME = std::string("Gnoll");
 static const std::string STR_KOBOLD_NAME = std::string("Kobold");
 static const std::string STR_LIZARDFOLK_NAME = std::string("Echsenfolk");
+static const std::string STR_CHEST_NAME = std::string("Truhe");
 static const std::string STR_WALLH = std::string("Wand_H");
 static const std::string STR_WALLV = std::string("Wand_V");
 static const std::string STR_WALLC = std::string("Wand_K");

@@ -8,7 +8,7 @@
 namespace Actions {
 
 
-Examine::Examine() : Action(STR_ACT_EXAMINE, Duration::STANDARD_ACTION, 1)
+Examine::Examine() : Action(STR_ACT_EXAMINE, Duration::STANDARD_ACTION, 1, Game::MC_EXAMINE)
 {
 	m_sourceRequirements.push_back( std::pair<std::string, bool>(STR_PROP_PLAYER, true) );
 }

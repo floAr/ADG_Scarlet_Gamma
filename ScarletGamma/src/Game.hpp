@@ -20,7 +20,8 @@ public:
     {
         MC_DEFAULT = 0,
         MC_WALK,
-        MC_ATTACK
+        MC_ATTACK,
+        MC_EXAMINE
     };
 
 	/// \brief Default constructor that tames wild pointers

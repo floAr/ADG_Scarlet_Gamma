@@ -50,7 +50,10 @@ ChoosePlayerState::ChoosePlayerState(Core::PlayerID _id) :
 
 void ChoosePlayerState::Draw(sf::RenderWindow& win)
 {
-    //win.clear(sf::Color::Black);
+	SetGuiView();
+	float sx = float(win.getSize().x) / m_background.getTexture()->getSize().x;
+	float sy = float(win.getSize().y) / m_background.getTexture()->getSize().y;
+	m_background.setScale( std::max(1.0f, sx), std::max(1.0f, sy) );
 	win.draw(m_background);
 
 	GameState::Draw(win);

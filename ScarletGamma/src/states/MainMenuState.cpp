@@ -50,8 +50,12 @@ void States::MainMenuState::Update(float dt)
 void States::MainMenuState::Draw(sf::RenderWindow& win)
 {
    // win.clear(MIGHTY_SLATE);
-	//m_background->setScale(m_background.);
+	SetGuiView();
+	float sx = float(win.getSize().x) / m_background.getTexture()->getSize().x;
+	float sy = float(win.getSize().y) / m_background.getTexture()->getSize().y;
+	m_background.setScale( std::max(1.0f, sx), std::max(1.0f, sy) );
 	win.draw(m_background);
+
    /* sf::Text t("Press 'm' to open MasterState\n"
                "or escape to quit.", m_menuFont, 24);
     t.setPosition(30, 30);

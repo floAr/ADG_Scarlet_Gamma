@@ -86,4 +86,6 @@ namespace Core {
 	const Property PROPERTY::KNOWLEDGE = Property(Property::R_VCEVCEV00, STR_PROP_KNOWLEDGE, "'IN-Mod' + 0");
 	const Property PROPERTY::MAGICART = Property(Property::R_VCEVCEV00, STR_PROP_MAGICART, "'IN-Mod' + 0");
 
+	const Property PROPERTY::WATER = Property(Property::R_VCEV0EV00, STR_WATER, "10");
+
 } // namespace Core

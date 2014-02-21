@@ -87,6 +87,7 @@ namespace Core {
 		static const Property KNOWLEDGE;
 		static const Property MAGICART;
 
+		static const Property WATER;
 
 		// A custom property with R_VCEV0EV00 access rights and an empty default.
 		static Property Custom( const std::string& _name )

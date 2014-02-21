@@ -172,6 +172,8 @@ static const std::string STR_PROP_MAGICART = std::string("Zauberkunde*");
 /************************************************************************/
 static const std::string STR_ATTACKABLE = std::string("Angreifbar");
 static const std::string STR_JUMPPOINT = std::string("Spungmarke");
+static const std::string STR_ATTRIBUTES = std::string("Attribute");
+static const std::string STR_APPEARANCE = std::string("Erscheinungsbild");
 
 
 /************************************************************************/
@@ -192,6 +194,7 @@ static const std::string STR_PLANKS = std::string("Holz");
 static const std::string STR_EARTH = std::string("Erde");
 static const std::string STR_GRASS = std::string("Gras");
 static const std::string STR_WATER = std::string("Wasser");
+static const std::string STR_WELL_NAME = std::string("Brunnen");
 
 
 /************************************************************************/

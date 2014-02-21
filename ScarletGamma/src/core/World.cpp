@@ -505,6 +505,29 @@ namespace Core {
 		NewModule( STR_PROP_SWITCH );
 		object->Add( PROPERTY::SWITCH );
 
+		NewModule( STR_ATTRIBUTES );
+		object->Add( PROPERTY::STRENGTH );
+		object->Add( PROPERTY::DEXTERITY );
+		object->Add( PROPERTY::CONSTITUTION );
+		object->Add( PROPERTY::INTELLIGENCE );
+		object->Add( PROPERTY::WISDOM );
+		object->Add( PROPERTY::CHARISMA );
+		object->Add( PROPERTY::STRENGTH_MOD );
+		object->Add( PROPERTY::DEXTERITY_MOD );
+		object->Add( PROPERTY::CONSTITUTION_MOD );
+		object->Add( PROPERTY::INTELLIGENCE_MOD );
+		object->Add( PROPERTY::WISDOM_MOD );
+		object->Add( PROPERTY::CHARISMA_MOD );
+
+		NewModule( STR_APPEARANCE );
+		object->Add( PROPERTY::SIZE );
+		object->Add( PROPERTY::AGE );
+		object->Add( PROPERTY::SEX );
+		object->Add( PROPERTY::WEIGHT );
+		object->Add( PROPERTY::HAIRCOLOR );
+		object->Add( PROPERTY::EYECOLOR );
+		object->Add( PROPERTY::FOLK );
+
 #		undef NewModule
 	}
 
@@ -688,6 +711,13 @@ namespace Core {
         object->Add( PROPERTY::COLOR ).SetValue( "684f2bff");
         object->Add( PROPERTY::OBSTACLE );
 		object->Add( PROPERTY::INVENTORY );
+
+		// Well
+		object = GetObject( NewObjectTemplate( "media/well.png" ) );
+		object->Add( PROPERTY::NAME ).SetValue( STR_WELL_NAME );
+		object->Add( PROPERTY::OBSTACLE );
+		object->Add( PROPERTY::WATER );
+		object->Add( PROPERTY::LAYER ).SetValue( STR_3 );
 
 
 		object = GetObject( NewObjectTemplate( "media/bar_hor.png" ) );

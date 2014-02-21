@@ -8,15 +8,11 @@
 
 using namespace States;
 
-PromptState::PromptState()
-	: m_result(nullptr)
+PromptState::PromptState() :
+	DismissableDialogState( "media/orb_prompt.png" ),
+	m_result(nullptr)
 {
 	m_defaultButton->load("lib/TGUI-0.6-RC/widgets/Black.conf");
-	// Load shader from file
-	//m_shader=Content::Instance()->LoadShader("media/Prompt.frag",sf::Shader::Type::Fragment);
-	m_orb=sf::Sprite(Content::Instance()->LoadTexture("media/orb_prompt.png"));
-	float orbScale=DismissableDialogState::ORB_WIDTH/m_orb.getLocalBounds().width;
-	m_orb.setScale(sf::Vector2f(orbScale,orbScale));
 
 	// Create GUI
 	m_gui.setWindow(g_Game->GetWindow());

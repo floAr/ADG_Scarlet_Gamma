@@ -6,53 +6,54 @@
 
 namespace States{
 
-	std::vector<sf::Sprite*> DismissableDialogState::ms_orbs;
+	std::vector<sf::Sprite*> DismissableDialogState::m_orbs;
+	DismissableDialogState* DismissableDialogState::m_activeDDState = nullptr;
 
-	DismissableDialogState::DismissableDialogState() : 
-		m_isMinimized(false), m_orb(Content::Instance()->LoadTexture("media/orb.png")),
-		m_minimize(Content::Instance()->LoadTexture("media/orb_minimize.png")),
-		m_background(Content::Instance()->LoadTexture("media/prompt.jpg")),
-		m_forceKeepAlive(false)
+	DismissableDialogState::DismissableDialogState(const std::string& _orbTexture) : 
+		m_isMinimized(false), m_orb(Content::Instance()->LoadTexture(_orbTexture)),
+		m_forceKeepAlive(false),
+		m_isMinimizeable(true)
 	{
 		m_shader.loadFromFile("media/Prompt.frag", sf::Shader::Fragment);
 
-		//m_minimize.setScale(sf::Vector2f(0.15f,0.15f));
-		float orbScale=DismissableDialogState::ORB_WIDTH/m_orb.getLocalBounds().width;
+		float orbScale = DismissableDialogState::ORB_WIDTH/m_orb.getLocalBounds().width;
 		m_orb.setScale(sf::Vector2f(orbScale,orbScale));
 
-		float minimizeOrbScale=DismissableDialogState::ORB_WIDTH/m_minimize.getLocalBounds().width;
-		m_minimize.setScale(sf::Vector2f(minimizeOrbScale,minimizeOrbScale));
+		DismissableDialogState::AddOrb(&m_orb);
 
+		// Make sure this is the only maximized state
+		SetMinimized( false );
+	}
 
-		//m_isMinimized=true;
-		Resize(g_Game->GetWindow().getView().getSize());
+	DismissableDialogState::~DismissableDialogState()
+	{
+		// Remove the orb from the global list
+		DismissableDialogState::RemoveOrb(&m_orb);
+
+		m_activeDDState = nullptr;
 	}
 
 	void DismissableDialogState::SetMinimized(bool _value)
     {
 		m_isMinimized = _value;
-		if(m_isMinimized)
-			DismissableDialogState::AddOrb(&m_orb);
-		else
-			DismissableDialogState::RemoveOrb(&m_orb);
+
+		if( !_value )
+		{
+			// Make sure this is the only maximized state
+			if( m_activeDDState && m_activeDDState != this )
+				m_activeDDState->SetMinimized( true );
+			m_activeDDState = this;
+		} else m_activeDDState = nullptr;
 	}
 
 	void DismissableDialogState::SetOrbSprite(const std::string& texture)
     {
 		sf::Vector2f tempPos = m_orb.getPosition();
-        m_orbTexture = sf::Texture(Content::Instance()->LoadTexture(texture));
-        m_orbTexture.setSmooth(true);
-		m_orb = sf::Sprite(m_orbTexture);
-		float orbScale = (float) DismissableDialogState::ORB_WIDTH / m_orb.getLocalBounds().width;
-		m_orb.setScale(sf::Vector2f(orbScale, orbScale));
-		m_orb.setPosition(tempPos);
+		m_orb.setTexture( Content::Instance()->LoadTexture(texture) );
 	}
 
 	void DismissableDialogState::Update(float dt)
-	{
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-            m_orbTexture.setSmooth(!m_orbTexture.isSmooth());
-		
+	{	
         m_previousState->Update(dt);
 		if(m_isMinimized){//break this chain if minimized			
 			return;
@@ -62,16 +63,29 @@ namespace States{
 
 	void DismissableDialogState::Draw(sf::RenderWindow& win)
 	{
-		// update sprite 
 		m_previousState->Draw(win);
+
+		// Depending on the stack position things get buggy.
+		// First all "background" orbs must be drawn, then the overlay shader...
+		if( m_activeDDState && m_activeDDState == this )
+		{
+			// Draw them all
+			SetGuiView();
+			for( size_t i = 0; i < m_orbs.size(); ++i )
+				win.draw(*m_orbs[i]);
+			SetStateView();
+		}
 
 		// break this chain if minimized
 		if (m_isMinimized)
 		{
-			//m_previousState->Draw(win);
-			SetGuiView();
-			win.draw(m_orb); //overlay orb
-			SetStateView();
+			// Was drawn from active state?
+			if( !m_activeDDState )
+			{
+				SetGuiView();
+				win.draw(m_orb); // overlay orb
+				SetStateView();
+			}
 			return;
 		}
 
@@ -86,7 +100,7 @@ namespace States{
 		win.draw(sf::Sprite(screenBuffer), &m_shader);
 
 		// Draw background
-		win.draw(m_background);
+	//	win.draw(m_background);
 
 		// Draw GUI
 		SetStateView();
@@ -95,7 +109,7 @@ namespace States{
 		// Draw the minimize button
 		SetGuiView();
 		if(m_isMinimizeable){
-			win.draw(m_minimize); //draw minimize on top
+			win.draw(m_orb);
 		}
 
 		SetStateView();
@@ -106,35 +120,31 @@ namespace States{
 	void DismissableDialogState::MouseButtonPressed(sf::Event::MouseButtonEvent& button,
 		sf::Vector2f& tilePos, bool guiHandled)
 	{ 
-		if(guiHandled)
-			return;
-		sf::FloatRect bounds;
-		if(m_isMinimized) //currently minimized
-		{
-			bounds=m_orb.getGlobalBounds();
-		}
-		else //currently open
-		{
-			bounds=m_minimize.getGlobalBounds();
-		}
+		// These orbs overlay the Gui!
+		//if(guiHandled)
+		//	return;
 
-		if(button.x > bounds.left && 
-			button.x < bounds.left+bounds.width && 
-			button.y > bounds.top && 
-			button.y < bounds.top+bounds.height &&
-			m_isMinimizeable) //click on sprite
+		// If nobody is maximized or this one is maximized..
+		if( !m_activeDDState || m_activeDDState == this )
 		{
-			m_isMinimized=!m_isMinimized;
-			Resize(sf::Vector2f( (float) g_Game->GetWindow().getSize().x,
-				(float) g_Game->GetWindow().getSize().y));
-			if(m_isMinimized)
-				DismissableDialogState::AddOrb(&m_orb);
-			else
-				DismissableDialogState::RemoveOrb(&m_orb);
-		}
-		else //no orb was clicked -> pass click down
-			if(m_isMinimized)
-				m_previousState->MouseButtonPressed(button,tilePos,guiHandled);
+			// Test if the orb was clicked
+			sf::FloatRect bounds;
+			bounds = m_orb.getGlobalBounds();
+
+			if(button.x > bounds.left && 
+				button.x < bounds.left+bounds.width && 
+				button.y > bounds.top && 
+				button.y < bounds.top+bounds.height &&
+				m_isMinimizeable) //click on sprite
+			{
+				SetMinimized( !m_isMinimized );
+				Resize(sf::Vector2f( (float) g_Game->GetWindow().getSize().x,
+					(float) g_Game->GetWindow().getSize().y));
+			} else //no orb was clicked -> pass click down
+				if(m_isMinimized)
+					m_previousState->MouseButtonPressed(button,tilePos,guiHandled);
+		} else
+			m_previousState->MouseButtonPressed(button,tilePos,guiHandled);
 	}
 
 
@@ -146,46 +156,43 @@ namespace States{
 			m_previousState->Resize(_size);				
 			return;
 		}
-
-		m_background.setPosition(_size.x / 2.0f - m_background.getGlobalBounds().width / 2.0f, 60);
-		m_minimize.setPosition(sf::Vector2f(std::min(_size.x - m_minimize.getGlobalBounds().width - 5, m_background.getGlobalBounds().left +
-			m_background.getGlobalBounds().width - m_minimize.getGlobalBounds().width - 5), m_background.getGlobalBounds().top + 5));
 	}
 
 	void DismissableDialogState::AddOrb(sf::Sprite* _orb)
 	{
-		DismissableDialogState::ms_orbs.push_back(_orb);
+		DismissableDialogState::m_orbs.push_back(_orb);
 		DismissableDialogState::RecalculateOrbPositions();
 	}
 
 	void DismissableDialogState::RemoveOrb(sf::Sprite* _orb)
 	{
 
-		auto it=std::find(DismissableDialogState::ms_orbs.begin(),DismissableDialogState::ms_orbs.end(),_orb);
-		DismissableDialogState::ms_orbs.erase(it);
+		auto it=std::find(DismissableDialogState::m_orbs.begin(),DismissableDialogState::m_orbs.end(),_orb);
+		DismissableDialogState::m_orbs.erase(it);
 		RecalculateOrbPositions();
 	}
 
 	void DismissableDialogState::RecalculateOrbPositions()
 	{
-		int orbCount = DismissableDialogState::ms_orbs.size();
-		float widthPerOrb=DismissableDialogState::ORB_WIDTH+2;
-		float startPoint=g_Game->GetWindow().getSize().x/2-(widthPerOrb*orbCount/2);
-		float yPoint=(float)g_Game->GetWindow().getSize().y-DismissableDialogState::ORB_WIDTH-5;
-		int i;
-		for(i=0;i<orbCount;i++)
+		int orbCount = DismissableDialogState::m_orbs.size();
+		float widthPerOrb = DismissableDialogState::ORB_WIDTH+2;
+		float startPoint = g_Game->GetWindow().getSize().x/2 - (widthPerOrb*orbCount/2);
+		float yPoint = (float)g_Game->GetWindow().getSize().y - DismissableDialogState::ORB_WIDTH-5;
+		for(int i=0; i<orbCount; i++)
 		{
-			ms_orbs[i]->setPosition(startPoint,yPoint);
+			m_orbs[i]->setPosition(startPoint,yPoint);
 			startPoint+=widthPerOrb;
 		}
 	}
 
-	void DismissableDialogState::DisableMinimize(){
+	void DismissableDialogState::DisableMinimize()
+	{
 		m_isMinimizeable = false;
-		m_isMinimized = false;
+		SetMinimized( false );
 	}
 
-	void DismissableDialogState::SetKeepAlive(bool _value){
+	void DismissableDialogState::SetKeepAlive(bool _value)
+	{
 		m_forceKeepAlive = _value;
 	}
 

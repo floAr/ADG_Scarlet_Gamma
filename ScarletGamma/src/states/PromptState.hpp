@@ -54,6 +54,7 @@ namespace States
 		tgui::Button::Ptr m_defaultButton;	///< This is a preloaded button to increase RecalculateGUI performance by a height factor
 		tgui::Gui m_gui;
 		tgui::EditBox::Ptr m_editBox;
+		tgui::Label::Ptr m_message;
 		PromptButton* m_result;
 
 		std::unordered_map<int, PromptButton> m_buttons;

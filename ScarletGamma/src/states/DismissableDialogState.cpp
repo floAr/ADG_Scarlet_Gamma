@@ -150,12 +150,9 @@ namespace States{
 
 	void DismissableDialogState::Resize(const sf::Vector2f& _size)
 	{
+		RecalculateOrbPositions();
 		if (m_isMinimized)
-		{
-			RecalculateOrbPositions();
 			m_previousState->Resize(_size);				
-			return;
-		}
 	}
 
 	void DismissableDialogState::AddOrb(sf::Sprite* _orb)

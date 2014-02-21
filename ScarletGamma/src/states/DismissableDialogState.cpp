@@ -65,6 +65,8 @@ namespace States{
 	{
 		m_previousState->Draw(win);
 
+		if( m_finished ) return;
+
 		// Depending on the stack position things get buggy.
 		// First all "background" orbs must be drawn, then the overlay shader...
 		if( m_activeDDState && m_activeDDState == this )
@@ -124,6 +126,12 @@ namespace States{
 		//if(guiHandled)
 		//	return;
 
+		if( m_finished ) 
+		{
+			m_previousState->MouseButtonPressed(button,tilePos,guiHandled);
+			return;
+		}
+
 		// If nobody is maximized or this one is maximized..
 		if( !m_activeDDState || m_activeDDState == this )
 		{
@@ -140,11 +148,13 @@ namespace States{
 				SetMinimized( !m_isMinimized );
 				Resize(sf::Vector2f( (float) g_Game->GetWindow().getSize().x,
 					(float) g_Game->GetWindow().getSize().y));
-			} else //no orb was clicked -> pass click down
+			} else {//no orb was clicked -> pass click down
+				GameState::MouseButtonPressed(button, tilePos, guiHandled);
 				if(m_isMinimized)
-					m_previousState->MouseButtonPressed(button,tilePos,guiHandled);
+					m_previousState->MouseButtonPressed(button, tilePos, guiHandled);
+			}
 		} else
-			m_previousState->MouseButtonPressed(button,tilePos,guiHandled);
+			m_previousState->MouseButtonPressed(button, tilePos, guiHandled);
 	}
 
 
@@ -164,9 +174,12 @@ namespace States{
 	void DismissableDialogState::RemoveOrb(sf::Sprite* _orb)
 	{
 
-		auto it=std::find(DismissableDialogState::m_orbs.begin(),DismissableDialogState::m_orbs.end(),_orb);
-		DismissableDialogState::m_orbs.erase(it);
-		RecalculateOrbPositions();
+		auto it=std::find(m_orbs.begin(), m_orbs.end(),_orb);
+		if( it != m_orbs.end() )
+		{
+			DismissableDialogState::m_orbs.erase(it);
+			RecalculateOrbPositions();
+		}
 	}
 
 	void DismissableDialogState::RecalculateOrbPositions()

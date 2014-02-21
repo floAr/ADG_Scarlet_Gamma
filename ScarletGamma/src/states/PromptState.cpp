@@ -201,9 +201,12 @@ void PromptState::GuiCallback(tgui::Callback& args)
 
 	if (!m_editBox->isVisible())
 		m_editBox->setText(""); // Required if someone uses global PopCallback
-	if(!m_forceKeepAlive)
+	if(!m_forceKeepAlive) {
 		m_finished = true;
-	else
+		// The current state might not be on top -> remove it from Orb-bar manually
+		SetMinimized( true );
+		RemoveOrb( &m_orb );
+	} else
 	{
 		if (m_result != nullptr) // also handle button here to emit event
 			m_result->function(m_editBox->getText());

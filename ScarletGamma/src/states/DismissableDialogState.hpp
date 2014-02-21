@@ -16,7 +16,7 @@ namespace States
 		/// \brief Set the texture of the orb
 		//	void SetOrbTexture(sf::Texture _orbTexture);
 		sf::Sprite  m_orb;		  ///< Sprite shown when minimized
-		const static int ORB_WIDTH = 51;	///< pixelsize of one Orb
+		const static int ORB_WIDTH = 51;	///< pixel size of one Orb
 		bool m_isMinimizeable;	///< Bool indicating if the state can be minimized
 		bool m_forceKeepAlive;	///< does not close the State after pressing a button, but minimizing it
 
@@ -63,26 +63,27 @@ namespace States
 		/// \details Has the same internal logic as KeyPressed.
 		/// \param [in] button      SFML button event that contains all required information.
 		/// \param [in] tilePos     In-game tile that the user clicked on. Cast to float if required.
-		/// \param [in] guiHandled  Wether the GUI already used the event
+		/// \param [in] guiHandled  Whether the GUI already used the event
 		virtual void MouseButtonPressed(sf::Event::MouseButtonEvent& button,
-			sf::Vector2f& tilePos, bool guiHandled);
+			sf::Vector2f& tilePos, bool guiHandled) override;
 
 
 		// pass everything else downward when minimized
-		virtual void TextEntered(char character, bool guiHandled)
+		virtual void TextEntered(char character, bool guiHandled) override
 		{
 			if(m_isMinimized)
 				m_previousState->TextEntered(character,guiHandled);
 		}
 
 
-		virtual void KeyPressed(sf::Event::KeyEvent& key, bool guiHandled){
+		virtual void KeyPressed(sf::Event::KeyEvent& key, bool guiHandled) override
+		{
 			if(m_isMinimized)
 				m_previousState->KeyPressed(key,guiHandled);	
 		}
 
 
-		virtual void KeyReleased(sf::Event::KeyEvent& key, float time, bool guiHandled)
+		virtual void KeyReleased(sf::Event::KeyEvent& key, float time, bool guiHandled) override
 		{
 			if(m_isMinimized)
 				m_previousState->KeyReleased(key,time,guiHandled);
@@ -92,7 +93,7 @@ namespace States
 
 		//----------------------------------------------------------------------
 		// MOUSE EVENTS
-		virtual void MouseWheelMoved(sf::Event::MouseWheelEvent& wheel, bool guiHandled)
+		virtual void MouseWheelMoved(sf::Event::MouseWheelEvent& wheel, bool guiHandled) override
 		{
 			if(m_isMinimized)
 				m_previousState->MouseWheelMoved(wheel,guiHandled);
@@ -100,20 +101,22 @@ namespace States
 
 
 		virtual void MouseButtonReleased(sf::Event::MouseButtonEvent& button,
-			sf::Vector2f& tilePos,float time, bool guiHandled)
+			sf::Vector2f& tilePos,float time, bool guiHandled) override
 		{
 			if(m_isMinimized)
 				m_previousState->MouseButtonReleased(button,tilePos,time,guiHandled);
 		}
 
 
-		virtual void MouseMoved(int deltaX, int deltaY, bool guiHandled){
+		virtual void MouseMoved(int deltaX, int deltaY, bool guiHandled) override
+		{
 			if(m_isMinimized)
 				m_previousState->MouseMoved(deltaX,deltaY,guiHandled);
 		}
 
 
-		virtual void GuiCallback(tgui::Callback& callback){
+		virtual void GuiCallback(tgui::Callback& callback) override
+		{
 			if(m_isMinimized)
 				m_previousState->GuiCallback(callback);
 		}
@@ -126,8 +129,11 @@ namespace States
 		{
 			if (m_isMinimized)
 				return m_previousState->GuiHandleEvent(event);
-			else
-				return GameState::GuiHandleEvent(event);
+			else {
+				bool result = GameState::GuiHandleEvent(event);
+				GameState::GuiHandleCallbacks();
+				return result;
+			}
 		}
 
 		virtual void Resize(const sf::Vector2f& _size);

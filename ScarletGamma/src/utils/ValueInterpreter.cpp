@@ -62,7 +62,7 @@ namespace Utils {
 		{
 			// It is a property - use recursive evaluation
 			if( !_object ) throw Exception::InvalidFormula("Formel referenziert eine Eigenschaft, aber kein Objekt gegeben.");
-			if( !_object->HasProperty(_value) ) throw Exception::InvalidFormula("Formuel referenziert die Eigenschaft" + _value + ", welche nicht Teil des Objektes " + _object->GetName() + " ist.");
+			if( !_object->HasProperty(_value) ) throw Exception::InvalidFormula("Formel referenziert die Eigenschaft " + _value + ", welche nicht Teil des Objektes " + _object->GetName() + " ist.");
 			return Token( _object->GetProperty( _value ).Evaluate(_object), true );
 		}
 

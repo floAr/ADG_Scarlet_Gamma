@@ -69,25 +69,24 @@ namespace States{
 
 		// Depending on the stack position things get buggy.
 		// First all "background" orbs must be drawn, then the overlay shader...
-		if( m_activeDDState && m_activeDDState == this )
+		if( m_activeDDState )
 		{
 			// Draw them all
-			SetGuiView();
-			for( size_t i = 0; i < m_orbs.size(); ++i )
-				win.draw(*m_orbs[i]);
-			SetStateView();
+			if( m_activeDDState == this )
+			{
+				SetGuiView();
+				for( size_t i = 0; i < m_orbs.size(); ++i )
+					win.draw(*m_orbs[i]);
+				SetStateView();
+			} else return;
 		}
 
 		// break this chain if minimized
 		if (m_isMinimized)
 		{
-			// Was drawn from active state?
-			if( !m_activeDDState )
-			{
-				SetGuiView();
-				win.draw(m_orb); // overlay orb
-				SetStateView();
-			}
+			SetGuiView();
+			win.draw(m_orb); // overlay orb
+			SetStateView();
 			return;
 		}
 

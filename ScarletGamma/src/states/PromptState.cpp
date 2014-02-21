@@ -90,12 +90,13 @@ void PromptState::Resize(const sf::Vector2f& _size)
 	m_message->setPosition(_size.x / 2.0f - m_message->getSize().x / 2.0f,
 		_size.y * 0.4f);
 
+	float yEdit = _size.y * 0.4f + m_message->getSize().y + 30.0f;
+
 	// Adjust button position
 	float totalBtnWidth = 350.0f;
 	if (m_buttons.size() > 0)
 	{
-		float buttonTop = m_editBox->isVisible() ?
-			_size.y * 0.4f + 135.0f : _size.y * 0.4f + 75.0f;
+		float buttonTop = m_editBox->isVisible() ? yEdit + 60.0f : yEdit;
 
 		// Pre-calculations for button positions
 		float winWidth = _size.x;
@@ -113,7 +114,7 @@ void PromptState::Resize(const sf::Vector2f& _size)
 
 	// Adjust edit box size and position
 	m_editBox->setSize(std::min(std::max(350.0f, totalBtnWidth), _size.x - 20), 40.0f);
-	m_editBox->setPosition(_size.x / 2.0f - m_editBox->getSize().x / 2.0f, _size.y * 0.4f + 75.0f);
+	m_editBox->setPosition(_size.x / 2.0f - m_editBox->getSize().x / 2.0f, yEdit);
 }
 
 void PromptState::SetText(const std::string& _text)
@@ -124,7 +125,7 @@ void PromptState::SetText(const std::string& _text)
 	m_message->setAutoSize(true);
 	m_message->setText(_text);
 	// Make sure 'g' ... are not cut
-	m_message->setSize( m_message->getSize().x, 40.0f );
+	m_message->setSize( m_message->getSize().x, m_message->getSize().y + 10.0f );
 }
 
 void PromptState::SetDefaultValue(const std::string& _value)
@@ -153,7 +154,7 @@ const std::string PromptState::GetResult()
 	return m_editBox->getText();
 }
 
-void PromptState::AddButton(const std::string _buttonText, std::function<void(std::string)> _callback,
+void PromptState::AddButton(const std::string& _buttonText, std::function<void(const std::string&)> _callback,
 							sf::Keyboard::Key _hotkey, Core::Object* _evaluateObj)
 {
 	int bID = m_buttons.size();
@@ -190,6 +191,7 @@ void PromptState::GuiCallback(tgui::Callback& args)
 			prompt->Resize((sf::Vector2f)g_Game->GetWindow().getSize());
 			prompt->DisableMinimize();
 			prompt->SetTextInputRequired(false);
+			prompt->AddButton( "Mach ich", [this](const std::string&){ } , sf::Keyboard::Return );
             return;
 		}
 	}

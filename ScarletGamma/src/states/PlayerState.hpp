@@ -68,6 +68,6 @@ namespace States
 		/// \param [in] objectID	object to remember
 		void SetHotkeyToObject(const int hotkey, Core::ObjectID objectID);
 
-		void RollDice(std::string& _value);
+		void RollDice(const std::string& _value);
 	};
 }

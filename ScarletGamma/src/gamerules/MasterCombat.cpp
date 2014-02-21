@@ -35,7 +35,7 @@ void GameRules::MasterCombat::AddParticipant( Core::ObjectID _object )
     }
 }
 
-void GameRules::MasterCombat::InitiativeRollPromptFinished( std::string& _result, Core::ObjectID _object )
+void GameRules::MasterCombat::InitiativeRollPromptFinished( const std::string& _result, Core::ObjectID _object )
 {
 	ReceivedInitiative(_object, _result);
 }
@@ -87,7 +87,7 @@ void GameRules::MasterCombat::EndTurn()
 		ReceivedTurnEnded();
 }
 
-void MasterCombat::ReceivedInitiative( Core::ObjectID _object, std::string& _initiative )
+void MasterCombat::ReceivedInitiative( Core::ObjectID _object, const std::string& _initiative )
 {
     // Save initiative value
     int iniEvaluated = Utils::EvaluateFormula(_initiative, Game::RANDOM, g_Game->GetWorld()->GetObject(_object));

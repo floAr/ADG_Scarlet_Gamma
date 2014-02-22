@@ -25,7 +25,7 @@ void FreeTextAction::Execute()
     prompt->SetDefaultValue(m_valueCache);
     prompt->AddButton("OK", std::bind(&FreeTextAction::FreeTextPromptFinished, this,
         std::placeholders::_1), sf::Keyboard::Return);
-    prompt->AddButton("Abbrechen", [](std::string&) -> void {}, sf::Keyboard::Escape);
+    prompt->AddButton("Abbrechen", [this](std::string&) -> void { m_finished = true; }, sf::Keyboard::Escape);
 }
 
 Action* FreeTextAction::Clone(Core::ObjectID _executor, Core::ObjectID _target)

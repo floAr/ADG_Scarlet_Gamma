@@ -121,7 +121,7 @@ void PromptState::SetText(const std::string& _text)
 {
 	m_message = tgui::Label::Ptr(m_gui);
 	m_message->setTextSize(28);
-	m_message->setTextColor( sf::Color(200,200,200) );
+//	m_message->setTextColor( sf::Color(200,200,200) );
 	m_message->setAutoSize(true);
 	m_message->setText(_text);
 	// Make sure 'g' ... are not cut
@@ -191,7 +191,7 @@ void PromptState::GuiCallback(tgui::Callback& args)
 			prompt->Resize((sf::Vector2f)g_Game->GetWindow().getSize());
 			prompt->DisableMinimize();
 			prompt->SetTextInputRequired(false);
-			prompt->AddButton( "Mach ich", [this](const std::string&){ } , sf::Keyboard::Return );
+			prompt->AddButton( "Mach ich", [](const std::string&){ } , sf::Keyboard::Return );
             return;
 		}
 	}

@@ -652,7 +652,7 @@ namespace States {
 			prompt->SetTextInputRequired(false);
 			prompt->SetText("Alle aktuell ausgewählten Objekte nehmen am Kampf teil. Weiter?\n");
 			prompt->AddButton("Ja", std::bind(&MasterState::CreateCombatFromSelection, this), sf::Keyboard::Return);
-			prompt->AddButton("Nein", [](std::string) -> void {}, sf::Keyboard::Escape);
+			prompt->AddButton("Nein", [](const std::string&) -> void {}, sf::Keyboard::Escape);
 			prompt->DisableMinimize();
 		}
 		else

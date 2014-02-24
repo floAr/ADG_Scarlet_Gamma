@@ -21,7 +21,7 @@ namespace States{
 
 		DismissableDialogState::AddOrb(&m_orb);
 
-		// Make sure this is the only maximized state
+		// Make sure this is the active state
 		SetMinimized( false );
 	}
 
@@ -30,7 +30,8 @@ namespace States{
 		// Remove the orb from the global list
 		DismissableDialogState::RemoveOrb(&m_orb);
 
-		m_activeDDState = nullptr;
+		if( m_activeDDState == this )
+			m_activeDDState = nullptr;
 	}
 
 	void DismissableDialogState::SetMinimized(bool _value)
@@ -40,8 +41,8 @@ namespace States{
 		if( !_value )
 		{
 			// Make sure this is the only maximized state
-			if( m_activeDDState && m_activeDDState != this )
-				m_activeDDState->SetMinimized( true );
+//			if( m_activeDDState && m_activeDDState != this )
+//				m_activeDDState->SetMinimized( true );
 			m_activeDDState = this;
 		} else m_activeDDState = nullptr;
 	}
@@ -54,6 +55,8 @@ namespace States{
 
 	void DismissableDialogState::Update(float dt)
 	{	
+		if( !m_activeDDState && !m_isMinimized )
+			m_activeDDState = this;
         m_previousState->Update(dt);
 		if(m_isMinimized){//break this chain if minimized			
 			return;

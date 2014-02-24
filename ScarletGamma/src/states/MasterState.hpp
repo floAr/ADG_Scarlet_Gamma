@@ -79,8 +79,8 @@ namespace States
 
 		bool m_firstLayerSelection;			///< bool to indicate if this is the first layer selected with alt (to hide the rest)
 		
-		void RollSecretly(std::string& result);
+		void RollSecretly(const std::string& result);
 		
-		void RollOpen(std::string& result);
+		void RollOpen(const std::string& result);
 	};
 }

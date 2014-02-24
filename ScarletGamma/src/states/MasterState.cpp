@@ -652,7 +652,7 @@ namespace States {
 			prompt->SetTextInputRequired(false);
 			prompt->SetText("Alle aktuell ausgewählten Objekte nehmen am Kampf teil. Weiter?\n");
 			prompt->AddButton("Ja", std::bind(&MasterState::CreateCombatFromSelection, this), sf::Keyboard::Return);
-			prompt->AddButton("Nein", [](std::string) -> void {}, sf::Keyboard::Escape);
+			prompt->AddButton("Nein", [](const std::string&) -> void {}, sf::Keyboard::Escape);
 			prompt->DisableMinimize();
 		}
 		else
@@ -683,7 +683,7 @@ namespace States {
 		m_diceRollState->AddButton("Offen würfeln",std::bind(&MasterState::RollOpen,this,std::placeholders::_1));
 	}
 
-	void MasterState::RollSecretly(std::string& _result)
+	void MasterState::RollSecretly(const std::string& _result)
 	{
 		try {
 			if( m_selection.Size() == 0 )
@@ -705,7 +705,7 @@ namespace States {
 		}
 	}
 
-	void MasterState::RollOpen(std::string& _result)
+	void MasterState::RollOpen(const std::string& _result)
 	{
 		try {
 			if( m_selection.Size() == 0 )

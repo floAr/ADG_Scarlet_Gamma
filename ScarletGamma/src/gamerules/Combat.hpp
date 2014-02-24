@@ -29,7 +29,7 @@ namespace GameRules
         void PushInitiativePrompt(Core::ObjectID _object);
 
         /// \brief Is called when the initiative roll is accepted.
-		virtual void InitiativeRollPromptFinished(std::string& _result, Core::ObjectID _object);
+		virtual void InitiativeRollPromptFinished(const std::string& _result, Core::ObjectID _object);
 
         /// \brief Is called when it is a combattant's turn.
         virtual void SetTurn( Core::ObjectID _object );

@@ -16,8 +16,7 @@ namespace States
 		/// \brief Set the texture of the orb
 		//	void SetOrbTexture(sf::Texture _orbTexture);
 		sf::Sprite  m_orb;		  ///< Sprite shown when minimized
-        sf::Texture m_orbTexture; ///< Texture of the orb, local copy for smoothness
-		const static int ORB_WIDTH = 51;	///< pixelsize of one Orb
+		const static int ORB_WIDTH = 51;	///< pixel size of one Orb
 		bool m_isMinimizeable;	///< Bool indicating if the state can be minimized
 		bool m_forceKeepAlive;	///< does not close the State after pressing a button, but minimizing it
 
@@ -28,8 +27,11 @@ namespace States
 		virtual void SetKeepAlive(bool _value);
 		virtual void SetOrbSprite(const std::string& texture);
 
-		/// \brief Creates a Zoom object, The GUI for chats.
-		DismissableDialogState();	
+		/// \brief Creates an orb in the global list
+		DismissableDialogState(const std::string& _orbTexture);
+
+		/// \brief Remove the orb from the list
+		~DismissableDialogState();
 
 		/// \brief Virtual function that is called when the GameLoop wants
 		///		to update the GameState.
@@ -61,91 +63,62 @@ namespace States
 		/// \details Has the same internal logic as KeyPressed.
 		/// \param [in] button      SFML button event that contains all required information.
 		/// \param [in] tilePos     In-game tile that the user clicked on. Cast to float if required.
-		/// \param [in] guiHandled  Wether the GUI already used the event
+		/// \param [in] guiHandled  Whether the GUI already used the event
 		virtual void MouseButtonPressed(sf::Event::MouseButtonEvent& button,
-			sf::Vector2f& tilePos, bool guiHandled);
+			sf::Vector2f& tilePos, bool guiHandled) override;
 
 
 		// pass everything else downward when minimized
-		virtual void TextEntered(char character, bool guiHandled){
-			if(m_isMinimized){
+		virtual void TextEntered(char character, bool guiHandled) override
+		{
+			if(m_isMinimized)
 				m_previousState->TextEntered(character,guiHandled);
-				return;
-			}
 		}
 
 
-		/// \brief Gets called by the InputHandler when any key is pressed.
-		/// \param [in] key         SFML key event that contains all required information.
-		/// \param [in] guiHandled  Wether the GUI already used the event
-		virtual void KeyPressed(sf::Event::KeyEvent& key, bool guiHandled){
-			if(m_isMinimized){
+		virtual void KeyPressed(sf::Event::KeyEvent& key, bool guiHandled) override
+		{
+			if(m_isMinimized)
 				m_previousState->KeyPressed(key,guiHandled);	
-				return;
-			}
 		}
 
 
-		/// \brief Gets called by the InputHandler when any key is released.
-		/// \param [in] key         SFML key event that contains all required information.
-		/// \param [in] time        How long the key was pressed, in seconds.
-		/// \param [in] guiHandled  Wether the GUI already used the event
-		virtual void KeyReleased(sf::Event::KeyEvent& key, float time, bool guiHandled){
-			if(m_isMinimized){
+		virtual void KeyReleased(sf::Event::KeyEvent& key, float time, bool guiHandled) override
+		{
+			if(m_isMinimized)
 				m_previousState->KeyReleased(key,time,guiHandled);
-				return;
-			}
 		}
 
 
 
 		//----------------------------------------------------------------------
 		// MOUSE EVENTS
-
-		/// \brief Gets called when the mouse wheel is moved.
-		/// \param [in] wheel       SFML wheel event that contains all required information.
-		/// \param [in] guiHandled  Wether the GUI already used the event
-		virtual void MouseWheelMoved(sf::Event::MouseWheelEvent& wheel, bool guiHandled){
-			if(m_isMinimized){
+		virtual void MouseWheelMoved(sf::Event::MouseWheelEvent& wheel, bool guiHandled) override
+		{
+			if(m_isMinimized)
 				m_previousState->MouseWheelMoved(wheel,guiHandled);
-				return;
-			}
 		}
 
-
-
-		/// \brief Gets called when a mouse button is released.
-		/// \param [in] button      SFML button event that contains all required information.
-		/// \param [in] tilePos     In-game tile that the user clicked on. Cast to float if required.
-		/// \param [in] time        How long the button was pressed, in seconds.
-		/// \param [in] guiHandled  Wether the GUI already used the event
 
 		virtual void MouseButtonReleased(sf::Event::MouseButtonEvent& button,
-			sf::Vector2f& tilePos,float time, bool guiHandled){
-				if(m_isMinimized){
-					m_previousState->MouseButtonReleased(button,tilePos,time,guiHandled);
-					return;
-				}
+			sf::Vector2f& tilePos,float time, bool guiHandled) override
+		{
+			if(m_isMinimized)
+				m_previousState->MouseButtonReleased(button,tilePos,time,guiHandled);
 		}
 
 
-		/// \brief Gets called when the mouse is moved.
-		/// \param [in] deltaX      Relative horizontal mouse movement since last frame.
-		/// \param [in] deltaY      Relative vertical mouse movement since last frame.
-		/// \param [in] guiHandled  Wether the GUI already used the event
-		virtual void MouseMoved(int deltaX, int deltaY, bool guiHandled){
-			if(m_isMinimized){
+		virtual void MouseMoved(int deltaX, int deltaY, bool guiHandled) override
+		{
+			if(m_isMinimized)
 				m_previousState->MouseMoved(deltaX,deltaY,guiHandled);
-				return;
-			}
 		}
 
 
-		virtual void GuiCallback(tgui::Callback& callback){
-			if(m_isMinimized){
+		virtual void GuiCallback(tgui::Callback& callback) override
+		{
+			if(m_isMinimized)
 				m_previousState->GuiCallback(callback);
-				return;
-			}
 		}
 
 
@@ -156,8 +129,11 @@ namespace States
 		{
 			if (m_isMinimized)
 				return m_previousState->GuiHandleEvent(event);
-			else
-				return GameState::GuiHandleEvent(event);
+			else {
+				bool result = GameState::GuiHandleEvent(event);
+				GameState::GuiHandleCallbacks();
+				return result;
+			}
 		}
 
 		virtual void Resize(const sf::Vector2f& _size);
@@ -168,15 +144,13 @@ namespace States
 		static void RemoveOrb(sf::Sprite* _orb);
 
 	private:
-		bool m_isMinimized;		///< Indicates wether the state is currently minimized
-		sf::Sprite m_minimize;	///< Sprite to start the minimize process
+		bool m_isMinimized;		///< Indicates whether the state is currently minimized
 
 		int m_orbID;			///< index of the minimized orb
 		sf::Shader m_shader;	///< Shader for the blur effect
 
-		sf::Sprite m_background; ///< Background image
-
-		static std::vector<sf::Sprite*> ms_orbs;	///< List of currently minimized orbs
+		static std::vector<sf::Sprite*> m_orbs;			///< List of all currently existing orbs
+		static DismissableDialogState* m_activeDDState;	///< The dismissable states are mutually exclusive -> minimize an other one if the current one is maximized
 
 		static void RecalculateOrbPositions();
 	};

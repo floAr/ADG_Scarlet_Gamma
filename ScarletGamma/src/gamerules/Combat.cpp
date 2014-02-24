@@ -64,7 +64,7 @@ void GameRules::Combat::PushInitiativePrompt(Core::ObjectID _object)
 	//prompt->AddButton("Abbrechen", std::bind(&Combat::EndCombat, this), sf::Keyboard::Escape);
 }
 
-void GameRules::Combat::InitiativeRollPromptFinished( std::string& _result, Core::ObjectID _object )
+void GameRules::Combat::InitiativeRollPromptFinished( const std::string& _result, Core::ObjectID _object )
 {
     // Send initiative roll string to server
     Jo::Files::MemFile data;

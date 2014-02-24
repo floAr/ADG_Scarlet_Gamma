@@ -34,19 +34,19 @@ namespace States
 		/// \brief _buttonText  [in]  Caption of the button
 		/// \brief _callback    [in]  Function that is called when the button is pressed
 		/// \brief _evaluateObj [in]  Object used for evaluation check, or 0 for none
-		void AddButton(const std::string _buttonText, std::function<void(std::string)> _callback,
+		void AddButton(const std::string& _buttonText, std::function<void(const std::string&)> _callback,
 			sf::Keyboard::Key _hotkey = sf::Keyboard::Unknown, Core::Object* _evaluateObj = 0);
 
 	private:
 
 		struct PromptButton
 		{
-			PromptButton(tgui::Button::Ptr _button, std::function<void(std::string)> _function,
+			PromptButton(tgui::Button::Ptr _button, std::function<void(const std::string&)> _function,
 				Core::Object* _evaluateObj = 0, sf::Keyboard::Key _hotkey = sf::Keyboard::Unknown)
 				: button(_button), function(_function), evaluateObj(_evaluateObj), hotkey(_hotkey) {}
 
 			tgui::Button::Ptr				 button;
-			std::function<void(std::string)> function;
+			std::function<void(const std::string&)> function;
 			Core::Object*					 evaluateObj;
 			sf::Keyboard::Key				 hotkey;
 		};
@@ -54,6 +54,7 @@ namespace States
 		tgui::Button::Ptr m_defaultButton;	///< This is a preloaded button to increase RecalculateGUI performance by a height factor
 		tgui::Gui m_gui;
 		tgui::EditBox::Ptr m_editBox;
+		tgui::Label::Ptr m_message;
 		PromptButton* m_result;
 
 		std::unordered_map<int, PromptButton> m_buttons;

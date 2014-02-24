@@ -61,8 +61,8 @@ namespace Utils {
 		if( _value.find_last_not_of( "0123456789wW" ) != std::string::npos )
 		{
 			// It is a property - use recursive evaluation
-			if( !_object ) throw Exception::InvalidFormula("Formel referenziert eine Eigenschaft, aber kein Objekt gegeben.");
-			if( !_object->HasProperty(_value) ) throw Exception::InvalidFormula("Formel referenziert die Eigenschaft " + _value + ", welche nicht Teil des Objektes " + _object->GetName() + " ist.");
+			if( !_object ) throw Exception::InvalidFormula("Formel referenziert eine Eigenschaft,\naber kein Objekt gegeben.");
+			if( !_object->HasProperty(_value) ) throw Exception::InvalidFormula("Formel referenziert die Eigenschaft " + _value + ",\nwelche nicht Teil des Objektes " + _object->GetName() + " ist.");
 			return Token( _object->GetProperty( _value ).Evaluate(_object), true );
 		}
 

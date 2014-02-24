@@ -85,7 +85,7 @@ States::GameState* States::StateMachine::PushGameState(States::GameStateType sta
         newState = new States::PromptState();
 		break;
     case GST_DISMISS:
-        newState = new States::DismissableDialogState();
+        newState = new States::DismissableDialogState("media/orb.png");
 		break;
     }
 

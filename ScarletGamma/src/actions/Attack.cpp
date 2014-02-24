@@ -119,7 +119,7 @@ void Attack::HandleActionInfoResponse(uint8_t _messageType, const std::string& _
     }
 }
 
-void Attack::AttackRollPromptFinished(std::string& _result)
+void Attack::AttackRollPromptFinished(const std::string& _result)
 {
     // Prompt is finished, what was the result?
     if (_result.empty())
@@ -203,7 +203,7 @@ void Attack::AttackRollInfoLocal(const std::string& _message)
     PushAttackRollDMPrompt(result, &Attack::AttackRollDMPromptFinishedLocal);
 }
 
-void Attack::PushAttackRollDMPrompt(int _result, void (Attack::* _callback)(std::string&))
+void Attack::PushAttackRollDMPrompt(int _result, void (Attack::* _callback)(const std::string&))
 {
     // Open prompt for hit roll value
     States::PromptState* prompt = dynamic_cast<States::PromptState*>(
@@ -232,7 +232,7 @@ void Attack::PushAttackRollDMPrompt(int _result, void (Attack::* _callback)(std:
 		g_Game->GetWorld()->GetObject(m_executor));
 }
 
-void Attack::AttackRollDMPromptFinished(std::string& _result)
+void Attack::AttackRollDMPromptFinished(const std::string& _result)
 {
     int result = atoi( _result.c_str() );
 
@@ -248,7 +248,7 @@ void Attack::AttackRollDMPromptFinished(std::string& _result)
     }
 }
 
-void Attack::AttackRollDMPromptFinishedLocal(std::string& _result)
+void Attack::AttackRollDMPromptFinishedLocal(const std::string& _result)
 {
     int result = atoi( _result.c_str() );
 
@@ -302,7 +302,7 @@ void Attack::AttackRollMissed()
     m_finished = true;
 }
 
-void Attack::HitRollPromptFinished(std::string& _result)
+void Attack::HitRollPromptFinished(const std::string& _result)
 {
     // Prompt is finished, what was the result?
     if (_result.empty())
@@ -362,7 +362,7 @@ void Attack::HitRollInfoLocal(const std::string& _message)
     PushHitRollDMPrompt(result, &Attack::HitRollDMPromptFinishedLocal);
 }
 
-void Attack::PushHitRollDMPrompt(int _result, void (Attack::* _callback)(std::string&))
+void Attack::PushHitRollDMPrompt(int _result, void (Attack::* _callback)(const std::string&))
 {
     // Open prompt for hit roll value
     States::PromptState* prompt = dynamic_cast<States::PromptState*>(
@@ -383,7 +383,7 @@ void Attack::PushHitRollDMPrompt(int _result, void (Attack::* _callback)(std::st
 		sf::Keyboard::Return, g_Game->GetWorld()->GetObject(m_executor));
 }
 
-void Attack::HitRollDMPromptFinished(std::string& _result)
+void Attack::HitRollDMPromptFinished(const std::string& _result)
 {
     // Apply damage
     int result = atoi( _result.c_str() );
@@ -395,7 +395,7 @@ void Attack::HitRollDMPromptFinished(std::string& _result)
     Network::MsgActionEnd(m_id).Send(m_sender);
 }
 
-void Attack::HitRollDMPromptFinishedLocal(std::string& _result)
+void Attack::HitRollDMPromptFinishedLocal(const std::string& _result)
 {
     // Apply damage
     int result = atoi( _result.c_str() );

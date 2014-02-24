@@ -683,7 +683,7 @@ namespace States {
 		m_diceRollState->AddButton("Offen würfeln",std::bind(&MasterState::RollOpen,this,std::placeholders::_1));
 	}
 
-	void MasterState::RollSecretly(std::string& _result)
+	void MasterState::RollSecretly(const std::string& _result)
 	{
 		try {
 			if( m_selection.Size() == 0 )
@@ -705,7 +705,7 @@ namespace States {
 		}
 	}
 
-	void MasterState::RollOpen(std::string& _result)
+	void MasterState::RollOpen(const std::string& _result)
 	{
 		try {
 			if( m_selection.Size() == 0 )

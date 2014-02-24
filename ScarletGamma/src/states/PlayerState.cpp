@@ -442,7 +442,7 @@ bool States::PlayerState::OwnsObject( Core::ObjectID _object )
 	}
 
 	
-	void States::PlayerState::RollDice(std::string& _result)
+	void States::PlayerState::RollDice(const std::string& _result)
 	{
 		try {
 			int x = Utils::EvaluateFormula(_result, g_Game->RANDOM, m_focus);

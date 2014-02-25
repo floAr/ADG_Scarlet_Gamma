@@ -17,7 +17,7 @@
     <node id="n0">
       <data key="d6">
         <y:GenericNode configuration="com.yworks.flowchart.offPageReference">
-          <y:Geometry height="48.75" width="42.25" x="619.1164516363635" y="-174.38061818181825"/>
+          <y:Geometry height="48.75" width="42.25" x="787.1164516363635" y="-174.38061818181825"/>
           <y:Fill color="#FFFFFF" color2="#00CCFF" transparent="false"/>
           <y:BorderStyle color="#FFFFFF" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" borderDistance="0.0" fontFamily="Trebuchet MS" fontSize="14" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="20.255859375" modelName="sides" modelPosition="n" textColor="#000000" visible="true" width="43.5458984375" x="-0.64794921875" y="-20.255859375">Today</y:NodeLabel>
@@ -3191,7 +3191,7 @@ Abschlusspräsentation</y:NodeLabel>
       <data key="d6">
         <y:GenericNode configuration="com.yworks.flowchart.process">
           <y:Geometry height="12.0" width="336.0" x="-0.2585483636364643" y="-265.3153090909091"/>
-          <y:Fill color="#FFFFFF" color2="#B7C9E3" transparent="false"/>
+          <y:Fill color="#00FF00" color2="#B7C9E3" transparent="false"/>
           <y:BorderStyle color="#FFFFFF" type="line" width="1.0"/>
           <y:NodeLabel alignment="left" autoSizePolicy="content" borderDistance="0.0" fontFamily="Trebuchet MS" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.93359375" modelName="sides" modelPosition="n" textColor="#000000" visible="true" width="164.740234375" x="85.6298828125" y="-17.93359375">Rundenbasierter Kampfmodus</y:NodeLabel>
           <y:StyleProperties>
@@ -3230,7 +3230,7 @@ Abschlusspräsentation</y:NodeLabel>
       <data key="d6">
         <y:GenericNode configuration="com.yworks.flowchart.process">
           <y:Geometry height="12.0" width="231.0" x="-84.25854836363646" y="-307.3153090909091"/>
-          <y:Fill color="#FFFFFF" color2="#B7C9E3" transparent="false"/>
+          <y:Fill color="#FF9900" color2="#B7C9E3" transparent="false"/>
           <y:BorderStyle color="#FFFFFF" type="line" width="1.0"/>
           <y:NodeLabel alignment="left" autoSizePolicy="content" borderDistance="0.0" fontFamily="Trebuchet MS" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.93359375" modelName="sides" modelPosition="n" textColor="#000000" visible="true" width="41.359375" x="94.8203125" y="-17.93359375">Zauber</y:NodeLabel>
           <y:StyleProperties>
@@ -3282,7 +3282,7 @@ Abschlusspräsentation</y:NodeLabel>
       <data key="d6">
         <y:GenericNode configuration="com.yworks.flowchart.process">
           <y:Geometry height="12.0" width="63.0" x="608.7414516363635" y="-265.3153090909091"/>
-          <y:Fill color="#FFFFFF" color2="#B7C9E3" transparent="false"/>
+          <y:Fill color="#00FF00" color2="#B7C9E3" transparent="false"/>
           <y:BorderStyle color="#FFFFFF" type="line" width="1.0"/>
           <y:NodeLabel alignment="left" autoSizePolicy="content" borderDistance="0.0" fontFamily="Trebuchet MS" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.93359375" modelName="sides" modelPosition="n" textColor="#000000" visible="true" width="66.0859375" x="-1.54296875" y="-17.93359375">Fragebogen</y:NodeLabel>
           <y:StyleProperties>
@@ -3425,7 +3425,7 @@ Abschlusspräsentation</y:NodeLabel>
       <data key="d6">
         <y:GenericNode configuration="com.yworks.flowchart.process">
           <y:Geometry height="12.0" width="126.60071563636376" x="62.14073599999978" y="-349.3153090909091"/>
-          <y:Fill color="#FFFFFF" color2="#B7C9E3" transparent="false"/>
+          <y:Fill color="#00FF00" color2="#B7C9E3" transparent="false"/>
           <y:BorderStyle color="#FFFFFF" type="line" width="1.0"/>
           <y:NodeLabel alignment="left" autoSizePolicy="content" borderDistance="0.0" fontFamily="Trebuchet MS" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.93359375" modelName="sides" modelPosition="n" textColor="#000000" visible="true" width="62.388671875" x="32.10602188068188" y="-17.93359375">Weitkampf</y:NodeLabel>
           <y:StyleProperties>

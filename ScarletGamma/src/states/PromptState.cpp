@@ -8,21 +8,19 @@
 
 using namespace States;
 
-PromptState::PromptState()
-	: m_result(nullptr)
+PromptState::PromptState() :
+	DismissableDialogState( "media/orb_prompt.png" ),
+	m_result(nullptr),
+	m_editBox(nullptr),
+	m_message(nullptr)
 {
 	m_defaultButton->load("lib/TGUI-0.6-RC/widgets/Black.conf");
-	// Load shader from file
-	//m_shader=Content::Instance()->LoadShader("media/Prompt.frag",sf::Shader::Type::Fragment);
-	m_orb=sf::Sprite(Content::Instance()->LoadTexture("media/orb_prompt.png"));
-	float orbScale=DismissableDialogState::ORB_WIDTH/m_orb.getLocalBounds().width;
-	m_orb.setScale(sf::Vector2f(orbScale,orbScale));
 
 	// Create GUI
 	m_gui.setWindow(g_Game->GetWindow());
 	m_gui.setGlobalFont( Content::Instance()->LoadFont("media/arial.ttf") );
-	m_gui.loadWidgetsFromFile("media/Prompt.gui");
-	m_editBox = m_gui.get("EnterText");
+	m_editBox = tgui::EditBox::Ptr(m_gui);
+	m_editBox->load("lib/TGUI-0.6-RC/widgets/Black.conf");
 	SetGui(&m_gui);
 }
 
@@ -35,11 +33,6 @@ void PromptState::OnBegin()
 void PromptState::Draw(sf::RenderWindow& win)
 {
 	DismissableDialogState::Draw(win);
-
-	// Draw GUI
-	//sf::Vector2u size = g_Game->GetWindow().getSize();
-	//Resize(sf::Vector2f((float) size.x, (float) size.y));
-	//GameState::Draw(win);
 }
 
 void PromptState::Update(float dt)
@@ -94,26 +87,21 @@ void PromptState::Resize(const sf::Vector2f& _size)
 	DismissableDialogState::Resize(_size);
 
 	// Adjust text position
-	tgui::Label::Ptr message = m_gui.get("Message");
-	message->setPosition(_size.x / 2.0f - message->getSize().x / 2.0f,
-		message->getPosition().y);
+	m_message->setPosition(_size.x / 2.0f - m_message->getSize().x / 2.0f,
+		_size.y * 0.4f);
 
-	// Adjust edit box size and position
-	auto editBoxPtr = m_editBox.get();
-	editBoxPtr->setSize(std::min(920.f, _size.x - 20), editBoxPtr->getSize().y);
-	editBoxPtr->setPosition(_size.x / 2.0f - editBoxPtr->getSize().x / 2.0f, editBoxPtr->getPosition().y);
+	float yEdit = _size.y * 0.4f + m_message->getSize().y + 30.0f;
 
 	// Adjust button position
+	float totalBtnWidth = 350.0f;
 	if (m_buttons.size() > 0)
 	{
-		float buttonTop = m_editBox->isVisible() ?
-			m_editBox->getPosition().y + m_editBox->getSize().y + 20 :
-			m_editBox->getPosition().y;
+		float buttonTop = m_editBox->isVisible() ? yEdit + 60.0f : yEdit;
 
 		// Pre-calculations for button positions
 		float winWidth = _size.x;
 		int spacing = 10;
-		float totalBtnWidth = m_buttons.at(0).button->getSize().x *
+		totalBtnWidth = m_buttons.at(0).button->getSize().x *
 			m_buttons.size() + spacing * (m_buttons.size() - 1);
 
 		// Reposition all buttons
@@ -123,13 +111,21 @@ void PromptState::Resize(const sf::Vector2f& _size)
 				+ m_buttons.at(0).button->getSize().x * i + spacing * i, buttonTop);
 		}
 	}
+
+	// Adjust edit box size and position
+	m_editBox->setSize(std::min(std::max(350.0f, totalBtnWidth), _size.x - 20), 40.0f);
+	m_editBox->setPosition(_size.x / 2.0f - m_editBox->getSize().x / 2.0f, yEdit);
 }
 
 void PromptState::SetText(const std::string& _text)
 {
-	tgui::Label::Ptr message = m_gui.get("Message");
-	message->setAutoSize(true);
-	message->setText(_text);
+	m_message = tgui::Label::Ptr(m_gui);
+	m_message->setTextSize(28);
+//	m_message->setTextColor( sf::Color(200,200,200) );
+	m_message->setAutoSize(true);
+	m_message->setText(_text);
+	// Make sure 'g' ... are not cut
+	m_message->setSize( m_message->getSize().x, m_message->getSize().y + 10.0f );
 }
 
 void PromptState::SetDefaultValue(const std::string& _value)
@@ -158,7 +154,7 @@ const std::string PromptState::GetResult()
 	return m_editBox->getText();
 }
 
-void PromptState::AddButton(const std::string _buttonText, std::function<void(std::string)> _callback,
+void PromptState::AddButton(const std::string& _buttonText, std::function<void(const std::string&)> _callback,
 							sf::Keyboard::Key _hotkey, Core::Object* _evaluateObj)
 {
 	int bID = m_buttons.size();
@@ -195,6 +191,7 @@ void PromptState::GuiCallback(tgui::Callback& args)
 			prompt->Resize((sf::Vector2f)g_Game->GetWindow().getSize());
 			prompt->DisableMinimize();
 			prompt->SetTextInputRequired(false);
+			prompt->AddButton( "Mach ich", [](const std::string&){ } , sf::Keyboard::Return );
             return;
 		}
 	}
@@ -206,9 +203,12 @@ void PromptState::GuiCallback(tgui::Callback& args)
 
 	if (!m_editBox->isVisible())
 		m_editBox->setText(""); // Required if someone uses global PopCallback
-	if(!m_forceKeepAlive)
+	if(!m_forceKeepAlive) {
 		m_finished = true;
-	else
+		// The current state might not be on top -> remove it from Orb-bar manually
+		SetMinimized( true );
+		RemoveOrb( &m_orb );
+	} else
 	{
 		if (m_result != nullptr) // also handle button here to emit event
 			m_result->function(m_editBox->getText());

@@ -19,10 +19,10 @@ namespace GameRules
 
         /// \brief Adds a combat participant to the correct position in the
         ///     initiavite list.
-        void ReceivedInitiative(Core::ObjectID _object, std::string& _initiative);
+        void ReceivedInitiative(Core::ObjectID _object, const std::string& _initiative);
 
         /// \brief Called when a DM ini prompt is done.
-        virtual void InitiativeRollPromptFinished(std::string& _result, Core::ObjectID _object) override;
+        virtual void InitiativeRollPromptFinished(const std::string& _result, Core::ObjectID _object) override;
 
         /// \brief Called when the DM added the (initial) participants and wants
         ///     to start the combat.

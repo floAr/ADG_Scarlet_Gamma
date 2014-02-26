@@ -78,6 +78,9 @@ namespace States
 
 		virtual void KeyPressed(sf::Event::KeyEvent& key, bool guiHandled) override
 		{
+			// Handle copy & paste
+			GameState::KeyPressed(key, guiHandled);
+
 			if(m_isMinimized)
 				m_previousState->KeyPressed(key,guiHandled);	
 		}

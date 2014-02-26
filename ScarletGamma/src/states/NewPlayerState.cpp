@@ -322,6 +322,9 @@ void CharacterState::Draw(sf::RenderWindow& win)
 
 void CharacterState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 {
+	// Handle copy & paste
+	GameState::KeyPressed(key, guiHandled);
+
     switch (key.code)
     {
     // Quit with escape and c

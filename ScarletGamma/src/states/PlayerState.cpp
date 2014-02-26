@@ -189,6 +189,9 @@ void States::PlayerState::MouseWheelMoved(sf::Event::MouseWheelEvent& wheel, boo
 
 void States::PlayerState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 {
+	// Handle copy & paste
+	GameState::KeyPressed(key, guiHandled);
+
 	// Let common state handle input
 	CommonState::KeyPressed(key, guiHandled);
 

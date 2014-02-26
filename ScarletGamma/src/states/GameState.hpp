@@ -91,7 +91,7 @@ namespace States
 		/// \brief Gets called by the InputHandler when any key is pressed.
 		/// \param [in] key         SFML key event that contains all required information.
 		/// \param [in] guiHandled  Wether the GUI already used the event
-		virtual void KeyPressed(sf::Event::KeyEvent& key, bool guiHandled) { }
+		virtual void KeyPressed(sf::Event::KeyEvent& key, bool guiHandled);
 
 		/// \brief Gets called by the InputHandler when any key is released.
 		/// \param [in] key         SFML key event that contains all required information.
@@ -183,6 +183,16 @@ namespace States
 		/// \param [in] gui  Pointer to the GUI instance.
 		void SetGui(tgui::Gui* gui) { m_currentGui = gui ; }
 
+		/// \brief brute force search for the focused element in the gui
+		tgui::Widget::Ptr GetFocusedElement();
+
+		/// \brief Paste text into an edit field if one is focused. Does nothing
+		///		otherwise.
+		void Paste(const sf::String& _text);
+
+		/// \brief Get the string from a focused edit. The string is empty if no
+		///		edit is focused
+		sf::String Copy();
 	private:
 		tgui::Gui* m_currentGui;	///< GUI to be rendered, updated and used to handle events.
 	};

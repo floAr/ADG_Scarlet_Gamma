@@ -43,7 +43,10 @@ void States::LaunchMasterState::Draw(sf::RenderWindow& win)
 
 void States::LaunchMasterState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 {
-    switch (key.code)
+	// Handle copy & paste
+	GameState::KeyPressed(key, guiHandled);
+
+	switch (key.code)
     {
     // Quit with escape
     case sf::Keyboard::Escape:

@@ -70,7 +70,7 @@ Window:
 		Enabled = true
 		Transparency = 255
 		CallbackId = 0
-		Text = "Verbinde zu Server ..."
+		Text = "Connecting to server ..."
 		TextColor = (200,200,200,255)
 		TextSize = 26
 		BackgroundColor = (0,0,0,0)

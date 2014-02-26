@@ -43,6 +43,9 @@ void States::LaunchPlayerState::Draw(sf::RenderWindow& win)
 
 void States::LaunchPlayerState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 {
+	// Handle copy & paste
+	GameState::KeyPressed(key, guiHandled);
+
     switch (key.code)
     {
     // Quit with escape

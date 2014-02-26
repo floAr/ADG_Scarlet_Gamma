@@ -1,6 +1,7 @@
 #include "GameState.hpp"
 #include "sfutils\View.hpp"
 #include "Game.hpp"
+#include "utils\Clipboard.hpp"
 
 namespace States {
 
@@ -39,6 +40,20 @@ namespace States {
 		}
 	}
 
+	void GameState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
+	{
+		// Handle copy & paste
+		if( key.code == sf::Keyboard::C && sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) )
+		{
+			sf::String text = Copy();
+			if( !text.isEmpty() )
+				Utils::Clipboard::Instance()->SetClipboardText(text.toAnsiString().c_str());
+		} else if( key.code == sf::Keyboard::V && sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) )
+		{
+			Paste( Utils::Clipboard::Instance()->GetClipboardText() );
+		}
+	}
+
 	void GameState::AddPopCallback(std::function<void(GameState*)> callback)
 	{
 		m_popCallbacks.push_back(callback);
@@ -66,6 +81,54 @@ namespace States {
 	void GameState::SetStateView()
 	{
 		g_Game->GetWindow().setView(m_stateView);
+	}
+
+
+	tgui::Widget::Ptr GameState::GetFocusedElement()
+	{
+		auto widgets = &m_currentGui->getWidgets();
+		for( int i=0; i<(int)widgets->size(); ++i )
+		{
+			if( (*widgets)[i]->isFocused() )
+			{
+				// Test if the element is a container and search must go on...
+				tgui::Container* container = dynamic_cast<tgui::Container*>((*widgets)[i].get());
+				if( !container ) return (*widgets)[i];
+				else {
+					// "restart recursive"
+					widgets = &container->getWidgets();
+					i = -1;
+				}
+			}
+		}
+
+		return nullptr;
+	}
+
+	void GameState::Paste(const sf::String& _text)
+	{
+		// Try to get the focused edit
+		tgui::Widget::Ptr widget = GetFocusedElement();
+		tgui::EditBox* edit = dynamic_cast<tgui::EditBox*>(widget.get());
+		if( edit )
+		{
+			// Emulate entering the whole text
+			for( size_t i=0; i<_text.getSize(); ++i )
+				edit->textEntered( _text[i] );
+		}
+	}
+
+	sf::String GameState::Copy()
+	{
+		// Try to get the focused edit
+		tgui::Widget::Ptr widget = GetFocusedElement();
+		tgui::EditBox* edit = dynamic_cast<tgui::EditBox*>(widget.get());
+		if( edit )
+		{
+			return edit->getSelectedText();
+		}
+
+		return "";
 	}
 
 } // namespace States

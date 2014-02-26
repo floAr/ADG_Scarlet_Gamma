@@ -395,6 +395,8 @@ namespace States {
 
 	void MasterState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 	{
+		// Handle copy & paste
+		GameState::KeyPressed(key, guiHandled);
 
 		// This should work ALWAYS, even if GUI is focused:
 		switch (key.code)
@@ -407,24 +409,6 @@ namespace States {
 				m_hiddenLayers[l] = 0;
 			}
 			m_firstLayerSelection=true;
-			break;
-		case sf::Keyboard::C:
-			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)){//ctrl+c -> copy
-				Utils::Clipboard::Instance()->SetClipboardText("Toll wenn es klappen würde");
-			}
-			break;
-		case sf::Keyboard::V:
-			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)){//ctrl+c -> copy
-				std::string content=Utils::Clipboard::Instance()->GetClipboardText();
-				for (auto i = content.begin(); i != content.end(); ++i){
-					sf::Event kevent;
-
-					//trying with textentered
-					kevent.type=sf::Event::TextEntered;
-					kevent.text.unicode=*i;
-					m_gui.handleEvent(kevent);
-				}
-			}
 			break;
 			//for each key add the mask, as long as alt is pressed (maybe cache this in local field)
 		case sf::Keyboard::Num1:

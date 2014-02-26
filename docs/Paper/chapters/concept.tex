@@ -1,6 +1,6 @@
 \chapter{Konzept}
 \label{concept}
-
+In den Abschnitten dieses Kapitels werden verschiedenen Elementare Konzepte vorgestellt, welche in dem Prototypen zum Einsatz kommen. Nach einer Übersicht über das Grobkonzept werden Kernelemente und Interaktive System erläutert um abschließend in \ref{sec:Spielfluss} das Zusammenspiel der einzelnen Systeme an einem kurzen fingierten Abenteuer aufzuzeigen.
 
 \section{Spielkonzept}
 \label{sec:Grobkonzept}
@@ -56,19 +56,38 @@ Eine wichtige Aktion dieser Art ist die \emph{'Freitextaktion'}, welche von eine
 
 In diesem Kapitel wird die Funktionsweise und das Zusammenspiel der verschiedenen vorgestellten Systeme anhand eines kurzen Abenteuers aus Sicht der Spieler und des Spielleiters erläutert.\newline
 Der Spielleiter, im folgenden auch \emph{SL} genannt beginnt damit ein Abenteuer zu konzipieren und vor zu bereiten. In diesem Szenario sollen die Spieler in einer Taverne von dem Wirt beauftragt werden seltsamen Geräuschen aus dem Keller nachzugehen. Im Keller finden die Spieler einen Durchbruch in ein tieferes Gewölbe und müssen sich dort dem Kampf mit zwei Goblins stellen, um am Ende mit einer Schatztruhe belohnt zu werden.\newline
+\subsection{Vorbereitung}
+\label{sec:Vorbereitung}
 Der SL beginnt seine Vorbereite mit dem Layout der Umgebung. Dafür greift er auf verschiedene generische Tiles zu und nutzt die frei-definierbare Farbe um diverse Materialien darzustellen. Mit diesen Tiles erstellt er zwei verschiedene Karten, die Taverne und das Gewölbe, welches aus einem Eingangsbereich und einem größeren Raum für den Kampf und die Truhe besteht. Für die Gegner könnte der Spielleiter eins der vorbereiteten Prefabs nutzen, er entscheidet sich jedoch dafür einen eigenen Gegnertyp zu definieren. Dafür erstellt er ein neues Objekt und weist ihm eine Grafik zu. Danach fügt er das \emph{'Angreifbar'} Modul hinzu, welches die Eigenschaften \emph{'Trefferpunkte'} und \emph{'Rüstungsklasse'} enthält. Die Rüstungsklasse setzt der SL auf den fixen Wert 15, die Trefferpunkte definiert er als '5W3'. Dies bedeutet das alle Instanzen dieser Vorlage die gleiche Rüstungsklasse haben werden, die Trefferpunkte jedoch jeweils zufällig ausgewürfelt werden und zwischen 5 und 15 liegen.\newline
 Der SL platziert nun zwei Instanzen der grade erstellen Vorlage und eine Instanz des Truhen Prefabs in dem Verlies. Die Truhe besitzt eine Inventar Eigenschaft, die der Spielleiter nun mit einigen Münzen und einem Rüstungsobjekt befüllt. Zuletzt versiegelt der SL den Durchgang vom ersten in den zweiten Raum mit einigen bunten Balken, welche als Bücherregal fungieren werden. Einem Regal weißt der Spielleiter das 'Schalter' Modul zu, welches Spielern später die Möglichkeit der Interaktion gibt.\newline
 Die Taverne füllt der Spielleitern mit einigen NPCs und Objekten, außerdem platziert er das Modul \emph{Sprungmarke} auf einer Tür im hinteren Bereich der Taverne und verbindet das Sprungziel mit dem ersten Raum der Gewölbe Karte .\todo{ausreichend? oder wollen wir das nochmal genauer erklären (eigtl. meiner meinung nach oben abgedeckt)} \newline
 Die Vorbereitung des Abenteuers ist hiermit abgeschlossen.
 
+\subsection{Einführung in das Abenteuer}
+\label{sec:EinführungInDasAbenteuer}
+
+
 Zur Spielrunde finden sich neben dem Spielleiter noch zwei Spieler (S1 und S2) ein. Nachdem beide Spieler mit einem an \emph{Pathfinder}\footnote{http://paizo.com/pathfinder}\todo{noch irgendwo infos zu pathfinder?} angelehnten Charakterbogen die Werte ihres Charakters definiert haben verbinden sie sich mit dem SL-Server. Der Prototyp synchronisiert nun die Spielwelt, Objektvorlagen und Medien des Spiels. Nachdem beide Spieler die Verbindung hergestellt haben platziert der Spielleiter sie in der Taverne.\newline
-Die Spieler erkunden die Umgebung und bald entfaltet sich das Rollenspiel. S1 fordert einen vom SL als besonders düster aussehend beschriebenen NPC zu einer Runde Armdrücken auf.\newline
+Die Spieler erkunden die Umgebung und bald entfaltet sich das Rollenspiel. 
+
+\subsection{Rollenspiel}
+\label{sec:Rollenspiel}
+
+S1 fordert einen vom SL als besonders düster aussehend beschriebenen NPC zu einer Runde Armdrücken auf.\newline
 Der Spielleiter würfelt verdeckt einen Wert für den NPC und fordert S1 auf ebenfalls einen Wurf mit einem W20 zuzüglich es Stärke-Modifikators auszuführen. Diese Eigenschaft ist an das Spielerobjekt angehängt und wird aus den Werten der Attribut Eigenschaften errechnet. S1 merkt an das ihr Charakter eine hübsche, verschlagene Diebin ist und möchte gerne ebenfalls den Charisma-Modifikator mit einbringen. Der SL genehmigt dies und S1 würfelt endgültig mit \emph{'W20 + ST-Mod + CH-Mod'} \todo{habe hier die ' bei 'Ch-Mod' ausgelassen weil ich es hübscher fand. Ok soweit?}\newline
 S1 gewinnt diesen Wurf und als Preis erhält sie eine Runde Getränke aufs Haus.\newline
-Nach einigen Getränken und Gesprächen mit den NPCs, welche der SL über Teamspeak durchführt entscheiden sich die Spieler mit dem Abenteuer fortzuschreiten. In einem Gespräch mit dem Inhaber erfahren S1 und S2 das es sonderbare Begebenheit im Keller der Taverne gibt. Der Spielleiter bewegt den Questgeber und gibt den Spielern so den Weg zur vorher definierten Sprungmarke frei.\newline
-Voller Tatendrang und beschwingt von den feinen Getränken stürzen sich beide Spieler in das Abenteuer.
+Nach einigen Getränken und Gesprächen mit den NPCs, welche der SL über Teamspeak durchführt entscheiden sich die Spieler mit dem Abenteuer fortzuschreiten. 
 
+\subsection{Das erste Rätsel}
+\label{sec:DasErsteRätsel}
+
+In einem Gespräch mit dem Inhaber erfahren S1 und S2 das es sonderbare Begebenheit im Keller der Taverne gibt. Der Spielleiter bewegt den Questgeber und gibt den Spielern so den Weg zur vorher definierten Sprungmarke frei.\newline
+Voller Tatendrang und beschwingt von den feinen Getränken stürzen sich beide Spieler in das Abenteuer.
 Nach der Interaktion mit der Sprungmarke werden beide Spieler auf der Gewölbekarte platziert. Der Spielleiter beschreibt die Umgebung kurz und lässt die Spieler dann die Umgebung selber erkunden. Blad hat S2 herausgefunden das es die Möglichkeit gibt mit einem der Bücherregale zu interagieren. Der SL erhält die Benachrichtigung darüber über den Chat und entfernt das Bücherregal, während er eindrucksvoll beschreibt wie es sich unter Ächzen und Knarren im Boden versenkt.\newline
+
+
+\subsection{Der Kampf}
+\label{sec:DerKampf}
 Die Spieler betreten den zweiten Raum und der Spielleiter fordert sie sofort auf einen Wurf ihre Schleichfähigkeit auszuführen. Das Würfelglück ist nun jedoch nicht bei den Spielern und daher startet sofort ein Kampf mit dem Goblins.\newline
 Dafür selektiert der Spielleiter die Spieler und die Golbins und startet einen Kampf über seine GUI. S1 und S2 werden dadurch automatisch aufgefordert einen Initiative-Wurf abzulegen, SL würfelt diesen Wert für die Goblins aus. \todo{Ich würde das Kampfsystem gerne etwas kürzen hier. evtl eine generelle Beschreibung in \ref{sec:DD} und hier dann nur die Ansteuerung der Mechaniken?}
 Damit endet der Kampf siegreich für die Spieler und sie können die Truhe im Raum untersuchen und sich an der reichen Beute bedienen. Der Spielleiter leitet die Spieler nun zurück in die Taverne und erzählt einen kurzen Abschluss des Abenteuers.

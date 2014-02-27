@@ -294,7 +294,7 @@ namespace States {
 						object->ResetTarget();
 					} else if( m_draggedContent->from == Interfaces::DragContent::PROPERTY_PANEL )
 					{
-						if( m_draggedContent->object->HasProperty( STR_PROP_ITEM ) )
+						if( m_draggedContent->object && m_draggedContent->object->HasProperty( STR_PROP_ITEM ) )
 						{
 							// Take away from the source object
 							m_draggedContent->prop->RemoveObject(m_draggedContent->object->ID());

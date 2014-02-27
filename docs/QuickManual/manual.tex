@@ -72,9 +72,12 @@
 			Manche der Eigenschaften erlauben besondere Tätigkeiten auf dem Objekt, wenn es im Spiel platziert ist. Diese sind in Modulen zusammengefasst um Objekte schneller bauen zu können.\\
 			
 			\begin{tabular}{p{0.275\linewidth}|p{0.62\linewidth}}
-				\textbf{Angreifbar}      & Ein Objekt das 'TP' (Trefferpunkte) und 'RK' (Rüstungsklasse) enthält kann angegriffen werden. \\\hline
-				\textbf{Schalter}        & Kann umgeschaltet werden, was eine Meldung beim Spielleiter zur folge hat. Der Wert ist 'true' oder 'false'\\\hline
-				\textbf{Sprungmarke}     & Spielleiter kann ein Objekt als Sprungziel wählen (auch auf einer anderen Karte). Später können Spieler diese als Teleport/Treppe/... verwenden.
+				\textbf{Angreifbar} [Modul]      & Ein Objekt das 'TP' (Trefferpunkte) und 'RK' (Rüstungsklasse) enthält kann angegriffen werden. \\\hline
+				\textbf{Besitzer} [Eigenschaft]  & Wenn diese Eigenschaft nicht leer ist kann ein Spieler das Objekt beobachten. Wenn der Spielername gleich dem Wert ist kann der Spieler das Objekt steuern.\\\hline
+				\textbf{Farbe} [Eigenschaft]     & Multipliziert die Textur des Objekts mit der Farbe. Hexadezimal: rrggbbaa. Beispiel: 008800ff = mittleres grün.\\\hline
+				\textbf{Hindernis} [Eigenschaft  & Felder mit mindestens einem Hindernis können nicht betreten werden.\\\hline
+				\textbf{Schalter} [Modul]        & Kann umgeschaltet werden, was eine Meldung beim Spielleiter zur folge hat. Der Wert ist 'true' oder 'false'\\\hline
+				\textbf{Sprungmarke} [Modul]     & Spielleiter kann ein Objekt als Sprungziel wählen (auch auf einer anderen Karte). Später können Spieler diese als Teleport/Treppe/... verwenden.\\\hline
 			\end{tabular}
 	
 	\section{Editor}
@@ -103,7 +106,7 @@
 		\vspace{-12pt}\subsubsection*{Map}
 			Eine Liste mit allen Karten der geladenen Welt. Es kann per Klick zwischen den Karten gesprungen werden und neue Karten erstellt werden.
 		\subsubsection*{Modus}
-			Verschiedene Spielsituationen können unterschiedliche Anforderungen stellen. Die Modi unterscheiden möglichst sinnvolle Aktionen der Maus. Der Rechtsklick ist immer gleich belegt: Er öffnet ein Kreismenü mit allen Objekten des Feldes. Ein Rechtsklick auf das Objekt zeigt Aktionsmöglichkeiten. Der Spieler kann die Aktionen auch mit einem Linksklick ansehen, im Falle des Spielleiters wird das Objekt selektiert. Dieser kann mit \textbf{Strg} auf diese Weise auch mehrere Objekte auswählen.
+			Verschiedene Spielsituationen können unterschiedliche Anforderungen stellen. Die Modi unterscheiden möglichst sinnvolle Aktionen der Maus. Der Rechtsklick ist immer gleich belegt siehe Aktionen \ref{Aktionen}.
 			
 			\textbf{Selektion}: Linksklick selektiert oberstes sichtbares Objekt. Links+ziehen eines Rechtecks markiert alle sichtbaren Objekte.
 			
@@ -135,7 +138,7 @@
 		\subsubsection*{Gehe zu}
 			Tool zur Erleichterung der Navigation. Es kann entweder zu einer Tile-Position oder zu einem Objekt gesprungen werden. Für zweiteres benötigt man die Objekt-ID, welche zb. in der Sprungziel Eigenschaft steht.
 		\subsubsection*{Kampf}
-			Kampf mit aktueller Auswahl einleiten, danach nach belieben weitere Teilnehmer hinzufügen oder Kampf beginnen. Teilnehmer machen Initiativewürfe und erscheinen dann in der Liste unten links. Nur de aktive Teilnehmer kann handeln.
+			Kampf mit aktueller Auswahl einleiten, danach nach belieben weitere Teilnehmer hinzufügen oder Kampf beginnen. Teilnehmer machen Initiativewürfe und erscheinen dann in der Liste unten links. Nur der aktive Teilnehmer kann handeln.
 		
 	\section{Chat}
 		In der Chat-Zeile können neue Nachrichten für alle angegeben werden. Eine Möglichkeit Spieler direkt anzuschreiben existiert derzeit nicht.
@@ -149,11 +152,27 @@
 		 \item[/npc NAME TEXT] Lässt den NSC etwas sagen. '\textit{/npc Hans Du bist mir eine Wurst}' $\rightarrow$ '\textit{[Hans] Du bist mir eine Wurst.}
 		\end{description}
 	
-%	\section{Der Spielfluss}
-%	
-%		\subsection{Pause}
-%		\subsection{Kämpfe}
-%			\subsubsection{Subsub}
+	\section{Der Spielfluss}
+		\vspace{-16pt}\subsection{Aktionen}
+			\label{Aktionen}
+			Aktionen werden immer für alle selektierten Objekte (entspricht ausführenden) durchgeführt. Die Aktion bezieht sich immer auf ein Ziel, das wie folgt gewählt werden kann:
+			
+			\begin{minipage}{0.54\linewidth}
+			Ein Rechtsklick öffnet ein Kreismenü mit allen Objekten des Feldes. Ein Rechtsklick auf das Objekt (einen der Buttons) zeigt Aktionsmöglichkeiten. Der Spieler kann die Aktionen auch mit einem Linksklick anzeigen lassen, im Falle des Spielleiters selektiert der Linksklick das Objekt.
+			\end{minipage}\hspace{1em}
+			\begin{minipage}{0.4\linewidth}
+				\includegraphics[width=1.0\linewidth]{img/circularmenu}
+			\end{minipage}
+			
+			Master und Spieler können mit einem Linksklick direkt auf das Feld eine Standardaktion ausführen. Diese wird aus allen Aktionen auf allen Objekten des Feldes ausgewählt. Es passiert nichts, wenn es keine gültige Option gibt.
+		
+			Der Spieler kann durch alle anderen Spieler/Tiergefährten (alles mit OWNER-Eigenschaft) scrollen und wenn sie ihm gehören auch steuern.
+			
+		\subsection{Pause}
+			Der Spielleiter kann die Simulation sich bewegender Objekte anhalten und dabei alle Spieler sperren, sofern er in ruhe etwas editieren möchte.
+		
+		\subsection{Kämpfe}
+			\subsubsection{Subsub}
 			
 	\section{Shortcuts}
 		Im folgenden ist die Tastaturbelegung aufgelistet. [M] bedeutet, dass die Aktion im Master-Modus, also dem Spielleiter zur Verfügung steht. [S] bedeutet entsprechend, dass der Spieler die Aktion ausführen kann.\\
@@ -164,9 +183,17 @@
 			\textbf{Alt+1 ... Alt+0} & M & Ändere Sichtbarkeit der Layer 1 bis 10. \\\hline
 			\textbf{Alt}             & M & Blende alle Layer wieder ein.\\
 			                         & S & Setze Fokus auf den Spieler.\\\hline
+			\textbf{Entf}			 & M & Lösche alle selektierten Objekte.\\\hline
+			\textbf{Esc}			 & M,S & In den meisten Menüs: zurück.\\\hline
 			\textbf{Pause, P}		 & M & Halte Spiel an oder setze fort.\\\hline
-			\textbf{Entf}			 & M & Lösche alle selektierten Objekte.
+			\textbf{Strg+1 ... Strg+9}& S,M & Setze Shortkey für ein selektiertes Objekt*.\\\hline
+			\textbf{1 ... 9}		 & M,S & Gehe zu Objekt auf Hotkey 1-9.\\\hline
+			\textbf{Strg+C}			 & M,S & Kopieren von markiertem Text.\\\hline
+			\textbf{Strg+V}			 & M,S & Einfügen von markiertem Text.\\\hline
+			\textbf{Strg+ Selektieren}& M & Objekte der Auswahl hinzufügen.\\\hline
+			\textbf{Tab, Shift+ Tab}	 & S & Durch alle beobachtbaren Objekte schalten.
 		\end{tabular}
 	
+		* Für den Spieler ist das immer das fokussierte Objekt, welches er durch Tab/Shift+Tab erreichen kann. Der Master kann die Keys derzeit auch nur für einzelne Objekte definieren (Gehe zu wäre bei mehreren undefiniert).
 	
 \end{document}

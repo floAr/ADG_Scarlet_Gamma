@@ -78,9 +78,9 @@
 				\textbf{Farbe} [Eigenschaft]     & Multipliziert die Textur des Objekts mit der Farbe. Hexadezimal: rrggbbaa. Beispiel: 008800ff = mittleres grün.\\\hline
 				\textbf{Hindernis} [Eigenschaft  & Felder mit mindestens einem Hindernis können nicht betreten werden.\\\hline
 				\textbf{Schalter} [Modul]        & Kann umgeschaltet werden, was eine Meldung beim Spielleiter zur folge hat. Der Wert ist 'true' oder 'false'\\\hline
-				\textbf{Sprungmarke} [Modul]     & Spielleiter kann ein Objekt als Sprungziel wählen (auch auf einer anderen Karte). Später können Spieler diese als Teleport/Treppe/... verwenden.\\
+				\textbf{Sprungmarke} [Modul]     & Spielleiter kann ein Objekt als Sprungziel wählen (auch auf einer anderen Karte). Später können Spieler diese als Teleport/Treppe/... verwenden.\cr
 			\end{supertabular}
-	
+			
 	\section{Editor}
 		\begin{picture}(0,120)
 			\put(0,0){\includegraphics[width=\linewidth]{img/master}}
@@ -178,7 +178,7 @@
 	\section{Shortcuts}
 		Im folgenden ist die Tastaturbelegung aufgelistet. [M] bedeutet, dass die Aktion im Master-Modus, also dem Spielleiter zur Verfügung steht. [S] bedeutet entsprechend, dass der Spieler die Aktion ausführen kann.\\
 		
-		\begin{tabular}{p{0.15\linewidth}|p{0.075\linewidth}|p{0.62\linewidth}}
+		\begin{supertabular}{p{0.15\linewidth}|p{0.075\linewidth}|p{0.62\linewidth}}
 %								     & Wer & Keyboard\\\hline
 			\textbf{C}               & M,S & Öffnet den Charakterbildschirm für das ausgewählte Objekt (M) oder den Spieler. \\\hline
 			\textbf{Alt+1 ... Alt+0} & M & Ändere Sichtbarkeit der Layer 1 bis 10. \\\hline
@@ -192,8 +192,8 @@
 			\textbf{Strg+C}			 & M,S & Kopieren von markiertem Text.\\\hline
 			\textbf{Strg+V}			 & M,S & Einfügen von markiertem Text.\\\hline
 			\textbf{Strg+ Selektieren}& M & Objekte der Auswahl hinzufügen.\\\hline
-			\textbf{Tab, Shift+ Tab}	 & S & Durch alle beobachtbaren Objekte schalten.
-		\end{tabular}\\
+			\textbf{Tab, Shift+ Tab}	 & S & Durch alle beobachtbaren Objekte schalten.\cr
+		\end{supertabular}\\
 	
 		* Für den Spieler ist das immer das fokussierte Objekt, welches er durch Tab/Shift+Tab erreichen kann. Der Master kann die Keys derzeit auch nur für einzelne Objekte definieren (Gehe zu wäre bei mehreren undefiniert).
 	

@@ -74,7 +74,8 @@
 	
 	\newcommand{\sectionStar}[1]{
 		%\par\noindent
-		%\needspace{3cm}
+		%\pagebreak[3]
+		\needspace{2.0ex}
 		\hspace*{-3pt}
 		\colorbox{col_sectionbox}{\parbox[t][2.3ex][c]{\dimexpr\linewidth-6pt}{ \sffamily\normalsize\bfseries\color{col_section} #1 }}
 		\par\nopagebreak
@@ -89,7 +90,7 @@
 
 	\newcommand{\subsectionStar}[1]{
 		%\par\noindent
-		%\needspace{3cm}
+		\needspace{2ex}
 		\hspace*{-3pt}
 		\colorbox{col_subsectionbox}{\parbox[t][2ex][c]{\dimexpr\linewidth-6pt}{ \sffamily\normalsize\color{col_subsection} #1 }}
 		\par\nopagebreak
@@ -104,7 +105,7 @@
 	
 	\newcommand{\subsubsectionStar}[1]{
 		%\par\noindent
-		%\needspace{3cm}
+		\needspace{2ex}
 		\hspace*{-3pt}
 		\colorbox{col_lightback}{\parbox[t][1.8ex][c]{\dimexpr\linewidth-6pt}{ \sffamily\small #1 }}
 		\par\nopagebreak

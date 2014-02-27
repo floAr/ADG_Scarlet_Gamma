@@ -1,5 +1,6 @@
 \documentclass[german,10pt,a4paper,twocolumn,colorscheme=darkblue]{orarticle}
 \usepackage{epstopdf}
+\usepackage{supertabular}
 
 		
 % ****************************************************************************** %
@@ -71,14 +72,14 @@
 		\subsection{Besondere Eigenschaften}
 			Manche der Eigenschaften erlauben besondere Tätigkeiten auf dem Objekt, wenn es im Spiel platziert ist. Diese sind in Modulen zusammengefasst um Objekte schneller bauen zu können.\\
 			
-			\begin{tabular}{p{0.275\linewidth}|p{0.62\linewidth}}
+			\begin{supertabular}{p{0.275\linewidth}|p{0.62\linewidth}}
 				\textbf{Angreifbar} [Modul]      & Ein Objekt das 'TP' (Trefferpunkte) und 'RK' (Rüstungsklasse) enthält kann angegriffen werden. \\\hline
 				\textbf{Besitzer} [Eigenschaft]  & Wenn diese Eigenschaft nicht leer ist kann ein Spieler das Objekt beobachten. Wenn der Spielername gleich dem Wert ist kann der Spieler das Objekt steuern.\\\hline
 				\textbf{Farbe} [Eigenschaft]     & Multipliziert die Textur des Objekts mit der Farbe. Hexadezimal: rrggbbaa. Beispiel: 008800ff = mittleres grün.\\\hline
 				\textbf{Hindernis} [Eigenschaft  & Felder mit mindestens einem Hindernis können nicht betreten werden.\\\hline
 				\textbf{Schalter} [Modul]        & Kann umgeschaltet werden, was eine Meldung beim Spielleiter zur folge hat. Der Wert ist 'true' oder 'false'\\\hline
-				\textbf{Sprungmarke} [Modul]     & Spielleiter kann ein Objekt als Sprungziel wählen (auch auf einer anderen Karte). Später können Spieler diese als Teleport/Treppe/... verwenden.\\\hline
-			\end{tabular}
+				\textbf{Sprungmarke} [Modul]     & Spielleiter kann ein Objekt als Sprungziel wählen (auch auf einer anderen Karte). Später können Spieler diese als Teleport/Treppe/... verwenden.\\
+			\end{supertabular}
 	
 	\section{Editor}
 		\begin{picture}(0,120)
@@ -103,7 +104,7 @@
 		\end{description}
 		
 		\subsection{Toolbar}
-		\vspace{-12pt}\subsubsection*{Map}
+		\subsubsection*{Map}
 			Eine Liste mit allen Karten der geladenen Welt. Es kann per Klick zwischen den Karten gesprungen werden und neue Karten erstellt werden.
 		\subsubsection*{Modus}
 			Verschiedene Spielsituationen können unterschiedliche Anforderungen stellen. Die Modi unterscheiden möglichst sinnvolle Aktionen der Maus. Der Rechtsklick ist immer gleich belegt siehe Aktionen \ref{Aktionen}.
@@ -153,7 +154,7 @@
 		\end{description}
 	
 	\section{Der Spielfluss}
-		\vspace{-16pt}\subsection{Aktionen}
+		\subsection{Aktionen}
 			\label{Aktionen}
 			Aktionen werden immer für alle selektierten Objekte (entspricht ausführenden) durchgeführt. Die Aktion bezieht sich immer auf ein Ziel, das wie folgt gewählt werden kann:
 			
@@ -192,7 +193,7 @@
 			\textbf{Strg+V}			 & M,S & Einfügen von markiertem Text.\\\hline
 			\textbf{Strg+ Selektieren}& M & Objekte der Auswahl hinzufügen.\\\hline
 			\textbf{Tab, Shift+ Tab}	 & S & Durch alle beobachtbaren Objekte schalten.
-		\end{tabular}
+		\end{tabular}\\
 	
 		* Für den Spieler ist das immer das fokussierte Objekt, welches er durch Tab/Shift+Tab erreichen kann. Der Master kann die Keys derzeit auch nur für einzelne Objekte definieren (Gehe zu wäre bei mehreren undefiniert).
 	

@@ -33,6 +33,7 @@
 \DeclareOption*{}
 \ProcessOptions\relax
 
+% Import coding and symbols
 \RequirePackage{babel}
 \RequirePackage[utf8]{inputenc}
 \RequirePackage{graphicx}
@@ -42,6 +43,7 @@
 
 % format captions: small, compact blocks
 \RequirePackage[font=small,labelfont=bf,format=plain,margin=5pt,labelsep=space]{caption}
+\RequirePackage{needspace}
 
 % colors for the docuument
 \definecolor{darkgrey}{rgb}{ 0.1, 0.1, 0.1 }
@@ -62,7 +64,8 @@
 
 % Paragraph Style
 \parindent 0cm                        % No indentation of paragraphes
-\parskip0.75ex plus0.5ex minus0.25ex  % Vertical space between paragraphes
+%\parskip0.75ex plus0.5ex minus0.25ex  % Vertical space between paragraphes
+\parskip0.75ex                        % Vertical space between paragraphes
 		
 		
 		
@@ -71,7 +74,8 @@
 	
 	\newcommand{\sectionStar}[1]{
 		\par\noindent
-		\vspace{10pt}\hspace*{-3pt}
+		\hspace*{-3pt}
+		\needspace{3cm}
 		\colorbox{col_sectionbox}{\parbox[t][2.3ex][c]{\dimexpr\linewidth-6pt}{ \sffamily\normalsize\bfseries\color{col_section} #1 }}
 		\par
 	}
@@ -85,7 +89,8 @@
 
 	\newcommand{\subsectionStar}[1]{
 		\par\noindent
-		\vspace{8pt}\hspace*{-3pt}
+		\needspace{2cm}
+		\hspace*{-3pt}
 		\colorbox{col_subsectionbox}{\parbox[t][2ex][c]{\dimexpr\linewidth-6pt}{ \sffamily\normalsize\color{col_subsection} #1 }}
 		\par
 	}
@@ -99,7 +104,8 @@
 	
 	\newcommand{\subsubsectionStar}[1]{
 		\par\noindent
-		\vspace{4pt}\hspace*{-3pt}
+		\needspace{2cm}
+		\hspace*{-3pt}
 		\colorbox{col_lightback}{\parbox[t][1.8ex][c]{\dimexpr\linewidth-6pt}{ \sffamily\small #1 }}
 		\par
 	}
@@ -132,7 +138,7 @@
 	
 			
 			\section*{\@abstrtitel}
-			\vspace*{-0.3cm}
+			%\vspace*{-0.3cm}
 			\colorbox{col_lightback}{\parbox{\dimexpr\linewidth-6pt}{
 				\@abstract
 			}}

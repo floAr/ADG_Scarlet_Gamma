@@ -399,6 +399,15 @@ namespace States {
 		GameState::KeyPressed(key, guiHandled);
 
 		// This should work ALWAYS, even if GUI is focused:
+		if( key.code >= sf::Keyboard::Num1 && key.code <= sf::Keyboard::Num9 )
+		{
+			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
+				if( m_selection.Size() == 1 )
+					SetHotkeyToObject(key.code - sf::Keyboard::Num1, m_selection[0]);
+			} else
+				GoTo( GetObjectFromHotkey(key.code - sf::Keyboard::Num1) );
+		}
+
 		switch (key.code)
 		{
 			//on alt clear the current mask

@@ -407,4 +407,17 @@ namespace States {
 		m_diceRollState->SetKeepAlive(true);
 	}
 
+	Core::Object* CommonState::GetObjectFromHotkey(const int hotkey)
+	{
+		// return nullptr if there is no hotkey
+		if (m_hotkeys.find(hotkey) == m_hotkeys.end())
+			return nullptr;
+		return g_Game->GetWorld()->GetObject( m_hotkeys[hotkey] );
+	}
+
+	void CommonState::SetHotkeyToObject(const int hotkey, Core::ObjectID objectID)
+	{
+		m_hotkeys[hotkey] = objectID;
+	}
+
 } // namespace States

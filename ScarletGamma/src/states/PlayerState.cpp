@@ -195,25 +195,17 @@ void States::PlayerState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 	// Let common state handle input
 	CommonState::KeyPressed(key, guiHandled);
 
+	if( key.code >= sf::Keyboard::Num1 && key.code <= sf::Keyboard::Num9 )
+	{
+		if(sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
+			if( m_focus != nullptr )
+				SetHotkeyToObject(key.code - sf::Keyboard::Num1, m_focus->ID());
+		} else
+			FocusObject( GetObjectFromHotkey(key.code - sf::Keyboard::Num1) );
+	}
+
 	switch(key.code) //pre gui switch to still get event with LControl
 	{
-	case sf::Keyboard::Num1:
-	case sf::Keyboard::Num2:
-	case sf::Keyboard::Num3:
-	case sf::Keyboard::Num4:
-	case sf::Keyboard::Num5:
-	case sf::Keyboard::Num6:
-	case sf::Keyboard::Num7:
-	case sf::Keyboard::Num8:
-	case sf::Keyboard::Num9:
-		if(sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)){
-			if(m_focus!=nullptr)//check for null
-				SetHotkeyToObject(key.code - sf::Keyboard::Num1, m_focus->ID());
-		}
-		else
-			SetViewToHotkey(key.code - sf::Keyboard::Num1);
-		break;
-
 	// Pre-GUI Tabbing to prevent loosing focus (focus tabbing of gui cannot be
 	// deactivated.
 	case sf::Keyboard::Tab: {
@@ -365,15 +357,9 @@ float States::PlayerState::CheckTileVisibility( Core::Map& _map, sf::Vector2i& _
 	return v;
 }
 
-void States::PlayerState::SetViewToHotkey(const int hotkey)
-{
-	if (m_hotkeys.find(hotkey) == m_hotkeys.end())//return if there is no hotkey
-		return;
-	FocusObject(g_Game->GetWorld()->GetObject(m_hotkeys[hotkey]));
-}
-
 void States::PlayerState::FocusObject(Core::Object* _object)
 {
+	if( !_object ) return;
 	m_focus = _object;
 
 	// Always have the current focused element in selection
@@ -393,10 +379,6 @@ void States::PlayerState::ExamineObject(Core::ObjectID _object)
 	}
 }
 
-void States::PlayerState::SetHotkeyToObject(const int hotkey, Core::ObjectID objectID)
-{
-	m_hotkeys[hotkey] = objectID;
-}
 
 void States::PlayerState::CreateCombat( Core::ObjectID _object )
 {

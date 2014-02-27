@@ -3,7 +3,6 @@
 #include "Prerequisites.hpp"
 #include "states/CommonState.hpp"
 #include "interfaces/PropertyPanel.hpp"
-#include <unordered_map>
 
 namespace States
 {
@@ -47,7 +46,6 @@ namespace States
 		Core::Object* m_player;								///< The one and only player object
 		Core::ObjectID m_playerObjectID;					///< Persistent memory with the id required to show the characterstate.
 		Core::Object* m_focus;								///< The camera is tracking this object
-		std::unordered_map<int,Core::ObjectID> m_hotkeys;	///< Defined hotkeys of this client //TODO: maybe save hotkeys as properties
 
 		Interfaces::PropertyPanel::Ptr m_playerView;		///< Showing the player properties
 		Interfaces::PropertyPanel::Ptr m_observerView;		///< Showing something the player is observing
@@ -55,18 +53,6 @@ namespace States
 		/// \brief This method is given to the renderer to check the
 		///		visibility of a tile for the player
 		float CheckTileVisibility(Core::Map& _map, sf::Vector2i& _tilePos, sf::Vector2f& _playerPos) const;
-
-		/// \brief Set the current view to another objects position
-		/// \details Try to append the current view onto another object, if player does not exist nothing happens
-		/// \param [in] hotkey	pressed hotkey of the player
-		void SetViewToHotkey(const int hotkey);
-
-
-		/// \brief Bind an object to the hotkey
-		/// \details Save the currently focussed object with the pressed hotkey
-		/// \param [in] hotkey	pressed hotkey of the player
-		/// \param [in] objectID	object to remember
-		void SetHotkeyToObject(const int hotkey, Core::ObjectID objectID);
 
 		void RollDice(const std::string& _value);
 	};

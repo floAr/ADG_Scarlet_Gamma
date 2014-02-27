@@ -6,6 +6,7 @@
 #include "Prerequisites.hpp"
 #include "interfaces/DragNDrop.hpp"
 #include "interfaces/CombatantPanel.hpp"
+#include <unordered_map>
 
 namespace States
 {
@@ -105,6 +106,7 @@ namespace States
 		std::string m_name;          ///< Name of the player used in the chat
 		sf::Color m_color;           ///< Color of the player in the chat
 		GameRules::Combat* m_combat; ///< Pointer to Combat in progress, 0 if none
+		std::unordered_map<int,Core::ObjectID> m_hotkeys;	///< Defined hotkeys for entities
 
 		PromptState* m_diceRollState;	///< Pointer to the state to roll the dice
 
@@ -134,5 +136,16 @@ namespace States
 		/// \brief Search in all visible layers for an object.
 		/// \return An ObjectID or INVALID_ID if nothing could be found
 		Core::ObjectID FindTopmostTile(int _x, int _y);
+
+		/// \brief Get the object id which was mapped to the key.
+		/// \details Try to append the current view onto another object, if player does not exist nothing happens
+		/// \param [in] hotkey	pressed hotkey of the player
+		Core::Object* GetObjectFromHotkey(const int hotkey);
+
+		/// \brief Bind an object to the hotkey
+		/// \details Save the currently focused object with the pressed hotkey
+		/// \param [in] hotkey	pressed hotkey of the player
+		/// \param [in] objectID	object to remember
+		void SetHotkeyToObject(const int hotkey, Core::ObjectID objectID);
 	};
 }

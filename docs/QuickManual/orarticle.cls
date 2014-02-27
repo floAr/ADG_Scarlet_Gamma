@@ -65,19 +65,19 @@
 % Paragraph Style
 \parindent 0cm                        % No indentation of paragraphes
 %\parskip0.75ex plus0.5ex minus0.25ex  % Vertical space between paragraphes
-\parskip0.75ex                        % Vertical space between paragraphes
-		
+\parskip0.85ex                        % Vertical space between paragraphes
+
 		
 		
 \makeatletter
 	% Section commands, which add a colored background
 	
 	\newcommand{\sectionStar}[1]{
-		\par\noindent
+		%\par\noindent
+		%\needspace{3cm}
 		\hspace*{-3pt}
-		\needspace{3cm}
 		\colorbox{col_sectionbox}{\parbox[t][2.3ex][c]{\dimexpr\linewidth-6pt}{ \sffamily\normalsize\bfseries\color{col_section} #1 }}
-		\par
+		\par\nopagebreak
 	}
 	\newcommand{\sectionNoStar}[1]{
 		\vspace{0.3cm}
@@ -88,11 +88,11 @@
 	\renewcommand{\section}{\@ifstar \sectionStar \sectionNoStar}
 
 	\newcommand{\subsectionStar}[1]{
-		\par\noindent
-		\needspace{2cm}
+		%\par\noindent
+		%\needspace{3cm}
 		\hspace*{-3pt}
 		\colorbox{col_subsectionbox}{\parbox[t][2ex][c]{\dimexpr\linewidth-6pt}{ \sffamily\normalsize\color{col_subsection} #1 }}
-		\par
+		\par\nopagebreak
 	}
 	\newcommand{\subsectionNoStar}[1]{
 		\vspace{0.1cm}
@@ -103,11 +103,11 @@
 	\renewcommand{\subsection}{\@ifstar \subsectionStar \subsectionNoStar}
 	
 	\newcommand{\subsubsectionStar}[1]{
-		\par\noindent
-		\needspace{2cm}
+		%\par\noindent
+		%\needspace{3cm}
 		\hspace*{-3pt}
 		\colorbox{col_lightback}{\parbox[t][1.8ex][c]{\dimexpr\linewidth-6pt}{ \sffamily\small #1 }}
-		\par
+		\par\nopagebreak
 	}
 	\newcommand{\subsubsectionNoStar}[1]{
 		\refstepcounter{subsection}

@@ -18,13 +18,15 @@ namespace Network {
 
 	/// \brief Opening of all packets to decide what to do and what data was
 	///		sent.
+#	pragma pack(push, 1)
 	struct MessageHeader
 	{
-		Target target;		///< Type of target
 		uint64_t targetID;	///< ID if there are multiple targets of the same type.
 		bool forward;		///< != 0 if the message should be broadcasted.
+		Target target;		///< Type of target
 
 		MessageHeader( Target _target, uint64_t _id, bool _forward ) : target(_target), targetID(_id), forward(_forward)	{}
 	};
+#	pragma pack(pop)
 
 } // namespace Network

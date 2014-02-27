@@ -257,6 +257,8 @@ namespace Core {
 
 	const Property* PropertyList::Get( const std::string& _name ) const
 	{
+		if( !this ) throw Exception::NoSuchProperty();
+
 		for(auto current = m_list.begin(); current != m_list.end(); ++current )
 		{
 			if( Utils::IStringEqual( (*current).Name(), _name ) )

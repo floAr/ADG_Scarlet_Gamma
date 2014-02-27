@@ -73,7 +73,7 @@ size_t MsgActionBegin::Receive(Core::ActionID _action, uint8_t _sender,
     assert(Messenger::IsServer() && "Client got MsgActionBegin, that shouldn't happen");
 
     // Deserialize
-    Core::ObjectID target = *_data;
+    Core::ObjectID target = *(Core::ObjectID*)_data;
 	Core::Object* player = g_Game->GetWorld()->FindPlayer(_sender+1);
 
 #ifdef _DEBUG

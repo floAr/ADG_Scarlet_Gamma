@@ -1,0 +1,33 @@
+Bugs
+* Untersuchen häufig nicht möglich
+* Untersuchen lässt Spieler TP von Gegnern sehen
+* Sporadischer connection loss
+* Durch Charaktere tabben wieder kaputt
+* Hierher gehen im Playermodus läuft nicht (links klick schon)
+* Spieler kann Aktionen nicht mehr mit Linksklick anziegen
+* Treppen betreten gefrohren (Situation unbekannt)
+* Spieler kann "Als Sprungziel setzen" drücken
+
+Angriffsmodus
+* Texte im kürzen (Der Wert kann verändert werden. und Füllwörter)
+* Würfe über Initiativewürfe im Chat zeigen
+* Runden überspringen, wenn Aktionen ungenutzt verfallen können
+* Angreifen von Kampfmodul während des Kampfes scheint nicht zu funktionieren
+* Teilweise überhaupt undefinierte Situation in denen nichts mehr ging
+* Kampf manuell starten unintuitiv (warum geht es nach initiative nicht gleich los?)
+
+Editor
+* Map löschen, umbenennen
+* Drag&Drop sichtbar machen
+* Bilder und Namen aktualisieren, wenn Templates bearbeitet
+* Spieler löschen sollte ihn nur aus der Map entfernen und nicht das Objekt löschen, wie das sonst der Fall ist
+* Drag&Drop auf Spielerliste um Dinge ins Inventar einzufügen
+
+Sontiges
+* Zoom falsch herum
+* Konsolenausgabe wenn Bild nicht gefunden reduzieren
+* Shortkeys für Modi
+* Wegpunkte anders färben als Pfad
+* Master kann Würfe von Spielern verlangen
+* Filter bei leeren Objekten ausblenden
+* Notifikationen, wenn spieler etwas an sich oder Objekten verändern

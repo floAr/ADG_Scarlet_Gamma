@@ -14,13 +14,13 @@ PromptState::PromptState() :
 	m_editBox(nullptr),
 	m_message(nullptr)
 {
-	m_defaultButton->load("lib/TGUI-0.6-RC/widgets/Black.conf");
+	m_defaultButton->load("media/Black.conf");
 
 	// Create GUI
 	m_gui.setWindow(g_Game->GetWindow());
 	m_gui.setGlobalFont( Content::Instance()->LoadFont("media/arial.ttf") );
 	m_editBox = tgui::EditBox::Ptr(m_gui);
-	m_editBox->load("lib/TGUI-0.6-RC/widgets/Black.conf");
+	m_editBox->load("media/Black.conf");
 	SetGui(&m_gui);
 }
 

@@ -475,6 +475,9 @@ void CharacterState::Create()
 	if( m_player->HasProperty(STR_PROP_EYECOLOR) )
 		m_player->GetProperty( STR_PROP_EYECOLOR ).SetValue(m_eEye->getText());
 
+	// Register player locally
+	g_Game->GetWorld()->RegisterObject(m_player);
+
 	m_finished = true;
 }
 

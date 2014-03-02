@@ -427,18 +427,23 @@ bool States::PlayerState::OwnsObject( Core::ObjectID _object )
 		&& object->GetProperty(STR_PROP_OWNER).Value() == m_name;
 }
 
-	void States::PlayerState::CreateDiceRollState(){
+	void States::PlayerState::CreateDiceRollState()
+	{
 		CommonState::CreateDiceRollState();
-		m_diceRollState->AddButton("Würfeln",std::bind(&PlayerState::RollDice,this,std::placeholders::_1));
+		m_diceRollState->AddButton("Würfeln", std::bind(&PlayerState::RollDice, this, std::placeholders::_1));
 	}
 
 	
 	void States::PlayerState::RollDice(const std::string& _result)
 	{
+		Core::Object* obj = m_focus;
+		if (!m_focus->HasProperty(STR_PROP_OWNER) || m_focus->GetProperty(STR_PROP_OWNER).Value() != m_name)
+			obj = g_Game->GetWorld()->GetObject(m_playerObjectID);
+
 		try {
-			int x = Utils::EvaluateFormula(_result, g_Game->RANDOM, m_focus);
+			int x = Utils::EvaluateFormula(_result, g_Game->RANDOM, obj);
 			// Output for all
-			Network::ChatMsg("["+m_focus->GetName()+"] - Würfelwurf: "+_result+" = "+std::to_string(x), m_color).Send();
+			Network::ChatMsg("["+obj->GetName()+"] - Würfelwurf: "+_result+" = "+std::to_string(x), m_color).Send();
 		} catch( Exception::InvalidFormula _e ) {
 			g_Game->AppendToChatLog(Network::ChatMsg(_e.to_string(), sf::Color::Red));
 		}

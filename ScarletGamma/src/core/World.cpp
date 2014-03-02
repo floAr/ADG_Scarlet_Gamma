@@ -5,6 +5,7 @@
 #include "utils/StringUtil.hpp"
 #include "Constants.hpp"
 #include "PredefinedProperties.hpp"
+#include <algorithm>
 
 using namespace std;
 
@@ -350,7 +351,15 @@ namespace Core {
 			// Filter the template objects (they should all have owner = "")
 			// TODO: filter harder if templates get observed
 			if( !prop.Value().empty() )
-				m_ownedObjects.push_back(_object->ID());
+			{
+				// Avoid multiple entries
+				if ( std::count(m_ownedObjects.begin(), m_ownedObjects.end(), _object->ID()) == 0 )
+					m_ownedObjects.push_back(_object->ID());
+			}
+			else
+			{
+				std::remove(m_ownedObjects.begin(), m_ownedObjects.end(), _object->ID());
+			}
 		}
 	}
 
@@ -389,22 +398,6 @@ namespace Core {
 			GetPropertyBaseObject()->GetProperty(STR_PROP_PAUSE).SetValue( STR_TRUE );
 		else GetPropertyBaseObject()->GetProperty(STR_PROP_PAUSE).SetValue( STR_FALSE );
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 	void World::CreateDefaultPropertyBase()
 	{

@@ -337,7 +337,7 @@ void ObjectPanel::SelectObject(const tgui::Callback& _call)
 			m_selected = g_Game->GetWorld()->GetObject(ptr->getCallbackId());
 			m_viewer->Show( g_Game->GetWorld(), m_selected );
 			// Highlight new component
-			ptr->setTextColor( sf::Color(255,255,255) );
+			ptr->setTextColor( sf::Color(255,40,40) );
 			ptr->setTextSize( 15 );
 			s_lastSelected = ptr;
 			return;

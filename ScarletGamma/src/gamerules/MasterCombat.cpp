@@ -103,6 +103,10 @@ void MasterCombat::ReceivedInitiative( Core::ObjectID _object, const std::string
     int iniEvaluated = Utils::EvaluateFormula(_initiative, Game::RANDOM, g_Game->GetWorld()->GetObject(_object));
     m_initiatives.insert( std::pair<Core::ObjectID, int>( _object, iniEvaluated) );
 
+	// Write result to chat
+	Network::ChatMsg("Initiativewurf von " + g_Game->GetWorld()->GetObject(_object)->GetName() + ": " +
+		std::to_string(iniEvaluated), sf::Color::White).Send();
+
     // Insert combattant into list of participants
     auto it = m_participants.begin();
     while (it != m_participants.end())

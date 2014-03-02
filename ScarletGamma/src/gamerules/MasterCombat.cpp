@@ -35,6 +35,16 @@ void GameRules::MasterCombat::AddParticipant( Core::ObjectID _object )
     }
 }
 
+void GameRules::MasterCombat::RemoveParticipant( Core::ObjectID _object )
+{
+	// End turn if current object was deleted
+	if (_object == m_currentObject )
+		ReceivedTurnEnded();
+
+	// Call base
+	Combat::RemoveParticipant(_object);
+}
+
 void GameRules::MasterCombat::InitiativeRollPromptFinished( const std::string& _result, Core::ObjectID _object )
 {
 	ReceivedInitiative(_object, _result);
@@ -70,7 +80,7 @@ void GameRules::MasterCombat::StartCombat()
 void GameRules::MasterCombat::ReceivedTurnEnded()
 {
 	// Get current object, and increment it
-	auto it = std::find(m_participants.begin(), m_participants.end(), m_currentObject->ID());
+	auto it = std::find(m_participants.begin(), m_participants.end(), m_currentObject);
 	it++;
 
 	if (it == m_participants.end())
@@ -83,7 +93,7 @@ void GameRules::MasterCombat::ReceivedTurnEnded()
 void GameRules::MasterCombat::EndTurn()
 {
 	// Call it locally
-	if ( g_Game->GetCommonState()->OwnsObject(m_currentObject->ID()) )
+	if ( g_Game->GetCommonState()->OwnsObject(m_currentObject) )
 		ReceivedTurnEnded();
 }
 

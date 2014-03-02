@@ -68,7 +68,7 @@ void States::LaunchPlayerState::GuiCallback(tgui::Callback& callback)
 		// Show that we are working
 		tgui::Label::Ptr status = m_gui.get("Status");
 		status->setTextColor( sf::Color(200, 200, 200, 255) );
-		status->setText("Connecting to server ...");
+		status->setText("Verbinde zu Server ...");
 		Draw(*m_gui.getWindow());
 		m_gui.draw();
 		m_gui.getWindow()->display();

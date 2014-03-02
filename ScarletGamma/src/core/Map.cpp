@@ -178,6 +178,10 @@ namespace Core {
 		obj->Remove(STR_PROP_X);
 		obj->Remove(STR_PROP_Y);
 		//Keep the layer for later obj->Remove(STR_PROP_LAYER);
+
+		// Remove object from combat, if its ongoing
+		if ( g_Game->GetCommonState()->InCombat() )
+			g_Game->GetCommonState()->GetCombat()->RemoveParticipant(_object);
 	}
 
 

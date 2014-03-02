@@ -21,6 +21,9 @@ namespace GameRules
         ///     list using negative values (-1 = after last, -2 = before last...)
         void AddParticipantWithInitiative(Core::ObjectID _object, int8_t _position = -1);
 
+		/// \brief Removes a participant from the combat.
+		virtual void RemoveParticipant(Core::ObjectID _object);
+
 		/// \brief Checks whether the object already is in combat.
 		bool HasParticipant(Core::ObjectID _object) const;
 
@@ -67,7 +70,7 @@ namespace GameRules
         std::list<Core::ObjectID> m_participants;
 
         /// \brief The object whose turn it currently is.
-        Core::Object* m_currentObject;
+        Core::ObjectID m_currentObject;
 
         /// \brief Keeps whether the move action is still available in this turn.
         bool m_moveActionRemaining;

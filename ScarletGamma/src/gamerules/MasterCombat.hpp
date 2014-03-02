@@ -17,6 +17,9 @@ namespace GameRules
         ///     When the result is received, ReceivedInitiative is called.
         void AddParticipant(Core::ObjectID _object);
 
+		/// \brief Removes a participant from the combat.
+		virtual void RemoveParticipant(Core::ObjectID _object) override;
+
         /// \brief Adds a combat participant to the correct position in the
         ///     initiavite list.
         void ReceivedInitiative(Core::ObjectID _object, const std::string& _initiative);

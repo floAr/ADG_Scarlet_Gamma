@@ -105,7 +105,7 @@ void MasterCombat::ReceivedInitiative( Core::ObjectID _object, const std::string
 
 	// Write result to chat
 	Network::ChatMsg("Initiativewurf von " + g_Game->GetWorld()->GetObject(_object)->GetName() + ": " +
-		std::to_string(iniEvaluated), sf::Color::White).Send();
+		std::to_string(iniEvaluated), g_Game->GetWorld()->GetObject(_object)->GetColorOpaque()).Send();
 
     // Insert combattant into list of participants
     auto it = m_participants.begin();

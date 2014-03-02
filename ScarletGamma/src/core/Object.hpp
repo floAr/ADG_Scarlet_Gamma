@@ -62,6 +62,10 @@ public:
 	///		otherwise.
 	sf::Color GetColor() const;
 
+	/// \brief Returns a color with full opaqueness if the according property
+	///		exists and white otherwise.
+	sf::Color GetColorOpaque() const;
+
 	/// \brief Creates the color property if not existing and sets a color
 	///		which is multiplied during rendering.
 	void SetColor( const sf::Color& _color );

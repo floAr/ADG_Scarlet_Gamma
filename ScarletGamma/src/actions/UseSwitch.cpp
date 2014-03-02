@@ -20,7 +20,8 @@ void UseSwitch::Execute()
 	if( prop.Value() == STR_FALSE ) prop.SetValue( STR_TRUE );
 	else prop.SetValue( STR_FALSE );
 	if( executor->HasProperty(STR_PROP_PLAYER) )
-		Network::ChatMsg(executor->GetName() + " hat den Schalter '" + target->GetName() + "' betätigt.", executor->GetColor(), true).Send();
+		Network::ChatMsg(executor->GetName() + " hat den Schalter '" + target->GetName() + "' betätigt.",
+		executor->GetColorOpaque(), true).Send();
 }
 
 Action* UseSwitch::Clone( Core::ObjectID _executor, Core::ObjectID _target )

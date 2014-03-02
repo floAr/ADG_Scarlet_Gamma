@@ -643,7 +643,9 @@ namespace States {
 		{
 			States::PromptState* prompt = static_cast<States::PromptState*>(g_Game->GetStateMachine()->PushGameState(GST_PROMPT));
 			prompt->SetTextInputRequired(false);
-			prompt->SetText("Alle aktuell ausgewählten Objekte nehmen am Kampf teil. Weiter?\n");
+			prompt->SetText("Die aktuell ausgewählten " + std::to_string(m_selection.Size()) +
+				" Objekte nehmen am Kampf teil. Weiter?\n");
+			prompt->DisableMinimize();
 			prompt->AddButton("Ja", std::bind(&MasterState::CreateCombatFromSelection, this), sf::Keyboard::Return);
 			prompt->AddButton("Nein", [](const std::string&) -> void {}, sf::Keyboard::Escape);
 			prompt->DisableMinimize();

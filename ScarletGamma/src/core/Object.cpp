@@ -104,6 +104,12 @@ namespace Core {
 		return sf::Color::White;
 	}
 
+	sf::Color Object::GetColorOpaque() const
+	{
+		sf::Color color = GetColor();
+		color.a = 255;
+		return color;
+	}
 
 	void Object::SetColor( const sf::Color& _color )
 	{

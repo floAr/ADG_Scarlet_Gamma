@@ -91,7 +91,7 @@ void GameRules::Combat::SetTurn( Core::ObjectID _object )
     }
 
     m_currentObject = _object;
-    g_Game->AppendToChatLog( Network::ChatMsg(object->GetName() + " ist am Zug.", sf::Color::White) );
+    g_Game->AppendToChatLog( Network::ChatMsg(object->GetName() + " ist am Zug.", object->GetColorOpaque()) );
 
     // Reset combat round values
     m_diagonalCounter = false;

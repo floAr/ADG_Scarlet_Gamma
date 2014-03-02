@@ -600,7 +600,7 @@ namespace Core {
         object->Add( PROPERTY::FOLK ).SetValue( STR_GNOLL_NAME );
         object->Add( PROPERTY::EXPERIENCE ).SetValue( "400" );
         object->Add( PROPERTY::LAYER ).SetValue( STR_8 );
-        object->Add( PROPERTY::COLOR ).SetValue( "443311ff" );
+        object->Add( PROPERTY::COLOR ).SetValue( "6b501bff" );
         object->Add( PROPERTY::SIZE ).SetValue( STR_ATT_SIZE_M );
         object->Add( PROPERTY::SPEED ).SetValue( "9" );
         object->Add( PROPERTY::PERCEPTION ).SetValue( "2" );
@@ -736,21 +736,21 @@ namespace Core {
 		object->Add( PROPERTY::COLOR ).SetValue( "777777ff" );
 		object = GetObject( NewObjectTemplate( "media/planks.png" ) );
 		object->Add( PROPERTY::NAME ).SetValue( STR_PLANKS );
-		object->Add( PROPERTY::COLOR ).SetValue( "99aa44ff" );
+		object->Add( PROPERTY::COLOR ).SetValue( "b3995bff" );
 		object->Add( PROPERTY::LAYER ).SetValue( STR_2 );
 
 		object = GetObject( NewObjectTemplate( "media/noise_2.png" ) );
 		object->Add( PROPERTY::NAME ).SetValue( STR_EARTH );
-		object->Add( PROPERTY::COLOR ).SetValue( "556622ff" );
+		object->Add( PROPERTY::COLOR ).SetValue( "9c7c44ff" );
 		object->Add( PROPERTY::LAYER ).SetValue( STR_1 );
 		object = GetObject( NewObjectTemplate( "media/noise_2.png" ) );
 		object->Add( PROPERTY::NAME ).SetValue( STR_GRASS );
-		object->Add( PROPERTY::COLOR ).SetValue( "44bb44ff" );
+		object->Add( PROPERTY::COLOR ).SetValue( "607326ff" );
 		object->Add( PROPERTY::LAYER ).SetValue( STR_1 );
 		object = GetObject( NewObjectTemplate( "media/noise_1.png" ) );
 		object->Add( PROPERTY::NAME ).SetValue( STR_WATER );
 		object->Add( PROPERTY::OBSTACLE );
-		object->Add( PROPERTY::COLOR ).SetValue( "aaaaeeff" );
+		object->Add( PROPERTY::COLOR ).SetValue( "61b9e2ff" );
 		object->Add( PROPERTY::LAYER ).SetValue( STR_1 );
 
 	}

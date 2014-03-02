@@ -347,8 +347,14 @@ void CharacterState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 
 void CharacterState::CreateNew()
 {
+
+	// Find out how many character images exist
+	int i = 1;
+	while ( std::ifstream("media/char" + std::to_string(i) + ".png") )
+		i++;
+
 	// Create a new player object
-	*m_playerID = g_Game->GetWorld()->NewObject("media/smile_1.png");
+	*m_playerID = g_Game->GetWorld()->NewObject("media/char" + std::to_string(Game::RANDOM->Uniform(1, i)) + ".png");
 	m_player = g_Game->GetWorld()->GetObject(*m_playerID);
 	m_player->Add( Core::PROPERTY::NAME );
 	m_player->Add( Core::PROPERTY::OWNER );

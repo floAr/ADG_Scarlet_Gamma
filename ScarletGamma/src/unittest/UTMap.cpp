@@ -38,7 +38,7 @@ namespace UnitTest {
 		}
 
 		// Add one active object
-		ObjectID objID = world->NewObject("media/smile_2.png");
+		ObjectID objID = world->NewObject("media/char2.png");
 		Object* obj = world->GetObject(objID);
 		obj->Add( PROPERTY::NAME ).SetValue("ICH");
 		obj->Add( PROPERTY::OWNER ).SetValue("ICH");

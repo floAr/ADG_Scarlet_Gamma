@@ -675,6 +675,7 @@ namespace States {
 		CommonState::CreateDiceRollState();
 		m_diceRollState->AddButton("Verdeckt würfeln", std::bind(&MasterState::RollSecretly, this, std::placeholders::_1));
 		m_diceRollState->AddButton("Offen würfeln", std::bind(&MasterState::RollOpen, this, std::placeholders::_1));
+		m_diceRollState->AddButton("Abbrechen", [](const std::string&)->void{}, sf::Keyboard::Escape);
 	}
 
 	void MasterState::RollSecretly(const std::string& _result)

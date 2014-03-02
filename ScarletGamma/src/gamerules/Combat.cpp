@@ -67,7 +67,8 @@ void GameRules::Combat::PushInitiativePrompt(Core::ObjectID _object)
     // Add callback function
 	prompt->AddButton("OK", std::bind(&Combat::InitiativeRollPromptFinished, this,
 		std::placeholders::_1, object->ID()), sf::Keyboard::Return, object);
-	//prompt->AddButton("Abbrechen", std::bind(&Combat::EndCombat, this), sf::Keyboard::Escape);
+	prompt->AddButton("Abbrechen", std::bind(&Combat::RemoveParticipant, this, object->ID()),
+		sf::Keyboard::Escape);
 }
 
 void GameRules::Combat::InitiativeRollPromptFinished( const std::string& _result, Core::ObjectID _object )

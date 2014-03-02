@@ -430,7 +430,8 @@ bool States::PlayerState::OwnsObject( Core::ObjectID _object )
 	void States::PlayerState::CreateDiceRollState()
 	{
 		CommonState::CreateDiceRollState();
-		m_diceRollState->AddButton("Würfeln", std::bind(&PlayerState::RollDice, this, std::placeholders::_1));
+		m_diceRollState->AddButton("Würfeln", std::bind(&PlayerState::RollDice, this, std::placeholders::_1), sf::Keyboard::Return);
+		m_diceRollState->AddButton("Abbrechen", [](const std::string&)->void{}, sf::Keyboard::Escape);
 	}
 
 	

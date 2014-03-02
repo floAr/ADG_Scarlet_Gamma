@@ -219,6 +219,10 @@ namespace Core {
 
 	void World::RemoveObject( ObjectID _object )
 	{
+		// Do not remove objects with the player attribute!
+		if ( GetObject(_object)->HasProperty(STR_PROP_PLAYER) )
+			return;
+
 		Network::MsgRemoveObject( _object ).Send();
 		UnregisterObject( _object );
 		// TODO: Test if destructor is called proper

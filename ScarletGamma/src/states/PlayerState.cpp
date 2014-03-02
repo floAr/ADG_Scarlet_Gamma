@@ -265,6 +265,12 @@ void States::PlayerState::Update( float _dt )
 {
 	CommonState::Update( _dt );
 
+	if (!g_Game->GetWorld()->GetObject(m_playerObjectID))
+	{
+		m_player = nullptr;
+		return;
+	}
+
 	// Go through player object and update all viewed properties
 	m_playerView->Show( g_Game->GetWorld(), m_player );
 

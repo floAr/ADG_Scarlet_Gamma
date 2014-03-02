@@ -33,12 +33,16 @@ ChoosePlayerState::ChoosePlayerState(Core::PlayerID _id) :
 	auto& players = g_Game->GetWorld()->GetAllPlayers();
 	for( size_t i = 0; i < players.size(); ++i )
 	{
-		tgui::Button::Ptr button = createNew.clone();
-		m_gui.add( button );
-		button->setPosition( button->getPosition().x, 150.0f + i * 50.0f );
-		button->setText( g_Game->GetWorld()->GetObject(players[i])->GetName() );
-		button->setCallbackId( players[i] );
-		button->bindCallbackEx( &ChoosePlayerState::ChoosePlayer, this, tgui::Button::LeftMouseClicked );
+		std::string name = g_Game->GetWorld()->GetObject(players[i])->GetName();
+		if (!name.empty())
+		{
+			tgui::Button::Ptr button = createNew.clone();
+			m_gui.add( button );
+			button->setPosition( button->getPosition().x, 150.0f + i * 50.0f );
+			button->setText( name );
+			button->setCallbackId( players[i] );
+			button->bindCallbackEx( &ChoosePlayerState::ChoosePlayer, this, tgui::Button::LeftMouseClicked );
+		}
 	}
 
 	createNew->bindCallback( &ChoosePlayerState::CreatePlayer, this, tgui::Button::LeftMouseClicked );

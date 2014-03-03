@@ -13,6 +13,7 @@
 #include "Constants.hpp"
 #include "core/PredefinedProperties.hpp"
 #include "PlayerState.hpp"
+#include "network/Messenger.hpp"
 
 States::SelectionState::SelectionState() :
 	m_menu(m_gui)
@@ -90,7 +91,7 @@ void States::SelectionState::Draw(sf::RenderWindow& win)
 void States::SelectionState::GuiCallback(tgui::Callback& args)
 {
 	//* NORMAL SELECTION BEHAVIOR
-	if( dynamic_cast<PlayerState*>(m_previousState) )
+	if( !Network::Messenger::IsServer() )
 	{
 		// For player also map the left click on the action menu
 		sf::Vector2i mousePos = sf::Mouse::getPosition(g_Game->GetWindow());

@@ -63,6 +63,7 @@ namespace Interfaces {
 		Interfaces::DragContent::Sources m_dragNDropSource;		///< As what should this GUI fill the DragNDrop handler.
 		Interfaces::PropertyPanel::Ptr m_viewer;		///< A panel to view a selected object.
 		Core::Object* m_selected;
+		tgui::EditBox::Ptr m_lastSelected;
 
 		void RemoveBtn(const tgui::Callback& _call);
 		void AddBtn(const tgui::Callback& _call);
@@ -71,6 +72,7 @@ namespace Interfaces {
 		void StartDrag(const tgui::Callback& _call);
 		void Drop();
 		void SelectObject(const tgui::Callback& _call);
+		void HighlightObjectEdit(const tgui::EditBox::Ptr _edit);
 
 		/// \brief Extract all properties of an object recursively.
 		void Add( Core::ObjectID _object );

@@ -23,7 +23,8 @@ ObjectPanel::ObjectPanel() :
 	m_numPixelLines(0),
 	m_viewer(nullptr),
 	m_dragNDropSource(DragContent::OBJECT_PANEL),
-	m_selected(nullptr)
+	m_selected(nullptr),
+	m_lastSelected(nullptr)
 {
 	m_defaultEdit ->load("media/Black.conf");
 
@@ -140,6 +141,8 @@ void ObjectPanel::Add( ObjectID _object )
 	nameEdit->setCallbackId(_object);
 	nameEdit->disable();
 	nameEdit->setText(name);
+	// Highlight selected object (can happen if refreshing the filter)
+	if( m_selected == obj ) HighlightObjectEdit(nameEdit);
 
 	// A preview of this sprite
 	if( !sprite.empty() )
@@ -327,30 +330,31 @@ void ObjectPanel::Drop()
 
 void ObjectPanel::SelectObject(const tgui::Callback& _call)
 {
-	// A global state to have at most one selected item all over the GUI
-	static tgui::EditBox::Ptr s_lastSelected(nullptr);
-
 	// Find the clicked object
 	for( size_t i=1; i<m_Widgets.size(); ++i )
 	{
 		tgui::EditBox::Ptr ptr = m_Widgets[i];
 		if( ptr!=nullptr && ptr->mouseOnWidget((float)_call.mouse.x, (float)_call.mouse.y) )
 		{
-			// Remove old selection highlight
-			if( s_lastSelected != nullptr )
-			{
-				s_lastSelected->setTextColor( sf::Color(200,200,200) );
-				s_lastSelected->setTextSize( 13 );
-			}
 			m_selected = g_Game->GetWorld()->GetObject(ptr->getCallbackId());
 			m_viewer->Show( g_Game->GetWorld(), m_selected );
-			// Highlight new component
-			ptr->setTextColor( sf::Color(255,40,40) );
-			ptr->setTextSize( 15 );
-			s_lastSelected = ptr;
-			return;
+			HighlightObjectEdit(ptr);
 		}
 	}
+}
+
+void ObjectPanel::HighlightObjectEdit(const tgui::EditBox::Ptr _edit)
+{
+	// Remove old selection highlight
+	if( m_lastSelected != nullptr )
+	{
+		m_lastSelected->setTextColor( sf::Color(200,200,200) );
+		m_lastSelected->setTextSize( 13 );
+	}
+	// Highlight new component
+	_edit->setTextColor( sf::Color(60,60,200) );
+	_edit->setTextSize( 15 );
+	m_lastSelected = _edit;
 }
 
 
@@ -384,6 +388,7 @@ void ObjectPanel::RefreshFilter()
 	if(IsMinimized()) return;
 	
 	Clear();
+	m_lastSelected = nullptr;
 
 	const Core::ObjectList* allObjects = nullptr;
 	if( m_dragNDropSource == DragContent::MODULES_PANEL )

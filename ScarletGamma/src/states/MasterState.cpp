@@ -281,7 +281,11 @@ namespace States {
 
 		// Return if the GUI already handled it
 		if (guiHandled)
+		{
+			delete m_draggedContent;
+			m_draggedContent = nullptr;
 			return;
+		}
 
 		// Handle drop-event of drag&drop action
 		if( m_draggedContent )
@@ -320,7 +324,7 @@ namespace States {
 						if( !object->IsLocatedOnAMap() )
 							GetCurrentMap()->Add( object->ID(), x, y, 6 );
 						else {
-							GetCurrentMap()->SetObjectPosition( object, tilePos );
+							GetCurrentMap()->SetObjectPosition( object, sf::Vector2f((float)x,(float)y) );
 						}
 						object->ResetTarget();
 					} else if( m_draggedContent->from == Interfaces::DragContent::PROPERTY_PANEL )
@@ -336,6 +340,7 @@ namespace States {
 					{
 						// Insert into map
 						GetCurrentMap()->SetObjectPosition( m_draggedContent->object, sf::Vector2f((float)x,(float)y) );
+						m_draggedContent->object->ResetTarget();
 					}
 				}
 			}
@@ -474,6 +479,7 @@ namespace States {
 			//	gs->AddButton("testbutton",std::bind(&MasterState::TestButtonCallback,this,std::placeholders::_1),sf::Vector2f(212,460));
 			//	break;
 		}
+
 		// Return if the GUI already handled it
 		if (guiHandled)
 			return;

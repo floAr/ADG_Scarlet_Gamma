@@ -73,6 +73,7 @@ public:
 		R_SYSTEMONLY = 0x000,
 		R_V00000000 = 0x001,	///< Master: See
 		R_VC0000000 = 0x003,	///< Master: See, Change
+		R_VC0V00000 = 0x00b,	///< Master: See, Change, Owner: See
 		R_VCE000000 = 0x007,	///< Master: See, Change, Edit
 		R_V00V00000 = 0x009,	///< Master: See; Owner: See
 		R_V00V00V00 = 0x049,	///< Everybody: See
@@ -83,6 +84,7 @@ public:
 		R_V0EV00V00 = 0x04d,	///< Master: See, Edit; Owner: See; Player: See
 		R_VC0V00V00 = 0x04b,	///< Master: See, Change; Owner: See; Player: See
 		R_VCEV00V00 = 0x04f,	///< Master: See, Change, Edit; Owner: See; Player: See
+		R_VCEVCE000 = 0x03f,	///< Master: All; Owner: All;
 		R_VCEV0EV00 = 0x06f,	///< Master: See, Change, Edit; Owner: See, Edit; Player: See
 		R_VCEVCEV00 = 0x07f,	///< Master: All; Owner: See, Edit, Change; Player: See
 		R_V0EV0EV0E = 0x16d,	///< Everybody: See, Edit

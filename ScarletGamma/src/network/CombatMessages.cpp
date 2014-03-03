@@ -65,8 +65,9 @@ size_t Network::HandleCombatMessage(const uint8_t* _data, size_t _size, uint8_t 
                 readSize += sizeof(int8_t);
             }
 
-            // Add participant to combat
-            g_Game->GetCommonState()->GetCombat()->AddParticipantWithInitiative(object, index);
+			// Add participant to combat
+			if (g_Game->GetCommonState()->InCombat())
+				g_Game->GetCommonState()->GetCombat()->AddParticipantWithInitiative(object, index);
         } break;
 
     case CombatMsgType::DM_COMBAT_SET_TURN:
@@ -76,7 +77,8 @@ size_t Network::HandleCombatMessage(const uint8_t* _data, size_t _size, uint8_t 
             readSize += sizeof(Core::ObjectID);
 
             // Set turn
-            g_Game->GetCommonState()->GetCombat()->SetTurn(object);
+			if (g_Game->GetCommonState()->InCombat())
+				g_Game->GetCommonState()->GetCombat()->SetTurn(object);
         } break;
 
     case CombatMsgType::PL_COMBAT_END_TURN:
@@ -88,7 +90,8 @@ size_t Network::HandleCombatMessage(const uint8_t* _data, size_t _size, uint8_t 
 			// DM sent usage of steps, update locally
 			float steps = *reinterpret_cast<const float*>(_data + readSize);
 			readSize += sizeof(steps);
-			g_Game->GetCommonState()->GetCombat()->UseMoveAction(steps);
+			if (g_Game->GetCommonState()->InCombat())
+				g_Game->GetCommonState()->GetCombat()->UseMoveAction(steps);
 		} break;
 
     case CombatMsgType::DM_COMBAT_END:

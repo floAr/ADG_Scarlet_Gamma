@@ -93,8 +93,7 @@ void GameRules::MasterCombat::ReceivedTurnEnded()
 void GameRules::MasterCombat::EndTurn()
 {
 	// Call it locally
-	if ( g_Game->GetCommonState()->OwnsObject(m_currentObject) )
-		ReceivedTurnEnded();
+	ReceivedTurnEnded();
 }
 
 void MasterCombat::ReceivedInitiative( Core::ObjectID _object, const std::string& _initiative )

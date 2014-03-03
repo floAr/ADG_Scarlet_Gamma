@@ -21,7 +21,7 @@ namespace Network {
 	{
 		m_listener = new sf::TcpListener();
 		if( m_listener->listen( 42961 ) != sf::Socket::Done )
-			std::cout << "[Messenger] TcpListener cannot listen on port 42961";
+			std::cerr << "[Messenger] TcpListener cannot listen on port 42961\n";
 
 		// Events are polled
 		m_listener->setBlocking(false);
@@ -36,7 +36,7 @@ namespace Network {
 		sf::TcpSocket* serverConnection = new sf::TcpSocket();
 		if( serverConnection->connect( _server, 42961 ) != sf::Socket::Done )
 		{
-			std::cout << "[Messenger] Connection to " << _server << ':' << 42961 << " not possible";
+			std::cerr << "[Messenger] Connection to " << _server << ':' << 42961 << " not possible\n";
 			delete serverConnection;
 			throw std::string("Cannot connect to server.");
 		} else {

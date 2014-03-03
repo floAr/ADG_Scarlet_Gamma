@@ -189,6 +189,7 @@ namespace States {
 		assert( _whosePath );
 		try {
 			std::vector<sf::Vector2i> path;
+			std::vector<sf::Vector2i> waypoints;
 			sf::Vector2i start(sfUtils::Round(_whosePath->GetPosition()));
 			if( _whosePath->HasProperty(STR_PROP_PATH) )
 			{
@@ -200,16 +201,19 @@ namespace States {
 					Core::Object* object = g_Game->GetWorld()->GetObject(wayPoints[i]);
 					if( !object ) return;		// Path corrupted
 					sf::Vector2i goal = sfUtils::Round(object->GetPosition());
+					waypoints.push_back(goal);
 					auto part = g_Game->GetWorld()->GetMap(_whosePath->GetParentMap())->FindPath(start, goal);
 					start = goal;
-					path.insert( path.end(), part.begin(), part.end() );
+					if( part.size() > 1 )
+						path.insert( path.end(), part.begin()+1, part.end() );
 				}
 				// Loop?
 				if( pathProperty.Value() == "true" )
 				{
 					sf::Vector2i goal = sfUtils::Round(g_Game->GetWorld()->GetObject(wayPoints[0])->GetPosition());
 					auto part = g_Game->GetWorld()->GetMap(_whosePath->GetParentMap())->FindPath(start, goal);
-					path.insert( path.end(), part.begin(), part.end() );
+					if( part.size() > 1 )
+						path.insert( path.end(), part.begin()+1, part.end() );
 				}
 			} else if( _whosePath->HasProperty(STR_PROP_TARGET) ) {
 				// There are no paths but a short time target.
@@ -218,7 +222,9 @@ namespace States {
 			}
 
 			if( path.size() > 0 )
-				Graphics::TileRenderer::RenderPath(_window, path);
+				Graphics::TileRenderer::RenderPath(_window, path, sf::Color(255, 144, 1, 100));
+			if( waypoints.size() > 0 )
+				Graphics::TileRenderer::RenderPath(_window, waypoints, sf::Color(145, 194, 1, 255));
 		} catch(...) {
 			// In case of an invalid selection just draw no path
 		}

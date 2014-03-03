@@ -97,11 +97,11 @@ void Graphics::TileRenderer::Render(sf::RenderWindow& window, Core::Map& map, st
 	window.draw(*Graphics::SpriteAtlasBatcher::Instance());
 }
 
-void Graphics::TileRenderer::RenderPath( sf::RenderWindow& window, const std::vector<sf::Vector2i>& _path )
+void Graphics::TileRenderer::RenderPath( sf::RenderWindow& window, const std::vector<sf::Vector2i>& _path, const sf::Color& _color )
 {
 	const sf::Texture& tex = Content::Instance()->LoadTexture("media/way_point.png");
 	sf::Sprite drawSprite(tex);
-	drawSprite.setColor(sf::Color(255, 144, 1, 130));
+	drawSprite.setColor(_color);
 	for( size_t i=0; i<_path.size(); ++i )
 	{
 		drawSprite.setPosition(sf::Vector2f(_path[i]) * float(TILESIZE));

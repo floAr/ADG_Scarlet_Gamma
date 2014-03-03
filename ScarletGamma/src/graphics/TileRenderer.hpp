@@ -24,7 +24,7 @@ namespace Graphics
 
 		/// \brief Draw a path overlay for the current objects path.
 		///	\param [in] An array of tile-positions where the overlay should appear.
-		static void RenderPath(sf::RenderWindow& window, const std::vector<sf::Vector2i>& _path);
+		static void RenderPath(sf::RenderWindow& window, const std::vector<sf::Vector2i>& _path, const sf::Color& _color);
 
 		/// \brief Draw a focus selected objects.
 		static void RenderSelection(sf::RenderWindow& _window, const Core::ObjectList& _selection);

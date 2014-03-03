@@ -17,8 +17,8 @@ void UseSwitch::Execute()
 	Core::Object* executor = g_Game->GetWorld()->GetObject(m_executor);
 	Core::Object* target = g_Game->GetWorld()->GetObject(m_target);
 	auto& prop = target->GetProperty(STR_PROP_SWITCH);
-	if( prop.Value() == STR_FALSE ) prop.SetValue( STR_TRUE );
-	else prop.SetValue( STR_FALSE );
+	if( prop.Value() == STR_OFF ) prop.SetValue( STR_ON );
+	else prop.SetValue( STR_OFF );
 	if( executor->HasProperty(STR_PROP_PLAYER) )
 		Network::ChatMsg(executor->GetName() + " hat den Schalter '" + target->GetName() + "' betätigt.",
 		executor->GetColorOpaque(), true).Send();

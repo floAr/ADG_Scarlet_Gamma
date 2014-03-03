@@ -27,6 +27,8 @@ static const std::string STR_FFFFFFFF = std::string("ffffffff");
 static const std::string STR_MULTISELECTION = std::string("<Mehrfachauswahl>");
 static const std::string STR_PAUSE = std::string("Spiel pausiert");
 
+static const std::string STR_ON = std::string("An");
+static const std::string STR_OFF = std::string("Aus");
 
 
 /************************************************************************/
@@ -73,6 +75,7 @@ static const std::string STR_PROP_COLOR		= std::string("Farbe");		///< Name of c
 static const std::string STR_PROP_PATH		= std::string("path");		///< Name of path property: object list + boolean value
 static const std::string STR_PROP_TARGET	= std::string("target");	///< Name of target property: next point to be reached linearly
 static const std::string STR_PROP_OBSTACLE	= std::string("Hindernis");	///< Name of obstacle property: this object collides with the player
+static const std::string STR_PROP_OCCLUDER	= std::string("Verdeckend");
 static const std::string STR_PROP_NAME		= std::string("Name");		///< Name of name property: object's name
 static const std::string STR_PROP_PLAYER	= std::string("player");	///< Name of player: flags an object as player, the value is its ID
 static const std::string STR_PROP_OWNER		= std::string("Besitzer");	///< Name of owner property: flags the object as owned by a player

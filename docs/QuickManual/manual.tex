@@ -76,9 +76,10 @@
 				\textbf{Angreifbar} [Modul]      & Ein Objekt das 'TP' (Trefferpunkte) und 'RK' (Rüstungsklasse) enthält kann angegriffen werden. \\\hline
 				\textbf{Besitzer} [Eigenschaft]  & Wenn diese Eigenschaft nicht leer ist kann ein Spieler das Objekt beobachten. Wenn der Spielername gleich dem Wert ist kann der Spieler das Objekt steuern.\\\hline
 				\textbf{Farbe} [Eigenschaft]     & Multipliziert die Textur des Objekts mit der Farbe. Hexadezimal: rrggbbaa. Beispiel: 008800ff = mittleres grün.\\\hline
-				\textbf{Hindernis} [Eigenschaft  & Felder mit mindestens einem Hindernis können nicht betreten werden.\\\hline
+				\textbf{Hindernis} [Eigenschaft] & Felder mit mindestens einem Hindernis können nicht betreten werden.\\\hline
 				\textbf{Schalter} [Modul]        & Kann umgeschaltet werden, was eine Meldung beim Spielleiter zur folge hat. Der Wert ist 'true' oder 'false'\\\hline
-				\textbf{Sprungmarke} [Modul]     & Spielleiter kann ein Objekt als Sprungziel wählen (auch auf einer anderen Karte). Später können Spieler diese als Teleport/Treppe/... verwenden.\cr
+				\textbf{Sprungmarke} [Modul]     & Spielleiter kann ein Objekt als Sprungziel wählen (auch auf einer anderen Karte). Später können Spieler diese als Teleport/Treppe/... verwenden.\\\hline
+				\textbf{Verdeckend} [Eigenschaft]& Der Spieler kann durch diese Objekt nicht hindurchsehen.\cr
 			\end{supertabular}
 			
 	\section{Editor}
@@ -105,7 +106,9 @@
 		
 		\subsection{Toolbar}
 		\subsubsection*{Map}
-			Eine Liste mit allen Karten der geladenen Welt. Es kann per Klick zwischen den Karten gesprungen werden und neue Karten erstellt werden.
+			Eine Liste mit allen Karten der geladenen Welt. Es kann per Klick zwischen den Karten gesprungen werden.
+			
+			Über die Buttons können Maps/Karten erstellt gelöscht importiert und exportiert werden. In jedem Fall wird durch ein Popup die nötige Information eingegeben oder der Vorgang abgebrochen.
 		\subsubsection*{Modus}
 			Verschiedene Spielsituationen können unterschiedliche Anforderungen stellen. Die Modi unterscheiden möglichst sinnvolle Aktionen der Maus. Der Rechtsklick ist immer gleich belegt siehe Aktionen \ref{Aktionen}.
 			

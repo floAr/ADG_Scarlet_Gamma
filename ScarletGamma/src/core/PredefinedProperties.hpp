@@ -15,6 +15,7 @@ namespace Core {
 		static const Property PATH;
 		static const Property TARGET;
 		static const Property OBSTACLE;
+		static const Property OCCLUDER;
 		static const Property PLAYER;
 		static const Property JUMPPOINT;
 		static const Property OWNER;

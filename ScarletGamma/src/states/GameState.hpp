@@ -171,6 +171,8 @@ namespace States
 		/// \brief Only the state view can be changed.
 		sf::View& GetStateView()	{return m_stateView;}
 
+		/// \brief brute force search for the focused element in the gui
+		tgui::Widget::Ptr GetFocusedElement();
 	protected:
 		bool m_finished;			///< set to true if the GameState is finished
 		GameState* m_previousState;	///< Pointer to previous state or null
@@ -182,9 +184,6 @@ namespace States
 		/// \brief Sets the GUI to be rendered, updated and used to handle events.
 		/// \param [in] gui  Pointer to the GUI instance.
 		void SetGui(tgui::Gui* gui) { m_currentGui = gui ; }
-
-		/// \brief brute force search for the focused element in the gui
-		tgui::Widget::Ptr GetFocusedElement();
 
 		/// \brief Paste text into an edit field if one is focused. Does nothing
 		///		otherwise.

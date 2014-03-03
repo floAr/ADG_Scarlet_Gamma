@@ -189,6 +189,10 @@ void States::PlayerState::MouseWheelMoved(sf::Event::MouseWheelEvent& wheel, boo
 
 void States::PlayerState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 {
+	// Everything in that damned gui eats the focus - only edits are using it
+	tgui::EditBox* edit = dynamic_cast<tgui::EditBox*>(GameState::GetFocusedElement().get());
+	guiHandled &= edit != nullptr;
+
 	// Handle copy & paste
 	GameState::KeyPressed(key, guiHandled);
 

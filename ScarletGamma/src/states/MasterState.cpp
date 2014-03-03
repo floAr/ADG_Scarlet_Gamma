@@ -481,11 +481,15 @@ namespace States {
 		}
 
 		// Return if the GUI already handled it
-		if (guiHandled)
-			return;
+		// Everything in that damned gui eats the focus - only edits are using it
+		tgui::EditBox* edit = dynamic_cast<tgui::EditBox*>(GameState::GetFocusedElement().get());
+		guiHandled &= edit != nullptr;
 
 		// Let common state handle input
 		CommonState::KeyPressed(key, guiHandled);
+
+		if (guiHandled)
+			return;
 
 		// This should work only if the GUI didn't handle before
 		switch(key.code)

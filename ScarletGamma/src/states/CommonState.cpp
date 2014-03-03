@@ -126,21 +126,23 @@ namespace States {
 
 	void CommonState::KeyPressed( sf::Event::KeyEvent& key, bool guiHandled )
 	{
-		// Don't react to any key if gui handled it
-		if (guiHandled)
-			return;
-
-		switch(key.code)
+		if( key.code == sf::Keyboard::Return )
 		{
-		case sf::Keyboard::Return: {
 			// Show message input field if not visible or submit message.
 			tgui::EditBox::Ptr enterTextEdit = m_gui.get( "EnterText" );
 			if( !enterTextEdit->isFocused() )
 			{
 				//	enterTextEdit->setText("");
 				enterTextEdit->focus();
-			}
-			break; }
+			} else enterTextEdit->unfocus();
+		}
+
+		// Don't react to any key if gui handled it
+		if (guiHandled)
+			return;
+
+		switch(key.code)
+		{
 		case sf::Keyboard::Num0:
 		case sf::Keyboard::Numpad0: {
 			if( sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)
@@ -253,7 +255,6 @@ namespace States {
 	void CommonState::SubmitChat(const tgui::Callback& _call)
 	{
 		tgui::EditBox* enterTextEdit = (tgui::EditBox*)_call.widget;
-		enterTextEdit->unfocus();
 		// Send Message
 		if( enterTextEdit->getText() != "" )
 		{

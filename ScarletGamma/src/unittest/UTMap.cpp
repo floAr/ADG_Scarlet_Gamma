@@ -11,7 +11,7 @@ using namespace std;
 using namespace Core;
 
 namespace UnitTest {
-
+	
 	void TestMap()
 	{
 		Network::MaskWorldMessage messageLock;
@@ -33,6 +33,7 @@ namespace UnitTest {
 			ObjectID objID = world->NewObject(walls[rnd.Uniform(0,2)]);
 			Object* obj = world->GetObject(objID);
 			obj->Add( PROPERTY::OBSTACLE );
+			obj->Add( PROPERTY::OCCLUDER );
 			obj->SetColor(sf::Color(rnd.Uniform(0,255), rnd.Uniform(0,255), rnd.Uniform(0,255), 255));
 			map->Add(objID, rnd.Uniform(0,9), rnd.Uniform(0,9), 2);
 		}

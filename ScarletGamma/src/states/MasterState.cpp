@@ -186,7 +186,7 @@ namespace States {
 			SetStateView();
 		}
 
-		GameState::Draw(win);
+		CommonState::Draw(win);
 	}
 
 

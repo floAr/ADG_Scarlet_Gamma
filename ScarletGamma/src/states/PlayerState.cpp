@@ -90,7 +90,7 @@ void States::PlayerState::Draw(sf::RenderWindow& win)
 	win.draw(t);
 	SetStateView();
 
-	GameState::Draw(win);
+	CommonState::Draw(win);
 }
 
 void States::PlayerState::MouseButtonPressed(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos, bool guiHandled)

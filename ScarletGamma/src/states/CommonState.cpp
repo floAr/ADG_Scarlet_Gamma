@@ -85,6 +85,24 @@ namespace States {
 	}
 
 
+	void CommonState::Draw(sf::RenderWindow& _win)
+	{
+		GameState::Draw(_win);
+
+		// Draw a packet at the cursor if some content is dragged
+		if( m_draggedContent )
+		{
+			SetGuiView();
+			const sf::Texture& tex = Content::Instance()->LoadTexture("media/dragndrop.png");
+			auto mousePos = sf::Mouse::getPosition( _win );
+			sf::Sprite drawSprite(tex);
+			drawSprite.setPosition( mousePos.x - 15.0f, mousePos.y - 15.0f );
+			_win.draw(drawSprite);
+			SetStateView();
+		}
+	}
+
+
 	void CommonState::MouseMoved(int deltaX, int deltaY, bool guiHandled)
 	{
 		// Update default action if we are not in the GUI

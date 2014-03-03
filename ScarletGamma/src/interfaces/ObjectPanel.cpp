@@ -46,8 +46,9 @@ void ObjectPanel::Init( float _x, float _y, float _w, float _h,
 	Panel::setSize(_w, _h - (m_addAble ? 40.0f : 20.0f));
 	Panel::setBackgroundColor( sf::Color(50,50,50,150) );
 	if(m_dragNDropHandler)
-		Panel::bindCallbackEx(&ObjectPanel::StartDrag, this, tgui::Panel::LeftMousePressed);
+		Panel::bindCallbackEx( &ObjectPanel::StartDrag, this, tgui::Panel::LeftMousePressed );
 	Panel::bindCallbackEx( &ObjectPanel::SelectObject, this, tgui::EditBox::LeftMouseClicked );
+	Panel::bindCallback( &ObjectPanel::Drop, this, tgui::Panel::LeftMouseReleased );
 
 	// Create a scrollbar for long lists.
 	m_scrollBar = tgui::Scrollbar::Ptr( *this );
@@ -315,6 +316,12 @@ void ObjectPanel::StartDrag(const tgui::Callback& _call)
 			return;
 		}
 	}
+}
+
+void ObjectPanel::Drop()
+{
+	if( !*m_dragNDropHandler ) delete *m_dragNDropHandler;
+	*m_dragNDropHandler = nullptr;
 }
 
 

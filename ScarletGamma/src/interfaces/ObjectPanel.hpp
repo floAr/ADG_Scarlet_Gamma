@@ -69,6 +69,7 @@ namespace Interfaces {
 		void Scroll(const tgui::Callback& _call);
 		void MiniMaxi(const tgui::Callback& _call);
 		void StartDrag(const tgui::Callback& _call);
+		void Drop();
 		void SelectObject(const tgui::Callback& _call);
 
 		/// \brief Extract all properties of an object recursively.

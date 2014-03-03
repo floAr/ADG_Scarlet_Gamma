@@ -22,6 +22,8 @@ namespace States
 
 		~CommonState();
 
+		virtual void Draw(sf::RenderWindow& _win) override;
+
 		/// \brief Sets correct mouse cursor.
 		virtual void OnResume() override;
 

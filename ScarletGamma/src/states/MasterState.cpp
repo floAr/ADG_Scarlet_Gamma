@@ -420,7 +420,7 @@ namespace States {
 		if (guiHandled)
 			return;
 
-		m_zoom = (float)wheel.delta;
+		m_zoom = (float)-wheel.delta;
 	}
 
 
@@ -594,10 +594,6 @@ namespace States {
 		if (m_modeTool->GetMode() != Interfaces::ModeToolbox::ACTION)
 			Actions::ActionPool::Instance().UpdateDefaultAction(m_selection, 0);
 
-		// Don't react to any key if gui handled it
-		if (guiHandled)
-			return;
-
 		if( sf::Mouse::isButtonPressed(sf::Mouse::Left) )
 		{
 			// Most actions here require the tile position -> compute it
@@ -609,6 +605,10 @@ namespace States {
 				m_brush.Paint(mousePos.x, mousePos.y);
 			}
 		}
+
+        // Don't react to any key if gui handled it
+        if (guiHandled)
+            return;
 
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Middle))
 		{

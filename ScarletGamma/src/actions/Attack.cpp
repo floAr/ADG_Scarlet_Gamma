@@ -222,7 +222,7 @@ void Attack::PushAttackRollDMPrompt(int _result, void (Attack::* _callback)(cons
     // Applying 0 damage evaluates the hit points if it was a formula before
     CombatRules::ApplyHitDamage(m_target, 0);
 
-    message << "Der Wert kann angepasst werden. Das Ziel hat RK "
+    message << "Ziel hat RK "
         << CombatRules::GetArmorClass(m_target) << " und "
         << CombatRules::GetHitPoints(m_target) << "TP.\n";
 

@@ -467,7 +467,9 @@ namespace States {
 				ObjectID id = m_selection[i];
 				Map* map = g_Game->GetWorld()->GetMap( g_Game->GetWorld()->GetObject(id)->GetParentMap() );
 				map->Remove( id );
-				g_Game->GetWorld()->RemoveObject( id );	// Assumes real deletion
+				// Do not remove objects with the player attribute!
+				if ( !g_Game->GetWorld()->GetObject(id)->HasProperty(STR_PROP_PLAYER) )
+					g_Game->GetWorld()->RemoveObject( id );	// Assumes real deletion
 			}
 			m_selection.Clear();
 			m_selectionView->hide();

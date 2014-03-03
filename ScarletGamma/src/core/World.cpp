@@ -220,10 +220,6 @@ namespace Core {
 
 	void World::RemoveObject( ObjectID _object )
 	{
-		// Do not remove objects with the player attribute!
-		if ( GetObject(_object)->HasProperty(STR_PROP_PLAYER) )
-			return;
-
 		Network::MsgRemoveObject( _object ).Send();
 		UnregisterObject( _object );
 		// TODO: Test if destructor is called proper
@@ -399,6 +395,19 @@ namespace Core {
 		else GetPropertyBaseObject()->GetProperty(STR_PROP_PAUSE).SetValue( STR_FALSE );
 	}
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 	void World::CreateDefaultPropertyBase()
 	{
 		Network::MaskWorldMessage lock;
@@ -486,11 +495,11 @@ namespace Core {
 		Object* object;
 
 #		define NewModule(name)				\
-	OID = NewObject( STR_EMPTY );	\
-	m_moduleTemplates.Add( OID );	\
-	object = GetObject( OID );		\
-	object->Add( PROPERTY::NAME ).SetValue( name );	\
-	object->GetProperty( STR_PROP_SPRITE ).SetRights( Property::R_SYSTEMONLY );	// Hide the sprite property
+			OID = NewObject( STR_EMPTY );	\
+			m_moduleTemplates.Add( OID );	\
+			object = GetObject( OID );		\
+			object->Add( PROPERTY::NAME ).SetValue( name );	\
+			object->GetProperty( STR_PROP_SPRITE ).SetRights( Property::R_SYSTEMONLY );	// Hide the sprite property
 
 		NewModule( STR_ATTACKABLE );
 		object->Add( PROPERTY::HEALTH );

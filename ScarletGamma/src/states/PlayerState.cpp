@@ -335,7 +335,7 @@ float States::PlayerState::CheckTileVisibility( Core::Map& _map, sf::Vector2i& _
 	int err = dx+dy, e2; // error value e_xy
 	while(v > 0.001f && currentTile != _tilePos)
 	{
-		if( !_map.IsFree(currentTile) )
+		if( _map.HasAnyOrEmpty(currentTile, STR_PROP_OCCLUDER) )
 		{
 			// Use ray - tile distance to weight the occlusion.
 		//	sf::Vector2f closest = _playerPos + sfUtils::Dot(sf::Vector2f(currentTile) - _playerPos, direction) * direction;

@@ -120,20 +120,21 @@ namespace Core {
 		return const_cast<ObjectList&>( const_cast<const Map*>(this)->GetObjectsAt(_x, _y) );
 	}
 
-	bool Map::IsFree( const sf::Vector2i& _position, Core::ObjectID _self ) const
+	bool Map::HasAnyOrEmpty( const sf::Vector2i& _position, const std::string& _property, Core::ObjectID _self ) const
 	{
 		// Out of bounds -> obstacle (end of world)
-		if( _position.x < m_minX || _position.x > m_maxX ) return false;
-		if( _position.y < m_minY || _position.y > m_maxY ) return false;
+		if( _position.x < m_minX || _position.x > m_maxX ) return true;
+		if( _position.y < m_minY || _position.y > m_maxY ) return true;
 
 		// Test each object in this cell if it has obstacle property
 		auto list = GetObjectsAt(_position.x, _position.y);
-		if( list.Size() == 0 ) return false;
+		if( list.Size() == 0 ) return true;
 		for( int i=0; i<list.Size(); ++i )
-			if(list[i] != _self && m_parentWorld->GetObject(list[i])->HasProperty(STR_PROP_OBSTACLE))
-				return false;
-		return true;
+			if(list[i] != _self && m_parentWorld->GetObject(list[i])->HasProperty(_property))
+				return true;
+		return false;
 	}
+
 
 	void Map::Add(ObjectID _object, int _x, int _y, int _layer)
 	{
@@ -272,9 +273,9 @@ namespace Core {
 
 			// The actor can not move over blocked tiles. Since he is allowed
 			// to move diagonal it may be necessary to clamp the direction.
-			if( !IsFree(sfUtils::Round( position + sf::Vector2f(Utils::Sign(targetDirection.x)*0.5f, 0.0f) ), object->ID()) )
+			if( HasAnyOrEmpty(sfUtils::Round( position + sf::Vector2f(Utils::Sign(targetDirection.x)*0.5f, 0.0f) ), STR_PROP_OBSTACLE, object->ID()) )
 				targetDirection.x = 0.0f;
-			if( !IsFree(sfUtils::Round( position + sf::Vector2f(0.0f, Utils::Sign(targetDirection.y)*0.5f) ), object->ID()) )
+			if( HasAnyOrEmpty(sfUtils::Round( position + sf::Vector2f(0.0f, Utils::Sign(targetDirection.y)*0.5f) ), STR_PROP_OBSTACLE, object->ID()) )
 				targetDirection.y = 0.0f;
 
 			float len = sfUtils::Length(targetDirection);
@@ -379,10 +380,10 @@ namespace Core {
 						}
 					} else {
 						// Is this neighbor a possible field?
-						if(!IsFree(successorPos)) continue;
+						if(HasAnyOrEmpty(successorPos, STR_PROP_OBSTACLE)) continue;
 						// For diagonal fields at least one of the two from
 						// 4 neighborhood must be free.
-						if((x*y != 0) && !(IsFree(node->cell+sf::Vector2i(x,0)) || IsFree(node->cell+sf::Vector2i(0,y)) ) ) continue;
+						if((x*y != 0) && !(!HasAnyOrEmpty(node->cell+sf::Vector2i(x,0), STR_PROP_OBSTACLE) || !HasAnyOrEmpty(node->cell+sf::Vector2i(0,y), STR_PROP_OBSTACLE) ) ) continue;
 						// Insert
 						visited.push_back( SearchNode(node, costs, successorPos) );
 						visited.back().entry = openList.Insert(&visited.back(), visited.back().costs);

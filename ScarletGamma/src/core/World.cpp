@@ -418,6 +418,7 @@ namespace Core {
 		propertyO->SetColor( sf::Color::White );
 		propertyO->Add( PROPERTY::NAME );
 		propertyO->Add( PROPERTY::OBSTACLE );
+		propertyO->Add( PROPERTY::OCCLUDER );
 		propertyO->Add( PROPERTY::JUMPPOINT );
 		propertyO->Add( PROPERTY::SWITCH );
 		propertyO->Add( PROPERTY::OWNER );
@@ -729,14 +730,17 @@ namespace Core {
 		object = GetObject( NewObjectTemplate( "media/bar_hor.png" ) );
 		object->Add( PROPERTY::NAME ).SetValue( STR_WALLH );
 		object->Add( PROPERTY::OBSTACLE );
+		object->Add( PROPERTY::OCCLUDER );
 		object->Add( PROPERTY::LAYER ).SetValue( STR_2 );
 		object = GetObject( NewObjectTemplate( "media/bar_vert.png" ) );
 		object->Add( PROPERTY::NAME ).SetValue( STR_WALLV );
 		object->Add( PROPERTY::OBSTACLE );
+		object->Add( PROPERTY::OCCLUDER );
 		object->Add( PROPERTY::LAYER ).SetValue( STR_2 );
 		object = GetObject( NewObjectTemplate( "media/cross_big.png" ) );
 		object->Add( PROPERTY::NAME ).SetValue( STR_WALLC );
 		object->Add( PROPERTY::OBSTACLE );
+		object->Add( PROPERTY::OCCLUDER );
 		object->Add( PROPERTY::LAYER ).SetValue( STR_2 );
 		object = GetObject( NewObjectTemplate( "media/stairs.png" ) );
 		object->Add( PROPERTY::NAME ).SetValue( STR_STAIRS );

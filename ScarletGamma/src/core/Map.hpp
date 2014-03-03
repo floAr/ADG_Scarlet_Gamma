@@ -46,11 +46,11 @@ namespace Core {
 		const ObjectList& GetObjectsAt(int _x, int _y) const;
 		ObjectList& GetObjectsAt(int _x, int _y);
 
-		/// \brief Tests if there are no objects with collision in the
-		///		grid cell.
+		/// \brief Tests if there are no objects with a certain property in the
+		///		grid cell. All cells without any object return true ()!
 		///	\param [in] _position 2D tile-position.
 		/// \param [in] _self     Own object ID, to avoid blocking myself
-		bool IsFree(const sf::Vector2i& _position, Core::ObjectID _self = -1) const;
+		bool HasAnyOrEmpty(const sf::Vector2i& _position, const std::string& _property, Core::ObjectID _self = -1) const;
 
 		/// \brief Add a new object between or on top of the existing objects.
 		/// \details If the map position is not inside the current map the map

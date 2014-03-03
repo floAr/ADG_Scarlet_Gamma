@@ -77,6 +77,12 @@ namespace States {
 		m_color = sf::Color(80,80,250);
 		m_name = "Master";
 
+		// Creat pause text
+		m_pauseText.setFont(Content::Instance()->LoadFont("media/arial.ttf"));
+		m_pauseText.setCharacterSize(20);
+		m_pauseText.setStyle(sf::Text::Bold);
+		m_pauseText.setString("PAUSE");
+
 		// Set window size
 		sf::Vector2u size = g_Game->GetWindow().getSize();
 		Resize( sf::Vector2f( (float) size.x, (float) size.y ) );
@@ -163,6 +169,21 @@ namespace States {
 			int minX,minY,maxX,maxY;
 			ComputeSelectionRect( mousePos, minX, maxX, minY, maxY );
 			Graphics::TileRenderer::RenderRect( win, sf::Vector2i(minX,minY), sf::Vector2i(maxX,maxY) );
+		}
+
+		// Draw pause text if game is paused
+		if (g_Game->GetWorld()->IsPaused())
+		{
+			SetGuiView();
+			// Faking dark border
+			m_pauseText.setColor(sf::Color(0, 0, 0, 100));
+			m_pauseText.move(-1, -1); win.draw(m_pauseText);
+			m_pauseText.move( 2,  0); win.draw(m_pauseText);
+			m_pauseText.move( 0,  2); win.draw(m_pauseText);
+			m_pauseText.move(-2,  0); win.draw(m_pauseText);
+			m_pauseText.setColor(sf::Color(255, 255, 255, 100));
+			m_pauseText.move( 1, -1); win.draw(m_pauseText);
+			SetStateView();
 		}
 
 		GameState::Draw(win);
@@ -558,6 +579,10 @@ namespace States {
 		m_propertyPanel->setSize( m_propertyPanel->getSize().x, height * 0.5f );
 		m_viewPanel->setSize( m_viewPanel->getSize().x, height * 0.5f );
 		m_viewPanel->setPosition( m_modulePanel->getSize().x, height * 0.5f );
+
+		// Reposition pause text
+		m_pauseText.setPosition(_size.x / 2.0f - m_pauseText.getGlobalBounds().width / 2.0f,
+								_size.y / 2.0f - m_pauseText.getGlobalBounds().height / 2.0f);
 	}
 
 

@@ -478,6 +478,18 @@ namespace States {
 		case sf::Keyboard::P:
 			g_Game->GetWorld()->SetPause( !g_Game->GetWorld()->IsPaused() );
 			break;
+		case sf::Keyboard::F1:
+			m_modeTool->SetMode( Interfaces::ModeToolbox::SELECTION );
+			break;
+		case sf::Keyboard::F2:
+			m_modeTool->SetMode( Interfaces::ModeToolbox::BRUSH );
+			break;
+		case sf::Keyboard::F3:
+			m_modeTool->SetMode( Interfaces::ModeToolbox::ACTION );
+			break;
+		case sf::Keyboard::F4:
+			m_modeTool->SetMode( Interfaces::ModeToolbox::DRAGNDROP );
+			break;
 		}
 	}
 

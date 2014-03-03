@@ -138,6 +138,7 @@ namespace Interfaces {
 		virtual void Init() override;
 
 		Mode GetMode() const			{ return Mode(m_selected); }
+		void SetMode(Mode _mode);
 		BrushToolbox::Ptr Brush() const { return m_brushBox; }
 	private:
 		tgui::ListBox::Ptr m_actionList;	///< List of possible modes

@@ -303,6 +303,15 @@ namespace Interfaces {
 		m_selected = _call.value;
 	}
 
+	void ModeToolbox::SetMode(Mode _mode)
+	{
+		m_actionList->setSelectedItem( int(_mode) );
+		// Changing gui selection does not trigger the event automatically
+		tgui::Callback call;
+		call.value = int(_mode);
+		SelectMode( call );
+	}
+
 
 
 

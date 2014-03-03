@@ -102,7 +102,9 @@ namespace Tools {
 							if( m_layer == g_Game->GetWorld()->GetObject( id )->GetProperty( STR_PROP_LAYER ).Evaluate() )
 							{
 								m_map->Remove( m_map->GetObjectsAt(x,y)[i] );
-								g_Game->GetWorld()->RemoveObject( id );	// Assumes real deletion
+								// Do not remove objects with the player attribute!
+								if ( !g_Game->GetWorld()->GetObject(id)->HasProperty(STR_PROP_PLAYER) )
+									g_Game->GetWorld()->RemoveObject( id );	// Assumes real deletion otherwise
 								// The currently iterated array should be shorter now.
 								--i;
 							}
@@ -120,7 +122,9 @@ namespace Tools {
 								obj->GetName() == m_obj->GetName() )
 							{
 								m_map->Remove( m_map->GetObjectsAt(x,y)[i] );
-								g_Game->GetWorld()->RemoveObject( id );	// Assumes real deletion
+								// Do not remove objects with the player attribute!
+								if ( !g_Game->GetWorld()->GetObject(id)->HasProperty(STR_PROP_PLAYER) )
+									g_Game->GetWorld()->RemoveObject( id );	// Assumes real deletion otherwise
 								// The currently iterated array should be shorter now.
 								--i;
 							}

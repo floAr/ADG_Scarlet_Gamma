@@ -469,7 +469,7 @@ namespace States {
 				map->Remove( id );
 				// Do not remove objects with the player attribute!
 				if ( !g_Game->GetWorld()->GetObject(id)->HasProperty(STR_PROP_PLAYER) )
-					g_Game->GetWorld()->RemoveObject( id );	// Assumes real deletion
+					g_Game->GetWorld()->RemoveObject( id );	// Assumes real deletion otherwise
 			}
 			m_selection.Clear();
 			m_selectionView->hide();

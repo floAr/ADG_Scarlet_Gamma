@@ -33,7 +33,8 @@ namespace States {
 		m_selectionView(nullptr),
 		m_toolbar(nullptr),
 		m_worldFileName(_loadFile),
-		m_rectSelection(false)
+		m_rectSelection(false),
+		m_lastObjectPanelUpdate(0.0f)
 	{
 		// Load the map
 		Jo::Files::HDDFile file(_loadFile);
@@ -116,6 +117,15 @@ namespace States {
 		if( m_selectionView->isVisible() )
 			m_selectionView->Show( g_Game->GetWorld(), m_selection );
 		m_viewPanel->RefreshFilter();
+
+		// Update the object views seldom (they always reload all pictures)
+		m_lastObjectPanelUpdate += dt;
+		if( m_lastObjectPanelUpdate > 1.5f )
+		{
+			m_modulePanel->RefreshFilter();
+			m_objectsPanel->RefreshFilter();
+			m_lastObjectPanelUpdate = 0.0f;
+		}
 	}
 
 	void MasterState::Draw(sf::RenderWindow& win)

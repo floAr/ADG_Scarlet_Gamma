@@ -42,12 +42,18 @@ namespace Interfaces {
 		/// \brief Call this if mouse is scrolled. It will move the scrollbar
 		///		if the cursor is on this component.
 		void Scroll( int _delta );
+
+		/// \brief Remove all lines and then show the once remaining after
+		///		filtering.
+		void RefreshFilter();
 	protected:
 		tgui::EditBox::Ptr m_newName;
 		tgui::Button::Ptr m_newAdd;
 		tgui::Scrollbar::Ptr m_scrollBar;
 		tgui::EditBox::Ptr m_titleBar;			///< Contains the object name in minimized state and is the searchbar if maximized
 		tgui::AnimatedPicture::Ptr m_miniMaxi;
+		tgui::EditBox::Ptr m_defaultEdit;
+		tgui::Checkbox::Ptr m_defaultDelete;
 		
 		bool m_addAble;
 		int m_oldScrollValue;		///< The damned scrollbar-change does not send the previous value.
@@ -76,10 +82,6 @@ namespace Interfaces {
 
 		/// \brief Remove all properties from the list
 		void Clear();
-
-		/// \brief Remove all lines and then show the once remaining after
-		///		filtering.
-		void RefreshFilter();
 	};
 
 } // namespace Interfaces

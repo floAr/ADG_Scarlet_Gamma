@@ -25,6 +25,10 @@ ObjectPanel::ObjectPanel() :
 	m_dragNDropSource(DragContent::OBJECT_PANEL),
 	m_selected(nullptr)
 {
+	m_defaultEdit ->load("media/Black.conf");
+
+	m_defaultDelete->load("media/Black.conf");
+	m_defaultDelete->setSize(12.0f, 12.0f);
 }
 
 
@@ -129,8 +133,7 @@ void ObjectPanel::Add( ObjectID _object )
 	float w = Panel::getSize().x - x - (m_addAble ? 12.0f : 0.0f);
 
 	// Create component on the left side
-	tgui::EditBox::Ptr nameEdit( *this );
-	nameEdit->load("media/Black.conf");
+	tgui::EditBox::Ptr nameEdit = m_defaultEdit.clone(); this->add( nameEdit );
 	nameEdit->setSize(w, 20.0f);
 	nameEdit->setPosition(x, y);
 	nameEdit->setCallbackId(_object);
@@ -150,10 +153,8 @@ void ObjectPanel::Add( ObjectID _object )
 	// Create a remove line button
 	if( m_addAble )
 	{
-		tgui::Checkbox::Ptr del( *this );
-		del->load("media/Black.conf");
+		tgui::Checkbox::Ptr del = m_defaultDelete.clone(); this->add( del );
 		del->setPosition(Panel::getSize().x - 12.0f, y+4.0f);
-		del->setSize(12.0f, 12.0f);
 		del->setCallbackId(_object);
 		del->bindCallbackEx(&ObjectPanel::RemoveBtn, this, tgui::Button::LeftMouseClicked);
 	}

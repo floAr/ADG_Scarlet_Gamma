@@ -62,6 +62,7 @@ namespace States
 		Interfaces::PlayersToolbox::Ptr m_playerTool;
 		Interfaces::GoToToolbox::Ptr m_gotoTool;
 		Interfaces::CombatToolbox::Ptr m_combatTool;
+		float m_lastObjectPanelUpdate;		///< Time since last gui update
 
 		/// \brief A permanent brush object.
 		/// \details Brushes contain an array for flags. So over the whole

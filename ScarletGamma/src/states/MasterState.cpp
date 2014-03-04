@@ -93,8 +93,29 @@ namespace States {
 	{
 		CommonState::Update(dt);
 
+		// Move with mouse cursors
+		float dirX = 0, dirY = 0;
+		if ( sf::Keyboard::isKeyPressed(sf::Keyboard::Left) )
+			dirX -= 1.0f;
+		if ( sf::Keyboard::isKeyPressed(sf::Keyboard::Right) )
+			dirX += 1.0f;
+		if ( sf::Keyboard::isKeyPressed(sf::Keyboard::Up) )
+			dirY -= 1.0f;
+		if ( sf::Keyboard::isKeyPressed(sf::Keyboard::Down) )
+			dirY += 1.0f;
+		if (dirX != 0 || dirY != 0)
+		{
+			float speed = 150.0f;
+			sf::Vector2f scale(m_stateView.getSize().x / g_Game->GetWindow().getSize().x,
+                               m_stateView.getSize().y / g_Game->GetWindow().getSize().y);
+			m_stateView.move( sf::Vector2f(dirX * speed * dt * scale.x, dirY * speed * dt * scale.y) );
+			SetStateView();
+		}
+
+		// Update the game world
 		g_Game->GetWorld()->Update(dt);
 
+		// Update the toolbar
 		m_toolbar->Update( dt );
 
 		// Repair selection

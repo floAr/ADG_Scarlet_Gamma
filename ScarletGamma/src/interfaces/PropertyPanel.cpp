@@ -249,6 +249,12 @@ PropertyPanel::Ptr PropertyPanel::AddNode( EntryLine& _parent )
 		m_addAble, true, m_player,
 		m_dragNDropHandler, _parent.left->getCallbackId() );
 
+	tgui::Checkbox::Ptr del = m_basicDeleteButton.clone();
+	m_listContainer->add(del);
+	del->setPosition(Panel::getSize().x - 12.0f, y+4.0f);
+	del->setCallbackId((uint32_t)subNode.get());	assert(sizeof(void*)==4);
+	del->bindCallbackEx(&PropertyPanel::RemoveNodeBtn, this, tgui::Button::LeftMouseClicked);
+
 	return subNode;
 }
 
@@ -262,6 +268,19 @@ void PropertyPanel::RemoveBtn(const tgui::Callback& _call)
 		m_objects[i]->Remove( name );
 
 	Remove( delLine );
+}
+
+
+void PropertyPanel::RemoveNodeBtn(const tgui::Callback& _call)
+{
+	// To remove a node just delete the element from the source object.
+	// RefreshFilter will do the rest.
+	PropertyPanel* panel = (PropertyPanel*)_call.id;
+	Core::Property& prop = m_objects[0]->GetProperty( m_lines[panel->getCallbackId()].left->getText() );
+	// Child panels always contain only one object
+	prop.RemoveObject( panel->m_objects[0] );
+	// Delete the delete button
+	m_listContainer->remove(_call.widget);
 }
 
 	
@@ -347,7 +366,7 @@ void PropertyPanel::MiniMaxi()
 		PropertyPanel* parent = nullptr;
 		if( m_Parent ) parent = dynamic_cast<PropertyPanel*>(m_Parent->getParent());
 		if( parent )
-			parent->Resize( -(m_numPixelLines + (m_addAble?40:20)), (int)Panel::getPosition().y+1 );
+			parent->Resize( -(m_numPixelLines + (m_addAble?40:20)), (int)Panel::getPosition().y+5 );
 
 		// If minimized show component name in the title bar
 		if( m_objects.size()==1 )

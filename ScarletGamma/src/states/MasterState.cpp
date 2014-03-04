@@ -281,6 +281,9 @@ namespace States {
 						m_draggedContent->from = Interfaces::DragContent::MAP;
 						m_draggedContent->object = g_Game->GetWorld()->GetObject(topmostObject);
 						m_draggedContent->prop = nullptr;
+						// If the object is part of the selection append the whole selection
+						if( m_selection.Contains( topmostObject ) )
+							m_draggedContent->manyObjects = &m_selection;
 					}
 				}
 				break; }
@@ -359,9 +362,21 @@ namespace States {
 						}
 					} else if( m_draggedContent->from == Interfaces::DragContent::MAP )
 					{
-						// Insert into map
-						GetCurrentMap()->SetObjectPosition( m_draggedContent->object, sf::Vector2f((float)x,(float)y) );
-						m_draggedContent->object->ResetTarget();
+						if( m_draggedContent->manyObjects )
+						{
+							// Determine move-vector form main object
+							sf::Vector2f dir = sf::Vector2f((float)x,(float)y) - m_draggedContent->object->GetPosition();
+							for( int i = 0; i < m_draggedContent->manyObjects->Size(); ++i )
+							{
+								Core::Object* object = g_Game->GetWorld()->GetObject( (*m_draggedContent->manyObjects)[i] );
+								GetCurrentMap()->SetObjectPosition( object, object->GetPosition() + dir );
+								object->ResetTarget();
+							}
+						} else {
+							// Insert into map
+							GetCurrentMap()->SetObjectPosition( m_draggedContent->object, sf::Vector2f((float)x,(float)y) );
+							m_draggedContent->object->ResetTarget();
+						}
 					}
 				}
 			}

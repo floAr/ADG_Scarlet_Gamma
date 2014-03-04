@@ -21,8 +21,9 @@ namespace Interfaces {
 		Sources from;				///< How filled that object?
 		Core::Object* object;		///< The object which is dragged or the object which contains the property which is dragged.
 		Core::Property* prop;		///< nullptr or a property which was below the cursor on drag start
+		Core::ObjectList* manyObjects;	///< Filled if a selection is moved by the map
 
-		DragContent() : object(nullptr), prop(nullptr)	{}
+		DragContent() : object(nullptr), prop(nullptr), manyObjects(nullptr)	{}
 	};
 
 } // namespace Interfaces

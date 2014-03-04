@@ -26,6 +26,7 @@ void Graphics::TileRenderer::Render(sf::RenderWindow& window, Core::Map& map, st
 
 	Graphics::SpriteAtlasBatcher::Instance()->Begin();
 
+	try {
 	// Search layer-wise
 	for (int layer = 1; layer <= map.GetMaxLayer(); layer++ )
 	{
@@ -92,6 +93,8 @@ void Graphics::TileRenderer::Render(sf::RenderWindow& window, Core::Map& map, st
 			Graphics::SpriteAtlasBatcher::Instance()->Enque(drawSprite);
 		}
 	}
+
+	} catch(...) {}
 
 	Graphics::SpriteAtlasBatcher::Instance()->End();
 	window.draw(*Graphics::SpriteAtlasBatcher::Instance());

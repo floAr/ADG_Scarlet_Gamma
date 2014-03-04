@@ -8,6 +8,8 @@
 #include "ActionState.hpp"
 #include "PromptState.hpp"
 #include "DismissableDialogState.hpp"
+#include "Game.hpp"
+#include "network\ChatMessages.hpp"
 
 States::StateMachine::StateMachine() :
     m_gameState(0)
@@ -117,89 +119,144 @@ void States::StateMachine::PopGameState()
 
 void States::StateMachine::Update(float dt)
 {
-    // Replace game state with predecessor - may be 0
-    while (m_gameState && m_gameState->IsFinished())
-    {
-        PopGameState();
-    }
+	try {
+		// Replace game state with predecessor - may be 0
+		while (m_gameState && m_gameState->IsFinished())
+		{
+			PopGameState();
+		}
 
-    // Update, if there is a GameState left
-    if (m_gameState)
-        m_gameState->Update(dt);
+		// Update, if there is a GameState left
+		if (m_gameState)
+			m_gameState->Update(dt);
 
-    // Handle GUI callbacks
-    GuiHandleCallbacks();
+		// Handle GUI callbacks
+		GuiHandleCallbacks();
+	} catch( std::string _msg ) {
+		g_Game->AppendToChatLog( Network::ChatMsg( _msg, sf::Color::Red, true ) );
+	} catch( ... ) {
+		g_Game->AppendToChatLog( Network::ChatMsg( "Ein Fehler beim Update trat auf", sf::Color::Red, true ) );
+	}
 }
 
 void States::StateMachine::Draw(sf::RenderWindow& win)
 {
-    // Draw GameState to window, if both exists
-    if (win.isOpen() && m_gameState)
-    {
-        m_gameState->Draw(win);
-    }
+	try {
+		// Draw GameState to window, if both exists
+		if (win.isOpen() && m_gameState)
+		{
+			m_gameState->Draw(win);
+		}
+	} catch( std::string _msg ) {
+		g_Game->AppendToChatLog( Network::ChatMsg( _msg, sf::Color::Red, true ) );
+	} catch( ... ) {
+		g_Game->AppendToChatLog( Network::ChatMsg( "Ein Fehler beim Zeichnen trat auf", sf::Color::Red, true ) );
+	}
 }
 
 void States::StateMachine::TextEntered(char character, bool guiHandled)
 {
-    if (m_gameState)
-        m_gameState->TextEntered(character, guiHandled);
+	try {
+		if (m_gameState)
+			m_gameState->TextEntered(character, guiHandled);
+	} catch( ... ) {
+		g_Game->AppendToChatLog( Network::ChatMsg( "Ein Fehler bei Texteingabe trat auf", sf::Color::Red, true ) );
+	}
 }
 
 void States::StateMachine::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 {
-    if (m_gameState)
-        m_gameState->KeyPressed(key, guiHandled);
+	try {
+		if (m_gameState)
+	        m_gameState->KeyPressed(key, guiHandled);
+	} catch( ... ) {
+		g_Game->AppendToChatLog( Network::ChatMsg( "Ein Fehler bei Eingabe trat auf", sf::Color::Red, true ) );
+	}
 }
 
 void States::StateMachine::KeyReleased(sf::Event::KeyEvent& key, float time, bool guiHandled)
 {
-    if (m_gameState)
-        m_gameState->KeyReleased(key, time, guiHandled);
+	try {
+		if (m_gameState)
+	        m_gameState->KeyReleased(key, time, guiHandled);
+	} catch( ... ) {
+		g_Game->AppendToChatLog( Network::ChatMsg( "Ein Fehler bei Eingabe trat auf", sf::Color::Red, true ) );
+	}
 }
 
 void States::StateMachine::MouseWheelMoved(sf::Event::MouseWheelEvent& wheel, bool guiHandled)
 {
-    if (m_gameState)
-        m_gameState->MouseWheelMoved(wheel, guiHandled);
+	try {
+	    if (m_gameState)
+	        m_gameState->MouseWheelMoved(wheel, guiHandled);
+	} catch( ... ) {
+		g_Game->AppendToChatLog( Network::ChatMsg( "Ein Fehler bei Eingabe trat auf", sf::Color::Red, true ) );
+	}
+
 }
 
 void States::StateMachine::MouseButtonPressed(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos, bool guiHandled)
 {
-    if (m_gameState)
-        m_gameState->MouseButtonPressed(button, tilePos, guiHandled);
+	try {
+	    if (m_gameState)
+	        m_gameState->MouseButtonPressed(button, tilePos, guiHandled);
+	} catch( ... ) {
+		g_Game->AppendToChatLog( Network::ChatMsg( "Ein Fehler bei Eingabe trat auf", sf::Color::Red, true ) );
+	}
+
 }
 
 void States::StateMachine::MouseButtonReleased(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos,
                                                float time, bool guiHandled)
 {
-    if (m_gameState)
-        m_gameState->MouseButtonReleased(button, tilePos, time, guiHandled);
+	try {
+		if (m_gameState)
+			m_gameState->MouseButtonReleased(button, tilePos, time, guiHandled);
+	} catch( ... ) {
+		g_Game->AppendToChatLog( Network::ChatMsg( "Ein Fehler bei Eingabe trat auf", sf::Color::Red, true ) );
+	}
 }
 
 void States::StateMachine::MouseMoved(int deltaX, int deltaY, bool guiHandled)
 {
-    if (m_gameState)
-        m_gameState->MouseMoved(deltaX, deltaY, guiHandled);
+	try {
+		if (m_gameState)
+			m_gameState->MouseMoved(deltaX, deltaY, guiHandled);
+	} catch( ... ) {
+		g_Game->AppendToChatLog( Network::ChatMsg( "Ein Fehler bei Eingabe trat auf", sf::Color::Red, true ) );
+	}
 }
 
 bool States::StateMachine::GuiHandleEvent(sf::Event& event)
 {
-    if (m_gameState)
-        return m_gameState->GuiHandleEvent(event);
+	try {
+		if (m_gameState)
+			return m_gameState->GuiHandleEvent(event);
+	} catch( ... ) {
+		g_Game->AppendToChatLog( Network::ChatMsg( "Ein Fehler bei GUI-Eingabe trat auf", sf::Color::Red, true ) );
+	}
+
     return false;
 }
 
 void States::StateMachine::GuiHandleCallbacks()
 {
-    if (m_gameState)
-        m_gameState->GuiHandleCallbacks();
+	try {
+		if (m_gameState)
+			m_gameState->GuiHandleCallbacks();
+	} catch( ... ) {
+		g_Game->AppendToChatLog( Network::ChatMsg( "Ein Fehler in den GUI-Callbacks trat auf", sf::Color::Red, true ) );
+	}
 }
 
 void States::StateMachine::GuiDraw()
 {
-    if (m_gameState)
-        m_gameState->GuiDraw();
+	try {
+		if (m_gameState)
+			m_gameState->GuiDraw();
+	} catch( ... ) {
+		g_Game->AppendToChatLog( Network::ChatMsg( "Ein Fehler beim Zeichnen der GUI trat auf", sf::Color::Red, true ) );
+	}
 }
 
 

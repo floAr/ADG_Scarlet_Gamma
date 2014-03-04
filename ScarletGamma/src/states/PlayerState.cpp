@@ -105,8 +105,8 @@ void States::PlayerState::MouseButtonPressed(sf::Event::MouseButtonEvent& button
 		return;
 	if( g_Game->GetWorld()->IsPaused() ) return;
 
-	int tileX = (int)tilePos.x;
-	int tileY = (int)tilePos.y;
+	int tileX = (int)floor(tilePos.x);
+	int tileY = (int)floor(tilePos.y);
 
 	switch (button.button)
 	{

@@ -95,6 +95,7 @@ namespace Interfaces {
 		Interfaces::DragContent** m_dragNDropHandler;	///< A pointer to a pointer which must be filled if a mouse down event occures.
 
 		void RemoveBtn(const tgui::Callback& _call);
+		void RemoveNodeBtn(const tgui::Callback& _call);
 		void AddBtn(const tgui::Callback& _call);
 		void Scroll(const tgui::Callback& _call);
 		void MiniMaxi();

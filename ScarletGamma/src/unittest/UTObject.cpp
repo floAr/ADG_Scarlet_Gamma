@@ -24,7 +24,7 @@ namespace UnitTest {
 //			TEST_FAILED("Evaluation of formula wrong.");
 		obj.Add( Core::PROPERTY::DEXTERITY ).SetValue("'INI-Mod'+20");
 		auto& inventory =  obj.Add( Core::PROPERTY::INVENTORY );
-		inventory.AddObject( 2 );	// Add a probably wrong id
+		inventory.AddObject( &obj );
 
 		// Serialize and deserialize the object
 		Jo::Files::MetaFileWrapper Wrapper;
@@ -36,7 +36,7 @@ namespace UnitTest {
 			TEST_FAILED("Property not restored properly.");
 		if( !deserialized.GetProperty(STR_PROP_INVENTORY).IsObjectList() )
 			TEST_FAILED("Object list not restored.");
-		if( deserialized.GetProperty(STR_PROP_INVENTORY).GetObjects()[0] != 2 )
+		if( deserialized.GetProperty(STR_PROP_INVENTORY).GetObjects()[0] != obj.ID() )
 			TEST_FAILED("Object list corrupted.");
 		if( deserialized.GetProperty(STR_PROP_DEXTERITY).Evaluate(&deserialized) != 25 )
 			TEST_FAILED("Evaluation of formula wrong.");

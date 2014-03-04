@@ -557,11 +557,11 @@ void PropertyPanel::HandleDropEvent(const tgui::Callback& _call)
 				if( line != -1 )
 				{
 					// Take away from the source object
-					(*m_dragNDropHandler)->prop->RemoveObject((*m_dragNDropHandler)->object->ID());
+					(*m_dragNDropHandler)->prop->RemoveObject((*m_dragNDropHandler)->object);
 
 					// Insert
 					std::string propName = m_lines[line].left->getText();
-					m_objects[0]->GetProperty( propName ).AddObject( (*m_dragNDropHandler)->object->ID() );
+					m_objects[0]->GetProperty( propName ).AddObject( (*m_dragNDropHandler)->object );
 					addedSomething = true;
 				}
 			}
@@ -591,7 +591,7 @@ void PropertyPanel::HandleDropEvent(const tgui::Callback& _call)
 				// Every new added object is now flagged as item (can be
 				// dragged away again)
 				m_world->GetObject(id)->Add( Core::PROPERTY::ITEM );
-				m_objects[i]->GetProperty( propName ).AddObject( id );
+				m_objects[i]->GetProperty( propName ).AddObject( m_world->GetObject(id) );
 				addedSomething = true;
 			}
 		}
@@ -610,7 +610,7 @@ void PropertyPanel::HandleDropEvent(const tgui::Callback& _call)
 
 			// Insert
 			std::string propName = m_lines[line].left->getText();
-			m_objects[0]->GetProperty( propName ).AddObject( (*m_dragNDropHandler)->object->ID() );
+			m_objects[0]->GetProperty( propName ).AddObject( (*m_dragNDropHandler)->object );
 			addedSomething = true;
 		}
 	}

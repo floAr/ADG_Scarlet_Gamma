@@ -133,6 +133,7 @@ namespace Core {
 		bool IsActive( ObjectID _id ) const;
 
 		const std::string& GetName() const		{ return m_name; }
+		void SetName(const std::string& _name)	{ m_name = _name; }
 	private:
 		std::string m_name;
 

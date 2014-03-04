@@ -140,7 +140,7 @@ namespace Core {
 	void Object::AppendToPath( ObjectID _wayPoint )
 	{
 		Property& path = GetProperty( STR_PROP_PATH );
-		path.AddObject( _wayPoint );
+		path.AddObject( g_Game->GetWorld()->GetObject(_wayPoint) );
 		// Check for a loop: a single node cannot be a loop, first and last
 		// node must be the same.
 		bool hasLoop = path.GetObjects().Size() > 1;

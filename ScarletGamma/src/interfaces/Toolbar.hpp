@@ -90,9 +90,12 @@ namespace Interfaces {
 		int m_selected;
 
 		tgui::ListBox::Ptr m_mapList;
-		tgui::EditBox::Ptr m_newNameEdit;
 
 		void AddMap();
+		void RemoveMap();
+		void RenameMap();
+		void ExportMap();
+		void ImportMap();
 	};
 
 	/// \brief Toolbox for map selection and creation.

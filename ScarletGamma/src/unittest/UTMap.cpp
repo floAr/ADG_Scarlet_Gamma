@@ -47,8 +47,8 @@ namespace UnitTest {
 		obj->Add( PROPERTY::TARGET ).SetValue("0:3");
 		obj->Add( PROPERTY::INVENTORY );
 		auto& path = obj->Add( PROPERTY::PATH );
-		path.AddObject(map->GetObjectsAt(0,0)[0]);
-		path.AddObject(map->GetObjectsAt(9,9)[0]);
+		path.AddObject(world->GetObject(map->GetObjectsAt(0,0)[0]));
+		path.AddObject(world->GetObject(map->GetObjectsAt(9,9)[0]));
 		obj->SetColor(sf::Color(0, 155, 0, 155));
 		map->Add(objID, 0, 2, 6);
 

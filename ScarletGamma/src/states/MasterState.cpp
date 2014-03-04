@@ -332,7 +332,7 @@ namespace States {
 						if( m_draggedContent->object && m_draggedContent->object->HasProperty( STR_PROP_ITEM ) )
 						{
 							// Take away from the source object
-							m_draggedContent->prop->RemoveObject(m_draggedContent->object->ID());
+							m_draggedContent->prop->RemoveObject(m_draggedContent->object);
 							// Insert into map
 							GetCurrentMap()->Add( m_draggedContent->object->ID(), x, y, AutoDetectLayer(m_draggedContent->object) );
 						}
@@ -531,6 +531,13 @@ namespace States {
 		case sf::Keyboard::F4:
 			m_modeTool->SetMode( Interfaces::ModeToolbox::DRAGNDROP );
 			break;
+		case sf::Keyboard::S:
+			if( sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) )
+			{
+				// Save the world
+				Jo::Files::HDDFile file(m_worldFileName, Jo::Files::HDDFile::OVERWRITE);
+				g_Game->GetWorld()->Save( file );
+			}
 		}
 	}
 

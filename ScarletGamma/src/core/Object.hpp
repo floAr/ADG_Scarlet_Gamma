@@ -86,8 +86,12 @@ public:
 
 	/// \brief Is this object directly located on some map?
 	bool IsLocatedOnAMap() const;
-	MapID GetParentMap() const		{ return m_parent.map; }
-	void SetParentMap(MapID _map)	{ m_parent.map = _map; m_hasParent = true; }
+	bool HasParent() const				{ return m_hasParent; }
+	MapID GetParentMap() const			{ return m_parent.map; }
+	void SetParentMap(MapID _map)		{ m_parent.map = _map; m_hasParent = true; }
+	void SetParentObject(ObjectID _obj)	{ m_parent.object = _obj; m_hasParent = true; }
+	ObjectID GetParentObject() const	{ return m_parent.object; }
+	void SetNoParent()					{ m_hasParent = false; m_parent.map = INVALID_ID; }
 
 	/// \brief Is this object being updated?
 	bool IsActive() const;
@@ -105,7 +109,7 @@ private:
 
 	union {
 		MapID map;			///< On which map is this object?
-		ObjectID object;	///< In whose object list it is?
+		ObjectID object;	///< In whose object list is it?
 	} m_parent;
 	bool m_hasParent;		///< m_parent is defined. Which one is used depends on the existence of the "X"-property.
 

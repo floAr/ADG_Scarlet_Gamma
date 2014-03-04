@@ -162,7 +162,7 @@ void States::PlayerState::MouseButtonReleased( sf::Event::MouseButtonEvent& butt
 			if( m_draggedContent->object->HasProperty( STR_PROP_ITEM ) )
 			{
 				// Take away from the source object
-				m_draggedContent->prop->RemoveObject(m_draggedContent->object->ID());
+				m_draggedContent->prop->RemoveObject(m_draggedContent->object);
 				// Insert into map
 				int x = (int)floor(tilePos.x);
 				int y = (int)floor(tilePos.y);

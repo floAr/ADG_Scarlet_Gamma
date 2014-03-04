@@ -401,7 +401,7 @@ void CharacterState::CreateNew()
 
 	// Create a player sub-object containing his talents
 	Core::Object* talentO = g_Game->GetWorld()->GetObject( g_Game->GetWorld()->NewObject( STR_EMPTY ) );
-	m_player->Add( Core::PROPERTY::TALENTS ).AddObject(talentO->ID());
+	m_player->Add( Core::PROPERTY::TALENTS ).AddObject(talentO);
 	talentO->Add( Core::PROPERTY::NAME ).SetValue( STR_PROP_TALENTS );
 	talentO->GetProperty( STR_PROP_SPRITE ).SetRights( Core::Property::R_SYSTEMONLY );
 	talentO->GetProperty( STR_PROP_NAME ).SetRights( Core::Property::R_SYSTEMONLY );

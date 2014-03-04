@@ -42,7 +42,10 @@ namespace Core {
 
         /// \brief Add a new map by deserialization.
         /// \details This method does not send messages to the network.
-        MapID NewMap( const Jo::Files::MetaFileWrapper::Node& _node );
+		/// \param [in] _newID Give the map the next free id instead of
+		///		using the serialized id. This is useful for imports.. where
+		///		ids must be rescheduled.
+        MapID NewMap( Jo::Files::MetaFileWrapper::Node& _node, bool _newID );
 
         /// \brief Add a new object by deserialization.
         /// \details This method does not send messages to the network.
@@ -122,6 +125,16 @@ namespace Core {
 		bool IsPaused();
 		/// \brief Freeze or continue game.
 		void SetPause( bool _pause );
+
+		/// \brief Write a single map and all referenced objects into an extra file.
+		/// \param [in] _file An opened file with write access.
+		/// \param [in] _map The map which should be exported.
+		void ExportMap( Jo::Files::IFile& _file, MapID _map ) const;
+
+		/// \brief Imports everything from another world file.
+		/// \param [in] _file An opened file with read access containing a
+		///		world in metafile format.
+		void Import( Jo::Files::IFile& _file );
     private:
         /// \brief All real existing objects.
         std::unordered_map<ObjectID, Object> m_objects;

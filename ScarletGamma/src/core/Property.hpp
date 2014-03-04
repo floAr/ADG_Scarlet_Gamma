@@ -19,19 +19,23 @@ public:
 	/// \throws Exception::NoObjectList.
 	const ObjectList& GetObjects() const;
 
+	/// \brief Access the internal object list.
+	/// \throws Exception::NoObjectList.
+	ObjectList& GetObjects();
+
 	bool IsObjectList() const	{ return m_objects.Size() > 0; }
 
 	/// \brief Add a new object to the object list.
 	/// \details \see ObjectList::Add
 	///		Sends a message through the network.
 	/// \throws Exception::NoObjectList.
-	void AddObject( ObjectID _id );
+	void AddObject( Object* _object );
 
 	/// \brief Remove an object from the object list.
 	/// \details \see ObjectList::Remove
 	///		Sends a message through the network.
 	/// \throws Exception::NoObjectList.
-	void RemoveObject( ObjectID _id );
+	void RemoveObject( Object* _object );
 
 	/// \see ObjectList::PopFront();
 	/// \details Additionally sends a message through the network.
@@ -177,6 +181,7 @@ public:
 
 	/// \brief Indexed property read access for iteration purposes
 	const Property* At( int _index ) const	{ return &m_list[_index];}
+	Property* At( int _index )				{ return &m_list[_index];}
 
 	/// \brief Search all properties which have a certain text sequence in
 	///		there name.

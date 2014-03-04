@@ -47,17 +47,24 @@ namespace Core {
 		return m_objects;
 	}
 
-	void Property::AddObject( ObjectID _id )
+	ObjectList& Property::GetObjects()
 	{
-		m_objects.Add(_id);
+		return m_objects;
+	}
+
+	void Property::AddObject( Object* _object )
+	{
+		m_objects.Add(_object->ID());
+		if( !_object->HasParent() ) _object->SetParentObject(m_parent);
 		Network::MsgPropertyChanged( m_parent, this ).Send();
 	}
 
-	void Property::RemoveObject( ObjectID _id )
+	void Property::RemoveObject( Object* _object )
 	{
 		if( !IsObjectList() ) throw Exception::NoObjectList();
 
-		m_objects.Remove(_id);
+		m_objects.Remove(_object->ID());
+		if( !_object->IsLocatedOnAMap() ) _object->SetNoParent();
 		Network::MsgPropertyChanged( m_parent, this ).Send();
 	}
 

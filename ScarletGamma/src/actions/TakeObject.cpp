@@ -22,7 +22,7 @@ void TakeObject::Execute()
 	// Take the target object away from the map
 	g_Game->GetWorld()->GetMap(target->GetParentMap())->Remove( m_target );
 	// Add to executors inventory
-	executor->GetProperty( STR_PROP_INVENTORY ).AddObject( m_target );
+	executor->GetProperty( STR_PROP_INVENTORY ).AddObject( target );
 }
 
 Action* TakeObject::Clone( Core::ObjectID _executor, Core::ObjectID _target )

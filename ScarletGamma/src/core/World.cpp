@@ -61,9 +61,10 @@ namespace Core {
 		return m_nextFreeObjectID-1;
 	}
 
-	MapID World::NewMap( const Jo::Files::MetaFileWrapper::Node& _node )
+	MapID World::NewMap( Jo::Files::MetaFileWrapper::Node& _node, bool _newID )
 	{
 		// Deserialize -> update maximum used MapID
+		if( _newID ) _node[STR_ID] = (int)(m_nextFreeMapID++);
 		Map newMap(_node, this);
 		m_nextFreeMapID = max(m_nextFreeMapID, newMap.ID());
 		m_maps.insert(std::make_pair<MapID,Map>( newMap.ID(), std::move(newMap) ) );
@@ -136,7 +137,6 @@ namespace Core {
 			for( unsigned i=0; i<child->Size(); ++i )
 			{
 				ObjectID id = NewObject( (*child)[i], false );
-				Object* object = GetObject(id);
 			}
 		}
 
@@ -146,7 +146,7 @@ namespace Core {
 			// OK child should be an array of objects.
 			for( unsigned i=0; i<child->Size(); ++i )
 			{
-				NewMap( (*child)[i] );
+				NewMap( (*child)[i], false );
 			}
 		}
 
@@ -396,6 +396,103 @@ namespace Core {
 	}
 
 
+	void World::ExportMap( Jo::Files::IFile& _file, MapID _map ) const
+	{
+		Jo::Files::MetaFileWrapper saveGame;
+		// Serialize objects which are referenced by THE map
+		auto& objects = saveGame.RootNode.Add(string("Objects"), Jo::Files::MetaFileWrapper::ElementType::NODE, m_objects.size());
+		int i=0;
+		for( auto it=m_objects.begin(); it!=m_objects.end(); ++it )
+		{
+			// Search in parent hierarchy
+			const Object* parent = &it->second;
+			while( parent->HasParent() && !parent->IsLocatedOnAMap() )
+				parent = &m_objects.at(parent->GetParentObject());
+			if( parent->IsLocatedOnAMap() && parent->GetParentMap() == _map )
+				it->second.Serialize(objects[i++]);
+		}
+
+		// Serialize THE map
+		auto& maps = saveGame.RootNode.Add(string("Maps"), Jo::Files::MetaFileWrapper::ElementType::NODE, m_maps.size());
+		m_maps.at(_map).Serialize(maps[0]);
+
+		// Write a new file
+		saveGame.Write(_file, Jo::Files::Format::JSON);
+	}
+
+	void World::Import( Jo::Files::IFile& _file )
+	{
+		// The save game is a top level file which contains maps and objects
+		// serialized.
+		Jo::Files::MetaFileWrapper saveGame(_file);
+
+		// Create an object id mapping
+		std::unordered_map<ObjectID, ObjectID> idmap;
+
+		// There should be an array of objects
+		Jo::Files::MetaFileWrapper::Node* child;
+		if( saveGame.RootNode.HasChild(string("Objects"), &child) )
+		{
+			// OK child should be an array of objects.
+			for( unsigned i=0; i<child->Size(); ++i )
+			{
+				ObjectID oldid = (*child)[i][STR_ID];
+				ObjectID id = NewObject( (*child)[i], false );
+				idmap[oldid] = id;
+				Object* object = GetObject(id);
+			}
+		}
+
+		// Do the same for the maps
+		std::unordered_map<MapID, MapID> mapidmap;
+		if( saveGame.RootNode.HasChild(string("Maps"), &child) )
+		{
+			// OK child should be an array of objects.
+			for( unsigned i=0; i<child->Size(); ++i )
+			{
+				MapID oldid = (*child)[i][STR_ID];
+				MapID id = NewMap( (*child)[i], true );
+				mapidmap[oldid] = id;
+				Map* map = GetMap(id);
+
+				// Correct all object ids inside map
+				for( int y = map->Top(); y <= map->Bottom(); ++y )
+					for( int x = map->Left(); x <= map->Right(); ++x )
+					{
+						auto& objects = map->GetObjectsAt(x,y);
+						for( int o = 0; o < objects.Size(); ++o )
+							objects[o] = idmap[objects[o]];
+					}
+			}
+		}
+
+		// Correct all contained object lists and other references
+		for( auto it = idmap.begin(); it != idmap.end(); ++it )
+		{
+			// Only requires flat search - the contained objects are
+			// corrected itself.
+			Object* obj = GetObject(it->first);
+			for( int i = 0; i < obj->GetNumElements(); ++i )
+			{
+				if( obj->At(i)->IsObjectList() )
+				{
+					for( int o = 0; o < obj->At(i)->GetObjects().Size(); ++o )
+						obj->At(i)->GetObjects()[o] = idmap[obj->At(i)->GetObjects()[o]];
+				}
+			}
+
+			if( obj->HasParent() )
+			{
+				if( obj->IsLocatedOnAMap() )
+					obj->SetParentMap( mapidmap[obj->GetParentMap()] );
+				else
+					obj->SetParentObject( idmap[obj->GetParentObject()] );
+			}
+		}
+		
+	}
+
+
 
 
 
@@ -458,7 +555,7 @@ namespace Core {
 		propertyO->Add( PROPERTY::EYECOLOR );
 
 		Object* talentO = GetObject( NewObject( STR_EMPTY ) );
-		propertyO->Add( PROPERTY::TALENTS ).AddObject(talentO->ID());
+		propertyO->Add( PROPERTY::TALENTS ).AddObject(talentO);
 		talentO->Add( PROPERTY::NAME ).SetValue( STR_PROP_TALENTS );
 		talentO->GetProperty( STR_PROP_SPRITE ).SetRights( Property::R_SYSTEMONLY );
 		talentO->GetProperty( STR_PROP_NAME ).SetRights( Property::R_SYSTEMONLY );

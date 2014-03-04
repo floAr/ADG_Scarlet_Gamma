@@ -105,7 +105,7 @@ namespace Network {
 
 	void MsgAddMap::Receive( Core::World* _world, Jo::Files::MemFile& _input )
 	{
-		_world->NewMap( Jo::Files::MetaFileWrapper(_input).RootNode );
+		_world->NewMap( Jo::Files::MetaFileWrapper(_input).RootNode, false );
 	}
 
 	/*void SendAddMap( const Core::MapID _map )

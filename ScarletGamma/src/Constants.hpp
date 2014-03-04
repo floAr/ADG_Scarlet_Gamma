@@ -62,6 +62,11 @@ static const std::string STR_TO_FAR_AWAY = std::string("Objekt zu weit entfernt.
 static const std::string STR_WRONG_ID = std::string("Es gibt kein Objekt mit der gegebenen ID.");
 static const std::string STR_NO_POSITION = std::string("Das Objekt ist kein gültiges Ziel. Die Position fehlt.");
 static const std::string STR_WRONG_PATH = std::string("Resourcen müssen im 'media' Ordner liegen.");
+static const std::string STR_MSG_NEW_MAP = std::string("Name für neue Map:");
+static const std::string STR_MSG_DELETE_MAP = std::string("Map wirklich löschen?");
+static const std::string STR_MSG_RENAME_MAP = std::string("Neuer Name für Map:");
+static const std::string STR_MSG_EXPORT_MAP = std::string("Dateiname für Export (wird überschrieben):");
+static const std::string STR_MSG_IMPORT_MAP = std::string("Dateiname für Import:");
 
 
 /************************************************************************/
@@ -231,3 +236,4 @@ static const std::string STR_LAYER10 = std::string("0: Eigenes II");
 static const std::string STR_SELECTION = std::string("Selektion");
 static const std::string STR_CREATE = std::string("Erstellen");
 static const std::string STR_CANCEL = std::string("Abbrechen");
+static const std::string STR_OK = std::string("Ok");

@@ -178,7 +178,7 @@ namespace Core {
 		// Remove map-related properties from the object
 		obj->Remove(STR_PROP_X);
 		obj->Remove(STR_PROP_Y);
-		//Keep the layer for later obj->Remove(STR_PROP_LAYER);
+		obj->SetNoParent();
 
 		// Remove object from combat, if its ongoing
 		if ( g_Game->GetCommonState()->InCombat() )
@@ -435,7 +435,7 @@ namespace Core {
 					// If we are already at the first path-point remove it.
 					if( start == goal )
 					{
-						if( loop ) pathProperty.AddObject( path[0] );
+						if( loop ) pathProperty.AddObject( pathPoint );
 						if( path.Size() == 1 )
 							return position;	// Do not delete the last point from list -> tracking of objects
 						pathProperty.PopFront();

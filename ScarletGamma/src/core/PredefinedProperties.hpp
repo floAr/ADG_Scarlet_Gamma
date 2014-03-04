@@ -22,6 +22,7 @@ namespace Core {
 		static const Property SWITCH;
 		static const Property ITEM;
 		static const Property PAUSE;
+		static const Property VIEWDISTANCE;
 
 		static const Property INVENTORY;
 		static const Property STRENGTH;

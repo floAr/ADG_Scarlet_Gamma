@@ -323,7 +323,10 @@ float States::PlayerState::CheckTileVisibility( Core::Map& _map, sf::Vector2i& _
 	float distance = sfUtils::Length(direction);
 
 	// The father away the less visible
-	float v = std::max(0.0f, std::min( 1.0f, 2.0f - distance * 0.3f ));
+	float maxdistance = 5.0f;
+	if( m_player->HasProperty(STR_PROP_VIEWDISTANCE) )
+		maxdistance = (float)m_player->GetProperty(STR_PROP_VIEWDISTANCE).Evaluate();
+	float v = std::max(0.0f, std::min( 1.0f, 1.0f - distance / maxdistance ));
 
 	// Search an occluder - simple ray march with a Bresenham.
 	// http://de.wikipedia.org/wiki/Bresenham-Algorithmus#C-Implementierung

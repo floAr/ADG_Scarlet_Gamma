@@ -361,6 +361,7 @@ void CharacterState::CreateNew()
 	m_player->Add( Core::PROPERTY::PLAYER );
 	m_player->Add( Core::PROPERTY::TARGET );
 	m_player->Add( Core::PROPERTY::PATH );
+	m_player->Add( Core::PROPERTY::VIEWDISTANCE );
 
 	m_player->Add( Core::PROPERTY::STRENGTH );
 	m_player->Add( Core::PROPERTY::STRENGTH_MOD );

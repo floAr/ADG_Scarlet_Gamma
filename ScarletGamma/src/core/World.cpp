@@ -425,6 +425,7 @@ namespace Core {
 		propertyO->Add( PROPERTY::ITEM );
 		propertyO->Add( PROPERTY::LAYER );
 		propertyO->Add( PROPERTY::PAUSE );
+		propertyO->Add( PROPERTY::VIEWDISTANCE );
 
 		propertyO->Add( PROPERTY::INVENTORY );
 		propertyO->Add( PROPERTY::STRENGTH );

@@ -96,7 +96,8 @@ namespace States {
 			const sf::Texture& tex = Content::Instance()->LoadTexture("media/dragndrop.png");
 			auto mousePos = sf::Mouse::getPosition( _win );
 			sf::Sprite drawSprite(tex);
-			drawSprite.setPosition( mousePos.x - 15.0f, mousePos.y - 15.0f );
+			drawSprite.setPosition( mousePos.x + 32.0f, mousePos.y + 32.0f );
+			drawSprite.setScale( 0.5f, 0.5f );
 			_win.draw(drawSprite);
 			SetStateView();
 		}

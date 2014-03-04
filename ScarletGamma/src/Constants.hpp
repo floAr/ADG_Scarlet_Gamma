@@ -83,6 +83,7 @@ static const std::string STR_PROP_SWITCH	= std::string("Schalter");
 static const std::string STR_PROP_JUMPPOINT	= std::string("Sprungziel");///< Name of portal property: The value is an id of the target object.
 static const std::string STR_PROP_ITEM		= std::string("Item");
 static const std::string STR_PROP_PAUSE		= std::string("__GAME_PAUSED__");
+static const std::string STR_PROP_VIEWDISTANCE	= std::string("Sichtweite");
 
 
 /************************************************************************/

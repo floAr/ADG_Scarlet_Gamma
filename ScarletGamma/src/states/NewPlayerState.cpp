@@ -349,8 +349,8 @@ void CharacterState::CreateNew()
 {
 
 	// Find out how many character images exist
-	int i = 1;
-	while ( std::ifstream("media/char" + std::to_string(i) + ".png") )
+	int i = 0;
+	while ( std::ifstream("media/char" + std::to_string(i + 1) + ".png") )
 		i++;
 
 	// Create a new player object

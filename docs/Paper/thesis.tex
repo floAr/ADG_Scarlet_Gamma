@@ -13,6 +13,13 @@
 
 \usepackage{pdfpages}
 
+% Remove all the unnecessary white space above chapter headings
+%\usepackage{titlesec}
+%\titleformat{\chapter}{\Huge\bfseries}{\chaptername\ \thechapter}{0pt}{\vskip 20pt\raggedright}
+%\titleformat{\chapter}[display]
+%    {\normalfont\huge\bfseries}{\chaptertitlename\ \thechapter}{20pt}{\Huge}
+%\titlespacing*{\chapter}{0pt}{0pt}{40pt}
+
 %*********************************************************************%
 % META                                                                %
 %*********************************************************************%
@@ -144,7 +151,7 @@
 % LITERATURE                                                          %
 %*********************************************************************%
 
-\cleardoublepage
+\clearpage
 \phantomsection
 \addcontentsline{toc}{chapter}{\bibname} % 
 \bibliographystyle{geralpha} % plain gerplain abbrvnat unsrtnat alphag alpha
@@ -166,7 +173,7 @@
 %*********************************************************************%
 
 \ifnotdraft {
-	\cleardoublepage
+	\clearpage
 	\phantomsection
 }
 \printindex

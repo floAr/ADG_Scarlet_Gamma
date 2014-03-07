@@ -1,7 +1,7 @@
 %% Class ttthesis %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% This template is inspired by Roland Bless %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \ProvidesClass{tex/ttthesis}[2010/10/26 Thomas Thüm - Template for Theses]
-\LoadClass[12pt,titlepage]{book}
+\LoadClass[12pt,titlepage,oneside]{book}
 
 %% Options of this Class
 \DeclareOption{draft}{\let\@draft\@empty}
@@ -200,9 +200,9 @@
 % \renewcommand{\@chapapp}{} allein reicht nicht!
 %% \chapter{...}
 \renewcommand{\@makechapterhead}[1]{%
-  \vspace*{0.2\textheight}%
+  \vspace*{0.0\textheight}%
   %\hrule
-  \vskip 15\p@
+  %\vskip 15\p@
   {\parindent \z@ \raggedright \normalfont
     \ifnum \c@secnumdepth >\m@ne
       \if@mainmatter
@@ -229,7 +229,7 @@
 
 %% \chapter*{...}
 \renewcommand{\@makeschapterhead}[1]{%
-  \vspace*{50\p@}%
+  \vspace*{0\p@}%
   {\parindent \z@ \raggedright
     \normalfont
     \interlinepenalty\@M
@@ -271,7 +271,7 @@
   \let\oldfootskip\footskip
   \let\oldtextheight\textheight
   
-   \cleardoublepage
+   \clearpage
    \if@twocolumn
       \@restonecoltrue\onecolumn
    \else

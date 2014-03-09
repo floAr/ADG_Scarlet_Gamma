@@ -16,12 +16,12 @@
 %- Wie will ich diese Ziele erreichen?
 %- Was habe ich im Einzelnen vor?
 
-Im Rahmen der Veranstaltung Advanced Game Development untersucht diese Arbeit die Übertragbarkeit von Interaktionsmöglichkeiten aus Pen-\&-Paper-Rollenspielen auf den Computer. Dazu wird ein Prototypen, mit dem Namen Scarlet Gamma, entwickelt und ausgewertet.
+Im Rahmen der Veranstaltung \emph{Advanced Game Development} untersucht diese Arbeit die Übertragbarkeit von Interaktionsmöglichkeiten aus Pen-\&-Paper-Rollenspielen auf den Computer. Dazu wird ein Prototyp mit dem Titel \emph{Scarlet Gamma} entwickelt und ausgewertet.
 
 \section{Motivation}
 \label{sec:Motivation}
 
-Pen-\&-Paper-Rollenspiele bilden eine spielerische Adaption von geschriebener Fiktion und zählen zu den erfolgreichsten Implementierungen interaktiver Erzählung \cite{Tychsen2006}. Regelsysteme wie das 1974 veröffentliche \emph{Dungeon and Dragons} unterscheiden sich insofern von ihren literarischen Vorlagen, dass sie weniger eine festgeschriebene Handlung als ein Regelwerk zur Interaktion der Spieler mit der Spielwelt vorgeben \cite{Apperley2006}. Die Handlung wird von einem menschlichen Spielleiter im Dialog mit den Spieler selbst erschaffen.
+Pen-\&-Paper-Rollenspiele bilden eine spielerische Adaption von geschriebener Fiktion und zählen zu den erfolgreichsten Implementierungen interaktiver Erzählung \cite{Tychsen2006}. Regelsysteme wie das 1974 veröffentliche \emph{Dungeons \& Dragons} unterscheiden sich insofern von ihren literarischen Vorlagen, dass sie weniger eine festgeschriebene Handlung als ein Regelwerk zur Interaktion der Spieler mit der Spielwelt vorgeben \cite{Apperley2006}. Die Handlung wird von einem menschlichen Spielleiter im Dialog mit den Spielern selbst erschaffen.
 
 Computer-basierte Rollenspiele verwenden zwar meist ähnliche Regelsysteme, jedoch werden die sozialen und kreativen Aspekte stark reduziert: die ersten Rollenspiele waren reine Einzelspieler-Kampagnen, in denen der Computer die Rolle des Spielleiters übernimmt \cite{Apperley2006}. Diese Entwicklung führte zu einer Verschiebung der Prioritäten im Spiel. Von der interaktiven Ausgestaltung der Geschichte wanderte der Fokus auf eine Fortentwicklung des Charakters \cite{Myers2003}.
 
@@ -30,12 +30,14 @@ Der Aspekt der freien Gestaltung einer Handlung während des Spielverlaufes ist 
 \section{Wissenschaftliche Frage}
 \label{sec:WissenschaftlicheFrage}
 
-Pen-\&-Paper-Rollenspiele basieren auf komplexen Regelwerken, finden jedoch nahezu vollständig in der Fantasie der Spieler statt. Hierbei übernimmt ein Spieler die Rolle des Spielleiters, der die Geschichte der Welt erzählt und die Regeln auslegt und erweitert um den Spielern ein möglichst freies und umfassendes Spielerlebnis zu bieten. Obwohl diverse PC-Rollenspiele auf diesen Regelsystemen beruhen, ist die im Pen-\&-Paper übliche Freiheit nicht gegeben. Die „Spielleiter“ sind in diesem Falle die Entwickler, die jedoch vom Spielerlebnis getrennt sind und nur eine begrenzte Anzahl verschiedener Möglichkeiten bedenken können. Eine Reaktion in Echtzeit auf die Ideen der Spieler ist in diesen Spielen nicht mehr möglich. Gerade diese Freiheit ist es jedoch, die für viele Spieler den Reiz von Pen-\&-Paper-Rollenspielen ausmacht.
+Pen-\&-Paper-Rollenspiele basieren auf komplexen Regelwerken, finden jedoch nahezu vollständig in der Fantasie der Spieler statt. Hierbei übernimmt ein Spieler die Rolle des Spielleiters, der die Geschichte der Welt erzählt und die Regeln auslegt und erweitert um den Spielern ein möglichst freies und umfassendes Spielerlebnis zu bieten. Obwohl diverse PC-Rollenspiele auf diesen Regelsystemen beruhen, ist die im Pen-\&-Paper übliche Freiheit nicht gegeben. Die „Spielleiter“ sind in diesem Falle die Entwickler, die jedoch vom Spielerlebnis getrennt sind und nur eine durch Budget und Entwicklungszeit begrenzte Anzahl verschiedener Möglichkeiten bedenken können. Eine Reaktion in Echtzeit auf die Ideen der Spieler ist in diesen Spielen nicht mehr möglich. Gerade diese Freiheit ist es jedoch, die für viele Spieler den Reiz von Pen-\&-Paper-Rollenspielen ausmacht.
 
-Ein gleichzeitig agierender Spielleiter könnte auf unvorhergesehen Aktionen der Spieler mit menschlicher Intelligenz reagieren und damit ein immersives Spielerlebnis schaffen, welches unbegrenzte Möglichkeiten suggeriert.
-Im Rahmen dieser Arbeit soll eine Antwort auf folgende wissenschaftliche Fragestellung gefunden werden:
+Ein gleichzeitig agierender Spielleiter kann auf unvorhergesehen Aktionen der Spieler mit menschlicher Intelligenz reagieren und damit ein immersives Spielerlebnis schaffen, welches unbegrenzte Möglichkeiten suggeriert.
+Im Rahmen dieser Arbeit soll eine Antwort auf folgende
+%wissenschaftliche
+Fragestellung gefunden werden:
 \vspace*{0.5em}\begin{center}\parbox{0.9\linewidth}{
-  \emph{Kann ein Multiplayer-RPG-Spiel entwickelt werden, bei dem ein Spielleiter die Regeln während des Spielens erweitert, so dass der Handlungsfreiraum der Spieler nicht behindert wird?}
+  \emph{Kann ein Multiplayer-PC-Rollenspiel entwickelt werden, bei dem ein Spielleiter die Regeln während des Spielens erweitert, so dass die0 Handlungsfreiheit der Spieler nicht behindert wird?}
 } \end{center}\vspace*{0.5em}
 
 \section{Zielstellung}
@@ -52,5 +54,5 @@ Die Erfüllung der Zielstellung wird anhand eines Probandentests evaluiert. Daf�
 % Auskommentiert, damit's ein bisschen schöner aussieht bei der Abgabe ;)
 \section{Gliederung}
 \label{sec:Gliederung}
-In dem \hyperref[background]{folgenden Kapitel} wird auf verschiedene Grundlagen eingegangen, welche zum Verständnis dieser Arbeit nötig sind. In \ref{concept} wird auf Basis dieser Grundlagen ein Konzept zur Beantwortung der wissenschaftlichen Frage ausgearbeitet und in \ref{implementation} die gewählte Implementierung erläutert.\newline \ref{evaluation} evaluiert mit definierter Erfolgskriterien die wissenschaftliche Frage über den Prototypen. In Kapitel 6 findet sich schließlich das gezogene Fazit und ein Ausblick auf weiter Arbeitspakete und Vertiefungsrichtungen.\newline Weitere Dokumente wie Bedienhandbuch und Fragebögen finden sich im Anhang.
+In dem \hyperref[background]{folgenden Kapitel} wird auf verschiedene Grundlagen eingegangen, welche zum Verständnis dieser Arbeit nötig sind. In \ref{concept} wird auf Basis dieser Grundlagen ein Konzept zur Beantwortung der wissenschaftlichen Frage ausgearbeitet und in \ref{implementation} die gewählte Implementierung erläutert.\newline \ref{evaluation} evaluiert mit definierter Erfolgskriterien die wissenschaftliche Frage über den Prototypen. In \ref{conclusion} findet sich schließlich das gezogene Fazit und ein Ausblick auf weitere Arbeitspakete und Vertiefungsrichtungen.\newline Weitere Dokumente wie Bedienhandbuch und Fragebögen finden sich im Anhang.
 

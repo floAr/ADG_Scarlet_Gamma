@@ -1,0 +1,4 @@
+Baldur's Gate:			http://www.mobygames.com/game/windows/baldurs-gate/screenshots/gameShotId,331031/
+Neverwinter Nights 2:	http://www.mobygames.com/game/windows/neverwinter-nights-2-mask-of-the-betrayer/screenshots/gameShotId,276723/ (vom NWN2-Addon, aber hey)
+						http://www.cs.cornell.edu/bigreddata/games/SGL.php (Toolset mit edu-Quelle, yay! :D)
+RPG Maker:				http://johansenquijano.wordpress.com/2013/09/21/on-rpg-maker-and-game-engines/

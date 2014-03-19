@@ -131,18 +131,6 @@
 \include{chapters/conclusion}
 
 %*********************************************************************%
-% APPENDIX                                                            %
-%*********************************************************************%
-
-\ifnotdraft{
-	\renewcommand*{\firstacronymfont}[1]{\emph{#1}}
-	%\printglossary[type=acronym,title=List of Acronyms,toctitle=Abkürzungsverzeichnis]
-}
-
-\appendix
-%\include{chapters/appendix}
-
-%*********************************************************************%
 % LITERATURE                                                          %
 %*********************************************************************%
 
@@ -155,14 +143,18 @@
 % in a paper, space is limited. use abreviations
 %\bibliography{../literature/IEEEabrv,../literature/MYabrv,../literature/literature}
 \clearpage
-%*********************************************************************%
-% Dokumente                                                           %
-%*********************************************************************%
-\label{sec:frageboegen}
 
-\includepdf[pages=-]{../Fragebogen_A.pdf}
-\includepdf[pages=-]{../Fragebogen_B.pdf}
-\includepdf[pages=-]{../QuickManual/manual.pdf}
+%*********************************************************************%
+% APPENDIX                                                            %
+%*********************************************************************%
+
+\ifnotdraft{
+	\renewcommand*{\firstacronymfont}[1]{\emph{#1}}
+	%\printglossary[type=acronym,title=List of Acronyms,toctitle=Abkürzungsverzeichnis]
+}
+
+\appendix
+\include{chapters/appendix}
 
 %*********************************************************************%
 % ERKLÄRUNG                                                           %

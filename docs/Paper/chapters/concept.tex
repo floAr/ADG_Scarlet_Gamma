@@ -19,6 +19,14 @@ Der zur Beantwortung der Frage umgesetzte Prototyp benutzt eine abstrakte, zwei-
 %	\item Clienten (Spieler),  Server (GM)
 %	\item Objectsystem, Rechtesystem
 %\end{itemize}
+
+\begin{figure}
+	\centering
+		\includegraphics[width=1.00\textwidth]{media/konzept_schema.eps}
+	\caption{Schematische Darstellung der komponentenbasierten Welt, Aktionen hängen nur von der Existenz und den Werten der Eigenschaften ab.}
+	\label{fig:konzept_schema}
+\end{figure}
+
 Hauptkomponente des Prototypen ist ein frei definierbares Objektsystem. Zu jedem Zeitpunkt steht es dem Spielleiter frei Objekte und Werte derartig zu verändern, dass ein völlig anderes Vorgehen ermöglicht wird. Intern behandelt der Prototyp alle Elemente als gleichwertige Objekte. Diesen Objekten können verschiedene Eigenschaften zugeordnet werden, welche das Verhalten der Objekte definieren. Dieses System erlaubt es dem Spielleiter jedes Objekt in der Spielwelt zu editieren und bei Bedarf mit weiteren Daten anzureichern. Schlägt ein Spieler vor einen Gegenstand aus der Umgebung als Waffe zu nutzen, so kann der Spielleiter dem entsprechenden Objekt einen Schadenswert hinzufügen und diesen später in der Berechnung des Kampfwertes nutzen.\newline
 Durch Module und Schablonen werden dem Spielleiter vorgefertigte Kombinationen von Eigenschaften und direkt verwendbare Objekte geliefert, welche er bei Bedarf schnell einsetzen kann. Mit dieser Option kann er das Verhalten der Spielwelt schnell ändern, was die Einwirkung bei laufendem Spiel ermöglicht.\newline
 Ein internes Rechtesystem erlaubt es Spielern nur einen gewissen Teils dieser Eigenschaften zu sehen oder diese ändern zu können. Auf diese Weise kann er zwar z.B. seine Trefferpunkte selbst verwalten, aber keine beliebigen Gegenstände verändern.

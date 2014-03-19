@@ -1,11 +1,19 @@
 \chapter{Anhang}
 \label{appedixa}
 
+\todo{Fill this page}
+
+\clearpage
+
 %*********************************************************************%
 % Dokumente                                                           %
 %*********************************************************************%
-\label{sec:frageboegen}
-
-\includepdf[pages=-]{../Fragebogen_A.pdf}
-\includepdf[pages=-]{../Fragebogen_B.pdf}
-\includepdf[pages=-]{../QuickManual/manual.pdf}
+\refstepcounter{section}
+\addcontentsline{toc}{section}{\protect\numberline{\thesection} Fragebogen A}
+\includepdf[pages=-,link,linkname=AppendixFragebogenA]{../Fragebogen_A.pdf}
+\refstepcounter{section}
+\addcontentsline{toc}{section}{\protect\numberline{\thesection} Testszenario Spielleiter}
+\includepdf[pages=-,link,linkname=AppendixSpielleiter]{../Testszenario_Spielleiter.pdf}
+\refstepcounter{section}
+\addcontentsline{toc}{section}{\protect\numberline{\thesection} Handbuch}
+\includepdf[pages=-,link,linkname=AppendixManual]{../QuickManual/manual.pdf}

@@ -13,7 +13,7 @@ Der Prototyp implementiert daher das Objektsystem auf einer 2D-Kachel-basierten 
 
 \subsection{Eigenschaften}
 \label{sec:Eigenschaften}
-Eine Eigenschaft in den Objekten ist als Name-Wert Paar definiert. Wobei beide als String gespeichert sind und damit beliebige Daten enthalten können. Es ist möglich dem System neue Eigenschaften hinzuzufügen. Dadurch kann grundsätzlich jedes Regelwerk und Rollenspiel in der Welt durchgeführt werden. Die Änderung dieser Werte geschieht zunächst manuell und ist somit nicht mehr als ein elektronischer Ersatz des Papiers, der eine Strukturierung der Daten einführt.\newline
+Eine Eigenschaft in den Objekten ist als Name-Wert Paar definiert. Wobei beide als Text gespeichert sind und damit beliebige Daten enthalten können. Es ist möglich dem System neue Eigenschaften hinzuzufügen. Dadurch kann grundsätzlich jedes Regelwerk und Rollenspiel in der Welt durchgeführt werden. Die Änderung dieser Werte geschieht zunächst manuell und ist somit nicht mehr als ein elektronischer Ersatz des Papiers, der eine Strukturierung der Daten einführt.\newline
 
 \subsubsection{Rechnen mit Werten}
 An verschieden Stellen ist es nun möglich die Werte der Eigenschaften auch als Formel zu interpretieren und auszuwerten. Eine gültige Formel kann aus folgenden Elementen bestehen:
@@ -27,7 +27,7 @@ An verschieden Stellen ist es nun möglich die Werte der Eigenschaften auch als 
 Aus diesen Elementen können die typischen Regeln aus PnP-Spielen leicht umgesetzt werden. Der Würfel 'Wx' erzeugt bei jeder Auswertung eine neue Zahl im Bereich 1 bis x.
 
 Außer dieser Auswertbarkeit, die für alle Eigenschaften gilt, gibt es auch vorgegebene Eigenschaften, die komplexere Interaktionen automatisieren.\newline
-Ein Beispiel dafür ist 'Hindernis'. Der eingebaute Weg-such-Algorithmus berücksichtigt Felder mit Objekten dieser Eigenschaft als nicht betretbar. Ein Übersicht über die besonderen Eigenschaften und Module ist im Handbuch zu finden. Ein Modul ist nichts weiter als eine Sammlung von Eigenschaften, die das erweitern von Objekten und Schablonen beschleunigt.
+Ein Beispiel dafür ist 'Hindernis'. Der eingebaute Weg-such-Algorithmus berücksichtigt Felder mit Objekten dieser Eigenschaft als nicht betretbar. Ein Übersicht über die besonderen Eigenschaften und Module ist im Handbuch zu finden. Wobei ein Modul nichts weiter ist, als eine Sammlung von Eigenschaften, die das erweitern von Objekten und Schablonen beschleunigt.
 
 \subsection{Rechtesystem}
 \label{sec:Rechtesystem}
@@ -48,7 +48,7 @@ Einige der Aktionen werden als Protokoll einer zweiseitigen Kommunikation zwisch
 
 \section{Editor}
 \label{sec:Editor}
-Da die Reaktionsgeschwindigkeit des Spielleiter maßgeblich für einen flüssigen Spielverlauf ist sollte die Realisierung von Aktionen mindestens ebenso schnell wie auf dem Papier ausgeführt werden können.\newline
+Da die Reaktionsgeschwindigkeit des Spielleiters maßgeblich für einen flüssigen Spielverlauf ist sollte die Realisierung von Aktionen mindestens ebenso schnell wie auf dem Papier ausgeführt werden können.\newline
 Hierzu werden so viele Interaktion wie möglich über Drag\&Drop umgesetzt. Objekte können der Welt hinzugefügt, darin verschoben oder einem anderen Objekt untergeordnet werden. Genauso werden Eigenschaften dadurch zu Schablonen und Objekten hinzugefügt. Auch der Spieler kann so Dinge aus seinem Inventar werfen oder aufnehmen.\newline
 Weiterhin kann der Editor zwischen verschiedenen Modi wechseln, wodurch der Spielleiter in verschieden Situationen besser reagieren kann. Befindet er sich im normalen Spielverlauf kann er im Aktionsmodus ähnlich agieren wie die Spieler, möchte er die Karte schnell ändern sind der Drag\&Drop Modus, zum Verschieben von einem oder mehreren Objekten, oder der Pinselmodus hingegen besser geeignet.
 

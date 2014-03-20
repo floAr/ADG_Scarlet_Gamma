@@ -29,7 +29,7 @@ Window:
 		Enabled = true
 		Transparency = 255
 		CallbackId = 0
-		Text = "saves/unittest.json"
+		Text = "saves/unittest2.json"
 		TextSize = 26
 		MaximumCharacters = 0
 		Borders = (6,4,6,4)

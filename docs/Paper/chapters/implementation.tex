@@ -1,44 +1,43 @@
 \chapter{Implementierung}
 \label{implementation}
 
-Der Prototyp versucht zum einen die Welt vollständig editierbar und zum anderen in Echtzeit verwaltbar zu machen. Dies kann durch einen Baukasten aus elementaren Grundfunktionen erreicht werden. Im folgenden werden einige dieser Bausteine erläutert und gezeigt wie sie helfen das Ziel zu erreichen.
+Der Prototyp versucht zum einen die Welt vollständig editierbar und zum anderen in Echtzeit verwaltbar zu machen. Dies kann durch einen Baukasten aus elementaren Grundfunktionen erreicht werden. Im Folgenden werden einige dieser Bausteine erläutert und gezeigt wie sie zum Erreichen des Ziels beitragen.
 
 \section{Objektsystem}
 \label{sec:Objektsystem}
-Alles in der künstlichen Spielwelt muss den gleichen Prinzipien folgen. Würden die Entitäten wie Spieler und Boden unterschiedlich realisiert sein, kann nicht mehr frei in jeder Richtung agiert werden. Aus diesem Grund ist alles in Form gleichartiger Objekte definiert. Welche eine Sammlung von Eigenschaften mit teils vordefinierter und teils fiktiver Bedeutung, welche zur Laufzeit definiert werden, sind. Ein Objekt selbst ist demnach nur ein Container ohne weitere Funktionalität. Dies folgt dem Konzept der Komponentenbasierten Softwareentwicklung welches unter anderem in \cite{CBSE} beschrieben wird.\newline
-Der Vorteil im Container-Ansatz liegt darin, dass sich alles in der Spielwelt in alles andere transformieren lässt, ohne dass es von den Entwicklern berücksichtigt werden muss.\newline
-Existiert ein Editor für ein solches System gibt es nun die Option neue Objekte zu erzeugen und die vorhandenen zu ändern oder zu löschen. Die Welt kann somit vollständig von außen kontrolliert und beliebige Regeln in ihr umgesetzt werden. Würde man dies allerdings ohne weitere Einschränkungen ermöglichen würden das Ergebnis kein Spiel darstellen. Ein Spieler müsste nun kontinuierlich seine Positionseigenschaft manuell ändern und auf Kollisionen prüfen.\newline
-Der Prototyp implementiert daher das Objektsystem auf einer 2D-Kachel-basierten Welt. Diese Darstellung ist einfach zu handhaben. Sowohl Algorithmen als auch die Interaktion mit der Welt werden dadurch vereinfacht. Weitere Funktionalität wird durch einige Eigenschaften geboten, welche ein flüssiges Spielerlebnis nach festen regeln einfügen. Diese Regeln können zwar nicht geändert werden, bei Bedarf ist aber immer die Umgehung durch manuelle Einwirkung möglich.\newline
+Alle Objekte in der Spielwelt müssen den gleichen Prinzipien folgen. Würden Entitäten wie Spieler und Boden unterschiedlich realisiert sein kann nicht mehr frei in jeder Richtung agiert werden. Aus diesem Grund ist die komplette Spielwelt aus gleichartigen Objekte zusammengesetzt, welche eine Sammlung von Eigenschaften mit teils vordefinierter und teils fiktiver Bedeutung sind. Ein Objekt selbst ist demnach nur ein Container ohne weitere Funktionalität. Dies folgt dem Konzept der Komponentenbasierten Softwareentwicklung, welches unter anderem in \cite{CBSE} beschrieben wird.\newline
+Der Vorteil im Container-Ansatz liegt darin, dass sich jedes Objekt in der Spielwelt in jedes andere transformieren lässt, ohne dass dies von den Entwicklern berücksichtigt werden muss.\newline
+Existiert ein Editor für ein solches System gibt es nun die Option neue Objekte zu erzeugen und die vorhandenen zu ändern oder zu löschen. Die Welt kann somit vollständig von außen kontrolliert und beliebige Regeln in ihr umgesetzt werden. Ohne weitere Einschränkungen kann das Ergebnis jedoch kaum als Spiel bezeichnet werden. Ein Spieler müsste kontinuierlich seine Positionseigenschaft manuell ändern und auf Kollisionen prüfen.\newline
+Der Prototyp implementiert daher das Objektsystem auf einer zweidimensionalen Welt, in der Objekte auf einem Raster platziert werden können. Diese Darstellung ist einfach zu handhaben. Sowohl die Interaktion mit der Welt als auch die zugrundeliegenden Algorithmen werden dadurch vereinfacht. Weitere Funktionalität wird durch einige Eigenschaften geboten, welche ein flüssiges Spielerlebnis nach festen Regeln ermöglichen. Diese Regeln können zwar nicht geändert werden, bei Bedarf ist aber immer die Umgehung durch manuelle Einwirkung möglich.\newline
 
 
 \subsection{Eigenschaften}
 \label{sec:Eigenschaften}
-Eine Eigenschaft in den Objekten ist als Name-Wert Paar definiert. Wobei beide als Text gespeichert sind und damit beliebige Daten enthalten können. Es ist möglich dem System neue Eigenschaften hinzuzufügen. Dadurch kann grundsätzlich jedes Regelwerk und Rollenspiel in der Welt durchgeführt werden. Die Änderung dieser Werte geschieht zunächst manuell und ist somit nicht mehr als ein elektronischer Ersatz des Papiers, der eine Strukturierung der Daten einführt.\newline
+Eine Eigenschaft in den Objekten ist als Name-Wert-Paar definiert, wobei beide als Text gespeichert werden und damit beliebige Daten enthalten können. Es ist möglich dem System neue Eigenschaften hinzuzufügen. Dadurch kann grundsätzlich jedes Regelwerk und Rollenspiel in der Welt durchgeführt werden. Die Änderung dieser Werte geschieht zunächst manuell und ist somit nicht mehr als ein elektronischer Ersatz des Papiers, der eine Strukturierung der Daten einführt.\newline
 
 \subsubsection{Rechnen mit Werten}
 An verschieden Stellen ist es nun möglich die Werte der Eigenschaften auch als Formel zu interpretieren und auszuwerten. Eine gültige Formel kann aus folgenden Elementen bestehen:
 \begin{itemize}
-	\item Ganzen Zahlen: 42
-	\item Zufälligen Würfeln: \textit{W20}
+	\item Ganze Zahlen: 42
+	\item Zufällige Würfel: \textit{W20}
 	\item Referenzen auf andere Eigenschaften des selben Objekts: '\textit{ST-Mod}'
 	\item Operatoren: +, -, *, /
 \end{itemize}
 
 Aus diesen Elementen können die typischen Regeln aus PnP-Spielen leicht umgesetzt werden. Der Würfel 'Wx' erzeugt bei jeder Auswertung eine neue Zahl im Bereich 1 bis x.
 
-Außer dieser Auswertbarkeit, die für alle Eigenschaften gilt, gibt es auch vorgegebene Eigenschaften, die komplexere Interaktionen automatisieren.\newline
-Ein Beispiel dafür ist 'Hindernis'. Der eingebaute Weg-such-Algorithmus berücksichtigt Felder mit Objekten dieser Eigenschaft als nicht betretbar. Ein Übersicht über die besonderen Eigenschaften und Module ist im Handbuch zu finden. Wobei ein Modul nichts weiter ist, als eine Sammlung von Eigenschaften, die das erweitern von Objekten und Schablonen beschleunigt.
+Neben dieser Auswertbarkeit, die für alle Eigenschaften gilt, gibt es auch vorgegebene Eigenschaften die komplexere Interaktionen automatisieren. Ein Beispiel dafür ist \emph{'Hindernis'}. Der eingebaute Algorithmus zur Wegfindung berücksichtigt Felder mit Objekten dieser Eigenschaft als nicht betretbar. Ein Übersicht über die besonderen Eigenschaften und Module ist im Handbuch zu finden. Ein Modul ist hierbei eine Sammlung von Eigenschaften, die das Erweitern von Objekten und Schablonen beschleunigt.
 
 \subsection{Rechtesystem}
 \label{sec:Rechtesystem}
-In der Regel darf nur der Spielleiter Eigenschaften hinzufügen und entfernen. Weiter kann ein Spieler nur Eigenschaften von Objekten verändern, die ihm gehören. Realisiert wird das dadurch, dass jede Eigenschaft die Rechte Löschbar, Editierbar und Sichtbar bekommt. Für Spieler wird anhand der Besitzer-Eigenschaft (wenn vorhanden) festgemacht, wie viel sie sehen und beeinflussen können.\newline
-Diese Einschränkung soll verhindern, dass Spieler im großen Stil anfangen zu schummeln. Es ist immer möglich, dass ein Spieler sich unlautere Vorteile verschafft, allerdings ist das auch in der Papier-Variante möglich und das Vertrauen in einer Spielgruppe sollte das System nicht missbrauchen.\newline
-Durch die Besitzereigenschaft kann einem Spieler das Recht gegeben werden eine Einheit zu kontrollieren. Tiergefährten und Söldner können so gesteuert werden, ohne das der Spieler Einfluss auf seine Gegner bekommt.
+In der Regel darf nur der Spielleiter Eigenschaften hinzufügen und entfernen. Weiterhin kann ein Spieler nur Eigenschaften von Objekten verändern, die ihm gehören. Realisiert wird dies über ein Rechtesystem, das für jede Eigenschaft die Rechte Löschbar, Editierbar und Sichtbar festlegt. Für Spieler wird anhand der \emph{'Besitzer'}-Eigenschaft (wenn vorhanden) entschieden, welche Eigenschaften sie sehen und beeinflussen können.\newline
+Diese Einschränkung soll verhindern, dass Spieler schummeln oder Werte zu sehen bekommen, die nicht für sie bestimmt sind. Es ist immer möglich, dass ein Spieler sich unlautere Vorteile verschafft. Allerdings trifft dies auch auf die Papier-Variante zu, sodass innerhalb der Spielgruppe ein Vertrauensverhältnis vorausgesetzt wird.\newline
+Durch die Besitzer-Eigenschaft kann einem Spieler das Recht gegeben werden eine Einheit zu kontrollieren. Tiergefährten und Söldner können so vom Spieler selbst gesteuert werden, ohne dass der SL eingreifen muss.
 
 
 \section{Aktionssystem}
 \label{sec:Aktionssystem}
-Die Existenz von bestimmten Eigenschaften ermöglicht das Ausführen von vor-implementierten Aktionen. Nicht jede dieser Aktionen ist in jedem Rollenspiel die gleiche und muss bei bedarf durch manuelle Handlungen ersetzt werden. Vor allem die Implementation des Kampfsystems basiert auf dem D\&D Regelsystem.\newline
+Die Existenz von bestimmten Eigenschaften ermöglicht das Ausführen von vorimplementierten Aktionen. Diese Aktionen hängen vom verwendeten Regelsystem ab und können bei Bedarf durch manuelle Handlungen ersetzt werden. Vor allem die Implementation des Kampfsystems basiert auf dem D\&D-Regelsystem.\newline
 Da der Spieler unvorhergesehene Handlungen ausführen können soll gibt es zusätzlich die Freitextaktion, welche für jedes Objekt möglich ist. Dabei wird dem Spielleiter mitgeteilt, dass ein Spieler ein bestimmtes Objekt manipulieren will. Er kann daraufhin eine Entscheidung fällen und nötige Konsequenzen durchführen.
 
 \section{Synchronisation}
@@ -49,7 +48,7 @@ Einige der Aktionen werden als Protokoll einer zweiseitigen Kommunikation zwisch
 \section{Editor}
 \label{sec:Editor}
 Da die Reaktionsgeschwindigkeit des Spielleiters maßgeblich für einen flüssigen Spielverlauf ist sollte die Realisierung von Aktionen mindestens ebenso schnell wie auf dem Papier ausgeführt werden können.\newline
-Hierzu werden so viele Interaktion wie möglich über Drag\&Drop umgesetzt. Objekte können der Welt hinzugefügt, darin verschoben oder einem anderen Objekt untergeordnet werden. Genauso werden Eigenschaften dadurch zu Schablonen und Objekten hinzugefügt. Auch der Spieler kann so Dinge aus seinem Inventar werfen oder aufnehmen.\newline
-Weiterhin kann der Editor zwischen verschiedenen Modi wechseln, wodurch der Spielleiter in verschieden Situationen besser reagieren kann. Befindet er sich im normalen Spielverlauf kann er im Aktionsmodus ähnlich agieren wie die Spieler, möchte er die Karte schnell ändern sind der Drag\&Drop Modus, zum Verschieben von einem oder mehreren Objekten, oder der Pinselmodus hingegen besser geeignet.
+Hierzu werden so viele Interaktion wie möglich über Drag\&Drop umgesetzt. Objekte können der Welt hinzugefügt, darin verschoben oder einem anderen Objekt untergeordnet werden. Genauso werden Eigenschaften dadurch zu Schablonen und Objekten hinzugefügt. Auch der Spieler kann so Dinge aus seinem Inventar ablegen oder aufnehmen.\newline
+Weiterhin kann der Editor zwischen verschiedenen Modi wechseln, wodurch der Spielleiter in verschieden Situationen besser reagieren kann. Befindet er sich im normalen Spielverlauf kann er im Aktionsmodus ähnlich agieren wie die Spieler. Möchte er die Karte schnell ändern sind der Drag\&Drop-Modus zum Verschieben von Objekten oder der Pinselmodus hingegen besser geeignet.
 
-Alle diese Möglichkeiten stehen während der Vorbereitungsphase, sowie im laufenden Spiel zur Verfügung. Die daraus entstehende Echtzeitinteraktion mit einer vollständig anpassbaren Welt bieten somit die gewünschte Freiheit für das Rollenspiel.
+Alle diese Möglichkeiten stehen während der Vorbereitungsphase sowie im laufenden Spiel zur Verfügung. Die daraus entstehende Echtzeitinteraktion mit einer vollständig anpassbaren Welt bietet somit die gewünschte Freiheit für das Rollenspiel.

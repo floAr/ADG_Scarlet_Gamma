@@ -334,7 +334,13 @@ void ObjectPanel::SelectObject(const tgui::Callback& _call)
 	for( size_t i=1; i<m_Widgets.size(); ++i )
 	{
 		tgui::EditBox::Ptr ptr = m_Widgets[i];
-		if( ptr!=nullptr && ptr->mouseOnWidget((float)_call.mouse.x, (float)_call.mouse.y) )
+
+		// Workaround: Clicking on the icon led to a crash, to find the proper
+		// EditBox we assume fixed x position of 50 to always simulate a click
+		// on the EditBox. Scrollbar clicks however shouldn't do that!
+		float newX = _call.mouse.x > 11 ? 50 : (float)_call.mouse.x;
+
+		if( ptr!=nullptr && ptr->mouseOnWidget(newX, (float)_call.mouse.y) )
 		{
 			m_selected = g_Game->GetWorld()->GetObject(ptr->getCallbackId());
 			m_viewer->Show( g_Game->GetWorld(), m_selected );

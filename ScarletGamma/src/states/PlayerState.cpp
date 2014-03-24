@@ -245,7 +245,10 @@ void States::PlayerState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 		FocusObject(m_player);
 		break;
 	case sf::Keyboard::C:
-		g_Game->GetStateMachine()->PushGameState(new CharacterState(&m_playerObjectID));
+		if( OwnsObject( m_focus->ID() ) ) {
+			Core::ObjectID id = m_focus->ID();
+			g_Game->GetStateMachine()->PushGameState(new CharacterState(&id));
+		}
 		break;
 	}
 }
@@ -277,7 +280,11 @@ void States::PlayerState::Update( float _dt )
 	}
 
 	// Go through player object and update all viewed properties
-	m_playerView->Show( g_Game->GetWorld(), m_player );
+	if( OwnsObject( m_focus->ID() ) ) {
+		m_playerView->show();
+		m_playerView->Show( g_Game->GetWorld(), m_focus );
+	} else
+		m_playerView->hide();
 
 	// Hide observer view if player is too far away
 	if( m_observerView->isVisible() )

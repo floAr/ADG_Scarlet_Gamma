@@ -172,6 +172,8 @@ void PromptState::AddButton(const std::string& _buttonText, std::function<void(c
 
 void PromptState::GuiCallback(tgui::Callback& args)
 {
+	if(m_isMinimized)
+		return;
 	if (!m_buttons.count(args.id)) // no callback
 		return;
 

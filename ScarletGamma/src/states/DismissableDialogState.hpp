@@ -47,17 +47,17 @@ namespace States
 		///		map, certain menus etc.
 		virtual void Draw(sf::RenderWindow& win);
 
-        /// \brief Forwards pause, required for mouse cursor setting.
-        virtual void OnPause() override
-        {
-            m_previousState->OnPause();
-        }
+		/// \brief Forwards pause, required for mouse cursor setting.
+		virtual void OnPause() override
+		{
+			m_previousState->OnPause();
+		}
 
-        /// \brief Forwards resume, required for mouse cursor setting.
-        virtual void OnResume() override
-        {
-            m_previousState->OnResume();
-        }
+		/// \brief Forwards resume, required for mouse cursor setting.
+		virtual void OnResume() override
+		{
+			m_previousState->OnResume();
+		}
 
 		/// \brief Gets called when a mouse button is pressed.
 		/// \details Has the same internal logic as KeyPressed.
@@ -147,7 +147,7 @@ namespace States
 		static void RemoveOrb(sf::Sprite* _orb);
 
 	private:
-		bool m_isMinimized;		///< Indicates whether the state is currently minimized
+
 
 		int m_orbID;			///< index of the minimized orb
 		sf::Shader m_shader;	///< Shader for the blur effect
@@ -156,5 +156,8 @@ namespace States
 		static DismissableDialogState* m_activeDDState;	///< The dismissable states are mutually exclusive -> minimize an other one if the current one is maximized
 
 		static void RecalculateOrbPositions();
+
+	protected:
+		bool m_isMinimized;		///< Indicates whether the state is currently minimized
 	};
 }

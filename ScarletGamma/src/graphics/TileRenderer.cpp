@@ -123,7 +123,7 @@ void Graphics::TileRenderer::RenderSelection( sf::RenderWindow& _window, const C
 		if (g_Game->GetCommonState()->OwnsObject(_selection[i]))
 			drawSprite.setColor(sf::Color::Yellow);
 		else
-			drawSprite.setColor(sf::Color(128, 128, 128, 255));
+			drawSprite.setColor(sf::Color(180, 180, 250, 255));
 		drawSprite.setPosition(obj->GetPosition() * float(TILESIZE));
 		drawSprite.setScale(float(TILESIZE)/tex.getSize().x, float(TILESIZE)/tex.getSize().y);
 		_window.draw(drawSprite);

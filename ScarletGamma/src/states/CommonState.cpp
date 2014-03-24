@@ -146,8 +146,7 @@ namespace States {
 		{
 		case sf::Keyboard::Num0:
 		case sf::Keyboard::Numpad0: {
-			if( sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)
-				|| sf::Keyboard::isKeyPressed(sf::Keyboard::RControl) )
+			if( Events::InputHandler::IsControlPressed() )
 			{
 				// Reset zoom
 				m_zoom = 0;

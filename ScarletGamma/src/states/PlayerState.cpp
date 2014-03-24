@@ -239,10 +239,10 @@ void States::PlayerState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 	case sf::Keyboard::Num0:
 	case sf::Keyboard::Numpad0:
 		// Refocus on player
-		m_focus = m_player;
+		FocusObject(m_player);
 		break;
 	case sf::Keyboard::LAlt:
-		m_focus = m_player;
+		FocusObject(m_player);
 		break;
 	case sf::Keyboard::C:
 		g_Game->GetStateMachine()->PushGameState(new CharacterState(&m_playerObjectID));

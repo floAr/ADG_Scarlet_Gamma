@@ -46,7 +46,7 @@ void Actions::FreeTextAction::FreeTextPromptFinished(const std::string& _result)
 {
     // We assume we are a player, because the DM must not execute this action.
     // Tell the DM that we want to start a Free Text action
-    Network::MsgActionBegin(this->m_id, m_target).Send();
+    Network::MsgActionBegin(this->m_id, m_executor, m_target).Send();
 
     // Send him the free text that the player entered
     Network::MsgActionInfo(this->m_id, static_cast<uint8_t>(FreeTextMsgType::PL_FREETEXT), _result).Send();

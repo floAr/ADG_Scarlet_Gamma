@@ -46,7 +46,7 @@ void Attack::Execute()
 {
     // Tell the server that we are starting an attack
     if (Network::Messenger::IsServer() == false)
-        Network::MsgActionBegin(this->m_id, m_target).Send();
+        Network::MsgActionBegin(this->m_id, m_executor, m_target).Send();
 
     // Open prompt for hit roll value
     States::PromptState* prompt = dynamic_cast<States::PromptState*>(

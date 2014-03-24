@@ -166,7 +166,7 @@ void States::SelectionState::ShowActionState(Core::ObjectID _targetObject, int _
 {
 	auto action = dynamic_cast<ActionState*>( g_Game->GetStateMachine()->PushGameState(States::GST_ACTION) );
 	action->SetTargetObject(_targetObject);
-	const Core::ObjectList* selection =g_Game->GetCommonState()->GetSelection();
+	const Core::ObjectList* selection = g_Game->GetCommonState()->GetSelection();
 	//TODO: Forschleife mit mehreren aktionen für alle objekte in der selektion
 	action->SetSourceObject((*selection)[0]);
 	action->SetPosition(_x, _y);

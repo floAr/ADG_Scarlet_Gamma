@@ -64,6 +64,7 @@ const std::string STR_NO_POSITION = std::string("Das Objekt ist kein gültiges Zi
 const std::string STR_WRONG_PATH = std::string("Resourcen müssen im 'media' Ordner liegen.");
 const std::string STR_MSG_NEW_MAP = std::string("Name für neue Map:");
 const std::string STR_MSG_DELETE_MAP = std::string("Map wirklich löschen?");
+const std::string STR_MSG_DELETE_PLAYER = std::string(" wirklich löschen?");
 const std::string STR_MSG_RENAME_MAP = std::string("Neuer Name für Map:");
 const std::string STR_MSG_EXPORT_MAP = std::string("Dateiname für Export (wird überschrieben):");
 const std::string STR_MSG_IMPORT_MAP = std::string("Dateiname für Import:");

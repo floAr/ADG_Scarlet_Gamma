@@ -64,6 +64,7 @@ extern const std::string STR_NO_POSITION;
 extern const std::string STR_WRONG_PATH;
 extern const std::string STR_MSG_NEW_MAP;
 extern const std::string STR_MSG_DELETE_MAP;
+extern const std::string STR_MSG_DELETE_PLAYER;
 extern const std::string STR_MSG_RENAME_MAP;
 extern const std::string STR_MSG_EXPORT_MAP;
 extern const std::string STR_MSG_IMPORT_MAP;

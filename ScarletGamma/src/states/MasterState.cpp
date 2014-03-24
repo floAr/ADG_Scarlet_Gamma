@@ -552,8 +552,21 @@ namespace States {
 				ObjectID id = m_selection[i];
 				Map* map = g_Game->GetWorld()->GetMap( g_Game->GetWorld()->GetObject(id)->GetParentMap() );
 				map->Remove( id );
-				// Do not remove objects with the player attribute!
-				if ( !g_Game->GetWorld()->GetObject(id)->HasProperty(STR_PROP_PLAYER) )
+				// Do not simply remove objects with the player attribute!
+				if ( g_Game->GetWorld()->GetObject(id)->HasProperty(STR_PROP_PLAYER) )
+				{
+					if( sf::Keyboard::isKeyPressed( sf::Keyboard::Key::LShift ) || sf::Keyboard::isKeyPressed( sf::Keyboard::Key::RShift ) )
+					{
+						States::PromptState* prompt = static_cast<States::PromptState*>(g_Game->GetStateMachine()->PushGameState(States::GST_PROMPT));
+						prompt->SetTextInputRequired(false);
+						prompt->SetText(STR_PLAYER + ' ' + g_Game->GetWorld()->GetObject(id)->GetName() + STR_MSG_DELETE_PLAYER);
+						prompt->DisableMinimize();
+						prompt->AddButton(STR_CANCEL, [](const std::string&) {}, sf::Keyboard::Escape);
+						prompt->AddButton(STR_OK, [id](const std::string&) {
+							g_Game->GetWorld()->RemoveObject( id );
+						}, sf::Keyboard::Return);
+					}
+				} else
 					g_Game->GetWorld()->RemoveObject( id );	// Assumes real deletion otherwise
 			}
 			m_selection.Clear();

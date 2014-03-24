@@ -9,6 +9,7 @@
 #include "core/PredefinedProperties.hpp"
 #include "core/Map.hpp"
 #include "network/Messenger.hpp"
+#include "events/InputHandler.hpp"
 
 using namespace Actions;
 
@@ -25,7 +26,7 @@ WalkTo::WalkTo() : Action(STR_ACT_WALKTO, Duration::FREE_ACTION, 100, Game::MC_W
 void WalkTo::Execute()
 {
 	Perform(m_executor, m_target, Network::Messenger::IsServer()
-		&& sf::Keyboard::isKeyPressed(sf::Keyboard::LControl));
+		&& Events::InputHandler::IsControlPressed());
 }
 
 void WalkTo::Perform(Core::ObjectID _executor, Core::ObjectID _target, bool _append)

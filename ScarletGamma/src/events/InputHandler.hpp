@@ -70,6 +70,9 @@ namespace Events
 		/// \brief Determine the current position of the cursor in tile-space
 		static sf::Vector2i GetMouseTilePosition();
 
+		/// \brief Asks SFML if any of the two control buttons is pressed.
+		static bool IsControlPressed();
+
 	private:
 		/// \brief Counts the total time the InputManager was updated with. Used for
 		///		determining how long a key / button was pressed.

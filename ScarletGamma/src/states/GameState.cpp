@@ -2,6 +2,7 @@
 #include "sfutils\View.hpp"
 #include "Game.hpp"
 #include "utils\Clipboard.hpp"
+#include "events\InputHandler.hpp"
 
 namespace States {
 
@@ -43,12 +44,12 @@ namespace States {
 	void GameState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 	{
 		// Handle copy & paste
-		if( key.code == sf::Keyboard::C && sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) )
+		if( key.code == sf::Keyboard::C && Events::InputHandler::IsControlPressed() )
 		{
 			sf::String text = Copy();
 			if( !text.isEmpty() )
 				Utils::Clipboard::Instance()->SetClipboardText(text.toAnsiString().c_str());
-		} else if( key.code == sf::Keyboard::V && sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) )
+		} else if( key.code == sf::Keyboard::V && Events::InputHandler::IsControlPressed() )
 		{
 			Paste( Utils::Clipboard::Instance()->GetClipboardText() );
 		}

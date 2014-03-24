@@ -95,3 +95,10 @@ sf::Vector2i Events::InputHandler::GetMouseTilePosition()
 	tilePos.y /= TILESIZE;
 	return sf::Vector2i( (int)floor(tilePos.x), (int)floor(tilePos.y) );
 }
+
+
+bool Events::InputHandler::IsControlPressed()
+{
+	return sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)
+		|| sf::Keyboard::isKeyPressed(sf::Keyboard::RControl);
+}

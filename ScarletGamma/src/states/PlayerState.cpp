@@ -17,6 +17,7 @@
 #include "NewPlayerState.hpp"
 #include "utils/ValueInterpreter.hpp"
 #include "utils/Exception.hpp"
+#include "events/InputHandler.hpp"
 
 
 States::PlayerState::PlayerState( Core::ObjectID _player ) :
@@ -122,7 +123,7 @@ void States::PlayerState::MouseButtonPressed(sf::Event::MouseButtonEvent& button
 			Actions::ActionPool::Instance().StartDefaultAction(m_focus->ID(), object->ID());
 
 			// Delete current target(s) if not appending
-			//if( !sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) )
+			//if( !Events::InputHandler::IsControlPressed() )
 			//{
 			//	m_focus->GetProperty(STR_PROP_TARGET).SetValue(STR_EMPTY);
 			//	Core::Property& path = m_player->GetProperty(STR_PROP_PATH);
@@ -201,14 +202,14 @@ void States::PlayerState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 
 	if( key.code >= sf::Keyboard::Num1 && key.code <= sf::Keyboard::Num9 )
 	{
-		if(sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
+		if(Events::InputHandler::IsControlPressed()) {
 			if( m_focus != nullptr )
 				SetHotkeyToObject(key.code - sf::Keyboard::Num1, m_focus->ID());
 		} else
 			FocusObject( GetObjectFromHotkey(key.code - sf::Keyboard::Num1) );
 	}
 
-	switch(key.code) //pre gui switch to still get event with LControl
+	switch(key.code)
 	{
 	// Pre-GUI Tabbing to prevent loosing focus (focus tabbing of gui cannot be
 	// deactivated.

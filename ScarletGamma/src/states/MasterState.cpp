@@ -388,7 +388,7 @@ namespace States {
 		if(m_rectSelection)
 		{
 			// If not pressing cntrl -> clear selection
-			if(!sf::Keyboard::isKeyPressed(sf::Keyboard::LControl))
+			if(!Events::InputHandler::IsControlPressed())
 				m_selection.Clear();
 
 			sf::Vector2i tile((int)floor(tilePos.x), (int)floor(tilePos.y));
@@ -473,7 +473,7 @@ namespace States {
 		// This should work ALWAYS, even if GUI is focused:
 		if( key.code >= sf::Keyboard::Num1 && key.code <= sf::Keyboard::Num9 )
 		{
-			if(sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
+			if(Events::InputHandler::IsControlPressed()) {
 				if( m_selection.Size() == 1 )
 					SetHotkeyToObject(key.code - sf::Keyboard::Num1, m_selection[0]);
 			} else
@@ -568,7 +568,7 @@ namespace States {
 			m_modeTool->SetMode( Interfaces::ModeToolbox::DRAGNDROP );
 			break;
 		case sf::Keyboard::S:
-			if( sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) )
+			if( Events::InputHandler::IsControlPressed() )
 			{
 				// Save the world
 				Jo::Files::HDDFile file(m_worldFileName, Jo::Files::HDDFile::OVERWRITE);

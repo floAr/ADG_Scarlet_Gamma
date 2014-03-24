@@ -141,14 +141,6 @@ void States::PromptState::SetTextInputRequired(bool _value)
 		m_editBox->hide();
 }
 
-
-void States::PromptState::OnEnd()
-{
-	// Call callback if we have one
-	if (m_result != nullptr)
-		m_result->function(m_editBox->getText());
-}
-
 const std::string PromptState::GetResult()
 {
 	return m_editBox->getText();
@@ -203,6 +195,10 @@ void PromptState::GuiCallback(tgui::Callback& args)
 
 	if (!m_editBox->isVisible())
 		m_editBox->setText(""); // Required if someone uses global PopCallback
+
+    if (m_result != nullptr) // also handle button here to emit event
+        m_result->function(m_editBox->getText());
+
 	if(!m_forceKeepAlive) {
 		m_finished = true;
 		// The current state might not be on top -> remove it from Orb-bar manually
@@ -210,8 +206,6 @@ void PromptState::GuiCallback(tgui::Callback& args)
 		RemoveOrb( &m_orb );
 	} else
 	{
-		if (m_result != nullptr) // also handle button here to emit event
-			m_result->function(m_editBox->getText());
 		if(m_isMinimizeable)
 			SetMinimized(true);
 	}

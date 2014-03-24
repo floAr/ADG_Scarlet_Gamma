@@ -373,7 +373,7 @@ void Attack::PushHitRollDMPrompt(int _result, void (Attack::* _callback)(const s
     message << "Trefferwurf von " << g_Game->GetWorld()->GetObject(m_executor)->GetName()
             << " auf " << g_Game->GetWorld()->GetObject(m_target)->GetName() << '\n';
     message << m_hitRoll << " = " << resultStr << ", ";
-    message << "Der Wert kann angepasst werden. Das Ziel hat "
+    message << "Das Ziel hat "
         << CombatRules::GetHitPoints(m_target) << "TP.\n";
 
     prompt->SetText(message.str());

@@ -347,6 +347,8 @@ namespace Core {
 						break;
 					}
 			m_players.push_back(_object->ID());
+			// Set property to something what is not used by network.
+			_object->GetProperty( STR_PROP_PLAYER ).SetValue( "-1" );
 		}
 		// Test object if it has an owner and add it.
 		if( _object->HasProperty( STR_PROP_OWNER ) )

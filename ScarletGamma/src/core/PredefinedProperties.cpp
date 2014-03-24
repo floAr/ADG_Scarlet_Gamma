@@ -23,7 +23,7 @@ namespace Core {
 	const Property PROPERTY::PAUSE = Property(Property::R_SYSTEMONLY, STR_PROP_PAUSE, STR_FALSE);
 	const Property PROPERTY::VIEWDISTANCE = Property(Property::R_VCEV00000, STR_PROP_VIEWDISTANCE, STR_5);
 
-	const Property PROPERTY::INVENTORY = Property(Property::R_VCEV0E000, STR_PROP_INVENTORY, STR_EMPTY);
+	const Property PROPERTY::INVENTORY = Property(Property::R_VCEV0EV00, STR_PROP_INVENTORY, STR_EMPTY);
 	const Property PROPERTY::STRENGTH = Property(Property::R_VCEV0E000, STR_PROP_STRENGTH, STR_0);
 	const Property PROPERTY::STRENGTH_MOD = Property(Property::R_VCEV0E000, STR_PROP_STRENGTH_MOD, "('ST'-10)/2");
 	const Property PROPERTY::DEXTERITY = Property(Property::R_VCEV0E000, STR_PROP_DEXTERITY, STR_0);

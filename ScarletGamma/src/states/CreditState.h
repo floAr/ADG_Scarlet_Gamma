@@ -2,18 +2,16 @@
 
 #include "GameState.hpp"
 #include <TGUI/TGUI.hpp>
-#include "Prerequisites.hpp"
 
 namespace States
 {
-	class LaunchPlayerState : public GameState
+	class CreditState : public GameState
 	{
 	public:
-		LaunchPlayerState();
+		CreditState();
 		virtual void Draw(sf::RenderWindow& win) override;
 		virtual void KeyPressed(sf::Event::KeyEvent& key, bool guiHandled) override;
-		virtual void GuiCallback(tgui::Callback& callback) override;
-
+		//virtual void GuiCallback(tgui::Callback& callback) override;
 	private:
 		sf::Font	m_menuFont;
 		tgui::Gui   m_gui;

@@ -20,5 +20,6 @@ namespace States
 		int			m_mousePos[3];
 		tgui::Gui   m_gui;
 		sf::Sprite	m_background;
+		sf::Sprite	m_logo;
 	};
 }

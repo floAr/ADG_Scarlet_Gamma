@@ -18,6 +18,8 @@ States::MainMenuState::MainMenuState() :
 	m_menuFont=Content::Instance()->LoadFont("media/arial.ttf");
 
 	m_background = sf::Sprite(Content::Instance()->LoadTexture("media/main_bg.png"));
+	m_logo = sf::Sprite(Content::Instance()->LoadTexture("media/logo.png"));
+	m_logo.setPosition(10, 25);
     //--------------------------------------
     // CREATE GUI
     // First, create a tgui::Gui object and load a font
@@ -46,6 +48,7 @@ void States::MainMenuState::Draw(sf::RenderWindow& win)
 	float sy = float(win.getSize().y) / m_background.getTexture()->getSize().y;
 	m_background.setScale( std::max(1.0f, sx), std::max(1.0f, sy) );
 	win.draw(m_background);
+	win.draw(m_logo);
 
    /* sf::Text t("Press 'm' to open MasterState\n"
                "or escape to quit.", m_menuFont, 24);

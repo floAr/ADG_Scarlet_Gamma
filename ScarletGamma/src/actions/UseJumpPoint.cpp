@@ -32,9 +32,15 @@ namespace Actions {
 			// Remove object from old map and reinsert at new position
 			Core::ObjectID targetID = (Core::ObjectID)atoi(jp.Value().c_str());
 			Core::Object* targetObj = g_Game->GetWorld()->GetObject( targetID );
-			Core::Map* map = g_Game->GetWorld()->GetMap(targetObj->GetParentMap());
-			map->SetObjectPosition( execObj, targetObj->GetPosition() );
-			execObj->ResetTarget();
+			if (targetObj != nullptr)
+			{
+				Core::Map* map = g_Game->GetWorld()->GetMap(targetObj->GetParentMap());
+				map->SetObjectPosition( execObj, targetObj->GetPosition() );
+				execObj->ResetTarget();
+			} else {
+				// Error message
+				Network::ChatMsg("Der Weg ist versperrt.", sf::Color::Red).Send();
+			}
 
 			// This action is finished
 			m_finished = true;

@@ -84,9 +84,10 @@ void FreeTextAction::HandleActionInfo(uint8_t _messageType, const std::string& _
         prompt->SetText("Spieler " + executor->GetName() + " möchte folgende Aktion auf " +
             target->GetName() + " starten:\n\"" + _message + "\"\n");
         prompt->SetTextInputRequired(false);
+        prompt->SetKeepAlive(true);
         prompt->AddButton("Zu " + target->GetName(), std::bind(&States::MasterState::GoTo, master, target));
         prompt->AddButton("Zu " + executor->GetName(), std::bind(&States::MasterState::GoTo, master, executor));
-        prompt->AddButton("Schließen", [](const std::string&)->void {}, sf::Keyboard::Escape);
+        prompt->AddButton("Schließen", [=](const std::string&)->void { prompt->SetKeepAlive(false); }, sf::Keyboard::Escape);
 
         } break;
     default:

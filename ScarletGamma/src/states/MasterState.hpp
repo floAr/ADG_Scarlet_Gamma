@@ -63,7 +63,10 @@ namespace States
 		Interfaces::GoToToolbox::Ptr m_gotoTool;
 		Interfaces::CombatToolbox::Ptr m_combatTool;
 		float m_lastObjectPanelUpdate;		///< Time since last gui update
-		sf::Text m_pauseText;
+		
+		/// \brief Text to show hints in the center of the screen (Pause, Gespeichert) etc.
+		sf::Text m_hintText;
+		float m_saveHintTime;
 
 		/// \brief A permanent brush object.
 		/// \details Brushes contain an array for flags. So over the whole

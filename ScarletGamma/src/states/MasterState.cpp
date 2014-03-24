@@ -77,11 +77,11 @@ namespace States {
 		m_color = sf::Color(80,80,250);
 		m_name = "Master";
 
-		// Creat pause text
-		m_pauseText.setFont(Content::Instance()->LoadFont("media/arial.ttf"));
-		m_pauseText.setCharacterSize(20);
-		m_pauseText.setStyle(sf::Text::Bold);
-		m_pauseText.setString("PAUSE");
+		// Creat hint text
+		m_saveHintTime = -1;
+		m_hintText.setFont(Content::Instance()->LoadFont("media/arial.ttf"));
+		m_hintText.setCharacterSize(20);
+		m_hintText.setStyle(sf::Text::Bold);
 
 		// Set window size
 		sf::Vector2u size = g_Game->GetWindow().getSize();
@@ -140,6 +140,10 @@ namespace States {
 			m_selectionChanged = false;
 		}
 
+		// Update saved hint time if necessary
+		if (m_saveHintTime > 0)
+			m_saveHintTime -= dt;
+
 		// Update the viewed properties
 		if( m_selectionView->isVisible() )
 			m_selectionView->Show( g_Game->GetWorld(), m_selection );
@@ -192,19 +196,40 @@ namespace States {
 			Graphics::TileRenderer::RenderRect( win, sf::Vector2i(minX,minY), sf::Vector2i(maxX,maxY) );
 		}
 
-		// Draw pause text if game is paused
-		if (g_Game->GetWorld()->IsPaused())
+		// Hint texts
+		if (m_saveHintTime > 0)
 		{
+			m_hintText.setString("GESPEICHERT");
+			Resize(sf::Vector2f((float) win.getSize().x, (float) win.getSize().y));
 			SetGuiView();
 			// Faking dark border
-			m_pauseText.setColor(sf::Color(0, 0, 0, 100));
-			m_pauseText.move(-1, -1); win.draw(m_pauseText);
-			m_pauseText.move( 2,  0); win.draw(m_pauseText);
-			m_pauseText.move( 0,  2); win.draw(m_pauseText);
-			m_pauseText.move(-2,  0); win.draw(m_pauseText);
-			m_pauseText.setColor(sf::Color(255, 255, 255, 100));
-			m_pauseText.move( 1, -1); win.draw(m_pauseText);
+			m_hintText.setColor(sf::Color(0, 0, 0, 100));
+			m_hintText.move(-1, -1); win.draw(m_hintText);
+			m_hintText.move( 2,  0); win.draw(m_hintText);
+			m_hintText.move( 0,  2); win.draw(m_hintText);
+			m_hintText.move(-2,  0); win.draw(m_hintText);
+			m_hintText.setColor(sf::Color(255, 255, 255, 100));
+			m_hintText.move( 1, -1); win.draw(m_hintText);
 			SetStateView();
+		}
+		else
+		{
+			// Draw pause text if game is paused
+			if (g_Game->GetWorld()->IsPaused())
+			{
+				m_hintText.setString("PAUSE");
+				Resize(sf::Vector2f((float) win.getSize().x, (float) win.getSize().y));
+				SetGuiView();
+				// Faking dark border
+				m_hintText.setColor(sf::Color(0, 0, 0, 100));
+				m_hintText.move(-1, -1); win.draw(m_hintText);
+				m_hintText.move( 2,  0); win.draw(m_hintText);
+				m_hintText.move( 0,  2); win.draw(m_hintText);
+				m_hintText.move(-2,  0); win.draw(m_hintText);
+				m_hintText.setColor(sf::Color(255, 255, 255, 100));
+				m_hintText.move( 1, -1); win.draw(m_hintText);
+				SetStateView();
+			}
 		}
 
 		CommonState::Draw(win);
@@ -592,6 +617,7 @@ namespace States {
 			if( Events::InputHandler::IsControlPressed() )
 			{
 				// Save the world
+				m_saveHintTime = 2.f;
 				Jo::Files::HDDFile file(m_worldFileName, Jo::Files::HDDFile::OVERWRITE);
 				g_Game->GetWorld()->Save( file );
 			}
@@ -655,8 +681,8 @@ namespace States {
 		m_viewPanel->setPosition( m_modulePanel->getSize().x, height * 0.5f );
 
 		// Reposition pause text
-		m_pauseText.setPosition(_size.x / 2.0f - m_pauseText.getGlobalBounds().width / 2.0f,
-								_size.y / 2.0f - m_pauseText.getGlobalBounds().height / 2.0f);
+		m_hintText.setPosition(_size.x / 2.0f - m_hintText.getGlobalBounds().width / 2.0f,
+								_size.y / 2.0f - m_hintText.getGlobalBounds().height / 2.0f);
 	}
 
 

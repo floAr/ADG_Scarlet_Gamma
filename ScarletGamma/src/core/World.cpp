@@ -314,6 +314,14 @@ namespace Core {
 		return id;
 	}
 
+	ObjectID World::NewObjectTemplate( ObjectID _object )
+	{
+		// Use standard cloning
+		ObjectID id = NewObject( GetObject(_object) );
+		m_objectTemplates.Add(id);
+		return id;
+	}
+
 	Object* World::GetNextObservableObject(ObjectID _currentID, int _direction)
 	{
 		if( m_ownedObjects.empty()) return nullptr;

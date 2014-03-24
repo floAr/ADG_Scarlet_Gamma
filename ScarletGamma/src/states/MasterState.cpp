@@ -509,6 +509,14 @@ namespace States {
 				BlendLayer(9);
 			break;
 
+		case sf::Keyboard::D:
+			// Duplicate the current template
+			if( Events::InputHandler::IsControlPressed() )
+			{
+				g_Game->GetWorld()->NewObjectTemplate( m_objectsPanel->GetSelected()->ID() );
+			}
+			break;
+
 			//case sf::Keyboard::T:
 			//	PromptState* gs = dynamic_cast<PromptState*>(g_Game->GetStateMachine()->PushGameState(GST_PROMPT));
 			//	gs->ConfigurePromp("Das ist dein toller Text",false);

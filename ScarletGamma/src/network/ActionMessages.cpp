@@ -56,14 +56,15 @@ void ActionMsg::Send(uint8_t sender)
 ////////////////////////////////////////////////////////////////////////////////
 // MsgActionBegin
 
-MsgActionBegin::MsgActionBegin(Core::ActionID _action, Core::ObjectID target)
-    : ActionMsg(ActionMsgType::ACTION_BEGIN, _action), m_target(target)
+MsgActionBegin::MsgActionBegin(Core::ActionID _action, Core::ObjectID _executor, Core::ObjectID target)
+    : ActionMsg(ActionMsgType::ACTION_BEGIN, _action), m_executor(_executor), m_target(target)
 {
 }
 
 void MsgActionBegin::WriteData(Jo::Files::MemFile& _output) const
 {
     // Serialize
+	_output.Write( &m_executor, sizeof(Core::ObjectID) );
     _output.Write( &m_target, sizeof(Core::ObjectID) );
 }
 
@@ -73,18 +74,20 @@ size_t MsgActionBegin::Receive(Core::ActionID _action, uint8_t _sender,
     assert(Messenger::IsServer() && "Client got MsgActionBegin, that shouldn't happen");
 
     // Deserialize
-    Core::ObjectID target = *(Core::ObjectID*)_data;
+	Core::ObjectID executor = ((Core::ObjectID*)_data)[0];
+    Core::ObjectID target = ((Core::ObjectID*)_data)[1];
 	Core::Object* player = g_Game->GetWorld()->FindPlayer(_sender+1);
 
 #ifdef _DEBUG
+	if( player )
     std::cout << "Player " <<  player->GetName()
         << " starting action '" << Actions::ActionPool::Instance().GetActionName(_action)
         << "' on target " << g_Game->GetWorld()->GetObject(target)->GetName() << '\n';
 #endif
 
-    Actions::ActionPool::Instance().StartClientAction(_action, player->ID(), target, _sender);
+    Actions::ActionPool::Instance().StartClientAction(_action, executor, target, _sender);
 
-    return sizeof(Core::ObjectID);
+    return sizeof(Core::ObjectID)*2;
 }
 
 

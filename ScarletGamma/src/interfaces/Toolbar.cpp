@@ -273,7 +273,6 @@ namespace Interfaces {
 			m_mapList->removeItem( m_selected );
 			m_selected = m_maps.size()-1;
 		}, sf::Keyboard::Return);
-		prompt->DisableMinimize();
 	}
 
 	void MapToolbox::RenameMap()
@@ -290,7 +289,6 @@ namespace Interfaces {
 				g_Game->GetWorld()->GetMap( GetSelectedMap() )->SetName(_name);
 			}
 		}, sf::Keyboard::Return);
-		prompt->DisableMinimize();
 	}
 
 	void MapToolbox::ExportMap()
@@ -303,7 +301,6 @@ namespace Interfaces {
 			Jo::Files::HDDFile file(_file, Jo::Files::HDDFile::OVERWRITE);
 			g_Game->GetWorld()->ExportMap(file, GetSelectedMap());
 		}, sf::Keyboard::Return);
-		prompt->DisableMinimize();
 	}
 
 	void MapToolbox::ImportMap()
@@ -322,7 +319,6 @@ namespace Interfaces {
 			if( m_maps.size() > 0 )
 				m_mapList->setSelectedItem( 0 );
 		}, sf::Keyboard::Return);
-		prompt->DisableMinimize();
 	}
 
 	void MapToolbox::SetMap(Core::MapID _id)

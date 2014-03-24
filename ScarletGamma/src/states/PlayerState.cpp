@@ -17,6 +17,7 @@
 #include "NewPlayerState.hpp"
 #include "utils/ValueInterpreter.hpp"
 #include "utils/Exception.hpp"
+#include "events/InputHandler.hpp"
 
 
 States::PlayerState::PlayerState( Core::ObjectID _player ) :
@@ -122,7 +123,7 @@ void States::PlayerState::MouseButtonPressed(sf::Event::MouseButtonEvent& button
 			Actions::ActionPool::Instance().StartDefaultAction(m_focus->ID(), object->ID());
 
 			// Delete current target(s) if not appending
-			//if( !sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) )
+			//if( !Events::InputHandler::IsControlPressed() )
 			//{
 			//	m_focus->GetProperty(STR_PROP_TARGET).SetValue(STR_EMPTY);
 			//	Core::Property& path = m_player->GetProperty(STR_PROP_PATH);
@@ -201,14 +202,14 @@ void States::PlayerState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 
 	if( key.code >= sf::Keyboard::Num1 && key.code <= sf::Keyboard::Num9 )
 	{
-		if(sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
+		if(Events::InputHandler::IsControlPressed()) {
 			if( m_focus != nullptr )
 				SetHotkeyToObject(key.code - sf::Keyboard::Num1, m_focus->ID());
 		} else
 			FocusObject( GetObjectFromHotkey(key.code - sf::Keyboard::Num1) );
 	}
 
-	switch(key.code) //pre gui switch to still get event with LControl
+	switch(key.code)
 	{
 	// Pre-GUI Tabbing to prevent loosing focus (focus tabbing of gui cannot be
 	// deactivated.
@@ -238,13 +239,16 @@ void States::PlayerState::KeyPressed(sf::Event::KeyEvent& key, bool guiHandled)
 	case sf::Keyboard::Num0:
 	case sf::Keyboard::Numpad0:
 		// Refocus on player
-		m_focus = m_player;
+		FocusObject(m_player);
 		break;
 	case sf::Keyboard::LAlt:
-		m_focus = m_player;
+		FocusObject(m_player);
 		break;
 	case sf::Keyboard::C:
-		g_Game->GetStateMachine()->PushGameState(new CharacterState(&m_playerObjectID));
+		if( OwnsObject( m_focus->ID() ) ) {
+			Core::ObjectID id = m_focus->ID();
+			g_Game->GetStateMachine()->PushGameState(new CharacterState(&id));
+		}
 		break;
 	}
 }
@@ -276,7 +280,11 @@ void States::PlayerState::Update( float _dt )
 	}
 
 	// Go through player object and update all viewed properties
-	m_playerView->Show( g_Game->GetWorld(), m_player );
+	if( OwnsObject( m_focus->ID() ) ) {
+		m_playerView->show();
+		m_playerView->Show( g_Game->GetWorld(), m_focus );
+	} else
+		m_playerView->hide();
 
 	// Hide observer view if player is too far away
 	if( m_observerView->isVisible() )

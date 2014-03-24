@@ -46,7 +46,7 @@ void Actions::FreeTextAction::FreeTextPromptFinished(const std::string& _result)
 {
     // We assume we are a player, because the DM must not execute this action.
     // Tell the DM that we want to start a Free Text action
-    Network::MsgActionBegin(this->m_id, m_target).Send();
+    Network::MsgActionBegin(this->m_id, m_executor, m_target).Send();
 
     // Send him the free text that the player entered
     Network::MsgActionInfo(this->m_id, static_cast<uint8_t>(FreeTextMsgType::PL_FREETEXT), _result).Send();
@@ -84,9 +84,10 @@ void FreeTextAction::HandleActionInfo(uint8_t _messageType, const std::string& _
         prompt->SetText("Spieler " + executor->GetName() + " möchte folgende Aktion auf " +
             target->GetName() + " starten:\n\"" + _message + "\"\n");
         prompt->SetTextInputRequired(false);
+        prompt->SetKeepAlive(true);
         prompt->AddButton("Zu " + target->GetName(), std::bind(&States::MasterState::GoTo, master, target));
         prompt->AddButton("Zu " + executor->GetName(), std::bind(&States::MasterState::GoTo, master, executor));
-        prompt->AddButton("Schließen", [](const std::string&)->void {}, sf::Keyboard::Escape);
+        prompt->AddButton("Schließen", [=](const std::string&)->void { prompt->SetKeepAlive(false); }, sf::Keyboard::Escape);
 
         } break;
     default:

@@ -46,7 +46,7 @@ void Attack::Execute()
 {
     // Tell the server that we are starting an attack
     if (Network::Messenger::IsServer() == false)
-        Network::MsgActionBegin(this->m_id, m_target).Send();
+        Network::MsgActionBegin(this->m_id, m_executor, m_target).Send();
 
     // Open prompt for hit roll value
     States::PromptState* prompt = dynamic_cast<States::PromptState*>(
@@ -373,7 +373,7 @@ void Attack::PushHitRollDMPrompt(int _result, void (Attack::* _callback)(const s
     message << "Trefferwurf von " << g_Game->GetWorld()->GetObject(m_executor)->GetName()
             << " auf " << g_Game->GetWorld()->GetObject(m_target)->GetName() << '\n';
     message << m_hitRoll << " = " << resultStr << ", ";
-    message << "Der Wert kann angepasst werden. Das Ziel hat "
+    message << "Das Ziel hat "
         << CombatRules::GetHitPoints(m_target) << "TP.\n";
 
     prompt->SetText(message.str());

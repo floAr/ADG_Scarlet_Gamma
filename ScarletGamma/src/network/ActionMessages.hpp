@@ -45,11 +45,12 @@ namespace Network
     class MsgActionBegin: public ActionMsg
     {
     public:
-        MsgActionBegin(Core::ActionID id, Core::ObjectID target);
+        MsgActionBegin(Core::ActionID id, Core::ObjectID _executor, Core::ObjectID target);
 
         /// \see HandleActionMessage
         static size_t Receive(Core::ActionID _action, uint8_t _sender, const uint8_t* _data, size_t _size);
     protected:
+		const Core::ObjectID m_executor;
         const Core::ObjectID m_target;
         virtual void WriteData(Jo::Files::MemFile& _output) const override;
     };

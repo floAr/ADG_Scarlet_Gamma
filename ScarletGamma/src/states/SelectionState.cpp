@@ -14,6 +14,7 @@
 #include "core/PredefinedProperties.hpp"
 #include "PlayerState.hpp"
 #include "network/Messenger.hpp"
+#include "events/InputHandler.hpp"
 
 States::SelectionState::SelectionState() :
 	m_menu(m_gui)
@@ -29,7 +30,7 @@ States::SelectionState::SelectionState() :
 
 void States::SelectionState::OnBegin()
 {
-	m_controlWasPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::LControl);
+	m_controlWasPressed = Events::InputHandler::IsControlPressed();
 }
 
 void States::SelectionState::SetTilePosition(int x, int y,const bool* hiddenLayers)
@@ -74,9 +75,9 @@ void States::SelectionState::Update(float dt)
 	if(m_dirty)
 		RecalculateGUI();
 	m_previousState->Update(dt);
-	if(m_controlWasPressed && !sf::Keyboard::isKeyPressed(sf::Keyboard::LControl))
+	if(m_controlWasPressed && !Events::InputHandler::IsControlPressed())
 		m_finished=true;
-	m_controlWasPressed |= sf::Keyboard::isKeyPressed(sf::Keyboard::LControl);
+	m_controlWasPressed |= Events::InputHandler::IsControlPressed();
 }
 
 
@@ -102,7 +103,7 @@ void States::SelectionState::GuiCallback(tgui::Callback& args)
 		assert(previousState);
 
 		// If control is not pressed clear selection
-		if( !sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) && !sf::Keyboard::isKeyPressed(sf::Keyboard::RControl) )
+		if( !Events::InputHandler::IsControlPressed() )
 		{
 			previousState->ClearSelection();
 		}
@@ -117,7 +118,7 @@ void States::SelectionState::GuiCallback(tgui::Callback& args)
 			previousState->AddToSelection(args.id);
 		}
 		m_dirty = true;
-		if( !sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) )
+		if( !Events::InputHandler::IsControlPressed() )
 			m_finished = true;
 	}
 	// 	*/
@@ -153,7 +154,7 @@ void States::SelectionState::MouseButtonPressed(sf::Event::MouseButtonEvent& but
 	else if(button.button == sf::Mouse::Left)
 	{
 		// If clicked somewhere not on the gui finish in single selection mode
-		if ( !sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) )
+		if ( !Events::InputHandler::IsControlPressed() )
 			m_finished = true;
 		else
 			SetTilePosition((int)floor(tilePos.x), (int)floor(tilePos.y));
@@ -165,7 +166,7 @@ void States::SelectionState::ShowActionState(Core::ObjectID _targetObject, int _
 {
 	auto action = dynamic_cast<ActionState*>( g_Game->GetStateMachine()->PushGameState(States::GST_ACTION) );
 	action->SetTargetObject(_targetObject);
-	const Core::ObjectList* selection =g_Game->GetCommonState()->GetSelection();
+	const Core::ObjectList* selection = g_Game->GetCommonState()->GetSelection();
 	//TODO: Forschleife mit mehreren aktionen für alle objekte in der selektion
 	action->SetSourceObject((*selection)[0]);
 	action->SetPosition(_x, _y);

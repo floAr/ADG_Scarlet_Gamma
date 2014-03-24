@@ -248,6 +248,9 @@
     <ClCompile Include="src\states\CreditState.cpp">
       <Filter>Quelldateien\states</Filter>
     </ClCompile>
+    <ClCompile Include="src\Constants.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\core\Map.hpp">

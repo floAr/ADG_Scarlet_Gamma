@@ -64,7 +64,7 @@ void Events::EventHandler::Update(float dt)
 			break;
 
 		case sf::Event::KeyPressed:
-            if (event.key.alt && event.key.code == sf::Keyboard::Return)
+            if (event.key.code == sf::Keyboard::F11 || (event.key.alt && event.key.code == sf::Keyboard::Return))
             {
                 if (!m_fullscreen)
                 {

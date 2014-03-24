@@ -127,6 +127,7 @@ void GameRules::Combat::SetTurn( Core::ObjectID _object )
         player->FocusObject(object);
 
 	// Update panel
+    UpdateCombatantPanel();
 	UpdateCombatantPanelTurn();
 }
 

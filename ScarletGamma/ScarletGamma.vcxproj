@@ -94,6 +94,7 @@
     <ClCompile Include="src\actions\UseJumpPoint.cpp" />
     <ClCompile Include="src\actions\UseSwitch.cpp" />
     <ClCompile Include="src\actions\WalkTo.cpp" />
+    <ClCompile Include="src\Constants.cpp" />
     <ClCompile Include="src\core\Map.cpp" />
     <ClCompile Include="src\core\Object.cpp" />
     <ClCompile Include="src\core\ObjectList.cpp" />

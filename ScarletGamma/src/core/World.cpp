@@ -314,6 +314,14 @@ namespace Core {
 		return id;
 	}
 
+	ObjectID World::NewObjectTemplate( ObjectID _object )
+	{
+		// Use standard cloning
+		ObjectID id = NewObject( GetObject(_object) );
+		m_objectTemplates.Add(id);
+		return id;
+	}
+
 	Object* World::GetNextObservableObject(ObjectID _currentID, int _direction)
 	{
 		if( m_ownedObjects.empty()) return nullptr;
@@ -339,6 +347,8 @@ namespace Core {
 						break;
 					}
 			m_players.push_back(_object->ID());
+			// Set property to something what is not used by network.
+			_object->GetProperty( STR_PROP_PLAYER ).SetValue( "-1" );
 		}
 		// Test object if it has an owner and add it.
 		if( _object->HasProperty( STR_PROP_OWNER ) )
@@ -863,7 +873,14 @@ namespace Core {
 		object->Add( PROPERTY::OBSTACLE );
 		object->Add( PROPERTY::COLOR ).SetValue( "61b9e2ff" );
 		object->Add( PROPERTY::LAYER ).SetValue( STR_1 );
-
+		object = GetObject( NewObjectTemplate( "media/noise_2.png" ) );
+		object->Add( PROPERTY::NAME ).SetValue( STR_GRANITE );
+		object->Add( PROPERTY::COLOR ).SetValue( "abababff" );
+		object->Add( PROPERTY::LAYER ).SetValue( STR_1 );
+		object = GetObject( NewObjectTemplate( "media/noise_1.png" ) );
+		object->Add( PROPERTY::NAME ).SetValue( STR_BASALT );
+		object->Add( PROPERTY::COLOR ).SetValue( "343434ff" );
+		object->Add( PROPERTY::LAYER ).SetValue( STR_1 );
 	}
 
 } // namespace Core

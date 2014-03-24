@@ -106,6 +106,7 @@ namespace Core {
 		const ObjectList& GetTemplateBase()	{ return m_objectTemplates; }
 		ObjectID NewModuleTemplate( const std::string& _sprite );
 		ObjectID NewObjectTemplate( const std::string& _sprite );
+		ObjectID NewObjectTemplate( ObjectID _object );
 
 		/// \brief Returns the next observable object
 		/// \param [in] _currentID ObjectID of the object currently watched

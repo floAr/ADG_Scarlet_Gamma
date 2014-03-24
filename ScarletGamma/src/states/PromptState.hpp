@@ -22,7 +22,6 @@ namespace States
 		const std::string GetResult();
 
 		void OnBegin() override;
-		void OnEnd() override;
 		virtual void Draw(sf::RenderWindow& win) override;
 		virtual void Update(float dt) override;
 		virtual void KeyPressed(sf::Event::KeyEvent& key, bool guiHandled) override;

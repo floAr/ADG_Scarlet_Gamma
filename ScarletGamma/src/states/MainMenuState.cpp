@@ -101,6 +101,10 @@ void States::MainMenuState::GuiCallback(tgui::Callback& callback)
 		// Player state initialization
 		g_Game->GetStateMachine()->PushGameState(GST_LAUNCH_PLAYER);
 		break;
+	case 4:
+		// Show credits
+		g_Game->GetStateMachine()->PushGameState(GST_CREDITS);
+		break;
 	default:
 		// No such GUI element!
 		assert(false);

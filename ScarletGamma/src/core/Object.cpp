@@ -225,4 +225,11 @@ namespace Core {
 			return false;
 	}
 
+	Property& Object::Add( const Property& _property )
+	{
+		Property& ref = Add(_property, m_id);
+		OnPropertyAdd(ref.Name());
+		return ref;
+	}
+
 } // namespace Core

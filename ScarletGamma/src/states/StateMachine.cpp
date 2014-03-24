@@ -10,6 +10,7 @@
 #include "DismissableDialogState.hpp"
 #include "Game.hpp"
 #include "network\ChatMessages.hpp"
+#include "CreditState.h"
 
 States::StateMachine::StateMachine() :
     m_gameState(0)
@@ -69,6 +70,9 @@ States::GameState* States::StateMachine::PushGameState(States::GameStateType sta
     case GST_LAUNCH_PLAYER:
         newState = new States::LaunchPlayerState();
         break;
+	case GST_CREDITS:
+		newState = new States::CreditState();
+		break;
     case GST_PLAYER:
         // You mast create the player state your self - it requires input.
         assert(false);

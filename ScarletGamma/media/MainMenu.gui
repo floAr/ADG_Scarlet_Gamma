@@ -33,12 +33,29 @@ Window:
 		TextColor = (200,200,200,255)
 		TextSize = 26
 	}
+	
+	Button: "Credits"
+	{
+		ConfigFile = "media/Black.conf"
+		Left = 30
+		Top = 300
+		Width = 300
+		Height = 40
+		Visible = true
+		Enabled = true
+		Transparency = 255
+		Callback = LeftMouseClicked
+		CallbackId = 4
+		Text = "Credits"
+		TextColor = (200,200,200,255)
+		TextSize = 26
+	}
 
 	Button: "Quit"
 	{
 		ConfigFile = "media/Black.conf"
 		Left = 30
-		Top = 300
+		Top = 350
 		Width = 300
 		Height = 40
 		Visible = true

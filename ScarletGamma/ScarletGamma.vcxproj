@@ -127,6 +127,7 @@
     <ClCompile Include="src\states\ActionState.cpp" />
     <ClCompile Include="src\states\ChoosePlayerState.cpp" />
     <ClCompile Include="src\states\CommonState.cpp" />
+    <ClCompile Include="src\states\CreditState.cpp" />
     <ClCompile Include="src\states\DismissableDialogState.cpp" />
     <ClCompile Include="src\states\GameState.cpp" />
     <ClCompile Include="src\states\IntroState.cpp" />
@@ -196,6 +197,7 @@
     <ClInclude Include="src\sfutils\View.hpp" />
     <ClInclude Include="src\sfutils\Vectors.hpp" />
     <ClInclude Include="src\states\ActionState.hpp" />
+    <ClInclude Include="src\states\CreditState.h" />
     <ClInclude Include="src\states\ChoosePlayerState.hpp" />
     <ClInclude Include="src\states\CommonState.hpp" />
     <ClInclude Include="src\states\DismissableDialogState.hpp" />

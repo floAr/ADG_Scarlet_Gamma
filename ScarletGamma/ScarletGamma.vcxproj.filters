@@ -245,6 +245,9 @@
     <ClCompile Include="src\actions\FreeTextAction.cpp">
       <Filter>Quelldateien\actions</Filter>
     </ClCompile>
+    <ClCompile Include="src\states\CreditState.cpp">
+      <Filter>Quelldateien\states</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\core\Map.hpp">
@@ -453,6 +456,9 @@
     </ClInclude>
     <ClInclude Include="src\actions\FreeTextAction.hpp">
       <Filter>Quelldateien\actions</Filter>
+    </ClInclude>
+    <ClInclude Include="src\states\CreditState.h">
+      <Filter>Quelldateien\states</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -30,7 +30,8 @@ public:
 	/// \brief Adds a copy of a property to the end of this list.
 	/// \param [in] _property Some property object from another list or a new one.
 	/// \return An editable reference to the property inside the object
-	Property& Add( const Property& _property )	{ Property& ref = Add(_property, m_id); OnPropertyAdd(ref.Name()); return ref; }
+	/// \bug Crashes at times. Moved to the cpp file to make debugging a easier. ~Daerst
+	Property& Add( const Property& _property );
 
 	/// \brief Remove a property from this object.
 	void Remove( const std::string& _name )		{ PropertyList::Remove(_name); OnPropertyRemove(_name); }

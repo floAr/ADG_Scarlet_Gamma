@@ -204,6 +204,8 @@ static const std::string STR_EARTH = std::string("Erde");
 static const std::string STR_GRASS = std::string("Gras");
 static const std::string STR_WATER = std::string("Wasser");
 static const std::string STR_WELL_NAME = std::string("Brunnen");
+static const std::string STR_BASALT = std::string("Basalt");
+static const std::string STR_GRANITE = std::string("Granit");
 
 
 /************************************************************************/

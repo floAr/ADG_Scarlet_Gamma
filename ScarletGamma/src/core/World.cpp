@@ -863,7 +863,14 @@ namespace Core {
 		object->Add( PROPERTY::OBSTACLE );
 		object->Add( PROPERTY::COLOR ).SetValue( "61b9e2ff" );
 		object->Add( PROPERTY::LAYER ).SetValue( STR_1 );
-
+		object = GetObject( NewObjectTemplate( "media/noise_2.png" ) );
+		object->Add( PROPERTY::NAME ).SetValue( STR_GRANITE );
+		object->Add( PROPERTY::COLOR ).SetValue( "abababff" );
+		object->Add( PROPERTY::LAYER ).SetValue( STR_1 );
+		object = GetObject( NewObjectTemplate( "media/noise_1.png" ) );
+		object->Add( PROPERTY::NAME ).SetValue( STR_BASALT );
+		object->Add( PROPERTY::COLOR ).SetValue( "343434ff" );
+		object->Add( PROPERTY::LAYER ).SetValue( STR_1 );
 	}
 
 } // namespace Core

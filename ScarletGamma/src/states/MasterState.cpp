@@ -77,7 +77,7 @@ namespace States {
 		m_color = sf::Color(80,80,250);
 		m_name = "Master";
 
-		// Creat hint text
+		// Create hint text
 		m_saveHintTime = -1;
 		m_hintText.setFont(Content::Instance()->LoadFont("media/arial.ttf"));
 		m_hintText.setCharacterSize(20);
@@ -620,6 +620,7 @@ namespace States {
 				m_saveHintTime = 2.f;
 				Jo::Files::HDDFile file(m_worldFileName, Jo::Files::HDDFile::OVERWRITE);
 				g_Game->GetWorld()->Save( file );
+				g_Game->AppendToChatLog( Network::ChatMsg("Welt gespeichert", sf::Color(255, 255, 200, 255) ) );
 			}
 		}
 	}

@@ -222,6 +222,8 @@ namespace Core {
 	{
 		Network::MsgRemoveObject( _object ).Send();
 		UnregisterObject( _object );
+		m_moduleTemplates.Remove( _object );
+		m_objectTemplates.Remove( _object );
 		// TODO: Test if destructor is called proper
 		m_objects.erase( _object );
 	}

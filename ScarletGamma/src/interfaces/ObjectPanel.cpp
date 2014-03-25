@@ -222,7 +222,7 @@ void ObjectPanel::RemoveBtn(const tgui::Callback& _call)
 	int posY = (int)_call.widget->getPosition().y;
 	unsigned delLine = _call.id;
 	// Remove object from world
-	if( m_selected->ID() == delLine ) m_selected = nullptr;
+	if( m_selected && m_selected->ID() == delLine ) m_selected = nullptr;
 	g_Game->GetWorld()->RemoveObject( delLine );
 	
 	// First element is always the scrollbar
@@ -309,7 +309,9 @@ void ObjectPanel::StartDrag(const tgui::Callback& _call)
 	// mouseOnWhichWidget does not work for disabled components to search manually
 	for( size_t i=1; i<m_Widgets.size(); ++i )
 	{
-		if( m_Widgets[i]->mouseOnWidget((float)_call.mouse.x, (float)_call.mouse.y) )
+		// Element should not be the delete "button".
+		if( !dynamic_cast<tgui::Checkbox*>(m_Widgets[i].get())
+			&& m_Widgets[i]->mouseOnWidget((float)_call.mouse.x, (float)_call.mouse.y) )
 		{
 			// Overwrite the last referenced content if it was not handled.
 			if( !*m_dragNDropHandler ) *m_dragNDropHandler = new Interfaces::DragContent();
@@ -333,18 +335,13 @@ void ObjectPanel::SelectObject(const tgui::Callback& _call)
 	// Find the clicked object
 	for( size_t i=1; i<m_Widgets.size(); ++i )
 	{
-		tgui::EditBox::Ptr ptr = m_Widgets[i];
+		tgui::EditBox* ptr = dynamic_cast<tgui::EditBox*>(m_Widgets[i].get());
 
-		// Workaround: Clicking on the icon led to a crash, to find the proper
-		// EditBox we assume fixed x position of 50 to always simulate a click
-		// on the EditBox. Scrollbar clicks however shouldn't do that!
-		float newX = _call.mouse.x > 11 ? 50 : (float)_call.mouse.x;
-
-		if( ptr!=nullptr && ptr->mouseOnWidget(newX, (float)_call.mouse.y) )
+		if( ptr!=nullptr && ptr->mouseOnWidget((float)_call.mouse.x, (float)_call.mouse.y) )
 		{
 			m_selected = g_Game->GetWorld()->GetObject(ptr->getCallbackId());
 			m_viewer->Show( g_Game->GetWorld(), m_selected );
-			HighlightObjectEdit(ptr);
+			HighlightObjectEdit(m_Widgets[i]);
 		}
 	}
 }

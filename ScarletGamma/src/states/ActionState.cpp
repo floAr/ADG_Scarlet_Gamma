@@ -100,3 +100,9 @@ void States::ActionState::MouseButtonPressed(sf::Event::MouseButtonEvent& button
 	//if not close the state
 	m_finished = true;
 }
+
+void States::ActionState::KeyPressed( sf::Event::KeyEvent& key, bool guiHandled )
+{
+	if (key.code == sf::Keyboard::Escape)
+		m_finished = true;
+}

@@ -27,6 +27,9 @@ namespace States
 		virtual void MouseButtonPressed(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos,
 			bool guiHandled) override;
 
+		/// \brief Close with escape.
+		virtual void KeyPressed(sf::Event::KeyEvent& key, bool guiHandled) override;
+
 	private:
 		/// \brief Show the actions for the selected object
 		/// \details Sets m_finished to true.

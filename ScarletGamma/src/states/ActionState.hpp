@@ -35,6 +35,9 @@ namespace States
 		virtual void Draw(sf::RenderWindow& win);
 		virtual void MouseButtonPressed(sf::Event::MouseButtonEvent& button, sf::Vector2f& tilePos,
 			bool guiHandled) override;
+
+		/// \brief Close with escape.
+		virtual void KeyPressed(sf::Event::KeyEvent& key, bool guiHandled) override;
 	
 	private:
 		tgui::Gui m_gui;

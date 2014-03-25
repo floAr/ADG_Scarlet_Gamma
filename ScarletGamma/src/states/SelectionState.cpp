@@ -172,3 +172,9 @@ void States::SelectionState::ShowActionState(Core::ObjectID _targetObject, int _
 	action->SetPosition(_x, _y);
 	m_finished = true;
 }
+
+void States::SelectionState::KeyPressed( sf::Event::KeyEvent& key, bool guiHandled )
+{
+	if (key.code == sf::Keyboard::Escape)
+		m_finished = true;
+}

@@ -41,6 +41,9 @@ namespace States
 		/// \brief Show the examination gui for the given object.
 		void ExamineObject(Core::ObjectID _object);
 
+		/// \brief Set the focus back to the player's main character.
+		virtual void EndCombat();
+
 	private:
 		Core::PlayerID m_playerID;							///< The players id (set by socket index)
 		Core::Object* m_player;								///< The one and only player object

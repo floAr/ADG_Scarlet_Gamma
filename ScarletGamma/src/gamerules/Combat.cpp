@@ -122,9 +122,9 @@ void GameRules::Combat::SetTurn( Core::ObjectID _object )
     }
 
     // Set view to object if I am a player
-    States::PlayerState* player = dynamic_cast<States::PlayerState*>(g_Game->GetCommonState());
-    if (player)
-        player->FocusObject(object);
+	States::PlayerState* player = dynamic_cast<States::PlayerState*>(g_Game->GetCommonState());
+	if (player)
+		player->FocusObject(object);
 
 	// Update panel
     UpdateCombatantPanel();

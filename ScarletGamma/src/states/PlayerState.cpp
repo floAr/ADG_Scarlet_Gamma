@@ -388,6 +388,7 @@ void States::PlayerState::FocusObject(Core::Object* _object)
 	m_selection.Add( _object->ID() );
 }
 
+
 void States::PlayerState::ExamineObject(Core::ObjectID _object)
 {
 	Core::Object* object = g_Game->GetWorld()->GetObject(_object);
@@ -463,4 +464,12 @@ bool States::PlayerState::OwnsObject( Core::ObjectID _object )
 		} catch( Exception::InvalidFormula _e ) {
 			g_Game->AppendToChatLog(Network::ChatMsg(_e.to_string(), sf::Color::Red));
 		}
+	}
+
+	void States::PlayerState::EndCombat()
+	{
+		CommonState::EndCombat();
+
+		// Reset focus
+		FocusObject(m_player);
 	}
